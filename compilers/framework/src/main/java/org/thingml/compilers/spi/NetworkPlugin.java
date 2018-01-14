@@ -39,7 +39,6 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.Checker;
 
 /**
  *
@@ -82,10 +81,6 @@ public abstract class NetworkPlugin {
      * some specific checking.
     */
 
-    public Checker.InfoType getHighestLevel() {
-        return Checker.InfoType.NOTICE;
-    }
-
 
     public String getName() {
         return this.getPluginID() + " plugin's rules";
@@ -94,11 +89,6 @@ public abstract class NetworkPlugin {
 
     public String getDescription() {
         return "Check that " + this.getPluginID() + " plugin can be used.";
-    }
-
-
-    public void check(Configuration cfg, Checker checker) {
-
     }
 
     public Set<ExternalConnector> getExternalConnectors(Configuration cfg, Protocol prot) {

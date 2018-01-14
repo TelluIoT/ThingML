@@ -49,6 +49,7 @@ import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.VariableAssignment;
+import org.thingml.xtext.validation.TypeChecker;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -65,7 +66,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(DivExpression expression, StringBuilder builder, Context ctx) {
 		final Type lhsType = TyperHelper
-				.getBroadType(ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs()));
+				.getBroadType(TypeChecker.computeTypeOf(expression.getLhs()));
 		if (Types.INTEGER_TYPE.equals(lhsType)) {// integer division if LHS is
 													// integer
 			builder.append("Math.floor(");

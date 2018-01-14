@@ -38,7 +38,6 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         super(new CThingActionCompilerPosix(), new CExternalThingEnabledApiCompiler(new PosixThingApiCompiler()),
                 new CCfgMainGenerator(), new PosixCCfgBuildCompiler(),
                 new CExternalThingEnabledImplCompiler(new PosixThingImplCompiler()));
-        this.checker = new PosixChecker(this.getID(), null);
     }
 
     @Override
@@ -67,10 +66,6 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-
-        //Checker
-        this.checker.do_check(cfg, false);
-        //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {

@@ -38,22 +38,17 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.validation.Checker;
 
 public abstract class JSCompiler extends OpaqueThingMLCompiler {
 
 	public JSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler,
 			CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, NewFSMBasedThingImplCompiler thingImplCompiler) {
 		super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
-		this.checker = new Checker(getID(), null);
 		this.ctx = new JSContext(this);
 	}
 
 	@Override
     public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-        this.checker.do_check(cfg, false);
-        //this.checker.printReport(log);
-
         ctx.addContextAnnotation("thisRef", "this.");
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);

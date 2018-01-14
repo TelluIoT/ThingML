@@ -29,7 +29,6 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Protocol;
-import org.thingml.xtext.validation.Checker;
 
 /**
  *
@@ -136,10 +135,6 @@ public abstract class SerializationPlugin {
      * some specific checking.
     */
 
-    public Checker.InfoType getHighestLevel() {
-        return Checker.InfoType.NOTICE;
-    }
-
 
     public String getName() {
         return this.getPluginID() + " plugin's rules";
@@ -150,8 +145,4 @@ public abstract class SerializationPlugin {
         return "Check that " + this.getPluginID() + " plugin can be used.";
     }
 
-
-    public void check(Configuration cfg, Checker checker) {
-
-    }
 }

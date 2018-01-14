@@ -34,7 +34,6 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.validation.Checker;
 
 public class GoCompiler extends OpaqueThingMLCompiler {
 	
@@ -44,7 +43,6 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 			  new GoCfgMainGenerator(),
 			  new GoCfgBuildCompiler(),
 			  new GoThingImplCompiler());
-		this.checker = new Checker(getID(), null);
 	}
 
 	@Override
@@ -97,9 +95,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 	}
 
 	@Override
-	public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-		this.checker.do_check(cfg, false);
-		
+	public void do_call_compiler(Configuration cfg, Logger log, String... options) {		
 		GoContext ctx = new GoContext(this);
 		
 		// Generate types

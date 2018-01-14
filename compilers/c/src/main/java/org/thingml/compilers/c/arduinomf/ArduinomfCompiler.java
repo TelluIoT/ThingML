@@ -20,7 +20,6 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.arduino.ArduinoChecker;
 import org.thingml.compilers.c.arduino.CThingActionCompilerArduino;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
@@ -38,7 +37,6 @@ public class ArduinomfCompiler extends OpaqueThingMLCompiler {
     public ArduinomfCompiler() {
             super(new CThingActionCompilerArduino(), new CThingApiCompilerArduinomf(), new CCfgMainGenerator(),
                     new CfgBuildCompiler(), new CThingImplCompiler());
-            this.checker = new ArduinoChecker(this.getID(), null);
     }
 
     
@@ -68,11 +66,6 @@ public class ArduinomfCompiler extends OpaqueThingMLCompiler {
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-
-        //Checks
-
-        this.checker.do_check(cfg, false);
-        //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {

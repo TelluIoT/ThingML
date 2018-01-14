@@ -15,6 +15,7 @@ import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.AbstractThingMLValidator
+import org.eclipse.emf.common.util.EList
 
 class ThingsUsage extends AbstractThingMLValidator {
 
@@ -79,15 +80,25 @@ class ThingsUsage extends AbstractThingMLValidator {
 		}
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkPSM(Thing t) {
-		val isPSM = ThingMLHelpers.getAllExpressions(t, ExternExpression).size() > 0 ||
-			ActionHelper.getAllActions(t, ExternStatement).size() > 0;
-		if (isPSM) {
-			val uri = t.eResource.URI.toString
-			if (!uri.contains("_"))
-				info("Thing " + t.name + " is PSM. Consider moving in a _platform folder.", t.eContainer,
-					ThingMLPackage.eINSTANCE.thingMLModel_Types, (t.eContainer as ThingMLModel).types.indexOf(t), "psm-in-basedir")
-		}
+		val uri = t.eResource.URI.toString
+		if (uri.contains("_")) return;
+		ThingMLHelpers.getAllExpressions(t, ExternExpression).forEach[ext |
+			val parent = ext.eContainer.eGet(ext.eContainingFeature)
+			val msg = "This expression makes thing " + t.name + " PSM. Consider moving the thing in a _platform folder."
+			if (parent instanceof EList)
+				info(msg, ext.eContainer, ext.eContainingFeature, (parent as EList).indexOf(ext), "psm-in-basedir")
+			else
+				info(msg, ext.eContainer, ext.eContainingFeature, "psm-in-basedir")
+		]
+		ActionHelper.getAllActions(t, ExternStatement).forEach[ext |
+			val parent = ext.eContainer.eGet(ext.eContainingFeature)
+			val msg = "This action makes thing " + t.name + " PSM. Consider moving the thing in a _platform folder."
+			if (parent instanceof EList)
+				info(msg, ext.eContainer, ext.eContainingFeature, (parent as EList).indexOf(ext), "psm-in-basedir")
+			else
+				info(msg, ext.eContainer, ext.eContainingFeature, "psm-in-basedir")
+		]		
 	}
 }

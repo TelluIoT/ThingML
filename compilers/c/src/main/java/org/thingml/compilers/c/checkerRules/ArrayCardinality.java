@@ -26,17 +26,17 @@ import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.Rule;
+/*import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;*/
 
 
 /**
  *
  * @author sintef
  */
-public class ArrayCardinality extends Rule {
+public class ArrayCardinality /*extends Rule*/ {
 
-	@Override
+	/*@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.ERROR;
     }
@@ -63,5 +63,5 @@ public class ArrayCardinality extends Rule {
             }
         }
     }
-
+*/
 }

@@ -18,7 +18,6 @@ package org.thingml.testing.tests;
 
 import java.io.File;
 
-import org.eclipse.xtext.validation.Issue;
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.notification.RunNotifier;
 import org.thingml.testing.errors.ThingMLCheckerError;
@@ -49,11 +48,6 @@ public class CheckerTest extends ThingMLFileTest {
 			// We should try the generic checker
 			NewChecker checker = new NewChecker();
 			checker.validateModel(this.model);
-			/*
-			System.out.println(this.name);
-			for (Issue error : checker.getErrors()) {
-				System.out.println(error);
-			}*/
 			
 			EachTestNotifier not = new EachTestNotifier(notifier, getDescription());
 			

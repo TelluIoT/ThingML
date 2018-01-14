@@ -36,7 +36,6 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     public ArduinoCompiler() {
         super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CppCfgMainGenerator(),
                 new CfgBuildCompiler(), new CppThingImplCompiler());
-        this.checker = new ArduinoChecker(this.getID(), null);
     }
 
     @Override
@@ -66,11 +65,6 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-
-        //Checks
-
-        this.checker.do_check(cfg, false);
-        //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
