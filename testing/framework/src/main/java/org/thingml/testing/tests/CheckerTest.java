@@ -26,7 +26,7 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.NewChecker;
+import org.thingml.xtext.validation.Checker;
 
 public class CheckerTest extends ThingMLFileTest {
 	private static final long serialVersionUID = 1L;
@@ -46,7 +46,7 @@ public class CheckerTest extends ThingMLFileTest {
 		
 		if (!compilerChecker) {
 			// We should try the generic checker
-			NewChecker checker = new NewChecker();
+			Checker checker = new Checker();
 			checker.validateModel(this.model);
 			
 			EachTestNotifier not = new EachTestNotifier(notifier, getDescription());
@@ -63,7 +63,7 @@ public class CheckerTest extends ThingMLFileTest {
 				EachTestNotifier not = new EachTestNotifier(notifier, cse.getDescription());
 				not.fireTestStarted();
 				
-				NewChecker checker = cse.getCompiler().newChecker;
+				Checker checker = cse.getCompiler().checker;
 				checker.validateModel(this.model);
 				
 				if (shouldSucceed == checker.hasErrors())

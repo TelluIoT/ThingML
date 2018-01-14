@@ -63,7 +63,7 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.validation.NewChecker;
+import org.thingml.xtext.validation.Checker;
 
 /**
  * Created by ffl on 23.11.14.
@@ -77,7 +77,7 @@ public abstract class ThingMLCompiler {
     public static XtextResource resource;
     public static File currentFile;
     protected Context ctx = new Context(this);
-    public NewChecker newChecker = new NewChecker();
+    public Checker checker = new Checker();
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
     Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
     Map<String, ExternalThingPlugin> externalThingPlugingPerExternalThing = new HashMap<>();

@@ -31,10 +31,10 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class NewChecker {
+public class Checker {
 	private List<Issue> issues;
 	
-	public NewChecker() {
+	public Checker() {
 		issues = new LinkedList<Issue>();
 		// TODO: Add a constructor that accepts compiler-specific validators as well
 	}

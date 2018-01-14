@@ -81,7 +81,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
 		
 		//Run validation
-		if (newChecker.validateConfiguration(cfg)) {
+		if (checker.validateConfiguration(cfg)) {
 			//Compile
 			do_call_compiler(cfg, log, options);
 			log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
