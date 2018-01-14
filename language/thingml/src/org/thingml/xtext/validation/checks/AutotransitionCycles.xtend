@@ -19,7 +19,7 @@ class AutotransitionCycles extends AbstractThingMLValidator {
 			if (cycle !== null && cycle.size > 1) {
 				val msg = cycle.join("Auto transition cycle: (",", ",")",[name])
 				cycle.forEach[ state |
-					error(msg, c, ThingMLPackage.eINSTANCE.stateContainer_Substate, c.substate.indexOf(state))
+					error(msg, c, ThingMLPackage.eINSTANCE.stateContainer_Substate, c.substate.indexOf(state), "autotransition-cycle")
 				]
 			}
 		]

@@ -23,7 +23,7 @@ class PortsUsage extends AbstractThingMLValidator {
 			]
 			if (!unconnected.empty) {
 				val msg = unconnected.join("Required ports (",", ",") are not connected")[name]
-				warning(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i)
+				warning(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "required-ports-not-connected")
 			}
 		]
 	}

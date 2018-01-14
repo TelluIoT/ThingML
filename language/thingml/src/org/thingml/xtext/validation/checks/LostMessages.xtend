@@ -58,11 +58,11 @@ class LostMessages extends AbstractThingMLValidator {
 			
 			if (!notReceived.empty) {
 				val msg = notReceived.join("Messages (",", ",") are never received from other instances")[it]
-				info(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances,i)
+				info(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances,i,"messages-not-received")
 			}
 			if (!sentNotReceived.empty) {
 				val msg = sentNotReceived.join("Messages (",", ",") are sent but never received by other instances")[it]
-				info(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances,i)
+				info(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances,i,"messages-not-used")
 			}
 		]
 	}

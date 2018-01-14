@@ -29,18 +29,15 @@ class FunctionUsage extends AbstractThingMLValidator {
 			val assigns = ActionHelper.getAllActions(ThingMLHelpers.findContainingThing(f), VariableAssignment)
 			f.parameters.forEach [ p, i |
 				// Checks that all params are used			
-				val isUsed = refs.exists [ pr |
-					return pr.property.equals(p)
-				]
+				val isUsed = refs.exists [ pr | pr.property === p ]
 				if (!isUsed) {
-					warning("Parameter " + p.getName() + " is never used", f,
-						ThingMLPackage.eINSTANCE.function_Parameters, i)
+					warning("Parameter "+p.name+" is never used", f, ThingMLPackage.eINSTANCE.function_Parameters, i, "parameter-not-used")
 				}
 				// Checks that no param is re-assigned		
 				assigns.forEach [ va |
-					if (va.property.equals(p)) {
-						warning("Re-assigning parameter " + p.getName() + " can have side effects", va.eContainer,
-							va.eContainingFeature)
+					if (va.property === p) {
+						//FIXME: This probably highlights too much?
+						warning("Re-assigning parameter "+p.name+" can have side effects", va.eContainer, va.eContainingFeature, "parameter-reassign")
 					}
 				]
 			]
@@ -51,27 +48,23 @@ class FunctionUsage extends AbstractThingMLValidator {
 					val returnType = TypeChecker.computeTypeOf(ra.getExp());
 					val parent = ra.eContainer.eGet(ra.eContainingFeature)
 					if (returnType.equals(Types.ERROR_TYPE)) {
-						val msg = "Function " + f.getName() + " of Thing " + (f.eContainer as Thing).getName() +
-							" should return " + actualType.getName() + ". Found " + returnType.getName() + ".";
+						val msg = "Function "+f.name+" should return "+actualType.name+". Found "+returnType.name+"."
 						if (parent instanceof EList)
-							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra))
+							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "function-return-wrong-type")
 						else
-							error(msg, ra.eContainer, ra.eContainingFeature)
+							error(msg, ra.eContainer, ra.eContainingFeature ,"function-return-wrong-type")
 					} else if (returnType.equals(Types.ANY_TYPE)) {
-						val msg = "Function " + f.getName() + " of Thing " + (f.eContainer as Thing).getName() +
-							" should return " + actualType.getName() + ". Found " + returnType.getName() +
-							". Consider using a cast.";
+						val msg = "Function "+f.name+" should return "+actualType.name+". Found a value/expression that cannot be typed. Consider using a cast (<exp> as <type>)."
 						if (parent instanceof EList)
-							warning(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra))
+							warning(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "function-return-wrong-type-cast")
 						else
-							warning(msg, ra.eContainer, ra.eContainingFeature)
+							warning(msg, ra.eContainer, ra.eContainingFeature, "function-return-wrong-type-cast")
 					} else if (!TyperHelper.isA(returnType, actualType)) {
-						val msg = "Function " + f.getName() + " of Thing " + (f.eContainer as Thing).getName() +
-							" should return " + actualType.getName() + ". Found " + returnType.getName() + ".";
+						val msg = "Function "+f.name+" should return "+actualType.name+". Found "+returnType.name+"."
 						if (parent instanceof EList)
-							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra))
+							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "function-return-wrong-type")
 						else
-							error(msg, ra.eContainer, ra.eContainingFeature)
+							error(msg, ra.eContainer, ra.eContainingFeature, "function-return-wrong-type")
 					}
 				]
 			}
@@ -94,52 +87,44 @@ class FunctionUsage extends AbstractThingMLValidator {
 		checkFunctionCall(call.function, call.parameters, call)
 	}	
 
-	def checkFunctionCall(Function call, List<Expression> params, EObject o) {
-		val thing = ThingMLHelpers.findContainingThing(call)
+	def checkFunctionCall(Function function, List<Expression> params, EObject o) {
 		val parent = o.eContainer.eGet(o.eContainingFeature)
 		// Check that the function is called with the right number of parameters
-		if (call.getParameters().size() != params.size()) {
-			val msg = "Function " + call.getName() + " of Thing " + thing.getName() +
-				" is called with wrong number of parameters. Expected " + call.getParameters().size() +
-				", called with " + params.size();
+		if (function.parameters.size !== params.size) {
+			val msg = "Function "+function.name+" is called with a wrong number of arguments. Expected "+function.parameters.size+", called with "+params.size
 			if (parent instanceof EList)
-				error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o))
+				error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-length")
 			else
-				error(msg, o.eContainer, o.eContainingFeature)
+				error(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-length")
+			return;
 		}
 
 		// Check that the parameters are properly typed
-		call.parameters.forEach [ p, i |
+		function.parameters.forEach [ p, i |
 			val e = params.get(i);
 			val expected = TyperHelper.getBroadType(p.getTypeRef().getType());
 			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) {
 				if (actual.equals(Types.ERROR_TYPE)) {
-					val msg = "Function " + call.getName() + " of Thing " + thing.getName() +
-						" is called with an erroneous parameter. Expected " + expected.getName() + ", called with " +
-						TyperHelper.getBroadType(actual).getName();
+					val msg = "Function "+function.name+" is called with an erroneous parameter. Expected "+expected.name+", called with "+TyperHelper.getBroadType(actual).name;
 					if (parent instanceof EList)
-						error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o))
+						error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
-						error(msg, o.eContainer, o.eContainingFeature)
+						error(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-type")
 				} else if (actual.equals(Types.ANY_TYPE)) {
-					val msg = "Function " + call.getName() + " of Thing " + thing.getName() +
-						" is called with a parameter which cannot be typed. Consider using a cast <exp> as <type>.";
+					val msg = "Function "+function.name+" is called with a parameter which cannot be typed. Consider using a cast (<exp> as <type>)."
 					if (parent instanceof EList)
-						warning(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o))
+						warning(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
-						warning(msg, o.eContainer, o.eContainingFeature)
+						warning(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-type")
 				} else if (!TyperHelper.isA(actual, expected)) {
-					val msg = "Function " + call.getName() + " of Thing " + thing.getName() +
-						" is called with an erroneous parameter. Expected " + expected.getName() + ", called with " +
-						TyperHelper.getBroadType(actual).getName();
+					val msg = "Function "+function.name+" is called with an erroneous parameter. Expected "+expected.name+", called with "+TyperHelper.getBroadType(actual).name;
 					if (parent instanceof EList)
-						error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o))
+						error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
-						error(msg, o.eContainer, o.eContainingFeature)
+						error(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-type")
 				}
 			}
 		]
 	}
-
 }

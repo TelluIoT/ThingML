@@ -19,11 +19,11 @@ class ControlStructures extends AbstractThingMLValidator {
 		if (actual.equals(Types.BOOLEAN_TYPE)) return;
 		if (actual.equals(Types.ANY_TYPE)) {
 			if (ThingMLHelpers.getAllExpressions(e, typeof(ExternExpression)).size > 0)
-				warning("Condition involving extern expressions cannot be typed as Boolean. Consider using a cast.", a, e.eContainingFeature)
+				warning("Condition involving extern expressions cannot be typed as Boolean. Consider using a cast.", a, e.eContainingFeature, "condition-boolean")
 			else
-				warning("Condition cannot be typed as Boolean. Consider using a cast.", a, e.eContainingFeature)
+				warning("Condition cannot be typed as Boolean. Consider using a cast.", a, e.eContainingFeature, "condition-boolean")
 		} else {
-			error("Condition is not a Boolean ("+TyperHelper.getBroadType(actual).name+")", a, e.eContainingFeature)
+			error("Condition is not a Boolean ("+TyperHelper.getBroadType(actual).name+")", a, e.eContainingFeature, "condition-boolean")
 		}
 	}
 	

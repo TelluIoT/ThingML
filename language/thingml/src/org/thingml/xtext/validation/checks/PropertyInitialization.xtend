@@ -40,7 +40,7 @@ class PropertyInitialization extends AbstractThingMLValidator {
 			
 			if (!props.empty) {
 				val msg = props.join("Properties (",", ",") are not initialized")[it.name]
-				warning(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i)
+				warning(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "properties-not-initialized")
 			}
 		]
 	}

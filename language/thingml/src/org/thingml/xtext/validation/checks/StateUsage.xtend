@@ -5,6 +5,7 @@ import org.thingml.xtext.thingML.FinalState
 import org.thingml.xtext.thingML.StateContainer
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.AbstractThingMLValidator
+import org.thingml.xtext.thingML.CompositeState
 
 class StateUsage extends AbstractThingMLValidator {
 	
@@ -16,7 +17,7 @@ class StateUsage extends AbstractThingMLValidator {
 				st.outgoing.exists[t | t.target == s]
 			]
 			if (!isReachable) {
-				warning("State " + s.name + " is unreachable", sc, ThingMLPackage.eINSTANCE.stateContainer_Substate, i)			
+				warning("State " + s.name + " is unreachable", sc, ThingMLPackage.eINSTANCE.stateContainer_Substate, i, "state-unreachable")			
 			}
 		]
 	}
@@ -24,8 +25,8 @@ class StateUsage extends AbstractThingMLValidator {
 	@Check(NORMAL)
 	def checkSinkState(StateContainer sc) {
 		sc.substate.forEach[s, i|
-			if (!(s instanceof FinalState) && s.outgoing.empty) {
-				warning("State " + s.name + " is a sink state. Consider making it final", sc, ThingMLPackage.eINSTANCE.stateContainer_Substate, i)
+			if (!(s instanceof FinalState || s instanceof CompositeState) && s.outgoing.empty) {
+				warning("State " + s.name + " is a sink state. Consider making it final", sc, ThingMLPackage.eINSTANCE.stateContainer_Substate, i, "state-sink")
 			}
 		]
 	}
