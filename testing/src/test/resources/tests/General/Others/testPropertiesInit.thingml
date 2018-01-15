@@ -3,16 +3,16 @@ import "../../thingml.thingml"
 thing TestPropertiesInit includes Test
 @test "x # AABBCCDDEEFF"
 {
-    property A1 : Char = '\'A\''
+    property A1 : Char = '\'A\'' as Char
     property A2 : Char = A1
     
-	readonly property B1 : Char = '\'B\''
+	readonly property B1 : Char = '\'B\'' as Char
     readonly property B2 : Char = B1
 
-    property C1 : Char = '\'Z\''
+    property C1 : Char = '\'Z\'' as Char
     property C2 : Char = C1
     
-	readonly property D1 : Char = '\'Z\''
+	readonly property D1 : Char = '\'Z\'' as Char
     readonly property D2 : Char = D1
 
 	property E1 : Integer = 5
@@ -60,8 +60,8 @@ thing TestPropertiesInit includes Test
 
 configuration conf {
 	instance test : TestPropertiesInit
-	set test.C1 = '\'C\''
-	set test.D1 = '\'D\''
+	set test.C1 = '\'C\'' as Char
+	set test.D1 = '\'D\'' as Char
 	set test.E1 = 5 + 5
 	set test.F1 = 5 + 5
 }

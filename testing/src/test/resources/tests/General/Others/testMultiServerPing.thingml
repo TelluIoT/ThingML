@@ -41,7 +41,7 @@ thing TestMultiServerPing includes Test, PingMsg
 			guard m.c == '\'0\''
 			action do
                 TestOut('\'P\'')
-                ppclient!ping(0)
+                ppclient!ping()
             end
 		}
 

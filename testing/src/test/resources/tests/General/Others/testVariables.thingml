@@ -4,12 +4,12 @@ thing TestVariables includes Test
 @test "xxx # abcdefxxxbxxgabcabcdefxx"
 {
 
-	property pa : Char = '\'a\''
+	property pa : Char = '\'a\'' as Char
 	
-	readonly property pb : Char = '\'b\''
+	readonly property pb : Char = '\'b\'' as Char
     
     statechart TestPropertyPing init state0 {
-    	property pc : Char = '\'c\''
+    	property pc : Char = '\'c\'' as Char
     	state state0 {
 			transition -> state1 
 			event e : Test?In
@@ -18,38 +18,38 @@ thing TestVariables includes Test
 
     	state state1 {
     		
-    		property pd : Char = '\'d\''
+    		property pd : Char = '\'d\'' as Char
     		
     		on entry do
-    			var pe : Char = '\'e\''
+    			var pe : Char = '\'e\'' as Char
     			if (pa == '\'a\'') do
-    				var pf : Char = '\'f\''
+    				var pf : Char = '\'f\'' as Char
     				TestOut( pa )
     				TestOut( pb )
     				TestOut( pc )
     				TestOut( pd )
     				TestOut( pe )
     				TestOut( pf )
-    				pe = '\'x\''
-    				pf = '\'x\''
+    				pe = '\'x\'' as Char
+    				pf = '\'x\'' as Char
     				TestOut( pe )
     				TestOut( pf )
     			end
-    			pa = '\'x\''
-    			pc = '\'x\''
-    			pd = '\'x\''
+    			pa = '\'x\'' as Char
+    			pc = '\'x\'' as Char
+    			pd = '\'x\'' as Char
     		end
     		
     		transition -> state2
 			event m : Test?In
 			guard m.c == '\'x\''
 			action do
-				TestOut( pa ) pa = '\'a\''
+				TestOut( pa ) pa = '\'a\'' as Char
 				TestOut( pb )
-				TestOut( pc ) pc = '\'c\''
-				TestOut( pd ) pd = '\'d\''
+				TestOut( pc ) pc = '\'c\'' as Char
+				TestOut( pd ) pd = '\'d\'' as Char
 				var pg : Char
-				pg = '\'g\''
+				pg = '\'g\'' as Char
 				TestOut( pg )
 			end
     		

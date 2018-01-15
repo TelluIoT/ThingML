@@ -3,17 +3,17 @@ import "../../thingml.thingml"
 thing TestNaming includes Test 
 @test "tt # (AE|EA)BCD"
 {
-    property A : Char = '\'A\''
+    property A : Char = '\'A\'' as Char
     
 	statechart TestNaming init A {
 	                    
-        property A : Char = '\'A\''
+        property A : Char = '\'A\'' as Char
                             
 		state A {
-            property A : Char = '\'A\''
+            property A : Char = '\'A\'' as Char
     
 			on entry do
-                var A : Char = '\'A\''
+                var A : Char = '\'A\'' as Char
                 TestOut('\'A\'')
             end
 			transition t -> C
@@ -26,7 +26,7 @@ thing TestNaming includes Test
             
             state A {
 			on entry do
-                var A : Char = '\'A\''
+                var A : Char = '\'A\'' as Char
                 TestOut('\'C\'')
             end
 			transition t -> C
@@ -46,7 +46,7 @@ thing TestNaming includes Test
 		region A init A {	
 			state A {
 				on entry do
-                    var A : Char = '\'A\''
+                    var A : Char = '\'A\'' as Char
                     TestOut('\'E\'')
                 end
 			}
