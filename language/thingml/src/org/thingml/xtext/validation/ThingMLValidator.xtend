@@ -5,19 +5,8 @@ package org.thingml.xtext.validation
 
 import java.util.LinkedList
 import org.eclipse.xtext.validation.Check
-import org.thingml.xtext.constraints.ThingMLHelpers
-import org.thingml.xtext.helpers.ActionHelper
-import org.thingml.xtext.thingML.Function
-import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.Thing
-import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.ThingMLPackage
-import org.thingml.xtext.thingML.VariableAssignment
-import org.thingml.xtext.thingML.ReturnAction
-import org.thingml.xtext.thingML.Type
-import org.thingml.xtext.helpers.TyperHelper
-import org.thingml.xtext.constraints.Types
-import org.eclipse.emf.common.util.EList
 
 /**
  * This class contains custom validation rules. 
@@ -25,18 +14,6 @@ import org.eclipse.emf.common.util.EList
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class ThingMLValidator extends AbstractThingMLValidator {
-
-	//Checker checker = new Checker("Generic", this);
-	
-	/*****************************************************************************
-	 *                 CUSTOM VALIDATION RULES FOR THINGS
-	 *****************************************************************************/
-	/* @Check(NORMAL)
-	def checkModel(ThingMLModel model) {
-		checker.do_generic_check(model, true)
-	}*/
-
-	
 
 	@Check
 	def checkNoCyclesInThingIncludes(Thing thing) {
