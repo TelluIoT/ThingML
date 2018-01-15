@@ -141,15 +141,31 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("print ");
-        generate(action.getMsg(), builder, ctx);
+        if (action.isLine()) builder.append("println ");
+        else builder.append("print ");
+        
+        boolean first = true;
+        for (Expression exp : action.getMsg()) {
+        	if (first) first = false;
+        	else builder.append(", ");
+        	
+        	generate(exp, builder, ctx);
+        }
         builder.append(NEW_LINE);
     }
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        builder.append("error ");
-        generate(action.getMsg(), builder, ctx);
+    	if (action.isLine()) builder.append("errorln ");
+        else builder.append("error ");
+    	
+    	boolean first = true;
+        for (Expression exp : action.getMsg()) {
+        	if (first) first = false;
+        	else builder.append(", ");
+        	
+        	generate(exp, builder, ctx);
+        }
         builder.append(NEW_LINE);
     }
 
