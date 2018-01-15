@@ -12,8 +12,32 @@ import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
+import org.thingml.xtext.thingML.ExternalConnector
+import org.thingml.xtext.thingML.Message
+import org.thingml.xtext.thingML.PrimitiveType
+import org.thingml.xtext.helpers.AnnotatedElementHelper
+import org.thingml.xtext.thingML.Configuration
 
 class MessageUsage extends ThingMLValidatorCheck {
+	
+	def boolean isSerializable(Message m) {
+		return m.parameters.forall[ p |
+			p.typeRef !== null && p.typeRef.type !== null 
+			&& (p.typeRef.type instanceof PrimitiveType || AnnotatedElementHelper.isDefined(p.typeRef.type, "serializable", "true"))
+		]
+	}
+	
+	@Check(NORMAL)
+	def checkSerialization(ExternalConnector c) {
+		c.port.receives.filter[m | !isSerializable(m)].forEach[m | 
+			val msg = "Message " + m.name + " is not serializable and cannot be used on an external connector "
+			error(msg, c.eContainer, ThingMLPackage.eINSTANCE.configuration_Connectors, (c.eContainer as Configuration).connectors.indexOf(c), "serialization")
+		]
+		c.port.sends.filter[m | !isSerializable(m)].forEach[m | 
+			val msg = "Message " + m.name + " is not serializable and cannot be used on an external connector "
+			error(msg, c.eContainer, ThingMLPackage.eINSTANCE.configuration_Connectors, (c.eContainer as Configuration).connectors.indexOf(c), "serialization")
+		]
+	}
 	
 	@Check(NORMAL)
 	def checkMessageNotSent(Thing thing) {
