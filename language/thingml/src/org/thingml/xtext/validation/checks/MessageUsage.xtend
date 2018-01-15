@@ -124,21 +124,21 @@ class MessageUsage extends ThingMLValidatorCheck {
 				if (actual.equals(Types.ERROR_TYPE)) {
 					val m = "Message "+msg.name+" is sent with an erroneous parameter. Expected "+expected.name+", sent with "+TyperHelper.getBroadType(actual).name
 					if (parent instanceof EList)
-						error(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "message-send-wrong-parameter-type")
+						error(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "type")
 					else
-						error(m, send.eContainer, send.eContainingFeature, "message-send-wrong-parameter-type")
+						error(m, send.eContainer, send.eContainingFeature, "type")
 				} else if (actual.equals(Types.ANY_TYPE)) {
 					val m = "Message "+msg.name+" is sent with a parameter which cannot be typed. Consider using a cast (<exp> as <type>)."
 					if (parent instanceof EList)
-						warning(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "message-send-wrong-parameter-type-cast")
+						warning(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "type-cast", p.getTypeRef().getType().name)
 					else
-						warning(m, send.eContainer, send.eContainingFeature, "message-send-wrong-parameter-type-cast")
+						warning(m, send.eContainer, send.eContainingFeature, "type-cast", p.getTypeRef().getType().name)
 				} else if (!TyperHelper.isA(actual, expected)) {
 					val m = "Message "+msg.name+" is sent with an erroneous parameter. Expected "+expected.name+", sent with "+TyperHelper.getBroadType(actual).name
 					if (parent instanceof EList)
-						error(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "message-send-wrong-parameter-type")
+						error(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "type")
 					else
-						error(m, send.eContainer, send.eContainingFeature, "message-send-wrong-parameter-type")
+						error(m, send.eContainer, send.eContainingFeature, "type")
 				}
 			}
 		]

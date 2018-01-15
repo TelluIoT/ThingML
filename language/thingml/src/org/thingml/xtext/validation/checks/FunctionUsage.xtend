@@ -78,21 +78,21 @@ class FunctionUsage extends ThingMLValidatorCheck {
 					if (returnType.equals(Types.ERROR_TYPE)) {
 						val msg = "Function "+f.name+" should return "+actualType.name+". Found "+returnType.name+"."
 						if (parent instanceof EList)
-							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "function-return-wrong-type")
+							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "type")
 						else
-							error(msg, ra.eContainer, ra.eContainingFeature ,"function-return-wrong-type")
+							error(msg, ra.eContainer, ra.eContainingFeature ,"type")
 					} else if (returnType.equals(Types.ANY_TYPE)) {
 						val msg = "Function "+f.name+" should return "+actualType.name+". Found a value/expression that cannot be typed. Consider using a cast (<exp> as <type>)."
 						if (parent instanceof EList)
-							warning(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "function-return-wrong-type-cast")
+							warning(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "type-cast", f.getTypeRef().getType().name)
 						else
-							warning(msg, ra.eContainer, ra.eContainingFeature, "function-return-wrong-type-cast")
+							warning(msg, ra.eContainer, ra.eContainingFeature, "type-cast", f.getTypeRef().getType().name)
 					} else if (!TyperHelper.isA(returnType, actualType)) {
 						val msg = "Function "+f.name+" should return "+actualType.name+". Found "+returnType.name+"."
 						if (parent instanceof EList)
-							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "function-return-wrong-type")
+							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "type")
 						else
-							error(msg, ra.eContainer, ra.eContainingFeature, "function-return-wrong-type")
+							error(msg, ra.eContainer, ra.eContainingFeature, "type")
 					}
 				]
 			}

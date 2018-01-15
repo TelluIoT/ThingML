@@ -27,4 +27,16 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 			context.xtextDocument.replace(issue.offset, 0, "final ")
 		]
 	}
+	
+	@Fix("type-cast")
+	def cast(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Cast to " + issue.data.get(0),
+			"Cast this expression to " + issue.data.get(0),
+			"" // Image
+		)[ context | 
+			context.xtextDocument.replace(issue.offset + issue.length, 0, " as " + issue.data.get(0))
+		]
+	}
 }
