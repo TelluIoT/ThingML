@@ -5,7 +5,7 @@ thing TestInternalEmptyTransition includes Test
 {
 
 	statechart TestInternalEmptyTransition init S0 {
-		property i : UInt16 = '0'
+		property i : UInt16 = 0
 
 		state S0 {
 			transition -> S1
@@ -17,7 +17,7 @@ thing TestInternalEmptyTransition includes Test
 			guard (i == 0)
 			action do
 				TestOut('\'X\'')
-				i = i + '1'
+				i = i + 1
 			end
 			
 			transition -> S2 guard (not(i == 0))

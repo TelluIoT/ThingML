@@ -3,7 +3,7 @@ import "../../thingml.thingml"
 thing TestSession includes Test
 @test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
 {
-	property ID : Char = '\'M\''
+	property ID : Char = '\'M\'' as Char
 
 	statechart Chart init INIT {
 		internal event Test?Done
@@ -15,7 +15,7 @@ thing TestSession includes Test
 			action do
 				ID = e.c
 				fork s
-				ID = '\'M\''
+				ID = '\'M\'' as Char
 			end
     	}
 

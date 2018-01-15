@@ -13,7 +13,7 @@ thing TestSession4 includes Test
 		receives m
 	}
 
-	property ID : Char = '\'M\''
+	property ID : Char = '\'M\'' as Char
 
 	statechart Chart init INIT {
 
@@ -23,7 +23,7 @@ thing TestSession4 includes Test
 			action do
 				ID = e.c
 				fork s
-				ID = '\'M\''
+				ID = '\'M\'' as Char
 			end
 			
 			internal event forks?Done
@@ -38,7 +38,7 @@ thing TestSession4 includes Test
 				on entry do
 					TestOut(ID)
 					forks!Done()
-					ID = '\'T\''
+					ID = '\'T\'' as Char
 					fork t
 				end
 			}
