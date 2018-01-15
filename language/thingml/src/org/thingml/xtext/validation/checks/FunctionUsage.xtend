@@ -19,8 +19,25 @@ import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
+import org.thingml.xtext.helpers.ThingHelper
 
 class FunctionUsage extends ThingMLValidatorCheck {
+
+	@Check(NORMAL)
+	def checkConcrete(Thing t) {
+		if (t.fragment) return;
+		ThingMLHelpers.allFunctions(t).filter[f | f.abstract].forEach[f |
+			try {
+				ThingHelper.getConcreteFunction(t, f)				
+			} catch (Exception e) {
+				val origin = ThingMLHelpers.findContainingThing(f)
+				if (origin == t)
+					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Functions, t.functions.indexOf(f), "function-bind")
+				else
+					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(origin), "function-bind")
+			}
+		]
+	}
 
 	@Check(NORMAL)
 	def checkParameters2(Function f) {

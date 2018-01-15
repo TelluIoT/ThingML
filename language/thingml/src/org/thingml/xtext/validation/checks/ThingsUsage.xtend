@@ -26,6 +26,18 @@ class ThingsUsage extends ThingMLValidatorCheck {
 			error(msg, i.eContainer, i.eContainingFeature, (i.eContainer as Configuration).instances.indexOf(i), "fragment-instanciation")
 		}
 	}
+	
+	@Check(FAST)
+	def checkInstanceUniqueness(Instance i) {
+		val cfg = i.eContainer as Configuration
+		val instances = cfg.instances.filter(i2 |
+			i2.name == i.name
+		)
+		if (instances.size > 1) {
+			val msg = "Instance " + i.getName() + " is duplicated.";
+			error(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, cfg.instances.indexOf(i), "duplicate-instance")
+		}
+	}	
 
 	@Check(FAST)
 	def checkPropertyUniqueness(Property p) {

@@ -1,10 +1,10 @@
 thing fragment F {
-	abstract function f() 
+	function f() do end
 }
 
 thing TestCheckStateMachine includes F
 {
-    abstract function f() //should fail as abstract function f is already defined in F
+    function f() do end//should fail as abstract function f is already defined in F
 	
     statechart TestAbstractFunction init INIT {
     	state INIT {

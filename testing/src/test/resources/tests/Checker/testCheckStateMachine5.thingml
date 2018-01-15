@@ -2,7 +2,7 @@ thing TestCheckStateMachine
 {
     statechart TestStateMachine init One {
     	state One {
-    		transition -> One //should fail as auto-transitions with no event must be guarded
+    		transition -> One //should fail as auto-transitions with no event must be guarded    		
     	}
     }
 }

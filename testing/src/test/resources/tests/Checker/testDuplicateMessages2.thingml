@@ -1,0 +1,19 @@
+thing TestCheckStateMachine
+{
+    
+	message m();
+	message m();
+	
+	provided port p {
+		sends m
+		receives m
+	} 
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry p!m()
+    		
+    		internal event p?m
+    	}
+    }
+}
