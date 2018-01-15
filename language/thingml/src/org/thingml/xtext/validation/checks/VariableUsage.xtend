@@ -33,7 +33,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 					error(msg, o, f, "property-assign-wrong-type")	
 				} else if (actual.equals(Types.ANY_TYPE)) {
 					val msg = "Property "+va.name+" is assigned with a value/expression which cannot be typed. Consider using a cast (<exp> as <Type>)"
-					error(msg, o, f, "property-assign-wrong-type-cast")
+					warning(msg, o, f, "property-assign-wrong-type-cast")
 				} else if (!TyperHelper.isA(actual, expected)) {
 					val msg = "Property "+va.name+" is assigned with an erroneous value/expression. Expected "+expected.name+", assigned with "+broad.name
 					error(msg, o, f, "property-assign-wrong-type")	
