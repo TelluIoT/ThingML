@@ -60,6 +60,6 @@ public class ReactJSCompiler extends JSCompiler {
 
 	@Override
 	protected String getEnumPath(Configuration t, ThingMLModel model, Context ctx) {
-		return "src/enums.jsx";
+		return "src/enums.js";
 	}
 }

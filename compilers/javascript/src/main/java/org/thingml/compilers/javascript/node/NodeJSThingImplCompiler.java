@@ -53,8 +53,8 @@ public class NodeJSThingImplCompiler extends JSThingImplCompiler {
 	}
 
 	@Override
-	protected JSClass newThingClass(String name, Section parent, JSContext jctx) {
-		return JSSourceBuilder.es5Class(parent, name);
+	protected JSClass newThingClass(Thing thing, Section parent, JSContext jctx) {
+		return JSSourceBuilder.es5Class(parent, jctx.firstToUpper(thing.getName()));
 	}
 
 }

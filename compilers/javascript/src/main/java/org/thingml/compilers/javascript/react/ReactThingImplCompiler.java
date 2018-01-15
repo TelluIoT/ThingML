@@ -20,13 +20,14 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSClass;
+import org.thingml.compilers.javascript.JSSourceBuilder.ReactComponent;
 import org.thingml.compilers.javascript.JSThingImplCompiler;
 import org.thingml.xtext.thingML.Thing;
 
 public class ReactThingImplCompiler extends JSThingImplCompiler {
 	@Override
 	protected String getThingPath(Thing thing, JSContext jctx) {
-		return "src/"+jctx.firstToUpper(thing.getName())+".jsx";
+		return "src/"+jctx.firstToUpper(thing.getName())+".js";
 	}
 
 	@Override
@@ -34,14 +35,23 @@ public class ReactThingImplCompiler extends JSThingImplCompiler {
 		// Add imports
 		Section imports = builder.section("imports").lines();
 		imports.append("import React from 'react';");
+		imports.append("import StateJS from '../lib/StateJSWrappers.js';");
+		imports.append("const EventEmitter = require('events').EventEmitter;");
 		builder.append("");
 		
-		return builder.section("main").lines();
+		Section main = builder.section("main").lines();
+		
+		builder.append("export default "+jctx.firstToUpper(thing.getName()));
+		
+		return main;
 	}
 
 	@Override
-	protected JSClass newThingClass(String name, Section parent, JSContext jctx) {
-		return JSSourceBuilder.reactComponent(parent, name);
+	protected JSClass newThingClass(Thing thing, Section parent, JSContext jctx) {
+		ReactComponent component = JSSourceBuilder.reactComponent(parent, jctx.firstToUpper(thing.getName()));
+		// Add rendering template
+		ReactTemplates.defaultThing(thing, component.renderReturn());
+		
+		return component;
 	}
-
 }

@@ -144,17 +144,22 @@ public class JSSourceBuilder extends SourceBuilder {
 	
 	public static class ReactComponent extends ES6Class {
 		protected JSFunction render;
+		protected Section renderReturn;
 		
 		public ReactComponent(Section parent, String name) {
 			super(parent, name);
 			this.setExtends("React.Component");
 			//this.constructor.addArgument("props");
+			this.constructor.body.append("super();");
 			
 			this.render = jsFunction(this.body, "render");
+			this.render.body.append("return (");
+			this.renderReturn = this.render.body.section("render-return").lines().indent();
+			this.render.body.append(");");
 		}
 		
-		public Section renderBody() {
-			return this.render.body();
+		public Section renderReturn() {
+			return this.renderReturn;
 		}
 	}
 	

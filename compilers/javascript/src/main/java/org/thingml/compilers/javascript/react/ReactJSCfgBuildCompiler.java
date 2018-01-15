@@ -16,16 +16,10 @@
  */
 package org.thingml.compilers.javascript.react;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.javascript.JSCfgBuildCompiler;
 import org.thingml.xtext.thingML.Configuration;
 
@@ -36,6 +30,7 @@ public class ReactJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		copyResourceToFile("react/index.html", "index.html", ctx);
 		copyResourceToFile("react/webpack.config.js", "webpack.config.js", ctx);
 		copyResourceToFile("react/babelrc", ".babelrc", ctx);
+		copyResourceToFile("react/StateJSWrappers.js", "lib/StateJSWrappers.js", ctx);
 		
 		// Write package.json
 		writeLinesToFile(

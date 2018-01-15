@@ -16,13 +16,19 @@
  */
 package org.thingml.compilers.javascript.react;
 
+import java.util.List;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
+import org.thingml.compilers.javascript.JSSourceBuilder.JSFunction;
 import org.thingml.compilers.javascript.JSSourceBuilder.ReactComponent;
 import org.thingml.compilers.javascript.JSCfgMainGenerator;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
@@ -30,19 +36,73 @@ public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		JSContext jctx = (JSContext)ctx;
 		
-		JSSourceBuilder builder = jctx.getSourceBuilder("src/main.jsx");
+		JSSourceBuilder builder = jctx.getSourceBuilder("src/main.js");
 		
 		// Add imports
 		Section imports = builder.section("imports").lines();
 		imports.append("import React from 'react';");
 		imports.append("import {render} from 'react-dom';");
+		// Import things
+		for (Thing t : ConfigurationHelper.allThings(cfg)) {
+			String name = ctx.firstToUpper(t.getName());
+			imports.append("import " + name + " from './" + name + ".js';");
+		}
 		builder.append("");
 		
-		// Create configuration component
+		// -- Create configuration component --
 		ReactComponent cfgComponent = builder.reactComponent(cfg.getName());
-		ReactTemplates.defaultConfiguration(cfg, cfgComponent.renderBody());
+		
+		// Create constructor
+		JSFunction constructor = cfgComponent.constructor();
+		constructor.enable();
+
+		Section instances = constructor.body().section("instances").lines();
+		generateInstances(cfg, instances, jctx);
+		Section connectors = constructor.body().section("connectors").lines();
+        generateConnectors(cfg, connectors, jctx);
+        constructor.body().comment("Initialise instances...");
+        List<Instance> orderedInstances = ConfigurationHelper.orderInstanceInit(cfg);
+        Instance inst;
+        while (!orderedInstances.isEmpty()) {
+            inst = orderedInstances.get(orderedInstances.size() - 1);
+            orderedInstances.remove(inst);
+            constructor.body().append(inst.getName() + "._init();");
+        }
+        constructor.body().comment("Store instances");
+        Section instArray = constructor.body().section("instances-array")
+        		            .append("this._instances = ").section("array")
+        		            .surroundWith("[", "]", 0).joinWith(", ")
+        		            .after(";");
+        for (Instance instA : cfg.getInstances())
+        	instArray.append(instA.getName());
+        
+		// Create render function
+		ReactTemplates.defaultConfiguration(cfg, cfgComponent.renderReturn());
 		// TODO: Add body from annotation
 		builder.append("");
+		
+		// Create instances function
+		JSFunction instancesFunc = cfgComponent.addMethod("instances");
+		instancesFunc.addArgument("...names");
+		{
+			Section body = instancesFunc.body();
+			body.append("const result = [];");
+			body.append("for (let instance of this._instances) {");
+			Section forBody = body.section("for-body").lines().indent();
+			forBody.append("const inList = names.length == 0 || names.reduce((res,name) => res || name == instance.name, false);");
+			forBody.append("if (inList) {");
+			Section ifBody = forBody.section("if-body").lines().indent();
+			ifBody.append("result.push(");
+			Section push = ifBody.section("push").lines().indent();
+			push.append("<div key={instance.name} className=\"thingml-instance\">");
+			push.section("div").lines().indent()
+				.append("{instance.render()}");
+			push.append("</div>");
+			ifBody.append(");");
+			forBody.append("}");
+			body.append("}");
+			body.append("return result;");
+		}
 		
 		// Call react-render
 		builder.section("react-render")

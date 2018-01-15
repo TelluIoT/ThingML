@@ -18,12 +18,21 @@ package org.thingml.compilers.javascript.react;
 
 import org.thingml.compilers.builder.Section;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
 
 public class ReactTemplates {
 	public static void defaultConfiguration(Configuration cfg, Section render) {
 		render.append("<div className=\"thingml-configuration\">");
-		render.section("configuration-div").lines().indent()
-			  .append("<p>").append(cfg.getName()).append("</p>");
+		Section div = render.section("configuration-div").lines().indent();
+		div.append("<p>"+cfg.getName()+"</p>");
+		div.append("{this.instances()}");
+		render.append("</div>");
+	}
+	
+	public static void defaultThing(Thing thing, Section render) {
+		render.append("<div className=\"thingml-thing\">");
+		render.section("thing-div").lines().indent()
+			  .section("thing").append("<p>").append(thing.getName()).append("</p>");
 		render.append("</div>");
 	}
 }

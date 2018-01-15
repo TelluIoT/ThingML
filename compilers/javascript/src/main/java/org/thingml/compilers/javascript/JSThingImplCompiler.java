@@ -80,7 +80,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		main.comment("\n * Definition for type : "+thing.getName()+"\n ");
 		main.append("");
 		
-		JSClass thingClass = newThingClass(jctx.firstToUpper(thing.getName()), main, jctx);
+		JSClass thingClass = newThingClass(thing, main, jctx);
 		
 		/* ----- Build constructor ----- */
 		JSFunction constructor = thingClass.constructor();
@@ -195,7 +195,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	
 	protected abstract String getThingPath(Thing thing, JSContext jctx);
 	protected abstract Section createMainSection(Thing thing, JSSourceBuilder builder, JSContext jctx);
-	protected abstract JSClass newThingClass(String name, Section parent, JSContext jctx);
+	protected abstract JSClass newThingClass(Thing thing, Section parent, JSContext jctx);
 	
 	/* ----- Statemachine building methods ----- */
 	@Override
