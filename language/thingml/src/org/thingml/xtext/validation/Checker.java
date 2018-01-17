@@ -63,33 +63,33 @@ public class Checker {
     }
     
     /* -- Helpers -- */
-    public List<Issue> getErrors() {
+    private List<Issue> getIssueBySeverity(Severity severity) {
     	List<Issue> errors = new LinkedList<Issue>();
     	for (Issue issue : this.issues)
-    		if (issue.getSeverity() == Severity.ERROR)
+    		if (issue.getSeverity() == severity)
     			errors.add(issue);
     	return errors;
     }
+    
+    public List<Issue> getErrors() {
+    	return getIssueBySeverity(Severity.ERROR);
+    }
+    
+    public List<Issue> getWarnings() {
+    	return getIssueBySeverity(Severity.WARNING);
+    }
+    
+    public List<Issue> getInfos() {
+    	return getIssueBySeverity(Severity.INFO);    	
+    }
+    
     public boolean hasErrors() {
     	for (Issue issue : this.issues)
     		if (issue.getSeverity() == Severity.ERROR)
     			return true;
     	return false;
     }
-    public List<Issue> getWarnings() {
-    	List<Issue> errors = new LinkedList<Issue>();
-    	for (Issue issue : this.issues)
-    		if (issue.getSeverity() == Severity.WARNING)
-    			errors.add(issue);
-    	return errors;
-    }    
-    public List<Issue> getInfos() {
-    	List<Issue> errors = new LinkedList<Issue>();
-    	for (Issue issue : this.issues)
-    		if (issue.getSeverity() == Severity.INFO)
-    			errors.add(issue);
-    	return errors;
-    }
+
     
     /* -- Printing -- */
 }

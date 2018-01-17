@@ -73,16 +73,20 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
 	@Override
 	public boolean compile(Configuration cfg, Logger log, String... options) {
-		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + " [" + new Date() + "]");
-		final long start = System.currentTimeMillis();
-		
+		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + " [" + new Date() + "]");				
 		//Saving the complete model, e.g. to get all required inputs if there is a problem in the compiler
 		ThingMLModel flatModel = flattenModel(ThingMLHelpers.findContainingModel(cfg));
 		saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
-		saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
+		//saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
 		
 		//Run validation
-		if (checker.validateConfiguration(cfg)) {
+		log.info("Checking configuration...");
+		final long startChecker = System.currentTimeMillis();
+		final boolean isValid = checker.validateConfiguration(cfg);
+		log.info("Checking configuration... Done! Took " + (System.currentTimeMillis() - startChecker) + " ms.");
+		
+		final long start = System.currentTimeMillis();
+		if (isValid) {
 			//Compile
 			if (do_call_compiler(cfg, log, options)) {
 				log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
@@ -91,7 +95,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		} else {
 			for (Issue error : checker.getErrors()) {
 				// TODO: Some line information as well!
-				log.error("Error: "+error.getMessage());
+				log.error("Error [l" + error.getLineNumber() + " in " + error.getUriToProblem().toFileString() + "]: " + error.getMessage());
 			}
 		}
 		// Failed

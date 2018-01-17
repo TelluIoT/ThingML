@@ -34,6 +34,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.xtext.validation.Issue;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -42,6 +43,7 @@ import org.thingml.eclipse.ui.ThingMLConsole;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.validation.Checker;
 
 
 public class CompileThingFile implements IHandler {
@@ -50,6 +52,8 @@ public class CompileThingFile implements IHandler {
 	private static Set<NetworkPlugin> loadedPlugins;
 	private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
 	private static Set<SerializationPlugin> loadedSerPlugins;
+	
+	private Checker checker = new Checker();
 
 	//IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
@@ -225,46 +229,26 @@ public class CompileThingFile implements IHandler {
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 
-				/*compiler.checker.Errors.clear();
-				compiler.checker.Warnings.clear();
-				compiler.checker.Notices.clear();												
-				compiler.checker.do_check(cfg);
-				ThingMLConsole.getInstance().printMessage("Configuration " + cfg.getName() + " contains " + compiler.checker.Errors.size() + " error(s), " + compiler.checker.Warnings.size() + " warning(s), and " + compiler.checker.Notices.size() + " notices.\n");
-				if (compiler.checker.Errors.size() > 0) {
-					ThingMLConsole.getInstance().printMessage("Please fix the errors below. In future versions, we will block the code generation if errors are identified!\n");	
-				}
-				String file = "";
-				for(CheckerInfo i : compiler.checker.Errors) {
-					if (i.file != null && !i.file.equals(file)) {
-						ThingMLConsole.getInstance().printError("Errors in file " + i.file + "\n");
-						file = i.file;
-					}
-					ThingMLConsole.getInstance().printError("\t" + i.toString());		         
-				}
-				file = "";
-				for(CheckerInfo i : compiler.checker.Warnings) {
-					if (i.file != null && !i.file.equals(file)) {
-						ThingMLConsole.getInstance().printWarn("Warnings in file " + i.file + "\n");
-						file = i.file;
-					}
-					ThingMLConsole.getInstance().printWarn("\t" + i.toString());		         
-				}
-				file = "";
-				for(CheckerInfo i : compiler.checker.Notices) {
-					if (i.file != null && !i.file.equals(file)) {
-						ThingMLConsole.getInstance().printMessage("Notices in file " + i.file + "\n");
-						file = i.file;
-					}
-					ThingMLConsole.getInstance().printMessage("\t" + i.toString());		         
-				}*/
+				ThingMLConsole.getInstance().printMessage("Checking configuration...\n");
+				final long startChecker = System.currentTimeMillis();
+				final boolean isValid = checker.validateConfiguration(cfg);
+				ThingMLConsole.getInstance().printMessage("Checking configuration... Done! Took " + (System.currentTimeMillis() - startChecker) + " ms.\n");
 				
-				
-				compiler.compile(cfg, options);
-				if(subCompiler != null) {
-					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
-					compiler.compileConnector(subCompiler, cfg);
+				if (isValid) {
+					final long start = System.currentTimeMillis();
+					compiler.compile(cfg, options);
+					if(subCompiler != null) {
+						ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
+						compiler.compileConnector(subCompiler, cfg);
+					}
+					ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.\n");
+				} else {
+					ThingMLConsole.getInstance().printError("Configuration " + cfg.getName() + " could not be compiled because of errors [" + new Date() + "].\n");
+					for (Issue error : checker.getErrors()) {
+						// TODO: Some line information as well!
+						ThingMLConsole.getInstance().printError("\tError [l" + error.getLineNumber() + " in " + error.getUriToProblem().toFileString() + "]: " + error.getMessage() + "\n");
+					}
 				}
-				ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully [" + new Date() + "].\n");
 			}
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
