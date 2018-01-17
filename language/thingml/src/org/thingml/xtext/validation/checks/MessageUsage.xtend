@@ -29,45 +29,30 @@ class MessageUsage extends ThingMLValidatorCheck {
 	
 	@Check(NORMAL)
 	def checkSerialization(ExternalConnector c) {
-		c.port.receives.filter[m | !isSerializable(m)].forEach[m | 
-			val msg = "Message " + m.name + " is not serializable and cannot be used on an external connector "
+		val nonSerializable = c.port.receives.filter[m | !isSerializable(m)].toSet
+		nonSerializable.addAll(c.port.sends.filter[m | !isSerializable(m)])
+		if (nonSerializable.size > 0) {
+			val msg = nonSerializable.join("Message(s) ", ", ", " is/are not serializable and cannot be used on an external connector ", [name])
 			error(msg, c.eContainer, ThingMLPackage.eINSTANCE.configuration_Connectors, (c.eContainer as Configuration).connectors.indexOf(c), "serialization")
-		]
-		c.port.sends.filter[m | !isSerializable(m)].forEach[m | 
-			val msg = "Message " + m.name + " is not serializable and cannot be used on an external connector "
-			error(msg, c.eContainer, ThingMLPackage.eINSTANCE.configuration_Connectors, (c.eContainer as Configuration).connectors.indexOf(c), "serialization")
-		]
+		}				
 	}
 	
 	@Check(NORMAL)
 	def checkMessageNotSent(Thing thing) {
 		if (thing.fragment) return
 		val allSendActions = ActionHelper.getAllActions(thing, SendAction)
-		// Check own ports
-		thing.ports.forEach[p |
+		ThingMLHelpers.allPorts(thing).forEach[p |
 			p.sends.forEach[m, i|
 				val isSent = allSendActions.exists[sa | sa.port === p && sa.message === m]
 				if (!isSent) {
-					val msg = "Message "+m.name+" is never sent"
-					warning(msg, p, ThingMLPackage.eINSTANCE.port_Sends, i, "message-never-sent")
+					val msg = "Message " + p.name + "." + m.name + " is never sent"
+					val t = ThingMLHelpers.findContainingThing(p)
+					if (t == thing)
+						warning(msg, p, ThingMLPackage.eINSTANCE.port_Sends, i, "message-never-sent")
+					else //FIXME: this assumes the port/message comes from a Thing directly included (which is OK for 99% of the case), but will highlight the wrong include if it comes from several levels of includes... The old implementation was also doing the same "mistale"
+						warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, thing.includes.indexOf(t), "included-messages-never-sent")
 				}
 			]
-		]
-		// Check included ports
-		thing.includes.forEach[inc, i|
-			val notSent = newArrayList()
-			ThingMLHelpers.allPorts(inc).forEach[p |
-				p.sends.forEach[m |
-					val isSent = allSendActions.exists[sa | sa.port === p && sa.message === m]
-					if (!isSent) {
-						notSent.add(p.name+"."+m.name)	
-					}
-				]
-			]
-			if (!notSent.empty) {
-				val msg = notSent.join("Messages (",", ",") is never sent")[it]
-				warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, i, "included-messages-never-sent")
-			}
 		]
 	}
 
@@ -76,28 +61,18 @@ class MessageUsage extends ThingMLValidatorCheck {
 		if (thing.fragment) return;
 		val handlers = StateHelper.allMessageHandlers(thing)
 		// Check own ports
-		thing.ports.forEach[p |
+		ThingMLHelpers.allPorts(thing).forEach[p |
 			p.receives.forEach[m, i|
 				if (handlers.get(p) === null || handlers.get(p).get(m) === null) {
 					val msg = "Message "+m.name+"is never received"
-					warning(msg, p, ThingMLPackage.eINSTANCE.port_Receives, i, "message-never-used")
+					val t = ThingMLHelpers.findContainingThing(p)
+					if (t == thing)
+						warning(msg, p, ThingMLPackage.eINSTANCE.port_Receives, i, "message-never-used")
+					else //FIXME: this assumes the port/message comes from a Thing directly included (which is OK for 99% of the case), but will highlight the wrong include if it comes from several levels of includes... The old implementation was also doing the same "mistale"
+						warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, thing.includes.indexOf(t), "included-messages-never-used")
+					
 				}
 			]
-		]
-		// Check included ports
-		thing.includes.forEach[inc, i|
-			val notReceived = newArrayList()
-			ThingMLHelpers.allPorts(inc).forEach[p |
-				p.receives.forEach[m |
-					if (handlers.get(p) === null || handlers.get(p).get(m) === null) {
-						notReceived.add(p.name+"."+m.name)
-					}
-				]
-			]
-			if (!notReceived.empty) {
-				val msg = notReceived.join("Messages (",", ",") is never received")[it]
-				warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, i, "included-messages-never-used")
-			}
 		]
 	}
 
