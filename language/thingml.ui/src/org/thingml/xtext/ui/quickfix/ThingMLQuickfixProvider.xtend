@@ -7,6 +7,10 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
+import org.thingml.xtext.thingML.Instance
+import org.thingml.xtext.constraints.ThingMLHelpers
+import org.thingml.xtext.thingML.RequiredPort
+import org.thingml.xtext.thingML.Configuration
 
 /**
  * Custom quickfixes.
@@ -37,6 +41,25 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 			"" // Image
 		)[ context | 
 			context.xtextDocument.replace(issue.offset + issue.length, 0, " as " + issue.data.get(0))
+		]
+	}
+	
+	@Fix("required-ports-not-connected")
+	def makeOptional(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Make port optional " + issue.data.get(0),
+			"Make port optional " + issue.data.get(0),
+			"" // Image
+		)[ obj, context | 
+			if (obj instanceof Configuration) {
+				val cfg = obj as Configuration
+				val iName = issue.data.get(0).split("/").get(0)
+				val i = cfg.instances.findFirst[i | i.name == iName]
+				val pName = issue.data.get(0).split("/").get(1) //FIXME: for some reasons, issue.data.get(1) did not work...								
+				val p = ThingMLHelpers.allPorts(i.type).findFirst[p | p instanceof RequiredPort && !(p as RequiredPort).optional && p.name == pName] as RequiredPort
+				p.optional = true
+			}
 		]
 	}
 }
