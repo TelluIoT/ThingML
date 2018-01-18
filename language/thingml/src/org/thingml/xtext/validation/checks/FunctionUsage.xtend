@@ -42,8 +42,8 @@ class FunctionUsage extends ThingMLValidatorCheck {
 	@Check(NORMAL)
 	def checkParameters2(Function f) {
 		if (!f.abstract) { // if function is concrete then we check its implementation
-			val refs = ThingMLHelpers.getAllExpressions(ThingMLHelpers.findContainingThing(f), PropertyReference)
-			val assigns = ActionHelper.getAllActions(ThingMLHelpers.findContainingThing(f), VariableAssignment)
+			val refs = ThingMLHelpers.getAllExpressions(f, PropertyReference)
+			val assigns = ActionHelper.getAllActions(f, VariableAssignment)
 			f.parameters.forEach [ p, i |
 				// Checks that all params are used			
 				val isUsed = refs.exists [ pr | pr.property === p ]

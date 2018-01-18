@@ -64,7 +64,7 @@ class MessageUsage extends ThingMLValidatorCheck {
 		ThingMLHelpers.allPorts(thing).forEach[p |
 			p.receives.forEach[m, i|
 				if (handlers.get(p) === null || handlers.get(p).get(m) === null) {
-					val msg = "Message "+m.name+"is never received"
+					val msg = "Message " + p.name + "." + m.name + " is never received"
 					val t = ThingMLHelpers.findContainingThing(p)
 					if (t == thing)
 						warning(msg, p, ThingMLPackage.eINSTANCE.port_Receives, i, "message-never-used")

@@ -1,9 +1,9 @@
 package org.thingml.xtext.validation.checks
 
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
-import org.thingml.xtext.helpers.ActionHelper
 import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.thingML.ExternExpression
 import org.thingml.xtext.thingML.ExternStatement
@@ -15,6 +15,7 @@ import org.thingml.xtext.thingML.Property
 import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.helpers.ActionHelper
 
 class ThingsUsage extends ThingMLValidatorCheck {
 
@@ -91,46 +92,38 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	/*
-	 * This check is disabled for now because it crashes when trying to add warnings on code from functions which are included from fragments.
-	 * When cheking a file, it should not check the expressions which are imported from another file (e.g. via a fragment)
-	 * 
-	 * See issue #204
-	 * 
-	 * 
-	 * 208  [main] ERROR text.validation.CompositeEValidator  - Error executing EValidator
-java.lang.IllegalArgumentException: You can only add issues for EObjects contained in the currently validated resource 'file:/home/franck/checkout/Tryggi3D/software/bluetooth/lib/ble/ATTProxy.thingml'. But the given EObject was contained in 'file:/home/franck/checkout/Tryggi3D/software/bluetooth/lib/ble/UUID.thingml'
-	at org.eclipse.xtext.validation.AbstractDeclarativeValidator.checkIsFromCurrentlyCheckedResource(AbstractDeclarativeValidator.java:571)
-	at org.eclipse.xtext.validation.AbstractDeclarativeValidator.acceptInfo(AbstractDeclarativeValidator.java:587)
-	at org.eclipse.xtext.validation.AbstractDeclarativeValidator.info(AbstractDeclarativeValidator.java:366)
-	at org.thingml.xtext.validation.checks.ThingsUsage.lambda$5(ThingsUsage.java:171)
-	at java.util.ArrayList.forEach(ArrayList.java:1249)
-	at org.thingml.xtext.validation.checks.ThingsUsage.checkPSM(ThingsUsage.java:174)
-	 * 
-	 */
-
-	/*
 	@Check(NORMAL)
-	def checkPSM(Thing t) {
+	def checkIncludedPSMinPIM(Thing t) {
 		val uri = t.eResource.URI.toString
 		if (uri.contains("_")) return;
-		ThingMLHelpers.getAllExpressions(t, ExternExpression).forEach[ext |
-			val parent = ext.eContainer.eGet(ext.eContainingFeature)
-			val msg = "This expression makes thing " + t.name + " PSM. Consider moving the thing in a _platform folder."
-			if (parent instanceof EList)
-				info(msg, ext.eContainer, ext.eContainingFeature, (parent as EList).indexOf(ext), "psm-in-basedir")
-			else
-				info(msg, ext.eContainer, ext.eContainingFeature, "psm-in-basedir")
+		t.includes.filter[i | 
+			ThingMLHelpers.getAllExpressions(i, ExternExpression).size > 0
+			|| ActionHelper.getAllActions(i, ExternStatement).size > 0
+		].forEach[i |
+			val msg = "This PIM thing includes PSM thing " + i.name + " making it PSM." 
+			warning(msg, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(i), "include-psm")
 		]
-		ActionHelper.getAllActions(t, ExternStatement).forEach[ext |
-			val parent = ext.eContainer.eGet(ext.eContainingFeature)
-			val msg = "This action makes thing " + t.name + " PSM. Consider moving the thing in a _platform folder."
-			if (parent instanceof EList)
-				info(msg, ext.eContainer, ext.eContainingFeature, (parent as EList).indexOf(ext), "psm-in-basedir")
-			else
-				info(msg, ext.eContainer, ext.eContainingFeature, "psm-in-basedir")
-		]		
 	}
-  */
+
+	@Check(NORMAL)
+	def checkPSM(ExternStatement e) {
+		checkPSM(ThingMLHelpers.findContainingThing(e), e)	
+	}
+	
+	@Check(NORMAL)
+	def checkPSM(ExternExpression e) {
+		checkPSM(ThingMLHelpers.findContainingThing(e), e)	
+	}
+	
+	def checkPSM(Thing t, EObject e) {
+		val uri = t.eResource.URI.toString
+		if (uri.contains("_")) return;
+		val parent = e.eContainer.eGet(e.eContainingFeature)
+		val msg = "This expression makes thing " + t.name + " PSM. Consider moving the thing in a _platform folder."
+		if (parent instanceof EList)
+			info(msg, e.eContainer, e.eContainingFeature, (parent as EList).indexOf(e), "psm-in-basedir")
+		else
+			info(msg, e.eContainer, e.eContainingFeature, "psm-in-basedir")
+	}
 	
 }
