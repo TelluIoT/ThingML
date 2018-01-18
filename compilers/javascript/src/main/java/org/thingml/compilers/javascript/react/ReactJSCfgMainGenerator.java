@@ -20,11 +20,12 @@ import java.util.List;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
+import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
+import org.thingml.compilers.javascript.JSSourceBuilder.ES6Class;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSFunction;
 import org.thingml.compilers.javascript.JSSourceBuilder.ReactComponent;
-import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
@@ -42,6 +43,7 @@ public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
 		Section imports = builder.section("imports").lines();
 		imports.append("import React from 'react';");
 		imports.append("import {render} from 'react-dom';");
+		imports.append("import {Wrapper} from '../lib/Wrappers.js';");
 		// Import things
 		for (Thing t : ConfigurationHelper.allThings(cfg)) {
 			String name = ctx.firstToUpper(t.getName());
@@ -77,8 +79,8 @@ public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
         	instArray.append(instA.getName());
         
 		// Create render function
-		ReactTemplates.defaultConfiguration(cfg, cfgComponent.renderReturn());
-		// TODO: Add body from annotation
+        ReactTemplates.configuartionImports(cfg, imports);
+        ReactTemplates.configurationRender(cfg, cfgComponent.render());
 		builder.append("");
 		
 		// Create instances function
@@ -92,13 +94,7 @@ public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
 			forBody.append("const inList = names.length == 0 || names.reduce((res,name) => res || name == instance.name, false);");
 			forBody.append("if (inList) {");
 			Section ifBody = forBody.section("if-body").lines().indent();
-			ifBody.append("result.push(");
-			Section push = ifBody.section("push").lines().indent();
-			push.append("<div key={instance.name} className=\"thingml-instance\">");
-			push.section("div").lines().indent()
-				.append("{instance.render()}");
-			push.append("</div>");
-			ifBody.append(");");
+			ifBody.append("result.push(<Wrapper key={instance.name} instance={instance} />);");
 			forBody.append("}");
 			body.append("}");
 			body.append("return result;");
@@ -110,7 +106,7 @@ public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
 			.append("<").append(cfg.getName()).append("/>")
 			.append(", ")
 			.append("document.getElementById('")
-			.append("configuration")
+			.append("thingml")
 			.append("')")
 			.append(");");
 	}

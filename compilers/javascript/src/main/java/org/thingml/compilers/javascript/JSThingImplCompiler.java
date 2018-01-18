@@ -51,6 +51,27 @@ import org.thingml.xtext.thingML.Transition;
 public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	DebugProfile debugProfile;
 	
+	protected void generateProperties(Thing thing, Section parent, JSContext jctx) {
+		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+		//for (Property p : ThingHelper.allUsedProperties(thing)) { //FIXME: allUsedProperties does not work in some cases where we use includes...
+			Section property = parent.section("property");
+			if (AnnotatedElementHelper.isDefined(p, "private", "true") || !(p.eContainer() instanceof Thing)) {
+				property.append("this.");
+				property.append(ThingMLElementHelper.qname(p, "_") + "_var");
+				Expression initExp = ThingHelper.initExpression(thing, p);
+				if (initExp != null) {
+					property.append(" = ");
+					jctx.getCompiler().getThingActionCompiler().generate(initExp, property.stringbuilder("initexpression"), jctx);
+				}
+				property.append(";");
+			} else {
+				property.lines();
+				property.append("this." + ThingMLElementHelper.qname(p, "_") + "_var = " + ThingMLElementHelper.qname(p, "_") + "_var;");
+				property.append("this.debug_" + ThingMLElementHelper.qname(p, "_") + "_var = " + ThingMLElementHelper.qname(p, "_") + "_var;");
+			}
+		}
+	}
+	
 	@Override
 	public void generateImplementation(Thing thing, Context ctx) {
 		JSContext jctx = (JSContext)ctx;
@@ -114,24 +135,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 			
 			// Properties
 			body.comment("Attributes");
-			for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			//for (Property p : ThingHelper.allUsedProperties(thing)) { //FIXME: allUsedProperties does not work in some cases where we use includes...
-				Section property = body.section("property");
-				if (AnnotatedElementHelper.isDefined(p, "private", "true") || !(p.eContainer() instanceof Thing)) {
-					property.append("this.");
-					property.append(ThingMLElementHelper.qname(p, "_") + "_var");
-					Expression initExp = ThingHelper.initExpression(thing, p);
-					if (initExp != null) {
-						property.append(" = ");
-						ctx.getCompiler().getThingActionCompiler().generate(initExp, property.stringbuilder("initexpression"), ctx);
-					}
-					property.append(";");
-				} else {
-					property.lines();
-					property.append("this." + ThingMLElementHelper.qname(p, "_") + "_var" + " = " + ThingMLElementHelper.qname(p, "_") + "_var" + ";");
-					property.append("this.debug_" + ThingMLElementHelper.qname(p, "_") + "_var" + " = " + ThingMLElementHelper.qname(p, "_") + "_var" + ";");
-				}
-			}
+			generateProperties(thing, body, jctx);
 			body.append("");
 			
 			// Call state-machine builder
@@ -201,29 +205,29 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	@Override
 	protected void generateStateMachine(CompositeState sm, Section section, Context ctx) {
 		StateJSState statemachine = JSSourceBuilder.stateJSState(section, sm.getName() != null ? sm.getName() : "default", "StateMachine");
-		statemachine.assignTo("this.statemachine");
+		statemachine.assignTo("this._statemachine");
 		generateActionsForState(sm, statemachine, ctx);
 		
 		// TODO: Why is this state specifically stored in the object? It doesn't seem like it's used anywhere outside this function...
 		StateJSState initial = JSSourceBuilder.stateJSState(section, "_initial", "PseudoState");
-		initial.assignTo("this._initial_" + ThingMLElementHelper.qname(sm, "_"));
-		initial.setParent("this.statemachine");
+		initial.assignTo("let _initial_" + ThingMLElementHelper.qname(sm, "_"));
+		initial.setParent("this._statemachine");
 		if (sm.isHistory()) initial.setPseudoStateKind("ShallowHistory");
 		else initial.setPseudoStateKind("Initial");
 		
 		for (Region r : sm.getRegion()) {
-			ctx.addContextAnnotation("container", "this.statemachine");
+			ctx.addContextAnnotation("container", "this._statemachine");
 			generateRegion(r, section, ctx);
 		}
 		for (State s : sm.getSubstate()) {
 			if (!(s instanceof Session)) {
-				ctx.addContextAnnotation("container", "this.statemachine");
+				ctx.addContextAnnotation("container", "this._statemachine");
 				generateState(s, section, ctx);
 			}
 		}
 		
 		// Handlers
-		section.append("this._initial_" + ThingMLElementHelper.qname(sm, "_") + ".to(" + ThingMLElementHelper.qname(sm.getInitial(), "_") + ");");
+		section.append("_initial_" + ThingMLElementHelper.qname(sm, "_") + ".to(" + ThingMLElementHelper.qname(sm.getInitial(), "_") + ");");
 		for (Handler h : StateHelper.allEmptyHandlers(sm)) {
 			generateHandler(h, null, null, section, ctx);
 		}
@@ -250,23 +254,23 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 			// FIXME: It also seems like regions inside sessions should not work in JavaScript here...
 			Session sm = (Session)cs;
 			StateJSState statemachine = JSSourceBuilder.stateJSState(section, sm.getName() != null ? sm.getName() : "default", "StateMachine");
-			statemachine.assignTo("this.statemachine");
+			statemachine.assignTo("this._statemachine");
 			
 			StateJSState initial = JSSourceBuilder.stateJSState(section, "_initial", "PseudoState");
-			initial.assignTo("this._initial_" + ThingMLElementHelper.qname(sm, "_"));
-			initial.setParent("this.statemachine");
+			initial.assignTo("let _initial_" + ThingMLElementHelper.qname(sm, "_"));
+			initial.setParent("this._statemachine");
 			if (sm.isHistory()) initial.setPseudoStateKind("ShallowHistory");
 			else initial.setPseudoStateKind("Initial");
 			
 			for (State s : sm.getSubstate()) {
 				if (!(s instanceof Session)) {
-					ctx.addContextAnnotation("container", "this.statemachine");
+					ctx.addContextAnnotation("container", "this._statemachine");
 					generateState(s, section, ctx);
 				}
 			}
 			
 			// Handlers
-			section.append("this._initial_" + ThingMLElementHelper.qname(sm, "_") + ".to(" + ThingMLElementHelper.qname(sm.getInitial(), "_") + ");");
+			section.append("_initial_" + ThingMLElementHelper.qname(sm, "_") + ".to(" + ThingMLElementHelper.qname(sm.getInitial(), "_") + ");");
 			for (Handler h : StateHelper.allEmptyHandlersSC(cs)) {
 				generateHandler(h, null, null, section, ctx);
 			}
@@ -402,7 +406,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	protected void generateInternalTransition(InternalTransition t, Message msg, Port p, Section section, Context ctx) {
 		String containerName = ThingMLElementHelper.qname((State)t.eContainer(), "_");
 		if (t.eContainer() instanceof CompositeState && t.eContainer().eContainer() instanceof Thing) // Should be root statemachine
-			containerName = "this.statemachine";
+			containerName = "this._statemachine";
 		
 		StateJSTransition transition = JSSourceBuilder.stateJSTransition(section, containerName);
 		

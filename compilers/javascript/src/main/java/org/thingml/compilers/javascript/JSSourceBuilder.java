@@ -144,7 +144,6 @@ public class JSSourceBuilder extends SourceBuilder {
 	
 	public static class ReactComponent extends ES6Class {
 		protected JSFunction render;
-		protected Section renderReturn;
 		
 		public ReactComponent(Section parent, String name) {
 			super(parent, name);
@@ -153,13 +152,10 @@ public class JSSourceBuilder extends SourceBuilder {
 			this.constructor.body.append("super();");
 			
 			this.render = jsFunction(this.body, "render");
-			this.render.body.append("return (");
-			this.renderReturn = this.render.body.section("render-return").lines().indent();
-			this.render.body.append(");");
 		}
 		
-		public Section renderReturn() {
-			return this.renderReturn;
+		public Section render() {
+			return this.render.body();
 		}
 	}
 	

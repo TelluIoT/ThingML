@@ -98,16 +98,16 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         	{
         		JSFunction deleteFunction = thingClass.addMethod("_delete");
         		Section body = deleteFunction.body();
-        		body.append("this.statemachine = null;")
-        			.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;")
+        		body.append("this._statemachine = null;")
+        			.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;")
         			.append("this.bus.removeAllListeners();");
         	}
         	/* ----- Public API for third parties ----- */
         	{
         		JSFunction initFunction = thingClass.addMethod("_init");
         		Section body = initFunction.body();
-        		body.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance\");")
-        			.append("StateJS.initialise(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance);")
+        		body.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance\");")
+        			.append("StateJS.initialise(this._statemachine, this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance);")
         			.append("this.ready = true;");
         	}
         	{
@@ -117,7 +117,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         		body.comment("msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}");
         		body.append("if (this.ready) {");
         		Section ifReady = body.section("if").lines().indent();
-        		ifReady.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);");
+        		ifReady.append("StateJS.evaluate(this._statemachine, this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);");
         		if(ThingHelper.hasSession(thing))
         			ifReady.append("this.forks.forEach(function(fork){")
         			       .section("foreach").lines().indent()

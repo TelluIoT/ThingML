@@ -16,12 +16,13 @@
  */
 package org.thingml.compilers.javascript.react;
 
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSCfgBuildCompiler;
 import org.thingml.xtext.thingML.Configuration;
+
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.WriterConfig;
 
 public class ReactJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	@Override
@@ -30,16 +31,20 @@ public class ReactJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		copyResourceToFile("react/index.html", "index.html", ctx);
 		copyResourceToFile("react/webpack.config.js", "webpack.config.js", ctx);
 		copyResourceToFile("react/babelrc", ".babelrc", ctx);
-		copyResourceToFile("react/StateJSWrappers.js", "lib/StateJSWrappers.js", ctx);
+		copyResourceToFile("react/Wrappers.js", "lib/Wrappers.js", ctx);
 		
 		// Write package.json
-		writeLinesToFile(
-			readResource("react/package.json").stream().map(new Function<String, String>() {
-				@Override
-				public String apply(String line) {
-					return line.replace("<NAME>", cfg.getName());
-				}
-			}).collect(Collectors.toList())
-		, "package.json", ctx);
+		String json = String.join("\n",readResource("react/package.json"));
+		JsonObject pkg = Json.parse(json).asObject();
+		
+		pkg.set("name", cfg.getName());
+		pkg.set("description", cfg.getName()+" configuration generated from ThingML");
+		
+		JsonObject deps = pkg.get("dependencies").asObject();
+		//TODO: Only add materials if we use it
+		deps.add("material-ui", "^0.20.0");
+		
+		StringBuilder builder = ctx.getBuilder("package.json");
+        builder.append(pkg.toString(WriterConfig.PRETTY_PRINT));
 	}
 }
