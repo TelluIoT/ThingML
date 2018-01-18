@@ -30,7 +30,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 	@Check(NORMAL)
 	def checkDanglingPorts(Configuration cfg) {
 		cfg.instances.forEach[inst, i|
-			val unconnected = inst.type.ports.filter[port | port instanceof RequiredPort].filter[requiredPort|
+			val unconnected = inst.type.ports.filter[port | port instanceof RequiredPort && !(port as RequiredPort).optional].filter[requiredPort|
 				return !cfg.connectors.exists[connector|
 					if (connector instanceof Connector)
 						return (connector as Connector).cli === inst && (connector as Connector).required === requiredPort
@@ -39,8 +39,8 @@ class PortsUsage extends ThingMLValidatorCheck {
 				]
 			]
 			if (!unconnected.empty) {
-				val msg = unconnected.join("Required ports (",", ",") are not connected")[name]
-				warning(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "required-ports-not-connected")
+				val msg = unconnected.join("Non optional required ports (",", ",") are not connected")[name]
+				error(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "required-ports-not-connected")
 			}
 		]
 	}
