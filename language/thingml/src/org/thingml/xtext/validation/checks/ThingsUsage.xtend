@@ -91,6 +91,25 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
+	/*
+	 * This check is disabled for now because it crashes when trying to add warnings on code from functions which are included from fragments.
+	 * When cheking a file, it should not check the expressions which are imported from another file (e.g. via a fragment)
+	 * 
+	 * See issue #204
+	 * 
+	 * 
+	 * 208  [main] ERROR text.validation.CompositeEValidator  - Error executing EValidator
+java.lang.IllegalArgumentException: You can only add issues for EObjects contained in the currently validated resource 'file:/home/franck/checkout/Tryggi3D/software/bluetooth/lib/ble/ATTProxy.thingml'. But the given EObject was contained in 'file:/home/franck/checkout/Tryggi3D/software/bluetooth/lib/ble/UUID.thingml'
+	at org.eclipse.xtext.validation.AbstractDeclarativeValidator.checkIsFromCurrentlyCheckedResource(AbstractDeclarativeValidator.java:571)
+	at org.eclipse.xtext.validation.AbstractDeclarativeValidator.acceptInfo(AbstractDeclarativeValidator.java:587)
+	at org.eclipse.xtext.validation.AbstractDeclarativeValidator.info(AbstractDeclarativeValidator.java:366)
+	at org.thingml.xtext.validation.checks.ThingsUsage.lambda$5(ThingsUsage.java:171)
+	at java.util.ArrayList.forEach(ArrayList.java:1249)
+	at org.thingml.xtext.validation.checks.ThingsUsage.checkPSM(ThingsUsage.java:174)
+	 * 
+	 */
+
+	/*
 	@Check(NORMAL)
 	def checkPSM(Thing t) {
 		val uri = t.eResource.URI.toString
@@ -112,4 +131,6 @@ class ThingsUsage extends ThingMLValidatorCheck {
 				info(msg, ext.eContainer, ext.eContainingFeature, "psm-in-basedir")
 		]		
 	}
+  */
+	
 }
