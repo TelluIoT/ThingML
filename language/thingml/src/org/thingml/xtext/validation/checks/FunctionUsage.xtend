@@ -22,6 +22,9 @@ import org.thingml.xtext.validation.TypeChecker
 import org.thingml.xtext.helpers.ThingHelper
 import org.thingml.xtext.helpers.UnimplementedFunction
 import org.thingml.xtext.helpers.FunctionWithMultipleImplem
+import org.thingml.xtext.thingML.ConditionalAction
+import org.thingml.xtext.thingML.Action
+import org.thingml.xtext.thingML.ActionBlock
 
 class FunctionUsage extends ThingMLValidatorCheck {
 
@@ -48,7 +51,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 	}
 
 	@Check(NORMAL)
-	def checkParameters2(Function f) {
+	def checkParameters(Function f) {
 		if (!f.abstract) { // if function is concrete then we check its implementation
 			val refs = ThingMLHelpers.getAllExpressions(f, PropertyReference)
 			val assigns = ActionHelper.getAllActions(f, VariableAssignment)
@@ -73,9 +76,65 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			}
 		}
 	}
+	
+	private def boolean returns(Action a) {
+		if (a instanceof ReturnAction)
+			return true
+		if (a instanceof ActionBlock) {
+			val block = a as ActionBlock
+			return block.actions.reverseView.exists[aa | returns(aa)]
+		}
+		if (a instanceof ConditionalAction) {
+			val ca = a as ConditionalAction
+			return returns(ca.action) && ca.elseAction !== null && returns(ca.elseAction)
+		}		
+		return false
+	}
+	
+	@Check(FAST)
+	def checkReturnOnlyInFunction(ReturnAction r) {
+		var parent = r.eContainer as EObject
+		while (parent !== null && !(parent instanceof Function)) {
+			parent = parent.eContainer as EObject
+		}
+		if (parent === null || (parent as Function).typeRef === null) {
+			val c = r.eContainer.eGet(r.eContainingFeature)
+			val msg = "Return action is only allowed in functions with a return type."
+			if (c instanceof EList)
+				error(msg, r.eContainer, r.eContainingFeature, (c as EList).indexOf(r), "return-not-allowed")
+			else
+				error(msg, r.eContainer, r.eContainingFeature, "return-not-allowed")			
+		}
+	}
+	
+	@Check(FAST)
+	def checkBlock(ActionBlock block) {
+		val firstReturn = block.actions.findFirst[a | returns(a)]
+		if (firstReturn !== null) {
+			val indexOfFirstReturn = block.actions.indexOf(firstReturn)
+			if (indexOfFirstReturn < block.actions.size - 1) {
+				val msg = "The code from here and below is unreachable (the code above will return in any case)"
+				error(msg, block, ThingMLPackage.eINSTANCE.actionBlock_Actions, indexOfFirstReturn + 1, "unreachable-code", indexOfFirstReturn.toString)					
+			}
+		}
+	}
 
 	@Check(FAST)
-	def checkParameters1(Function f) {
+	def checkReturnType2(Function f) {
+		if (!f.abstract && f.typeRef !== null && f.typeRef.type !== null) {
+			if (f.body instanceof ReturnAction || (f.body instanceof ConditionalAction && returns(f.body)))
+				return;
+			if (!returns(f.body)) {
+				val actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
+				val msg = "Function " + f.name + " must return " + actualType.name + ". Found no return action."
+				error(msg, f.eContainer, f.eContainingFeature, (f.eContainer as Thing).functions.indexOf(f), "missing-return")
+				return;
+			}
+		}
+	}
+
+	@Check(FAST)
+	def checkReturnType(Function f) {
 		if (!f.abstract) { // if function is concrete then we check its implementation
 			// Checks return type
 			if (f.typeRef !== null && f.typeRef.type !== null) { // non-void function

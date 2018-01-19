@@ -13,9 +13,9 @@ import org.thingml.xtext.thingML.Connector
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.RequiredPort
 import org.thingml.xtext.thingML.Thing
-import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.ThingMLFactory
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.thingml.xtext.thingML.ActionBlock
 
 /**
  * Custom quickfixes.
@@ -112,6 +112,24 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 		]
 	}	
 	
+	@Fix("unreachable-code")
+	def removeUnreachableCode(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Remove unreachable code",
+			"Remove unreachable code",
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof ActionBlock) {
+				val block = obj as ActionBlock
+				val index = Integer.parseInt(issue.data.get(0))
+				while(block.actions.size > index + 1) {
+					block.actions.remove(index + 1)	
+				}							
+			}
+		]
+	}
+	
 	@Fix("function-not-implemented")
 	def implementFunction(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(
@@ -128,6 +146,13 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 				val func = ThingMLFactory.eINSTANCE.createFunction
 				func.name = abs.name
 				func.abstract = false
+				if (abs.typeRef !== null) {
+					val typeRef = ThingMLFactory.eINSTANCE.createTypeRef
+					typeRef.cardinality = EcoreUtil.copy(abs.typeRef.cardinality)
+					typeRef.isArray = abs.typeRef.isArray
+					typeRef.type = abs.typeRef.type
+					func.typeRef = typeRef
+				}
 				val block = ThingMLFactory.eINSTANCE.createActionBlock
 				func.body = block
 				abs.parameters.forEach[ p | 
