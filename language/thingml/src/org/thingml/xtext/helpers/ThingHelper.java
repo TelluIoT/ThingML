@@ -73,11 +73,11 @@ public class ThingHelper {
 				cf = fn;
 				count++;
 			}
-		}
+		}		
 		if (cf == null)
-			throw new Exception("Cannot bind ThingML function " + f.getName() + " in thing " + self.getName());
+			throw new UnimplementedFunction("Cannot bind ThingML function " + f.getName() + " in thing " + self.getName());
 		if (count > 1)
-			throw new Exception("ThingML function " + f.getName() + " in thing " + self.getName() + " is bound to multiple concrete implementations");
+			throw new FunctionWithMultipleImplem("ThingML function " + f.getName() + " in thing " + self.getName() + " is bound to multiple concrete implementations");
 		return cf;
 	}
 
@@ -297,6 +297,5 @@ public class ThingHelper {
 			}
 		}
 		return result;
-	}
-
+	}	
 }

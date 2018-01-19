@@ -20,6 +20,8 @@ import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
 import org.thingml.xtext.helpers.ThingHelper
+import org.thingml.xtext.helpers.UnimplementedFunction
+import org.thingml.xtext.helpers.FunctionWithMultipleImplem
 
 class FunctionUsage extends ThingMLValidatorCheck {
 
@@ -29,12 +31,18 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		ThingMLHelpers.allFunctions(t).filter[f | f.abstract].forEach[f |
 			try {
 				ThingHelper.getConcreteFunction(t, f)				
-			} catch (Exception e) {
+			} catch (UnimplementedFunction e) {
 				val origin = ThingMLHelpers.findContainingThing(f)
 				if (origin == t)
-					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Functions, t.functions.indexOf(f), "function-bind")
+					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Functions, t.functions.indexOf(f), "function-not-implemented", f.name)
 				else
-					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(origin), "function-bind")
+					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(origin), "function-not-implemented", f.name)
+			} catch (FunctionWithMultipleImplem e) {
+				val origin = ThingMLHelpers.findContainingThing(f)
+				if (origin == t)
+					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Functions, t.functions.indexOf(f), "function-many-impl", f.name)
+				else
+					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(origin), "function-many-impl", f.name)
 			}
 		]
 	}

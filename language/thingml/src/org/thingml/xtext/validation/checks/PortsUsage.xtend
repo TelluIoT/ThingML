@@ -40,7 +40,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 						return (connector as ExternalConnector).inst === inst && (connector as ExternalConnector).port === requiredPort
 				]
 			].forEach[port |  
-				val msg = "Non optional required ports " + port.name + " is not connected"
+				val msg = "Non optional required port " + port.name + " is not connected"
 				error(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "required-ports-not-connected", inst.name + "/" + port.name)
 			]
 		]

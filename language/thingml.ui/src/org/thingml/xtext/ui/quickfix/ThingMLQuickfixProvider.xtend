@@ -12,6 +12,10 @@ import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.thingML.Connector
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.RequiredPort
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.thingML.ThingMLFactory
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 /**
  * Custom quickfixes.
@@ -104,6 +108,39 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 				]
 				cfg.connectors.removeAll(toBeRemoved)
 				cfg.instances.remove(i)
+			}
+		]
+	}	
+	
+	@Fix("function-not-implemented")
+	def implementFunction(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Implement function " + if (issue.data!==null) issue.data.get(0) else "", //FIXME: for some reasons, issue.data seems to be sometimes null...
+			"Implement function " + if (issue.data!==null) issue.data.get(0) else "", //FIXME: for some reasons, issue.data seems to be sometimes null...
+			"" // Image
+		)[ obj, context | 
+			if (issue.data !== null && obj instanceof Thing) {
+				val thing = obj as Thing
+				val fName = issue.data.get(0)
+				val abs = ThingMLHelpers.allFunctions(thing).findFirst[ f | f.name == fName && f.abstract]
+				
+				val func = ThingMLFactory.eINSTANCE.createFunction
+				func.name = abs.name
+				func.abstract = false
+				val block = ThingMLFactory.eINSTANCE.createActionBlock
+				func.body = block
+				abs.parameters.forEach[ p | 
+					val param = ThingMLFactory.eINSTANCE.createParameter
+					param.name = p.name
+					val typeRef = ThingMLFactory.eINSTANCE.createTypeRef
+					typeRef.cardinality = EcoreUtil.copy(p.typeRef.cardinality)
+					typeRef.isArray = p.typeRef.isArray
+					typeRef.type = p.typeRef.type
+					param.typeRef = typeRef
+					func.parameters.add(param)
+				]
+				thing.functions.add(func)
 			}
 		]
 	}	
