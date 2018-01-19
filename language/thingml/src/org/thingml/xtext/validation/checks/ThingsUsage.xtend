@@ -24,7 +24,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		if (i.type.fragment) {
 			val msg = "Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() +
 				". Make thing " + i.getType().getName() + " concrete (not a fragment) if you want to instantiate it.";
-			error(msg, i.eContainer, i.eContainingFeature, (i.eContainer as Configuration).instances.indexOf(i), "fragment-instanciation")
+			error(msg, i.eContainer, i.eContainingFeature, (i.eContainer as Configuration).instances.indexOf(i), "fragment-instanciation", i.name)
 		}
 	}
 	

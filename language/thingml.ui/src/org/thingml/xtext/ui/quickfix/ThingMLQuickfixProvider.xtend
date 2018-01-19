@@ -7,10 +7,11 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
-import org.thingml.xtext.thingML.Instance
 import org.thingml.xtext.constraints.ThingMLHelpers
-import org.thingml.xtext.thingML.RequiredPort
 import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.Connector
+import org.thingml.xtext.thingML.ExternalConnector
+import org.thingml.xtext.thingML.RequiredPort
 
 /**
  * Custom quickfixes.
@@ -48,8 +49,8 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 	def makeOptional(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(
 			issue,
-			"Make port optional " + issue.data.get(0),
-			"Make port optional " + issue.data.get(0),
+			"Make port " + issue.data.get(0) + " optional",
+			"Make port " + issue.data.get(0) + " optional",
 			"" // Image
 		)[ obj, context | 
 			if (obj instanceof Configuration) {
@@ -62,4 +63,48 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 			}
 		]
 	}
+	
+	@Fix("fragment-instanciation")
+	def makeConcrete(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Make thing " + issue.data.get(0) + " concrete",
+			"Make thing " + issue.data.get(0) + " concrete",
+			"" // Image
+		)[ obj, context | 
+			if (obj instanceof Configuration) {
+				val cfg = obj as Configuration
+				val iName = issue.data.get(0)
+				val i = cfg.instances.findFirst[i | i.name == iName]
+				i.type.fragment = false				
+			}
+		]
+	}
+	
+	@Fix("fragment-instanciation")
+	def removeInstance(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Remove instance " + issue.data.get(0),
+			"Remove instance " + issue.data.get(0),
+			"" // Image
+		)[ obj, context | 
+			if (obj instanceof Configuration) {
+				val cfg = obj as Configuration
+				val iName = issue.data.get(0)
+				val i = cfg.instances.findFirst[i | i.name == iName]
+				val toBeRemoved = cfg.connectors.filter[ c |
+					if (c instanceof ExternalConnector) {
+						val ec = c as ExternalConnector
+						return ec.inst == i
+					} else {
+						val conn = c as Connector
+						return conn.cli == i || conn.srv == i
+					}
+				]
+				cfg.connectors.removeAll(toBeRemoved)
+				cfg.instances.remove(i)
+			}
+		]
+	}	
 }
