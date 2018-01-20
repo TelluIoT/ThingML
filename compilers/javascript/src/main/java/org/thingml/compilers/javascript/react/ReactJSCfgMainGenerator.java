@@ -23,7 +23,6 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
-import org.thingml.compilers.javascript.JSSourceBuilder.ES6Class;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSFunction;
 import org.thingml.compilers.javascript.JSSourceBuilder.ReactComponent;
 import org.thingml.xtext.helpers.ConfigurationHelper;
@@ -43,7 +42,7 @@ public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
 		Section imports = builder.section("imports").lines();
 		imports.append("import React from 'react';");
 		imports.append("import {render} from 'react-dom';");
-		imports.append("import {Wrapper} from '../lib/Wrappers.js';");
+		imports.append("import {Wrapper,extendContainer} from '../lib/Wrappers.js';");
 		// Import things
 		for (Thing t : ConfigurationHelper.allThings(cfg)) {
 			String name = ctx.firstToUpper(t.getName());
@@ -71,34 +70,14 @@ public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
             constructor.body().append(inst.getName() + "._init();");
         }
         constructor.body().comment("Store instances");
-        Section instArray = constructor.body().section("instances-array")
-        		            .append("this._instances = ").section("array")
-        		            .surroundWith("[", "]", 0).joinWith(", ")
-        		            .after(";");
+        constructor.body().append("extendContainer(this, 'instance');");
         for (Instance instA : cfg.getInstances())
-        	instArray.append(instA.getName());
+        	constructor.body().append("this.addinstance("+instA.getName()+");");
         
 		// Create render function
-        ReactTemplates.configuartionImports(cfg, imports);
-        ReactTemplates.configurationRender(cfg, cfgComponent.render());
+        ReactTemplates.configuartionImports(cfg, imports, jctx);
+        ReactTemplates.configurationRender(cfg, cfgComponent.render(), jctx);
 		builder.append("");
-		
-		// Create instances function
-		JSFunction instancesFunc = cfgComponent.addMethod("instances");
-		instancesFunc.addArgument("...names");
-		{
-			Section body = instancesFunc.body();
-			body.append("const result = [];");
-			body.append("for (let instance of this._instances) {");
-			Section forBody = body.section("for-body").lines().indent();
-			forBody.append("const inList = names.length == 0 || names.reduce((res,name) => res || name == instance.name, false);");
-			forBody.append("if (inList) {");
-			Section ifBody = forBody.section("if-body").lines().indent();
-			ifBody.append("result.push(<Wrapper key={instance.name} instance={instance} />);");
-			forBody.append("}");
-			body.append("}");
-			body.append("return result;");
-		}
 		
 		// Call react-render
 		builder.section("react-render")

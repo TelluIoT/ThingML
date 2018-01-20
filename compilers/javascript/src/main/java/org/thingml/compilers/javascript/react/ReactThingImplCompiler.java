@@ -30,6 +30,9 @@ import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 
 public class ReactThingImplCompiler extends JSThingImplCompiler {
@@ -43,12 +46,12 @@ public class ReactThingImplCompiler extends JSThingImplCompiler {
 		// Add imports
 		Section imports = builder.section("imports").lines();
 		imports.append("import React from 'react';");
-		imports.append("import {extendObservable} from 'mobx';");
+		imports.append("import {extendObservable, observable} from 'mobx';");
 		imports.append("import {StateJS, Wrapper} from '../lib/Wrappers.js';");
 		imports.append("const EventEmitter = require('events').EventEmitter;");
 		builder.append("");
 		
-		ReactTemplates.thingImports(thing, imports);
+		ReactTemplates.thingImports(thing, imports, jctx);
 		
 		Section main = builder.section("main").lines();
 		
@@ -63,12 +66,43 @@ public class ReactThingImplCompiler extends JSThingImplCompiler {
 		
 		// Add rendering template
 		JSFunction render = component.addMethod("render");
-		ReactTemplates.thingRender(thing, render.body());
+		ReactTemplates.thingRender(thing, render.body(), jctx);
 		
-		JSFunction statemachine = component.addMethod("statemachine");
+		JSFunction statemachine = component.addMethod("getstatemachine");
 		statemachine.body().append("return <Wrapper instance={this._statemachine} />;");
 		
+		if (ThingHelper.hasSession(thing)) {
+			JSFunction sessions = component.addMethod("getsessions");
+			sessions.addArgument("...names");
+			{
+				Section body = sessions.body();
+				body.append("const result = [];");
+				body.append("if (names.length == 0) {");
+				Section ifBody = body.section("if").indent().lines();
+				ifBody.append("this.forks.forEach((fork, i) => {");
+				ifBody.section("forEach").lines().indent().append("result.push(<Wrapper key={fork.name+i} instance={fork}/>);");
+				ifBody.append("});");
+				body.append("} else {");
+				Section elseBody = body.section("else").indent().lines();
+				elseBody.append("this.forks.forEach((fork, i) => {");
+				Section forBody = elseBody.section("forEach").lines().indent();
+				forBody.append("if (fork.name == name) {");
+				forBody.section("if").lines().indent().append("result.push(<Wrapper key={fork.name+i} instance={fork}/>);");
+				forBody.append("}");
+				elseBody.append("});");
+				body.append("}");
+				body.append("return result;");
+			}
+		}
+		
 		return component;
+	}
+	
+	@Override
+	protected void generateChildren(Thing thing, Section parent, JSContext jctx) {
+		parent.comment("Children");
+		parent.append("this.forks = observable.array();");
+		parent.append("");
 	}
 	
 	@Override
@@ -106,7 +140,41 @@ public class ReactThingImplCompiler extends JSThingImplCompiler {
 		super.generateStateMachine(sm, section, ctx);
 		section.append("this._statemachine.template((state) => {");
 		Section render = section.section("render").lines().indent();
-		ReactTemplates.statecontainerRender(sm, "Statechart", render);
+		ReactTemplates.statecontainerRender(sm, "Statechart", render, (JSContext)ctx);
+		section.append("});");
+	}
+	
+	@Override
+	protected void generateCompositeState(StateContainer cs, Section section, Context ctx) {
+		super.generateCompositeState(cs, section, ctx);
+		if (cs instanceof Session) {
+			section.append("this._statemachine.template((state) => {");
+			Section render = section.section("render").lines().indent();
+			ReactTemplates.statecontainerRender(cs, "Session", render, (JSContext)ctx);
+			section.append("});");
+		} else {
+			section.append(ThingMLElementHelper.qname(cs, "_")+".template((state) => {");
+			Section render = section.section("render").lines().indent();
+			ReactTemplates.statecontainerRender(cs, "Composite state", render, (JSContext)ctx);
+			section.append("});");
+		}
+	}
+	
+	@Override
+	public void generateRegion(StateContainer r, Section section, Context ctx) {
+		super.generateRegion(r, section, ctx);
+		section.append(ThingMLElementHelper.qname(r, "_")+"_reg.template((state) => {");
+		Section render = section.section("render").lines().indent();
+		ReactTemplates.statecontainerRender(r, "Region", render, (JSContext)ctx);
+		section.append("});");
+	}
+	
+	@Override
+	protected void generateAtomicState(State s, Section section, Context ctx) {
+		super.generateAtomicState(s, section, ctx);
+		section.append(ThingMLElementHelper.qname(s, "_")+".template((state) => {");
+		Section render = section.section("render").lines().indent();
+		ReactTemplates.stateRender(s, render, (JSContext)ctx);
 		section.append("});");
 	}
 }

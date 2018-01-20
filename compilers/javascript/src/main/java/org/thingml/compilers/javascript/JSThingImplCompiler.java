@@ -51,6 +51,12 @@ import org.thingml.xtext.thingML.Transition;
 public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	DebugProfile debugProfile;
 	
+	protected void generateChildren(Thing thing, Section parent, JSContext jctx) {
+		parent.comment("Children");
+		parent.append("this.forks = [];");
+		parent.append("");
+	}
+	
 	protected void generateProperties(Thing thing, Section parent, JSContext jctx) {
 		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
 		//for (Property p : ThingHelper.allUsedProperties(thing)) { //FIXME: allUsedProperties does not work in some cases where we use includes...
@@ -127,11 +133,8 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 				.append("");
 			
 			// Session forks
-			if (ThingHelper.hasSession(thing)) {
-				body.comment("Children")
-					.append("this.forks = [];")
-					.append("");
-			}
+			if (ThingHelper.hasSession(thing))
+				generateChildren(thing, body, jctx);
 			
 			// Properties
 			body.comment("Attributes");

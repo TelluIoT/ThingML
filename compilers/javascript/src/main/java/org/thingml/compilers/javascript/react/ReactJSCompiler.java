@@ -16,13 +16,21 @@
  */
 package org.thingml.compilers.javascript.react;
 
+import java.util.function.Predicate;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.javascript.JSCompiler;
 import org.thingml.compilers.javascript.JSThingApiCompiler;
 import org.thingml.compilers.javascript.browser.BrowserThingActionCompiler;
 import org.thingml.utilities.logging.Logger;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public class ReactJSCompiler extends JSCompiler {
@@ -51,10 +59,38 @@ public class ReactJSCompiler extends JSCompiler {
 	public String getDescription() {
 		return "Generates Javascript and HTML for Web Browser user-interfaces using React components and JSX templates";
 	}
-
+	
+	// Check if the default templates should be used
+	protected boolean checkRenderTemplates(Configuration cfg) {
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "template") || AnnotatedElementHelper.hasAnnotation(cfg, "templatefun")) return true;
+		else return ConfigurationHelper.allUsedThings(cfg).stream().anyMatch(new Predicate<Thing>() {
+			@Override
+			public boolean test(Thing type) {
+				if (AnnotatedElementHelper.hasAnnotation(type, "template") || AnnotatedElementHelper.hasAnnotation(type, "templatefun")) return true;
+				if (type.getBehaviour() != null) {
+					if (CompositeStateHelper.allContainedStateContainers(type.getBehaviour()).stream().anyMatch(new Predicate<StateContainer>() {
+						@Override
+						public boolean test(StateContainer sc) {
+							return AnnotatedElementHelper.hasAnnotation(sc, "template") || AnnotatedElementHelper.hasAnnotation(sc, "templatefun");
+						}
+					})) return true;
+					if (CompositeStateHelper.allContainedStatesIncludingSessions(type.getBehaviour()).stream().anyMatch(new Predicate<State>() {
+						@Override
+						public boolean test(State s) {
+							// TODO Auto-generated method stub
+							return AnnotatedElementHelper.hasAnnotation(s, "template") || AnnotatedElementHelper.hasAnnotation(s, "templatefun");
+						}
+					})) return true;
+				}
+				return false;
+			}
+		});
+	}
 
 	@Override
 	public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
+		if (checkRenderTemplates(cfg)) this.ctx.addContextAnnotation("react-custom-templates", "true");
+		
 		return super.do_call_compiler(cfg, log, options);
 	}
 
