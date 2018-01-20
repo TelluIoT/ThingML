@@ -126,8 +126,10 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
 		if (action.getProperty().eContainer() instanceof Thing) {
 			// we can only listen to properties of a Thing, not all local variables, etc
-			builder.append("this.bus.emit('" + action.getProperty().getName() + "=', this."
-					+ ctx.getVariableName(action.getProperty()) + ");\n");
+			builder.append(ctx.getContextAnnotation("thisRef"));
+			builder.append("bus.emit('" + action.getProperty().getName() + "=', ");
+			builder.append(ctx.getContextAnnotation("thisRef"));
+			builder.append(ctx.getVariableName(action.getProperty()) + ");\n");
 		}
 	}
 
@@ -136,7 +138,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		if (!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
 			builder.append("setImmediate(() => ");
 		}
-		builder.append("this.bus.emit(");
+		builder.append(ctx.getContextAnnotation("thisRef"));
+		builder.append("bus.emit(");
 		builder.append("'" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
 		for (Expression pa : action.getParameters()) {
 			builder.append(", ");
@@ -158,20 +161,28 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		for (Property p : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(session))) {
 			if (!AnnotatedElementHelper.isDefined(p, "private", "true") && p.eContainer() instanceof Thing) {
 				if (p.getTypeRef().isIsArray() || p.getTypeRef().getCardinality() != null) {
-					builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
+					builder.append(", ");
+					builder.append(ctx.getContextAnnotation("thisRef"));
+					builder.append(ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
 				} else {
-					builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var");
+					builder.append(", ");
+					builder.append(ctx.getContextAnnotation("thisRef"));
+					builder.append(ThingMLElementHelper.qname(p, "_") + "_var");
 				}
 			}
 		}
-		builder.append(", this.debug);\n");
-		builder.append("this.forks.push(" + session.getName() + ");\n");
+		builder.append(", ");
+		builder.append(ctx.getContextAnnotation("thisRef"));
+		builder.append("debug);\n");
+		builder.append(ctx.getContextAnnotation("thisRef"));
+		builder.append("forks.push(" + session.getName() + ");\n");
 		builder.append(session.getName() + "._init();\n");
 	}
 
 	@Override
 	public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-		builder.append("this." + action.getFunction().getName() + "(");
+		builder.append(ctx.getContextAnnotation("thisRef"));
+		builder.append(action.getFunction().getName() + "(");
 		int i = 0;
 		for (Expression p : action.getParameters()) {
 			if (i > 0)
@@ -258,10 +269,12 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 							generate(p.getInit(), builder, ctx);
 						}
 					} else {
-						builder.append("this." + ctx.getVariableName(expression.getProperty()));
+						builder.append(ctx.getContextAnnotation("thisRef"));
+						builder.append(ctx.getVariableName(expression.getProperty()));
 					}
 				} else {
-					builder.append("this." + ctx.getVariableName(expression.getProperty()));
+					builder.append(ctx.getContextAnnotation("thisRef"));
+					builder.append(ctx.getVariableName(expression.getProperty()));
 				}
 			} else {
 				Property p = (Property) expression.getProperty();
@@ -281,7 +294,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-		builder.append("this." + expression.getFunction().getName() + "(");
+		builder.append(ctx.getContextAnnotation("thisRef"));
+		builder.append(expression.getFunction().getName() + "(");
 		int i = 0;
 		for (Expression p : expression.getParameters()) {
 			if (i > 0)
@@ -316,7 +330,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(Increment action, StringBuilder builder, Context ctx) {
 		if (action.getVar() instanceof Property) {
-			builder.append("this.");
+			builder.append(ctx.getContextAnnotation("thisRef"));
 		}
 		super.generate(action, builder, ctx);
 	}
@@ -324,7 +338,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(Decrement action, StringBuilder builder, Context ctx) {
 		if (action.getVar() instanceof Property) {
-			builder.append("this.");
+			builder.append(ctx.getContextAnnotation("thisRef"));
 		}
 		super.generate(action, builder, ctx);
 	}

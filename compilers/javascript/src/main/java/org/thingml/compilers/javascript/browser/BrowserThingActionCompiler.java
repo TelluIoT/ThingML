@@ -32,7 +32,8 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
     		builder.append("setTimeout(() => ");
     	}
-        builder.append("this.bus.emit('" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
+    	builder.append(ctx.getContextAnnotation("thisRef"));
+        builder.append("bus.emit('" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
         for (Expression pa : action.getParameters()) {
             builder.append(", ");
             generate(pa, builder, ctx);
