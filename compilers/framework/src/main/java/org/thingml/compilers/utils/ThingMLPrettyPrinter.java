@@ -26,8 +26,8 @@ import org.thingml.xtext.thingML.*;
 public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     public static boolean USE_ELLIPSIS_FOR_PARAMS = true;
-    public static int MAX_BLOCK_SIZE = 8;
-    public static boolean HIDE_BLOCKS = false;
+    public static int MAX_BLOCK_SIZE = 3;
+    public static boolean HIDE_BLOCKS = true;
 
     public final static String NEW_LINE = "\\n";
     public final static String INDENT = "  "; //two blank spaces for indentation
@@ -64,10 +64,13 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(ActionBlock action, StringBuilder builder, Context ctx) {
         StringBuilder temp = new StringBuilder();
         if (action.getActions().size() > 1)
-            temp.append("do " + NEW_LINE);
+            temp.append("do");
+        if (!HIDE_BLOCKS) {
+        	temp.append("\n");
+        }
         indent_level++;
         if (HIDE_BLOCKS && action.getActions().size() > 1) {
-            temp.append("..." + NEW_LINE);
+            temp.append("...");
         } else {
             if (action.getActions().size() > MAX_BLOCK_SIZE) {
                 int i = 0;
@@ -95,7 +98,9 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         }
         indent_level--;
         if (action.getActions().size() > 1)
-            temp.append("end" + NEW_LINE);
+            temp.append("end");
+        if (!HIDE_BLOCKS)
+        	temp.append("\n");
         builder.append(temp.toString());
     }
 
@@ -384,7 +389,10 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
+    	if (expression.getReceiveMsg().getName() != null)
+    		builder.append(expression.getReceiveMsg().getName() + "." + expression.getParameter().getName());
+    	else
+    		builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
     }    
     
     @Override

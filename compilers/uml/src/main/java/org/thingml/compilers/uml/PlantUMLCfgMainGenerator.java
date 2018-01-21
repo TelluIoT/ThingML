@@ -167,7 +167,11 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             if (thing.getAnnotations().size() > 0)
                 classes.append("note left of " + thing.getName() + " : ");
             for(PlatformAnnotation a : thing.getAnnotations()) {
-                classes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
+                classes.append("<b>@" + a.getName() + "</b>");
+                if (a.getValue().length() > 16 || a.getValue().contains("\n"))
+                	classes.append(" <color:royalBlue>\"...\"</color>\\n");
+                else
+                	classes.append(" <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
             }
             if (thing.getAnnotations().size() > 0)
                 classes.append("\n");
@@ -246,7 +250,11 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             if (t.getAnnotations().size() > 0)
                 datatypes.append("note bottom of " + t.getName() + " : ");
             for(PlatformAnnotation a : t.getAnnotations()) {
-                datatypes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
+                datatypes.append("<b>@" + a.getName() + "</b>");
+                if (a.getValue().length() > 16 || a.getValue().contains("\n"))
+                	datatypes.append(" <color:royalBlue>\"...\"</color>\\n");
+                else
+                	datatypes.append(" <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
             }
             if (t.getAnnotations().size() > 0)
                 datatypes.append("\n");

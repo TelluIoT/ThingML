@@ -39,7 +39,7 @@ import org.thingml.xtext.thingML.Transition;
  */
 public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
-	public static boolean FACTORIZE_TRANSITIONS = false;
+	public static boolean FACTORIZE_TRANSITIONS = true;
 
 	private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
 		ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
