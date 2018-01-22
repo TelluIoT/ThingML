@@ -18,6 +18,7 @@ import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
+import org.thingml.xtext.helpers.AnnotatedElementHelper
 
 class VariableUsage extends ThingMLValidatorCheck {
 	
@@ -82,7 +83,8 @@ class VariableUsage extends ThingMLValidatorCheck {
 	def checkPropertyUsage(Thing thing) {
 		val usedProperties = ThingHelper.allUsedProperties(thing)
 		// Check all thing properties
-		thing.properties.forEach[p, i|
+		thing.properties.filter[p | !AnnotatedElementHelper.isDefined(p, "SuppressWarning", "NotUsed")]
+		.forEach[p, i|
 			val isUsed = usedProperties.contains(p)
 			if (!isUsed) {
 				val msg = "Property " + p.getName() + " of Thing " + thing.getName() + " is never used. Consider removing (or using) it.";
@@ -92,7 +94,8 @@ class VariableUsage extends ThingMLValidatorCheck {
 		// Check all state properties
 		if (thing.behaviour !== null) {
 			CompositeStateHelper.allContainedStatesIncludingSessions(thing.behaviour).forEach[state|
-				state.properties.forEach[p, i|
+				state.properties.filter[p | !AnnotatedElementHelper.isDefined(p, "SuppressWarning", "NotUsed")]
+				.forEach[p, i|
 					val isUsed = usedProperties.contains(p)
 					if (!isUsed) {
 						val msg = "Property " + p.getName() + " of Thing " + thing.getName() + " is never used. Consider removing (or using) it.";

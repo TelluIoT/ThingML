@@ -16,6 +16,7 @@ import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLFactory
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.thingml.xtext.thingML.ActionBlock
+import org.thingml.xtext.thingML.StateContainer
 
 /**
  * Custom quickfixes.
@@ -128,6 +129,40 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 				}							
 			}
 		]
+	}
+	
+	@Fix("state-unreachable")
+	def removeState(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Remove state " + issue.data.get(0),
+			"Remove state " + issue.data.get(0),
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof StateContainer) {
+				val sc = obj as StateContainer
+				val sName = issue.data.get(0)
+				val s = sc.substate.findFirst[st | st.name == sName]
+				sc.substate.remove(s)
+			}			
+		]		
+	}
+	
+	@Fix("function-never-called")
+	def removeFunction(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Remove function " + issue.data.get(0),
+			"Remove function " + issue.data.get(0),
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof Thing) {
+				val thing = obj as Thing
+				val fName = issue.data.get(0)
+				val f = thing.functions.findFirst[fun | fun.name == fName]
+				thing.functions.remove(f)
+			}			
+		]		
 	}
 	
 	@Fix("function-not-implemented")
