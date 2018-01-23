@@ -1,0 +1,17 @@
+datatype DT<1>
+@type_checker "Real";
+
+thing TestCheckStateMachine
+@checker_should_fail "false"
+{       
+	function f() do end
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {  
+    		on entry do    			
+    			var p : DT
+    			p = '1' //should not fail as externs should be typed as Any, which can be assigned to Real (or anything)
+    		end  		    
+    	}
+    }
+}

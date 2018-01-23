@@ -82,38 +82,36 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	}
 
 	@Override
-	public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) { // FIXME:
-																							// avoid
-																							// duplication
+	public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
 		final Type leftType = TypeChecker.computeTypeOf(expression.getLhs());
-		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());
-		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
-			if (expression.getRhs() instanceof ExternExpression) {
-				final ExternExpression ext = (ExternExpression) expression.getRhs();
-				if (ext.getExpression().trim().equals("null")) {// we check for
-																// null pointer,
-																// should use ==
-					super.generate(expression, builder, ctx);
-					return;
-				}
-			}
-			generate(expression.getLhs(), builder, ctx);
-			builder.append(".equals(");
-			generate(expression.getRhs(), builder, ctx);
-			builder.append(")");
-		} else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
+		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());		
+		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE) && TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
 			if (expression.getLhs() instanceof ExternExpression) {
-				final ExternExpression ext = (ExternExpression) expression.getLhs();
-				if (ext.getExpression().trim().equals("null")) {// we check for
-																// null pointer,
-																// should use ==
+				final ExternExpression extL = (ExternExpression) expression.getLhs();
+				//A hack to workaround missing Characther literals...
+				if (extL.getExpression().startsWith("\'") && extL.getExpression().endsWith("\'") && extL.getExpression().length() == 3) {
+					super.generate(expression, builder, ctx);
+					return;
+				}
+				if (extL.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
 					super.generate(expression, builder, ctx);
 					return;
 				}
 			}
-			generate(expression.getRhs(), builder, ctx);
-			builder.append(".equals(");
+			if (expression.getRhs() instanceof ExternExpression) {
+				final ExternExpression extR = (ExternExpression) expression.getRhs();
+				if (extR.getExpression().startsWith("\'") && extR.getExpression().endsWith("\'") && extR.getExpression().length() == 3) {
+					super.generate(expression, builder, ctx);
+					return;
+				}
+				if (extR.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
+					super.generate(expression, builder, ctx);
+					return;
+				}
+			}
 			generate(expression.getLhs(), builder, ctx);
+			builder.append(".equals(");
+			generate(expression.getRhs(), builder, ctx);
 			builder.append(")");
 		} else {
 			super.generate(expression, builder, ctx);
@@ -121,17 +119,30 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	}
 
 	@Override
-	public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) { // FIXME:
-																								// avoid
-																								// duplication
+	public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) { 
 		final Type leftType = TypeChecker.computeTypeOf(expression.getLhs());
-		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());
-		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
+		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());		
+		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE) || TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
+			if (expression.getLhs() instanceof ExternExpression) {
+				final ExternExpression extL = (ExternExpression) expression.getLhs();
+				//A hack to workaround missing Characther literals...
+				if (extL.getExpression().startsWith("\'") && extL.getExpression().endsWith("\'") && extL.getExpression().length() == 3) {
+					super.generate(expression, builder, ctx);
+					return;
+				}
+				if (extL.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
+					super.generate(expression, builder, ctx);
+					return;
+				}
+			}
 			if (expression.getRhs() instanceof ExternExpression) {
-				final ExternExpression ext = (ExternExpression) expression.getRhs();
-				if (ext.getExpression().trim().equals("null")) {// we check for
-																// null pointer,
-																// should use ==
+				final ExternExpression extR = (ExternExpression) expression.getRhs();
+				//A hack to workaround missing Characther literals...
+				if (extR.getExpression().startsWith("\'") && extR.getExpression().endsWith("\'") && extR.getExpression().length() == 3) {
+					super.generate(expression, builder, ctx);
+					return;
+				}
+				if (extR.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
 					super.generate(expression, builder, ctx);
 					return;
 				}
@@ -140,21 +151,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			generate(expression.getLhs(), builder, ctx);
 			builder.append(".equals(");
 			generate(expression.getRhs(), builder, ctx);
-			builder.append("))");
-		} else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
-			if (expression.getRhs() instanceof ExternExpression) {
-				final ExternExpression ext = (ExternExpression) expression.getLhs();
-				if (ext.getExpression().trim().equals("null")) {// we check for
-																// null pointer,
-																// should use ==
-					super.generate(expression, builder, ctx);
-					return;
-				}
-			}
-			builder.append("!(");
-			generate(expression.getRhs(), builder, ctx);
-			builder.append(".equals(");
-			generate(expression.getLhs(), builder, ctx);
 			builder.append("))");
 		} else {
 			super.generate(expression, builder, ctx);
@@ -338,19 +334,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			builder.append("System.out.println();\n");
 	}
 
-	/*
-	 * @Override protected void generateReference(Message message, String
-	 * messageName, Reference expression, StringBuilder builder, Context ctx) {
-	 * String paramResult = ""; if (expression.getParameter() instanceof
-	 * ParamReference) { if (expression.getParameter() instanceof
-	 * SimpleParamRef) paramResult = "."; ParamReference paramReference =
-	 * (ParamReference) expression.getParameter(); //this method is called only
-	 * when the reference parameter is a ParamReference
-	 * builder.append(ctx.protectKeyword(messageName) + paramResult +
-	 * ctx.protectKeyword(paramReference.getParameterRef().getName())); } else
-	 * {//else : ArrayParamRef builder.append(ctx.protectKeyword(messageName) +
-	 * ".size()"); } }
-	 */
 	@Override
 	public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
 		if (!ctx.getAtInitTimeLock()) {

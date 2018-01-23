@@ -1,0 +1,21 @@
+import "../core/datatypes.thingml"
+
+thing TestCheckFunctionReturn
+@checker_should_fail "false"
+{
+	//should not fail as all the branches do return
+    function foo(a : Integer) : Integer do
+      if (false)
+      	if (false) return 0
+      	else if (false) return 0
+      	     else return 1
+      else if (false) return 0
+      	   else if (false) return 0
+      	        else return 1
+     end
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}

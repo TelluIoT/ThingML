@@ -1,0 +1,25 @@
+thing fragment T1
+@checker_should_fail "false"
+{    
+    abstract function foo()
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry do
+    			foo() //should not fail as you should be allowed to call an abstract function here
+    		end
+       	}
+    }
+}
+
+thing fragment T2 includes T1 
+@checker_should_fail "false"
+{
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry do
+    			foo() //should not fail as you should be allowed to call an abstract function here also
+    		end
+       	}
+    }	
+}
