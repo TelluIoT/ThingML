@@ -58,12 +58,12 @@ public class TyperHelper {
     	t = getBroadType(t);
         if (self == t) // T is a T
             return true;
-    	if (t == Types.OBJECT_TYPE) //Only String and Object are Object
-    		return self == Types.OBJECT_TYPE || self == Types.STRING_TYPE; 
-        if (self == Types.ANY_TYPE)//Any is anything (except Object, see above)
+    	if (t == Types.OBJECT_TYPE) //Only String, Object and Any are Object
+    		return self == Types.ANY_TYPE || self == Types.OBJECT_TYPE || self == Types.STRING_TYPE; 
+        if (self == Types.ANY_TYPE)//Any is anything
             return t != Types.ERROR_TYPE;
-        if (t == Types.ANY_TYPE)//anything (except Object) is an Any
-            return self != Types.OBJECT_TYPE && self != Types.ERROR_TYPE;
+        if (t == Types.ANY_TYPE)//anything is an Any
+            return /*self != Types.OBJECT_TYPE &&*/ self != Types.ERROR_TYPE;
         if (self == Types.INTEGER_TYPE && t == Types.REAL_TYPE) //an Integer is a Real
             return true;        
         return false;
