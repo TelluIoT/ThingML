@@ -25,11 +25,12 @@ import org.thingml.xtext.thingML.Type;
  */
 public class TyperHelper {
 
-
     public static Type getBroadType(Type self) {
         if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
             final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
-            if (ty.equals("Integer"))
+            if (ty.equals("Byte"))
+            	return Types.BYTE_TYPE;
+            else if (ty.equals("Integer"))
                 return Types.INTEGER_TYPE;
             else if (ty.equals("Real"))
                 return Types.REAL_TYPE;
@@ -65,7 +66,8 @@ public class TyperHelper {
         if (t == Types.ANY_TYPE)//anything is an Any
             return /*self != Types.OBJECT_TYPE &&*/ self != Types.ERROR_TYPE;
         if (self == Types.INTEGER_TYPE && t == Types.REAL_TYPE) //an Integer is a Real
-            return true;        
+            return true;
+        //TODO: BYTE_TYPE
         return false;
     }
 }

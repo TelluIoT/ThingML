@@ -35,6 +35,7 @@ import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.DoubleLiteral;
@@ -95,6 +96,11 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     public Type caseExternExpression(ExternExpression object) {
         return Types.ANY_TYPE;
     }
+	
+	@Override
+	public Type caseByteLiteral(ByteLiteral object) {
+		return Types.BYTE_TYPE;
+	}
 
     @Override
     public Type caseIntegerLiteral(IntegerLiteral object) {
@@ -121,13 +127,14 @@ public class TypeChecker extends ThingMLSwitch<Type> {
         Type t = computeTypeOf(object.getTerm());
         if (t.equals(Types.ANY_TYPE))
             return Types.ANY_TYPE;
-        if (!t.equals(Types.INTEGER_TYPE) && !t.equals(Types.REAL_TYPE)) {
+        if (!t.equals(Types.BYTE_TYPE) && !t.equals(Types.INTEGER_TYPE) && !t.equals(Types.REAL_TYPE)) {
             return Types.ERROR_TYPE;
         }
         return t;
     }
 
     private Type caseBinaryNumericalOperator(Type t1, Type t2) {
+    	//TODO: BYTE_TYPE
         if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
             return Types.ANY_TYPE;
         if ((!t1.equals(Types.INTEGER_TYPE) && !t1.equals(Types.REAL_TYPE)) || (!t2.equals(Types.INTEGER_TYPE) && !t2.equals(Types.REAL_TYPE))) {
@@ -175,6 +182,7 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     public Type caseModExpression(ModExpression object) {
         Type t1 = computeTypeOf(object.getLhs());
         Type t2 = computeTypeOf(object.getRhs());
+        //TODO: BYTE_TYPE
         if (t1.equals(Types.INTEGER_TYPE) && t2.equals(Types.INTEGER_TYPE))
             return Types.INTEGER_TYPE;
         if (TyperHelper.isA(t1, Types.INTEGER_TYPE) && TyperHelper.isA(t2, Types.INTEGER_TYPE))

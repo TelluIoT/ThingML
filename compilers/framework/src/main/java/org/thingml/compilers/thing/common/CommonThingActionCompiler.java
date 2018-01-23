@@ -18,6 +18,7 @@ package org.thingml.compilers.thing.common;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.xtext.ByteValueConverter;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Action;
@@ -25,6 +26,7 @@ import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
@@ -297,6 +299,11 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
   
     protected void generateReferenceArray(Variable variable, StringBuilder builder, Context context) {
         builder.append(context.getVariableName(variable) + ".length");
+    }
+    
+    @Override
+    public void generate(ByteLiteral expression, StringBuilder builder, Context ctx) {
+    	builder.append(String.format("0x%02X", expression.getByteValue()));
     }
 
     @Override

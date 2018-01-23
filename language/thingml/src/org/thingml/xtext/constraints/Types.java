@@ -27,6 +27,7 @@ import org.thingml.xtext.thingML.impl.ThingMLPackageImpl;
 public class Types {
     public static Type ANY_TYPE;
     public static Type ERROR_TYPE;
+    public static Type BYTE_TYPE;
     public static Type INTEGER_TYPE;
     public static Type BOOLEAN_TYPE;
     public static Type CHARACTER_TYPE;
@@ -36,26 +37,36 @@ public class Types {
     public static Type OBJECT_TYPE;
 
     static {
-        //ThingMLFactory factory = ThingMLPackageImpl.init().getThingMLFactory();
     	ThingMLFactory factory = ThingMLFactory.eINSTANCE;
+    	
         ANY_TYPE = factory.createPrimitiveType();
         ANY_TYPE.setName("Any");
         PlatformAnnotation any = factory.createPlatformAnnotation();
         any.setName("type_checker");
         any.setValue("Any");
         ANY_TYPE.getAnnotations().add(any);
+        
         ERROR_TYPE = factory.createPrimitiveType();
         ERROR_TYPE.setName("Error");
         PlatformAnnotation error = factory.createPlatformAnnotation();
         error.setName("type_checker");
         error.setValue("Error");
         ERROR_TYPE.getAnnotations().add(error);
+        
+        BYTE_TYPE = factory.createPrimitiveType();
+        BYTE_TYPE.setName("Integer");
+        PlatformAnnotation _byte = factory.createPlatformAnnotation();
+        _byte.setName("type_checker");
+        _byte.setValue("Byte");
+        BYTE_TYPE.getAnnotations().add(_byte);
+        
         INTEGER_TYPE = factory.createPrimitiveType();
         INTEGER_TYPE.setName("Integer");
         PlatformAnnotation integer = factory.createPlatformAnnotation();
         integer.setName("type_checker");
         integer.setValue("Integer");
         INTEGER_TYPE.getAnnotations().add(integer);
+        
         BOOLEAN_TYPE = factory.createPrimitiveType();
         BOOLEAN_TYPE.setName("Boolean");
         PlatformAnnotation bool = factory.createPlatformAnnotation();
@@ -76,18 +87,21 @@ public class Types {
         string.setName("type_checker");
         string.setValue("String");
         STRING_TYPE.getAnnotations().add(string);
+        
         REAL_TYPE = factory.createPrimitiveType();
         REAL_TYPE.setName("Real");
         PlatformAnnotation real = factory.createPlatformAnnotation();
         real.setName("type_checker");
         real.setValue("Real");
         REAL_TYPE.getAnnotations().add(real);
+        
         VOID_TYPE = factory.createPrimitiveType();
         VOID_TYPE.setName("Void");
         PlatformAnnotation _void = factory.createPlatformAnnotation();
         _void.setName("type_checker");
         _void.setValue("Void");
         VOID_TYPE.getAnnotations().add(_void);
+        
         OBJECT_TYPE = factory.createPrimitiveType();
         OBJECT_TYPE.setName("Object");
         PlatformAnnotation _object = factory.createPlatformAnnotation();

@@ -54,4 +54,11 @@ public class ThingMLTerminalConverter extends DefaultTerminalConverters {
 	public IValueConverter<String> STRING_TIC() {
 		return stringTicValueConverter;
 	}
+	
+	@Inject
+	private ByteValueConverter byteValueConverter;
+	@ValueConverter(rule = "BYTE")
+	public IValueConverter<Byte> BYTE() {
+		return byteValueConverter;
+	}
 }
