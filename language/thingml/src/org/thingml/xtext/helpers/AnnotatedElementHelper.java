@@ -18,6 +18,8 @@ package org.thingml.xtext.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.PlatformAnnotation;
@@ -27,12 +29,23 @@ import org.thingml.xtext.thingML.PlatformAnnotation;
  */
 public class AnnotatedElementHelper {
 
+	private static Pattern leadingTrailingNewlines = Pattern.compile("^\\s+\\n|\\n\\s+$");
 
 	private static String cleanAnnotation(String value) {
+		// Remove surrounding double-quotes
+		String unquoted = value;
 		if (value.startsWith("\"") && value.endsWith("\"")) {
-			return value.substring(1, value.length()-1);
+			unquoted = value.substring(1, value.length()-1);
 		}
-		return value;
+		// Remove leading and trailing patterns of newlines an spaces
+		// These commonly occur when a annotation is split over multiple lines
+		Matcher m = leadingTrailingNewlines.matcher(unquoted);
+		StringBuffer stripped = new StringBuffer(unquoted.length());
+		while (m.find())
+			m.appendReplacement(stripped, "");
+		m.appendTail(stripped);
+		// Done
+		return stripped.toString();
 	}
 	
     public static List<PlatformAnnotation> allAnnotations(AnnotatedElement self) {

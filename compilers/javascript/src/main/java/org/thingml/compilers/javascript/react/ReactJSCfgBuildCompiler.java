@@ -43,6 +43,7 @@ public class ReactJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		JsonObject deps = pkg.get("dependencies").asObject();
 		//TODO: Only add materials if we use it
 		deps.add("material-ui", "^0.20.0");
+		deps.add("react-icons", "^2.2.7");
 		
 		StringBuilder builder = ctx.getBuilder("package.json");
         builder.append(pkg.toString(WriterConfig.PRETTY_PRINT));
