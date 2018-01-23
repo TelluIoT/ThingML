@@ -96,7 +96,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		} else {
 			var thing = f.eContainer as Thing
 			if (!thing.fragment) {
-				error("Thing "+thing.name+" is not a fragment, so it cannot contain abstract functions", f.eContainer, f.eContainingFeature, thing.functions.indexOf(f), "abstract-function-fragment")
+				error("Thing "+thing.name+" is not a fragment, so it cannot contain abstract functions", thing, f.eContainingFeature, thing.functions.indexOf(f), "abstract-function-fragment", f.name)
 			}
 		}
 	}

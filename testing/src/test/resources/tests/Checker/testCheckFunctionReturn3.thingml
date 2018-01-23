@@ -1,0 +1,17 @@
+import "../core/datatypes.thingml"
+
+thing TestCheckFunctionReturn
+{
+	//Should fail because function does not always (never in this case) return (missing else, or return at the end)
+    function foo(a : Integer) : Integer do
+      if (false) do
+      	if (false) return 0
+      	else return 1
+      end //else return 1
+    end
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}

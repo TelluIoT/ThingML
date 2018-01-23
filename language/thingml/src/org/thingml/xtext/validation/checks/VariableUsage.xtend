@@ -19,8 +19,22 @@ import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
 import org.thingml.xtext.helpers.AnnotatedElementHelper
+import org.thingml.xtext.thingML.CastExpression
 
 class VariableUsage extends ThingMLValidatorCheck {
+	
+	@Check(FAST)
+	def checkCast(CastExpression cast) {
+		val actual = TypeChecker.computeTypeOf(cast.term)
+		if (!TyperHelper.isA(actual, cast.type)) {
+			val msg = "Cannot cast " + actual.name + " to " + cast.type.name
+			val parent = cast.eContainer.eGet(cast.eContainingFeature)
+			if (parent instanceof EList)
+				error(msg, cast.eContainer, cast.eContainingFeature, (parent as EList<Action>).indexOf(cast), "type")
+			else
+				error(msg, cast.eContainer, cast.eContainingFeature, "type")						
+		}
+	}
 	
 	def checkType(Variable va, Expression e, EObject o, EStructuralFeature f) {
 		if (va.typeRef.cardinality === null) {

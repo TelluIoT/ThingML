@@ -165,6 +165,40 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 		]		
 	}
 	
+	@Fix("abstract-function-fragment")
+	def makeThingFragment(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Make thing a fragment",
+			"Make thing a fragment",
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof Thing) {
+				val thing = obj as Thing
+				thing.fragment = true
+			}
+		]		
+	}
+	
+	@Fix("abstract-function-fragment")
+	def makeFunctionConcrete(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Make function " + (if (issue.data!==null) issue.data.get(0) else "") + " concrete", //FIXME: for some reasons, issue.data seems to be sometimes null...
+			"Make function " + (if (issue.data!==null) issue.data.get(0) else "") + " concrete", //FIXME: for some reasons, issue.data seems to be sometimes null...
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof Thing) {
+				val thing = obj as Thing
+				val fName = issue.data.get(0)				
+				val f = thing.functions.findFirst[ f | f.name == fName && f.abstract]
+				f.abstract = false
+				val block = ThingMLFactory.eINSTANCE.createActionBlock
+				f.body = block
+			}
+		]		
+	}
+	
 	@Fix("function-not-implemented")
 	def implementFunction(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(

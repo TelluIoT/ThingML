@@ -1,7 +1,9 @@
-thing TestCheckStateMachine
-{
-    
+thing fragment Msgs {
 	message m();
+}
+
+thing TestCheckStateMachine includes Msgs
+{
 	message m();
 	
 	provided port p {
