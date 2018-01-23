@@ -54,16 +54,18 @@ public class TyperHelper {
     }
 
     public static boolean isA(Type self, Type t) {
-        if (getBroadType(self) == Types.ANY_TYPE && getBroadType(t) != Types.ERROR_TYPE)//Any is anything
+    	self = getBroadType(self);
+    	t = getBroadType(t);
+        if (self == t) // T is a T
             return true;
-        if (getBroadType(t) == Types.ANY_TYPE && getBroadType(self) != Types.ERROR_TYPE)//anything is an Any
-            return true;
-        if (getBroadType(self) == getBroadType(t))
-            return true;
-        if (getBroadType(self) == Types.INTEGER_TYPE && getBroadType(t) == Types.REAL_TYPE) //an Integer is a Real
-            return true;
-        if (getBroadType(self) == Types.STRING_TYPE && getBroadType(t) == Types.OBJECT_TYPE)//a String is an Object
-            return true;
+    	if (t == Types.OBJECT_TYPE) //Only String and Object are Object
+    		return self == Types.OBJECT_TYPE || self == Types.STRING_TYPE; 
+        if (self == Types.ANY_TYPE)//Any is anything (except Object, see above)
+            return t != Types.ERROR_TYPE;
+        if (t == Types.ANY_TYPE)//anything (except Object) is an Any
+            return self != Types.OBJECT_TYPE && self != Types.ERROR_TYPE;
+        if (self == Types.INTEGER_TYPE && t == Types.REAL_TYPE) //an Integer is a Real
+            return true;        
         return false;
     }
 }
