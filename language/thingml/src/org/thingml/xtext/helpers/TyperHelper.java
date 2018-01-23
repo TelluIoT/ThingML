@@ -65,7 +65,9 @@ public class TyperHelper {
             return t != Types.ERROR_TYPE;
         if (t == Types.ANY_TYPE)//anything is an Any
             return /*self != Types.OBJECT_TYPE &&*/ self != Types.ERROR_TYPE;
-        if (self == Types.INTEGER_TYPE && t == Types.REAL_TYPE) //an Integer is a Real
+        if (self == Types.BYTE_TYPE && t == Types.INTEGER_TYPE) //a Byte is an Integer
+        	return true;
+        if ((self == Types.INTEGER_TYPE || self == Types.BYTE_TYPE) && t == Types.REAL_TYPE) //an Integer or a Byte is a Real
             return true;
         //TODO: BYTE_TYPE
         return false;
