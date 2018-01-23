@@ -62,7 +62,7 @@ class StateUsage extends ThingMLValidatorCheck {
 			]
 			if (!isReachable) {
 				warning("State " + s.name + " is unreachable", sc, ThingMLPackage.eINSTANCE.stateContainer_Substate, i,
-					"state-unreachable")
+					"state-unreachable", s.name)
 			}
 		]
 	}

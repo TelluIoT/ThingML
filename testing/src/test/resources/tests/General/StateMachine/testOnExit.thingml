@@ -10,7 +10,7 @@ thing TestOnExit includes Test
 		action TestDone()
 	
 		state I {
-			on exit TestOut('\'X\'')
+			on exit TestOut('\'X\'' as Char)
 			transition -> I
 			event m : Test?In
 			guard m.c == '\'t\''

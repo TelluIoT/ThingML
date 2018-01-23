@@ -1,0 +1,11 @@
+datatype DT<1>;
+
+thing TestCheckStateMachine
+{    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		readonly property p : DT = 0  
+    		on entry p = 1 //Should fail because we cannot re-allocate a readonly property
+    	}
+    }
+}

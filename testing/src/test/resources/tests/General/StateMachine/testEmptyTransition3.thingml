@@ -5,12 +5,12 @@ thing TestEmptyTransition3 includes Test
 {
 	statechart TestEmptyTransition init I {
 		state I {
-			on entry TestOut('\'I\'')
+			on entry TestOut('\'I\'' as Char)
 
 			transition -> J
 		}
 		state J {
-			on entry TestOut('\'J\'')
+			on entry TestOut('\'J\'' as Char)
 			
 			transition -> M
 			event m : Test?In
@@ -19,7 +19,7 @@ thing TestEmptyTransition3 includes Test
 			transition -> K
 		}
 		state K {
-			on entry TestOut('\'K\'')
+			on entry TestOut('\'K\'' as Char)
 			
 			transition -> M
 			event m : Test?In
@@ -28,7 +28,7 @@ thing TestEmptyTransition3 includes Test
 			transition -> L
 		}
 		state L {
-			on entry TestOut('\'L\'')
+			on entry TestOut('\'L\'' as Char)
 			
 			transition -> M
 			event m : Test?In
@@ -38,7 +38,7 @@ thing TestEmptyTransition3 includes Test
 		}
 
 		state M {
-			on entry TestOut('\'M\'')
+			on entry TestOut('\'M\'' as Char)
 			
 			transition -> M
 			event m : Test?In

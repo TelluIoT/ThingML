@@ -16,18 +16,18 @@ thing TestInternalEmptyTransition includes Test
 			internal
 			guard (i == 0)
 			action do
-				TestOut('\'X\'')
+				TestOut('\'X\'' as Char)
 				i = i + 1
 			end
 			
 			transition -> S2 guard (not(i == 0))
-			action TestOut('\'Y\'')
+			action TestOut('\'Y\'' as Char)
 		}
 
 
 		state S2 {
 			on entry do
-				TestOut('\'Z\'')
+				TestOut('\'Z\'' as Char)
 				TestDone()
 			end
 		}

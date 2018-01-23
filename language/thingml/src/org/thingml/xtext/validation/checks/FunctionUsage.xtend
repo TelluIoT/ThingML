@@ -27,6 +27,30 @@ import org.thingml.xtext.thingML.Action
 import org.thingml.xtext.thingML.ActionBlock
 
 class FunctionUsage extends ThingMLValidatorCheck {
+	
+	@Check(NORMAL)
+	def checkUsage(Function f) {
+		val thing = ThingMLHelpers.findContainingThing(f)
+		//Checks if the containing thing calls the function
+		if (ActionHelper.getAllActions(thing, FunctionCallStatement).exists[call | call.function == f])
+			return;
+		if (ThingMLHelpers.getAllExpressions(thing, FunctionCallExpression).exists[call | call.function == f])
+			return;			
+		
+		//if not, check if any thing that includes the function actually calls it
+		val model = ThingMLHelpers.findContainingModel(thing)
+		val isUsed = ThingMLHelpers.allThings(model).filter[t | ThingHelper.allIncludedThings(t).exists[t2 | t2 == thing]]
+		.exists[t |
+			ActionHelper.getAllActions(t, FunctionCallStatement).exists[call | call.function == f] 
+			|| ThingMLHelpers.getAllExpressions(t, FunctionCallExpression).exists[call | call.function == f]
+		]
+		
+		if (!isUsed) {
+			val msg = "Function " + f.name + " is never called."
+			warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Functions, thing.functions.indexOf(f), "function-never-called", f.name)							
+		}
+		
+	}
 
 	@Check(NORMAL)
 	def checkConcrete(Thing t) {
@@ -72,7 +96,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		} else {
 			var thing = f.eContainer as Thing
 			if (!thing.fragment) {
-				error("Thing "+thing.name+" is not a fragment, so it cannot contain abstract functions", f.eContainer, f.eContainingFeature, thing.functions.indexOf(f), "abstract-function-fragment")
+				error("Thing "+thing.name+" is not a fragment, so it cannot contain abstract functions", thing, f.eContainingFeature, thing.functions.indexOf(f), "abstract-function-fragment", f.name)
 			}
 		}
 	}

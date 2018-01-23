@@ -175,22 +175,17 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     public Type caseModExpression(ModExpression object) {
         Type t1 = computeTypeOf(object.getLhs());
         Type t2 = computeTypeOf(object.getRhs());
-        if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
+        if (t1.equals(Types.INTEGER_TYPE) && t2.equals(Types.INTEGER_TYPE))
+            return Types.INTEGER_TYPE;
+        if (TyperHelper.isA(t1, Types.INTEGER_TYPE) && TyperHelper.isA(t2, Types.INTEGER_TYPE))
             return Types.ANY_TYPE;
-        if (!t1.equals(Types.INTEGER_TYPE) || !t2.equals(Types.INTEGER_TYPE)) {
-            return Types.ERROR_TYPE;
-        }
-        return Types.INTEGER_TYPE;
+        return Types.ERROR_TYPE;
     }
 
     private Type caseComparison(Type t1, Type t2) {
-        if ((t1.equals(Types.INTEGER_TYPE) || t1.equals(Types.REAL_TYPE) || t1.equals(Types.ANY_TYPE)) && (t2.equals(Types.INTEGER_TYPE) || t2.equals(Types.REAL_TYPE) || t2.equals(Types.ANY_TYPE)))
-            return Types.BOOLEAN_TYPE;
-        if ((t1.equals(Types.BOOLEAN_TYPE) || t1.equals(Types.ANY_TYPE)) && (t2.equals(Types.BOOLEAN_TYPE) || t2.equals(Types.ANY_TYPE)))
-            return Types.BOOLEAN_TYPE;
-        if (TyperHelper.isA(t1, Types.ANY_TYPE) && TyperHelper.isA(t2, Types.ANY_TYPE))
-            return Types.BOOLEAN_TYPE;
-        return Types.ERROR_TYPE;
+    	if (TyperHelper.isA(t1, t2) || TyperHelper.isA(t2, t1))
+    		return Types.BOOLEAN_TYPE;
+    	return Types.ERROR_TYPE;
     }
 
     @Override
@@ -230,12 +225,11 @@ public class TypeChecker extends ThingMLSwitch<Type> {
 
     //Boolean
     private Type caseBooleanOperator(Type t1, Type t2) {
-        if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
-            return Types.ANY_TYPE;
-        if (!t1.equals(Types.BOOLEAN_TYPE) || !t2.equals(Types.BOOLEAN_TYPE)) {
-            return Types.ERROR_TYPE;
-        }
-        return Types.BOOLEAN_TYPE;
+    	if (t1.equals(Types.BOOLEAN_TYPE) && t2.equals(Types.BOOLEAN_TYPE))
+    		return Types.BOOLEAN_TYPE;
+    	if (TyperHelper.isA(t1, Types.BOOLEAN_TYPE) && TyperHelper.isA(t2, Types.BOOLEAN_TYPE))    	
+            return Types.ANY_TYPE;        
+        return Types.ERROR_TYPE;        
     }
 
     @Override
@@ -255,12 +249,11 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     @Override
     public Type caseNotExpression(NotExpression object) {
         Type t = computeTypeOf(object.getTerm());
-        if (t.equals(Types.ANY_TYPE))
-            return Types.ANY_TYPE;
-        if (!t.equals(Types.BOOLEAN_TYPE)) {
-            return Types.ERROR_TYPE;
-        }
-        return Types.BOOLEAN_TYPE;
+        if (t.equals(Types.BOOLEAN_TYPE))
+            return Types.BOOLEAN_TYPE;        
+        if (TyperHelper.isA(t, Types.BOOLEAN_TYPE))
+            return Types.ANY_TYPE;        
+        return Types.ERROR_TYPE;
     }
     //End Boolean
 
@@ -290,7 +283,7 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     @Override
     public Type caseArrayIndex(ArrayIndex object) {
         Type t = computeTypeOf(object.getIndex());
-        if (t.equals(Types.INTEGER_TYPE) || t.equals(Types.ANY_TYPE))
+        if (TyperHelper.isA(t, Types.INTEGER_TYPE))
             return computeTypeOf(object.getArray());
         return Types.ERROR_TYPE;
     }

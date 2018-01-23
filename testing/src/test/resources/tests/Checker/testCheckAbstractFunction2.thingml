@@ -1,0 +1,13 @@
+thing TestCheckAbstractFunction1
+{
+    //Should fail because concrete things (not fragment) cannot have abstract functions
+    abstract function foo()
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry do
+    			foo()
+    		end
+       	}
+    }
+}

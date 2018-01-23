@@ -16,6 +16,7 @@ import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLFactory
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.thingml.xtext.thingML.ActionBlock
+import org.thingml.xtext.thingML.StateContainer
 
 /**
  * Custom quickfixes.
@@ -128,6 +129,74 @@ class ThingMLQuickfixProvider extends DefaultQuickfixProvider
 				}							
 			}
 		]
+	}
+	
+	@Fix("state-unreachable")
+	def removeState(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Remove state " + issue.data.get(0),
+			"Remove state " + issue.data.get(0),
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof StateContainer) {
+				val sc = obj as StateContainer
+				val sName = issue.data.get(0)
+				val s = sc.substate.findFirst[st | st.name == sName]
+				sc.substate.remove(s)
+			}			
+		]		
+	}
+	
+	@Fix("function-never-called")
+	def removeFunction(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Remove function " + issue.data.get(0),
+			"Remove function " + issue.data.get(0),
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof Thing) {
+				val thing = obj as Thing
+				val fName = issue.data.get(0)
+				val f = thing.functions.findFirst[fun | fun.name == fName]
+				thing.functions.remove(f)
+			}			
+		]		
+	}
+	
+	@Fix("abstract-function-fragment")
+	def makeThingFragment(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Make thing a fragment",
+			"Make thing a fragment",
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof Thing) {
+				val thing = obj as Thing
+				thing.fragment = true
+			}
+		]		
+	}
+	
+	@Fix("abstract-function-fragment")
+	def makeFunctionConcrete(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Make function " + (if (issue.data!==null) issue.data.get(0) else "") + " concrete", //FIXME: for some reasons, issue.data seems to be sometimes null...
+			"Make function " + (if (issue.data!==null) issue.data.get(0) else "") + " concrete", //FIXME: for some reasons, issue.data seems to be sometimes null...
+			"" // Image
+		)[ obj, context |
+			if (obj instanceof Thing) {
+				val thing = obj as Thing
+				val fName = issue.data.get(0)				
+				val f = thing.functions.findFirst[ f | f.name == fName && f.abstract]
+				f.abstract = false
+				val block = ThingMLFactory.eINSTANCE.createActionBlock
+				f.body = block
+			}
+		]		
 	}
 	
 	@Fix("function-not-implemented")

@@ -7,6 +7,7 @@ import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.RequiredPort
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.thingML.InternalPort
 
 class LostMessages extends ThingMLValidatorCheck {
 	@Check(NORMAL)
@@ -15,7 +16,7 @@ class LostMessages extends ThingMLValidatorCheck {
 			val notReceived = newArrayList()
 			val sentNotReceived = newArrayList()
 			
-			inst.type.ports.forEach[port|
+			inst.type.ports.filter[port | !(port instanceof InternalPort)].forEach[port|
 				// If port is connected to an external connector, we assume that all messages are sent/received
 				if (cfg.connectors.exists[con|
 					con instanceof ExternalConnector

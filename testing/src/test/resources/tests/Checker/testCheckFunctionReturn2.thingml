@@ -1,0 +1,14 @@
+import "../core/datatypes.thingml"
+
+thing TestCheckFunctionReturn
+{
+	//Should fail because function returns wrong type
+    function foo(a : Integer) : Integer do
+      return false
+    end
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}

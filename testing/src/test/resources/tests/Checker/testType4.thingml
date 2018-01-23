@@ -1,0 +1,14 @@
+datatype DT<1>
+@type_checker "Boolean";
+
+thing TestCheckStateMachine
+{       
+    statechart TestAbstractFunction init INIT {
+    	state INIT {  
+    		on entry do
+    			var p : DT
+    			p = true or false or 0//should fail because false or 0 is an error
+    		end  		    
+    	}
+    }
+}

@@ -7,18 +7,18 @@ thing TestInternalTransition includes Test
 {
 	statechart TestInternalTransition init I {
 		state I {
-			on entry TestOut('\'E\'')
-			on exit  TestOut('\'X\'')
+			on entry TestOut('\'E\'' as Char)
+			on exit  TestOut('\'X\'' as Char)
 			
 			internal
 			event m : Test?In
 			guard m.c == '\'i\''
-			action TestOut('\'I\'')
+			action TestOut('\'I\'' as Char)
 			
 			transition -> I
 			event m : Test?In
 			guard m.c == '\'t\''
-			action TestOut('\'T\'')
+			action TestOut('\'T\'' as Char)
 			
 			internal event Test?Done
 			action TestDone()
