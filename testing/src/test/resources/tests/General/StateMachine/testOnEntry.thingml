@@ -16,7 +16,7 @@ thing TestOnEntry includes Test
 			guard m.c == '\'t\''
 		}
 		state J {
-			on entry TestOut('\'E\'')
+			on entry TestOut('\'E\'' as Char)
 			transition -> J
 			event m : Test?In
 			guard m.c == '\'t\''

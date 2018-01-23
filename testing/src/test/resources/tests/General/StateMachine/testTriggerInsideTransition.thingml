@@ -15,7 +15,7 @@ thing TestTriggerInsideTransition includes Test
 	statechart TestTriggerInsideTransition init I {
 	
 		state I {
-			on entry TestOut('\'I\'')
+			on entry TestOut('\'I\'' as Char)
 			transition -> F
 			event m : Test?In
 			guard m.c == '\'t\''
@@ -23,14 +23,14 @@ thing TestTriggerInsideTransition includes Test
 		}
 		
 		state F {
-			on entry TestOut('\'F\'')
+			on entry TestOut('\'F\'' as Char)
 			transition -> G
 			event m : p?m
 		}
 		
 		state G {
 			on entry do
-				TestOut('\'G\'')
+				TestOut('\'G\'' as Char)
 				TestDone()
 			end
 		}

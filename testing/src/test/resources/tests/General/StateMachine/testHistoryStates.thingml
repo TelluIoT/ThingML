@@ -9,7 +9,7 @@ thing TestHistoryStates includes Test
 		action TestDone()
 	
 		state I {
-			on entry TestOut('\'I\'')
+			on entry TestOut('\'I\'' as Char)
 			
 			transition -> C1
 			event m : Test?In
@@ -30,14 +30,14 @@ thing TestHistoryStates includes Test
 		guard m.c == '\'z\''
 		
 			state C1S1 {
-				on entry TestOut('\'1\'')
+				on entry TestOut('\'1\'' as Char)
 				transition -> C1S2
 				event m : Test?In
 				guard m.c == '\'n\''
 			}
 			
 			state C1S2 {
-				on entry TestOut('\'2\'')
+				on entry TestOut('\'2\'' as Char)
 				transition -> C1S1
 				event m : Test?In
 				guard m.c == '\'n\''
@@ -54,14 +54,14 @@ thing TestHistoryStates includes Test
 			guard m.c == '\'y\''
 				
 			state C2S1 {	
-				on entry TestOut('\'3\'')
+				on entry TestOut('\'3\'' as Char)
 				transition -> C2S2
 				event m : Test?In
 				guard m.c == '\'n\''
 			}
 				
 			state C2S2 {
-				on entry TestOut('\'4\'')
+				on entry TestOut('\'4\'' as Char)
 				transition -> C2S1
 				event m : Test?In
 				guard m.c == '\'n\''

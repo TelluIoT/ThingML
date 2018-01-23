@@ -10,7 +10,7 @@ thing TestHistory includes Test
 		action TestDone()
 	
 		state I {
-			on entry TestOut('\'I\'')
+			on entry TestOut('\'I\'' as Char)
 			transition -> C
 			event m : Test?In
 			guard m.c == '\'t\''
@@ -18,23 +18,23 @@ thing TestHistory includes Test
 		
 		composite state C init C1 keeps history {
 		
-		on entry TestOut('\'C\'')
-		on exit TestOut('\'X\'')
+		on entry TestOut('\'C\'' as Char)
+		on exit TestOut('\'X\'' as Char)
 		transition -> I
 		event m : Test?In
 		guard m.c == '\'t\''
 		
 			state C1 {
-				on entry TestOut('\'0\'')
-				on exit TestOut('\'1\'')
+				on entry TestOut('\'0\'' as Char)
+				on exit TestOut('\'1\'' as Char)
 				transition -> C2
 				event m : Test?In
 				guard m.c == '\'n\''
 			}
 			
 			state C2 {
-				on entry TestOut('\'2\'')
-				on exit TestOut('\'3\'')
+				on entry TestOut('\'2\'' as Char)
+				on exit TestOut('\'3\'' as Char)
 				transition -> C1
 				event m : Test?In
 				guard m.c == '\'n\''

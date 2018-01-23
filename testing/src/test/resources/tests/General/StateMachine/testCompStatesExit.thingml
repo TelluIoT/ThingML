@@ -11,7 +11,7 @@ thing TestCompStatesExit includes Test
 		action TestDone()
 	
 		state I {
-			on exit TestOut('\'I\'')
+			on exit TestOut('\'I\'' as Char)
 			transition -> CS
 			event m : Test?In
 			guard m.c == '\'t\''
@@ -19,20 +19,20 @@ thing TestCompStatesExit includes Test
 		
 		composite state CS init S1 {
 		
-		on exit TestOut('\'C\'')
+		on exit TestOut('\'C\'' as Char)
 		transition -> I
 		event m : Test?In
 		guard m.c == '\'x\''
 		
 			state S1 {
-				on exit TestOut('\'1\'')
+				on exit TestOut('\'1\'' as Char)
 				transition -> S2
 				event m : Test?In
 				guard m.c == '\'2\''
 			}
 			
 			state S2 {
-				on exit TestOut('\'2\'')
+				on exit TestOut('\'2\'' as Char)
 				transition -> S1
 				event m : Test?In
 				guard m.c == '\'1\''

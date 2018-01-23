@@ -10,14 +10,14 @@ thing TestRegion3 includes Test
 		composite state I init A {
 		
 			state A {
-				on entry TestOut('\'A\'')
+				on entry TestOut('\'A\'' as Char)
 				transition -> B
 				event m : Test?In
 				guard m.c == '\'t\''
 			}
 		
 			state B {
-				on entry TestOut('\'B\'')
+				on entry TestOut('\'B\'' as Char)
 				transition -> A
 				event m : Test?In
 				guard m.c == '\'t\''
@@ -26,14 +26,14 @@ thing TestRegion3 includes Test
 			region S init C {
 
 				state C {
-					on entry TestOut('\'C\'')
+					on entry TestOut('\'C\'' as Char)
 					transition -> D
 					event m : Test?In
 					guard m.c == '\'t\''
 				}
 
 				state D {
-					on entry TestOut('\'D\'')
+					on entry TestOut('\'D\'' as Char)
 					transition -> C
 					event m : Test?In
 					guard m.c == '\'t\''
@@ -44,14 +44,14 @@ thing TestRegion3 includes Test
 		region R init E {
 		
 			state E {
-				on entry TestOut('\'E\'')
+				on entry TestOut('\'E\'' as Char)
 				transition -> F
 				event m : Test?In
 				guard m.c == '\'t\''
 			}
 		
 			state F {
-				on entry TestOut('\'F\'')
+				on entry TestOut('\'F\'' as Char)
 				transition -> E
 				event m : Test?In
 				guard m.c == '\'t\''

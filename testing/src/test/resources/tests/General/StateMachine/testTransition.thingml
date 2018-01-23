@@ -11,14 +11,14 @@ thing TestTransition includes Test
 		action TestDone()
 	
 		state I {
-			on entry TestOut('\'I\'')
+			on entry TestOut('\'I\'' as Char)
 			transition -> F
 			event m : Test?In
 			guard m.c == '\'t\''
 		}
 		
 		state F {
-			on entry TestOut('\'F\'')
+			on entry TestOut('\'F\'' as Char)
 			transition -> I
 			event m : Test?In
 			guard m.c == '\'t\''

@@ -12,7 +12,7 @@ thing TestRegion includes Test
 		action TestDone()
 	                                  
 		state I {
-			on entry TestOut('\'I\'')
+			on entry TestOut('\'I\'' as Char)
 			transition -> F
 			event m : Test?In
 			guard m.c == '\'t\''
@@ -22,7 +22,7 @@ thing TestRegion includes Test
 		}
 		
 		state F {
-			on entry TestOut('\'F\'')
+			on entry TestOut('\'F\'' as Char)
 			transition -> I
 			event m : Test?In
 			guard m.c == '\'t\''
@@ -34,7 +34,7 @@ thing TestRegion includes Test
 		region R init A {
 		
 			state A {
-				on entry TestOut('\'A\'')
+				on entry TestOut('\'A\'' as Char)
 				//on exit TestOut('\'X\'')
 				transition -> B
 				event m : Test?In
@@ -45,7 +45,7 @@ thing TestRegion includes Test
 			}
 		
 			state B {
-				on entry TestOut('\'B\'')
+				on entry TestOut('\'B\'' as Char)
 				//on exit TestOut('\'1\'')
 				transition -> A
 				event m : Test?In

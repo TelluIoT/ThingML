@@ -20,14 +20,14 @@ thing TestCompositeStates includes Test
 		
 		composite state C1 init C1S1 {
 		
-		on entry TestOut('\'0\'')
-		on exit TestOut('\'0\'')
+		on entry TestOut('\'0\''  as Char)
+		on exit TestOut('\'0\''  as Char)
 		transition -> I
 		event m : Test?In
 		guard m.c == '\'i\''
 		
 			state C1S1 {
-				on entry TestOut('\'1\'')
+				on entry TestOut('\'1\''  as Char)
 				transition -> C1S2
 				event m : Test?In
 				guard m.c == '\'n\''
@@ -35,21 +35,21 @@ thing TestCompositeStates includes Test
 			
 			composite state C1S2 init C2S1 {
 				
-				on entry TestOut('\'2\'')
-				on exit TestOut('\'2\'')
+				on entry TestOut('\'2\''  as Char)
+				on exit TestOut('\'2\''  as Char)
 				transition -> C1S1
 				event m : Test?In
 				guard m.c == '\'o\''
 				
 				state C2S1 {	
-					on entry TestOut('\'3\'')
+					on entry TestOut('\'3\''  as Char)
 					transition -> C2S3
 					event m : Test?In
 					guard m.c == '\'n\''
 				}
 				
 				state C2S2 {
-					on exit TestOut('\'3\'')
+					on exit TestOut('\'3\''  as Char)
 					transition -> C2S3
 					event m : Test?In
 					guard m.c == '\'n\''
@@ -57,16 +57,16 @@ thing TestCompositeStates includes Test
 				
 				composite state C2S3 init C3S1 {
 				
-					on entry TestOut('\'4\'')
-					on exit TestOut('\'4\'')
+					on entry TestOut('\'4\'' as Char)
+					on exit TestOut('\'4\'' as Char)
 					transition -> C2S2
 					event m : Test?In
 					guard m.c == '\'p\''
 				
 					composite state C3S1 init C4S1 {
 					
-						on entry TestOut('\'5\'')
-						on exit TestOut('\'5\'')
+						on entry TestOut('\'5\'' as Char)
+						on exit TestOut('\'5\'' as Char)
 						
 						state C4S1 {
 						}

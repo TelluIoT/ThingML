@@ -5,7 +5,7 @@ thing TestEmptyTransition includes Test
 {
 	statechart TestEmptyTransition init I {
 		state I {
-			on entry TestOut('\'I\'')
+			on entry TestOut('\'I\'' as Char)
 			
 			transition -> J
 			
@@ -14,14 +14,14 @@ thing TestEmptyTransition includes Test
 			guard m.c == '\'t\''
 		}
 		state J {
-			on entry TestOut('\'J\'')
+			on entry TestOut('\'J\'' as Char)
 			
 			transition -> K
 			event m : Test?In
 			guard m.c == '\'t\''
 		}
 		state K {
-			on entry TestOut('\'K\'')
+			on entry TestOut('\'K\'' as Char)
 			
 			transition -> K
 			event m : Test?In

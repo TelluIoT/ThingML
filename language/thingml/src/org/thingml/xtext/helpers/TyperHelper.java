@@ -54,7 +54,9 @@ public class TyperHelper {
     }
 
     public static boolean isA(Type self, Type t) {
-        if (getBroadType(t) == Types.ANY_TYPE)//anything is an Any
+        if (getBroadType(self) == Types.ANY_TYPE && getBroadType(t) != Types.ERROR_TYPE)//Any is anything
+            return true;
+        if (getBroadType(t) == Types.ANY_TYPE && getBroadType(self) != Types.ERROR_TYPE)//anything is an Any
             return true;
         if (getBroadType(self) == getBroadType(t))
             return true;
