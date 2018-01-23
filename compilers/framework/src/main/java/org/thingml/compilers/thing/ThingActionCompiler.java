@@ -22,6 +22,7 @@ import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
@@ -206,6 +207,8 @@ public class ThingActionCompiler {
             generate((NotExpression) expression, builder, ctx);
         } else if (expression instanceof PropertyReference) {
             generate((PropertyReference) expression, builder, ctx);
+        } else if (expression instanceof ByteLiteral) {
+        	generate((ByteLiteral) expression, builder, ctx);
         } else if (expression instanceof IntegerLiteral) {
             generate((IntegerLiteral) expression, builder, ctx);
         } else if (expression instanceof DoubleLiteral) {
@@ -304,6 +307,10 @@ public class ThingActionCompiler {
     }
 
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+    
+    public void generate(ByteLiteral expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 

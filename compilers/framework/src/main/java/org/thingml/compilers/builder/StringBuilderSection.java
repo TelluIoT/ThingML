@@ -30,9 +30,23 @@ public class StringBuilderSection extends Section {
 	public void prepare(SourceBuilder builder) {
 		this.children.clear();
 		// Add all the lines of the StringBuilder as children of this section
+		int currentLeadingWs = Integer.MAX_VALUE;
+		Section currentSection = this;
 		for (String line : this.stringbuilder.toString().split("\\r?\\n")) {
-			// TODO: figure out indentation
-			this.append(line);
+			String trimmed = line.trim();
+			int leadingWs = line.indexOf(trimmed);
+			// Fix indentation
+			if (leadingWs > currentLeadingWs) {
+				// Add new level of indentation
+				currentSection = currentSection.section("indent").lines().indent();
+			} else if (leadingWs < currentLeadingWs) {
+				// Go up one level (not above self)
+				if (currentSection != this)
+					currentSection = currentSection.parent;
+			}
+			// Add current lime (trimmed version)
+			currentSection.append(trimmed);
+			currentLeadingWs = leadingWs;
 		}
 		super.prepare(builder);
 	}

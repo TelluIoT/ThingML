@@ -77,7 +77,6 @@ public class ReactJSCompiler extends JSCompiler {
 					if (CompositeStateHelper.allContainedStatesIncludingSessions(type.getBehaviour()).stream().anyMatch(new Predicate<State>() {
 						@Override
 						public boolean test(State s) {
-							// TODO Auto-generated method stub
 							return AnnotatedElementHelper.hasAnnotation(s, "template") || AnnotatedElementHelper.hasAnnotation(s, "templatefun");
 						}
 					})) return true;

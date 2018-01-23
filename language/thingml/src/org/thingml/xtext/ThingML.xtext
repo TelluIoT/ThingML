@@ -337,7 +337,7 @@ ArrayIndexPostfix returns Expression:
 ;
 
 AtomicExpression returns Expression:
-	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | FunctionCallExpression 
+	ExternExpression | EnumLiteralRef | ByteLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | FunctionCallExpression 
 	 | EventReference 
 ;
 
@@ -347,6 +347,9 @@ ExternExpression returns ExternExpression:
 	
 EnumLiteralRef returns EnumLiteralRef:
 	^enum=[Enumeration|ID] ':' literal=[EnumerationLiteral|ID];
+	
+ByteLiteral returns ByteLiteral:
+	byteValue=BYTE;
 
 IntegerLiteral returns IntegerLiteral:
 	intValue=INT;
@@ -411,8 +414,9 @@ InstanceRef returns InstanceRef:
 
 terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
-terminal INT returns ecore::EInt: ('0'..'9')+;
+terminal BYTE returns ecore::EByte: "0x" ('0'..'9'|'a'..'f'|'A'..'F') ('0'..'9'|'a'..'f'|'A'..'F');
 
+terminal INT returns ecore::EInt: ('0'..'9')+;
 
 terminal FLOAT returns ecore::EDouble :
 ('0'..'9')+ '.' ('0'..'9')* (('e'|'E') ('+' | '-')? ('0'..'9')+)?

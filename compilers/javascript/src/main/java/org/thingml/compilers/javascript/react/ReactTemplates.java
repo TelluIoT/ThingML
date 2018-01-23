@@ -303,7 +303,7 @@ public class ReactTemplates {
 					// If not template is provided, just render all substates (and regions)
 					ret.append("<React.Fragment>");
 					ret.section("substates").lines().indent().append("{state.getsubstates()}");
-					ret.section("regions").lines().indent().append("{state.getregions()}");
+					if (sc instanceof CompositeState) ret.section("regions").lines().indent().append("{state.getregions()}");
 					ret.append("</React.Fragment>");
 				}
 			}
