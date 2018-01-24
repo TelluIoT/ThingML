@@ -38,9 +38,9 @@ thing TestMultiServerPing includes Test, PingMsg
 		state Ping {
             transition -> Pong
 			event m : Test?In
-			guard m.c == '\'0\''
+			guard m.c == '0'
 			action do
-                TestOut('\'P\'')
+                TestOut('P')
                 ppclient!ping()
             end
 		}
@@ -48,7 +48,7 @@ thing TestMultiServerPing includes Test, PingMsg
 		state Pong {
 			internal event ppclient?pong
 			action do
-				TestOut('\'1\'')
+				TestOut('1')
 				doneCount = doneCount + 1
     			if (doneCount == 3) Test!Done()
 			end

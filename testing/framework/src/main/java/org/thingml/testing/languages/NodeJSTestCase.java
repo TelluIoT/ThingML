@@ -59,18 +59,18 @@ public class NodeJSTestCase extends ThingMLTestCase {
 		ThingMLHelpers.findContainingModel(dumper).getTypes().add(fsType);
 		
 		ThingMLInjector.addProperties(dumper,
-			"property fs : JavaScriptFS = 'require(\\'fs\\')' as JavaScriptFS"
+			"property fs : JavaScriptFS = `require('fs')` as JavaScriptFS"
 		);
 		
 		ThingMLInjector.addActions(function,
-			"''&fs&'.appendFileSync('&DumpPath&','&C&');'"
+			"``&fs&`.appendFileSync(`&DumpPath&`,`&C&`);`"
 		);
 	}
 
 	@Override
 	protected void populateStopExecution(Thing thing, ActionBlock body) throws AssertionError {
 		ThingMLInjector.addActions(body,
-			"'process.exit('&Code&');'"
+			"`process.exit(`&Code&`);`"
 		);
 	}
 

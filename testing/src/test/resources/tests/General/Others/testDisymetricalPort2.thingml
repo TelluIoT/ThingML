@@ -19,17 +19,17 @@ thing TestDisymetricalPort2 includes Test
 		
 		state Init {
 			on entry do
-				TestOut('\'I\'')
+				TestOut('I')
 			end
 
 			internal event pin?m1
-			action TestOut('\'1\'')
+			action TestOut('1')
 
 			internal event pin?m3
-			action TestOut('\'3\'')
+			action TestOut('3')
 
 			internal event Test?In	
-			action TestOut('\'J\'')
+			action TestOut('J')
 		}
 	}
 }

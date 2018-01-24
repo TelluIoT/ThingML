@@ -14,7 +14,7 @@ thing TestImportMsgs includes Test, B_Msgs
 			
 			internal
 			event m : Test?In
-			guard m.c == '\'x\''
+			guard m.c == 'x'
 			action do
 				p!msgA()
 			end
@@ -22,14 +22,14 @@ thing TestImportMsgs includes Test, B_Msgs
 			internal
 			event p?msgA
 			action do
-				TestOut('\'A\'')
+				TestOut('A')
 				p!msgB()
 			end
 
 			internal
 			event p?msgB
 			action do
-				TestOut('\'B\'')
+				TestOut('B')
 				TestDone()
 			end
 			    		

@@ -2,6 +2,6 @@ import "../../../thingml.thingml"
 
 thing fragment A_Func {
 	function A() : Char do
-		return '\'A\''
+		return 'A'
 	end
 }

@@ -10,16 +10,16 @@ thing TestArithmetic includes Test
 
     		transition -> STOP
 			event m : Test?In
-			guard m.c == '\'x\'' and (3 + x) * ((6 - 4) * 2) == 20
+			guard m.c == 'x' and (3 + x) * ((6 - 4) * 2) == 20
 			action do
-			    TestOut('\'x\'')
+			    TestOut('x')
             end			  		
 
     		transition -> STOP
 			event m : Test?In
-			guard m.c == '\'x\'' and not((3 + x) * ((6 - 4) * 2) == 20)
+			guard m.c == 'x' and not((3 + x) * ((6 - 4) * 2) == 20)
 			action do
-			    TestOut('\'z\'')
+			    TestOut('z')
             end
     	}
 

@@ -12,16 +12,16 @@ thing TestModulo includes Test
 			
     		transition -> STOP
 			event m : Test?In
-			guard m.c == '\'x\'' and (4 % 2 == 0) //true. Note: this should be parseable without having to put parenthesis like ((4 % 2) == 0)
+			guard m.c == 'x' and (4 % 2 == 0) //true. Note: this should be parseable without having to put parenthesis like ((4 % 2) == 0)
 			action do
-			    TestOut('\'x\'')
+			    TestOut('x')
             end
 
     		transition -> STOP
 			event m : Test?In
-			guard m.c == '\'x\'' and (1 == 4 % 2) //false. Note: this should be parseable without having to put parenthesis like (1 == (4 % 2))
+			guard m.c == 'x' and (1 == 4 % 2) //false. Note: this should be parseable without having to put parenthesis like (1 == (4 % 2))
 			action do
-			    TestOut('\'z\'')
+			    TestOut('z')
             end
     	}
 

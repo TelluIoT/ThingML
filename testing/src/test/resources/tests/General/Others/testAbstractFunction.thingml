@@ -16,7 +16,7 @@ thing TestAbstractFunction includes Test, Foo
 {
     //Define implementation of function foo
     function foo() do
-        TestOut('\'x\'')
+        TestOut('x')
     end
 
 
@@ -27,7 +27,7 @@ thing TestAbstractFunction includes Test, Foo
 
 			transition -> INIT
 			event m : Test?In
-			guard m.c == '\'x\''
+			guard m.c == 'x'
 			action do
 				foo() //check that we call the redefined function, not just the empty abstract definition
                 bar() //check that bar is properly included and that the call to foo is properly linked

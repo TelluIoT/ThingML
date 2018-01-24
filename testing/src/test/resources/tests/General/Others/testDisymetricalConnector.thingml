@@ -22,23 +22,23 @@ thing TestDisymetricalConnector includes Test, Msgs
 	statechart Chart init Init {		
 		state Init {
 			internal event e : Test?In
-			guard e.c == '\'1\''	
+			guard e.c == '1'	
 			action p1!m1()	
 
 			internal event e : Test?In
-			guard e.c == '\'2\''		
+			guard e.c == '2'		
 			action p2!m1()
 
 			internal event p1?m2
 			action do
-				TestOut('\'I\'')
+				TestOut('I')
 				count = count + 1
 				if (count == 3) TestDone()
 			end
 
 			internal event p2?m2
 			action do
-				TestOut('\'I\'')
+				TestOut('I')
 				count = count + 1
 				if (count == 3) TestDone()
 			end

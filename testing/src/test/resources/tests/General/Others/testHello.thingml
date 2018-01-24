@@ -12,40 +12,40 @@ thing TestHello includes Test
 		state H {	
 			transition -> E 
 			event m : Test?In
-			guard m.c == '\'h\''
-			action TestOut('\'w\'')
+			guard m.c == 'h'
+			action TestOut('w')
 			
 			internal event m : Test?In
-			guard not (m.c == '\'h\'')
-			action TestFailure('\'A\'')
+			guard not (m.c == 'h')
+			action TestFailure('A')
 		}
 		
 		state E {
 			transition -> L1 
 			event m : Test?In
-			guard m.c == '\'e\''
-			action TestOut('\'o\'')
+			guard m.c == 'e'
+			action TestOut('o')
 		}
 		
 		state L1 {
 			transition -> L2 
 			event m : Test?In
-			guard m.c == '\'l\''
-			action TestOut('\'r\'')
+			guard m.c == 'l'
+			action TestOut('r')
 		}
 		
 		state L2 {
 			transition -> O 
 			event m : Test?In
-			guard m.c == '\'l\''
-			action TestOut('\'l\'')
+			guard m.c == 'l'
+			action TestOut('l')
 		}
 		
 		state O {
 			transition -> H 
 			event m : Test?In
-			guard m.c == '\'o\''
-			action TestOut('\'d\'')
+			guard m.c == 'o'
+			action TestOut('d')
 		}
 	}
 }

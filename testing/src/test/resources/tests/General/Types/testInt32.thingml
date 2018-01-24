@@ -15,20 +15,20 @@ thing TestInt32 includes Test
 
     	state S0 {
     		internal event m : harnessIn?testIn
-			guard ((m.c == '\'1\'') and (min == -2147483648))
-			action harnessOut!testOut('\'1\'')
+			guard ((m.c == '1') and (min == -2147483648))
+			action harnessOut!testOut('1')
 
     		internal event m : harnessIn?testIn
-			guard ((m.c == '\'2\'') and (max == 2147483647))
-			action harnessOut!testOut('\'2\'')
+			guard ((m.c == '2') and (max == 2147483647))
+			action harnessOut!testOut('2')
 
     		internal event m : harnessIn?testIn
-			guard ((m.c == '\'3\'') and (zero == 0))
-			action harnessOut!testOut('\'3\'')
+			guard ((m.c == '3') and (zero == 0))
+			action harnessOut!testOut('3')
 
     		internal event m : harnessIn?testIn
-			guard ((m.c == '\'4\'') and (order == 1))
-			action harnessOut!testOut('\'4\'')
+			guard ((m.c == '4') and (order == 1))
+			action harnessOut!testOut('4')
     	}
     }
 }

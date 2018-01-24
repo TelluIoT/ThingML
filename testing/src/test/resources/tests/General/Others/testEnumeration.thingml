@@ -12,23 +12,23 @@ thing TestEnumeration includes Test
 		
 	     state A {
             on entry do
-                TestOut('\'a\'')
+                TestOut('a')
             end
             
             transition -> B
             event m : Test?In
-			guard m.c == '\'t\'' and status == DigitalState:LOW
+			guard m.c == 't' and status == DigitalState:LOW
          }               
          
          state B {
              on entry do
-                TestOut('\'b\'')
+                TestOut('b')
                 status = DigitalState:HIGH   
              end
              
             transition -> A
             event m : Test?In
-			guard m.c == '\'t\'' and status == DigitalState:HIGH
+			guard m.c == 't' and status == DigitalState:HIGH
          }
     }
 }

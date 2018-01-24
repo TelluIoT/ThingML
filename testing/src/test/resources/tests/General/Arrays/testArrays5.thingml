@@ -68,13 +68,13 @@ thing A includes Msgs {
 					n = n + 1
 				end
 				if (ar[c+d] == 6) do
-					myPort!rep('\'A\'')
+					myPort!rep('A')
 				end
 				if (ar[c+d] == 11) do
- 					  myPort!rep('\'B\'')
+ 					  myPort!rep('B')
 				end
 				if (ar[c+d] == 5) do
-					myPort!rep('\'C\'')
+					myPort!rep('C')
 				end
 			end
 		}

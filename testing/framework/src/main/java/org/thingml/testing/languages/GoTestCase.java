@@ -56,13 +56,13 @@ public class GoTestCase extends ThingMLTestCase {
 		
 		ThingMLInjector.addActions(function,
 			// Open the file for writing
-			"'file, err := os.OpenFile('&DumpPath&', os.O_APPEND|os.O_RDWR, 0666)'",
-			"'if err != nil {'",
-			"'  panic(err)'",
-			"'}'",
-			"'defer file.Close()'",
+			"`file, err := os.OpenFile(`&DumpPath&`, os.O_APPEND|os.O_RDWR, 0666)`",
+			"`if err != nil {`",
+			"`  panic(err)`",
+			"`}`",
+			"`defer file.Close()`",
 			// Write the character to the file
-			"'file.Write([]byte { '&C&' })'"
+			"`file.Write([]byte { `&C&` })`"
 		);
 	}
 
@@ -74,10 +74,10 @@ public class GoTestCase extends ThingMLTestCase {
 		thing.getAnnotations().add(ann);
 		
 		ThingMLInjector.addActions(body,
-			"'if Code > 0 {'",
-			"'  os.Exit(int('&Code&'));'",
-			"'}'",
-			"'state.Runtime.StopWhenInactive()'"
+			"`if Code > 0 {`",
+			"`  os.Exit(int(`&Code&`));`",
+			"`}`",
+			"`state.Runtime.StopWhenInactive()`"
 		);
 	}
 

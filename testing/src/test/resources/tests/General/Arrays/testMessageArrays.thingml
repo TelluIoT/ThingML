@@ -37,10 +37,10 @@ thing SendArray includes ArrayMsg {
 		sends mArray
 	}
 
-	set array[0] = '\'A\''
-	set array[1] = '\'B\''
-	set array[2] = '\'C\''
-	set array[3] = '\'D\''
+	set array[0] = 'A'
+	set array[1] = 'B'
+	set array[2] = 'C'
+	set array[3] = 'D'
     
     statechart TestArrays init S0 {
     	

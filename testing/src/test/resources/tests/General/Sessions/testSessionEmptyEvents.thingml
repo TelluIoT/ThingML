@@ -24,7 +24,7 @@ thing TestSessionEmptyEvents includes Test
 		session s<5> init S1 {
 			state S1 {
 				on entry do
-					TestOut('\'1\'')
+					TestOut('1')
 					p!n()
 				end
 
@@ -33,7 +33,7 @@ thing TestSessionEmptyEvents includes Test
 
 			state S2 {
 				on entry do
-					TestOut('\'2\'')
+					TestOut('2')
 				end
 
 				transition -> S3
@@ -41,7 +41,7 @@ thing TestSessionEmptyEvents includes Test
 
 			state S3 {
 				on entry do
-					TestOut('\'3\'')
+					TestOut('3')
 				end
 
 				transition -> S4
@@ -49,7 +49,7 @@ thing TestSessionEmptyEvents includes Test
 
 			state S4 {
 				on entry do
-					TestOut('\'4\'')
+					TestOut('4')
 				end
 
 				transition -> S5 event p?n
@@ -57,7 +57,7 @@ thing TestSessionEmptyEvents includes Test
 
 			final state S5 {
 				on entry do
-					TestOut('\'5\'')
+					TestOut('5')
 					TestDone()
 				end
 			}

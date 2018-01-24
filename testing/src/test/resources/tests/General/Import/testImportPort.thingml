@@ -9,7 +9,7 @@ thing TestImportPort includes Test, B_Port
 			
 			internal
 			event m : Test?In
-			guard m.c == '\'x\''
+			guard m.c == 'x'
 			action do
 				A!msgA()
 			end
@@ -17,14 +17,14 @@ thing TestImportPort includes Test, B_Port
 			internal
 			event A?msgA
 			action do
-				TestOut('\'A\'')
+				TestOut('A')
 				B!msgB()
 			end
 
 			internal
 			event B?msgB
 			action do
-				TestOut('\'B\'')
+				TestOut('B')
 				TestDone()
 			end
 			    		

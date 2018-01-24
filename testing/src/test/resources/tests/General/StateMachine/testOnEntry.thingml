@@ -13,13 +13,13 @@ thing TestOnEntry includes Test
 		state I {
 			transition -> J
 			event m : Test?In
-			guard m.c == '\'t\''
+			guard m.c == 't'
 		}
 		state J {
-			on entry TestOut('\'E\'' as Char)
+			on entry TestOut('E')
 			transition -> J
 			event m : Test?In
-			guard m.c == '\'t\''
+			guard m.c == 't'
 		}
 	}
 }

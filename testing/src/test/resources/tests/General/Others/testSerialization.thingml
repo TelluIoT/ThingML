@@ -24,51 +24,51 @@ thing TestSerialization includes Test
 	statechart Chart init Init {
 		state Init {
 			internal event e : Test?In
-			guard e.c == '\'1\''
+			guard e.c == '1'
 			action pout!m1()
 
 			internal event pin?m1
-			action TestOut('\'1\'')
+			action TestOut('1')
 
 			internal event e : Test?In
-			guard e.c == '\'2\''
-			action pout!m2('\'X\'')
+			guard e.c == '2'
+			action pout!m2('X')
 
 			internal event e : pin?m2
-			guard e.p == '\'X\''
-			action TestOut('\'2\'')
+			guard e.p == 'X'
+			action TestOut('2')
 
 			internal event e : Test?In
-			guard e.c == '\'3\''
+			guard e.c == '3'
 			action pout!m3((1 == 1))
 
 			internal event e : pin?m3
 			guard e.p
-			action TestOut('\'3\'')
+			action TestOut('3')
 
 			internal event e : Test?In
-			guard e.c == '\'4\''
+			guard e.c == '4'
 			action pout!m4(128)
 
 			internal event e : pin?m4
 			guard e.p == 128
-			action TestOut('\'4\'')
+			action TestOut('4')
 
 			internal event e : Test?In
-			guard e.c == '\'5\''
+			guard e.c == '5'
 			action pout!m5(33825)
 
 			internal event e : pin?m5
 			guard e.p == 33825
-			action TestOut('\'5\'')
+			action TestOut('5')
 
 			internal event e : Test?In
-			guard e.c == '\'6\''
+			guard e.c == '6'
 			action pout!m6(-17441)
 
 			internal event e : pin?m6
 			guard e.p == -17441
-			action TestOut('\'6\'')
+			action TestOut('6')
 
 			/*internal event e : Test?In
 			guard e.c == '\'7\''
@@ -79,28 +79,28 @@ thing TestSerialization includes Test
 			action TestOut('\'7\'')*/
 
 			internal event e : Test?In
-			guard e.c == '\'8\''
-			action pout!m8('-1446609953')
+			guard e.c == '8'
+			action pout!m8(`-1446609953`)
 
 			internal event e : pin?m8
-			guard e.p == '-1446609953'
-			action TestOut('\'8\'')
+			guard e.p == `-1446609953`
+			action TestOut('8')
 
 			internal event e : Test?In
-			guard e.c == '\'9\''
-			action pout!m9('-3.14156')
+			guard e.c == '9'
+			action pout!m9(`-3.14156`)
 
 			internal event e : pin?m9
-			guard e.p == '-3.14156'
-			action TestOut('\'9\'')
+			guard e.p == `-3.14156`
+			action TestOut('9')
 
 			internal event e : Test?In
-			guard e.c == '\'A\''
-			action pout!m10('-3.14156', '3.14156')
+			guard e.c == 'A'
+			action pout!m10(`-3.14156`, `3.14156`)
 
 			internal event e : pin?m10
-			guard ((e.p1 == '-3.14156') and (e.p2 == '3.14156'))
-			action TestOut('\'A\'')
+			guard ((e.p1 == `-3.14156`) and (e.p2 == `3.14156`))
+			action TestOut('A')
 			
 			internal event Test?Done
 			action TestDone()

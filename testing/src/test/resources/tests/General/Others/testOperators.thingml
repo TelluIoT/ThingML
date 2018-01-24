@@ -3,8 +3,8 @@ import "../../thingml.thingml"
 thing TestOperators includes Test
 @test "x # ABBBABBAAABA"
 {
-    property A : Char = '\'A\'' as Char
-    property B : Char = '\'B\'' as Char
+    property A : Char = 'A'
+    property B : Char = 'B'
 
 	statechart Chart init INIT {
     

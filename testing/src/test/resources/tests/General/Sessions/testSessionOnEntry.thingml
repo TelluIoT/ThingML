@@ -5,7 +5,7 @@ thing TestSessionOnEntry includes Test
 {
 	statechart Chart init INIT {
 
-        on entry TestOut('\'A\'')
+        on entry TestOut('A')
 
     	state INIT {
 			internal event e : Test?In
@@ -16,7 +16,7 @@ thing TestSessionOnEntry includes Test
 
 			final state S1 {
 				on entry do
-					TestOut('\'B\'')
+					TestOut('B')
 					TestDone()
 				end
 			}

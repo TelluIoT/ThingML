@@ -42,7 +42,7 @@ public class CharValueConverter extends AbstractLexerBasedConverter<Byte> {
 	}
 	
 	public static String ToString(Byte value) {
-		if (value >= 32 || value <= 126)
+		if (value >= 32 && value <= 126)
 			return "'"+(char)(byte)value+"'";
 		else if (value == 0)
 			return "'\\0'";

@@ -17,40 +17,40 @@ thing TestMessageFunction includes Test
 		state H {	
 			transition -> E 
 			event m : Test?In
-			guard m.c == '\'h\''
-			action TestOut(output('\'w\''))
+			guard m.c == 'h'
+			action TestOut(output('w'))
 			
 			internal event m : Test?In
-			guard not (m.c == '\'h\'')
-			action TestFailure('\'A\'')
+			guard not (m.c == 'h')
+			action TestFailure('A')
 		}
 		
 		state E {
 			transition -> L1 
 			event m : Test?In
-			guard m.c == '\'e\''
-			action TestOut(output('\'o\''))
+			guard m.c == 'e'
+			action TestOut(output('o'))
 		}
 		
 		state L1 {
 			transition -> L2 
 			event m : Test?In
-			guard m.c == '\'l\''
-			action TestOut(output('\'r\''))
+			guard m.c == 'l'
+			action TestOut(output('r'))
 		}
 		
 		state L2 {
 			transition -> O 
 			event m : Test?In
-			guard m.c == '\'l\''
-			action TestOut(output('\'l\''))
+			guard m.c == 'l'
+			action TestOut(output('l'))
 		}
 		
 		state O {
 			transition -> H 
 			event m : Test?In
-			guard m.c == '\'o\''
-			action TestOut(output('\'d\''))
+			guard m.c == 'o'
+			action TestOut(output('d'))
 		}
 	}
 }

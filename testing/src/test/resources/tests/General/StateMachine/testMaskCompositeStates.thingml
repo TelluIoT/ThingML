@@ -15,66 +15,66 @@ thing TestMaskCompositeStates includes Test
 		state I {
 			transition -> C1
 			event m : Test?In
-			guard m.c == '\'n\''
+			guard m.c == 'n'
 		}
 		
 		composite state C1 init C1S1 {
 		
 		    on entry do
-              TestOut('\'0\'' as Char)
+              TestOut('0')
             end
 		    on exit do
-              TestOut('\'0\'' as Char)
+              TestOut('0')
             end
         
 		    transition -> I
 		    event m : Test?In
-		    guard m.c == '\'p\''
+		    guard m.c == 'p'
 		
 			state C1S1 {
 				on entry do
-                    TestOut('\'1\'' as Char)
+                    TestOut('1')
                 end
 				transition -> C1S2
 				event m : Test?In
-				guard m.c == '\'n\''
+				guard m.c == 'n'
 			}
 			
 			composite state C1S2 init C2S1 {
 				
-				on entry TestOut('\'2\'' as Char)
-				on exit TestOut('\'2\'' as Char)
+				on entry TestOut('2')
+				on exit TestOut('2')
 				
                 transition -> C1S1
 				event m : Test?In
-				guard m.c == '\'p\''
+				guard m.c == 'p'
 				
 				state C2S1 {	
-					on entry TestOut('\'3\'' as Char)
+					on entry TestOut('3')
 					transition -> C2S3
 					event m : Test?In
-					guard m.c == '\'n\''
+					guard m.c == 'n'
 				}
 				
 				state C2S2 {
-					on entry TestOut('\'3\'' as Char)
+					on entry TestOut('3')
 					transition -> C2S3
 					event m : Test?In
-					guard m.c == '\'n\''
+					guard m.c == 'n'
 				}
 				
 				composite state C2S3 init C3S1 {
 				
-					on entry TestOut('\'4\'' as Char)
-					on exit TestOut('\'4\'' as Char)
+					on entry TestOut('4')
+					on exit TestOut('4')
 					transition -> C2S1
 					event m : Test?In
-					guard m.c == '\'p\''
+					guard m.c == 'p'
 				
 					composite state C3S1 init C4S1 {
 					
-						on entry TestOut('\'5\'' as Char)
-						on exit TestOut('\'5\'' as Char)
+						on entry TestOut('5')
+						on exit TestOut('5')
 						
 						state C4S1 {
 						}

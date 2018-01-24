@@ -64,9 +64,9 @@ public class PosixTestCase extends ThingMLTestCase {
 	@Override
 	protected void populateFileDumper(Thing dumper, ActionBlock function, Property path) throws AssertionError {
 		ThingMLInjector.addActions(function,
-			"'int fd = open('&DumpPath&', O_APPEND|O_SYNC|O_WRONLY);'",
-			"'write(fd, &'&C&', 1);'",
-			"'close(fd);'"
+			"`int fd = open(`&DumpPath&`, O_APPEND|O_SYNC|O_WRONLY);`",
+			"`write(fd, &`&C&`, 1);`",
+			"`close(fd);`"
 		);
 		// Add some includes
 		addHeaders(dumper,
@@ -79,7 +79,7 @@ public class PosixTestCase extends ThingMLTestCase {
 	@Override
 	protected void populateStopExecution(Thing thing, ActionBlock body) throws AssertionError {
 		ThingMLInjector.addActions(body,
-			"'exit('&Code&');'"
+			"`exit(`&Code&`);`"
 		);
 		// Add some includes
 		addHeaders(thing,

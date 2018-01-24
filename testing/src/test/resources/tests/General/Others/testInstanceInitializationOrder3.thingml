@@ -62,15 +62,15 @@ configuration conf {
 	instance test : TestInstanceInitializationOrder3
 	
 	instance A : I
-	set A.inst = '\'A\''
+	set A.inst = 'A'
 	instance B : I
-	set B.inst = '\'B\''
+	set B.inst = 'B'
 	instance C : I
-	set C.inst = '\'C\''
+	set C.inst = 'C'
 	instance D : I
-	set D.inst = '\'D\''
+	set D.inst = 'D'
 	instance E : I
-	set E.inst = '\'E\''
+	set E.inst = 'E'
 	
 	connector C.r => B.p
 	connector B.r => A.p

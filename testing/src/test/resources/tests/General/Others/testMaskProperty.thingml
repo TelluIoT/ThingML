@@ -13,10 +13,10 @@ thing TestMaskProperty includes Test, Obj
 	statechart TestMaskProperty init I {
 		state I {
 			internal event m : Test?In
-			guard m.c == '\'t\''
+			guard m.c == 't'
 			action do
-				if (frag == 0 and obj == 1 and conf == 2) TestOut('\'1\'')
-				if (not (frag == 0) or not (obj == 1) and not(conf == 2)) TestFailure('\'A\'')
+				if (frag == 0 and obj == 1 and conf == 2) TestOut('1')
+				if (not (frag == 0) or not (obj == 1) and not(conf == 2)) TestFailure('A')
 				TestDone()
 			end
 		}

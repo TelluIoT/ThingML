@@ -6,20 +6,20 @@ thing TestInternalTransition2 includes Test
 @test "titi # ETITI"
 {
 	statechart TestInternalTransition2 init I {	
-		on entry TestOut('\'E\'' as Char)
+		on entry TestOut('E')
 		
 		internal event Test?Done
 		action TestDone()
 			
 		internal
 		event m : Test?In
-		guard m.c == '\'i\''
-		action TestOut('\'I\'' as Char)
+		guard m.c == 'i'
+		action TestOut('I')
 			
 		internal
 		event m : Test?In
-		guard m.c == '\'t\''
-		action TestOut('\'T\'' as Char)	
+		guard m.c == 't'
+		action TestOut('T')	
 	
 		state I {
 			

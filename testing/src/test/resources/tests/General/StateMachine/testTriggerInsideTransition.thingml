@@ -15,22 +15,22 @@ thing TestTriggerInsideTransition includes Test
 	statechart TestTriggerInsideTransition init I {
 	
 		state I {
-			on entry TestOut('\'I\'' as Char)
+			on entry TestOut('I')
 			transition -> F
 			event m : Test?In
-			guard m.c == '\'t\''
+			guard m.c == 't'
 			action p!m()             //this should be queued and make the state machine to go to state G right after it has entered F
 		}
 		
 		state F {
-			on entry TestOut('\'F\'' as Char)
+			on entry TestOut('F')
 			transition -> G
 			event m : p?m
 		}
 		
 		state G {
 			on entry do
-				TestOut('\'G\'' as Char)
+				TestOut('G')
 				TestDone()
 			end
 		}

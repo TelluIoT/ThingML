@@ -12,7 +12,7 @@ thing TestArrays3 includes Test
 	
 		state I {
 			on entry do
-				TestOut('\'E\'')
+				TestOut('E')
 				TestDone()
 			end
 		}

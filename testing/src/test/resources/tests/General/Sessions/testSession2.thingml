@@ -3,7 +3,7 @@ import "../../thingml.thingml"
 thing TestSession2 includes Test
 @test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
 {
-	property ID : Char = '\'M\'' as Char
+	property ID : Char = 'M'
 
 	message m(id : Char)
 	message n(id : Char)
@@ -38,7 +38,7 @@ thing TestSession2 includes Test
     		event r : p?ready
     		guard r.id == ID
     		action do
-    			ID = '\'M\'' as Char
+    			ID = 'M'
     			p!m(ID)    			
     		end
     	}

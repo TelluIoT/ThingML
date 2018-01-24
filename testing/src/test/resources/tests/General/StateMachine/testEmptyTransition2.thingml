@@ -5,30 +5,30 @@ thing TestEmptyTransition2 includes Test
 {
 	statechart TestEmptyTransition init I {
 		state I {
-			on entry TestOut('\'I\'' as Char)
+			on entry TestOut('I')
 
 			transition -> J
 			event m : Test?In
-			guard m.c == '\'t\''
+			guard m.c == 't'
 		}
 		state J {
-			on entry TestOut('\'J\'' as Char)
+			on entry TestOut('J')
 			
 			transition -> K
 		}
 		state K {
-			on entry TestOut('\'K\'' as Char)
+			on entry TestOut('K')
 			
 			transition -> L
 		}
 		state L {
-			on entry TestOut('\'L\'' as Char)
+			on entry TestOut('L')
 			
 			transition -> M
 		}
 
 		state M {
-			on entry TestOut('\'M\'' as Char)
+			on entry TestOut('M')
 			
 			internal event Test?Done
 			action TestDone()

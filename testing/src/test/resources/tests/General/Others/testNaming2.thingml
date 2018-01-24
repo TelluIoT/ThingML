@@ -32,7 +32,7 @@ thing TestNaming2 includes Test
                 on entry do
                     boolean(true)
                     int(0)
-                    TestOut('\'X\'')
+                    TestOut('X')
                     TestDone()
                 end
            }

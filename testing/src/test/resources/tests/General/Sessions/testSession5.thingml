@@ -3,7 +3,7 @@ import "../../thingml.thingml"
 thing TestSession5 includes Test
 @test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
 {
-	property ID : Char = '\'M\'' as Char
+	property ID : Char = 'M'
 	
 	property finished : Integer = 0
 	internal port forks { receives Done sends Done }
@@ -18,7 +18,7 @@ thing TestSession5 includes Test
 				action do
 					ID = e.c
 					fork s
-					ID = '\'M\'' as Char
+					ID = 'M'
 				end
 				
 				internal event forks?Done

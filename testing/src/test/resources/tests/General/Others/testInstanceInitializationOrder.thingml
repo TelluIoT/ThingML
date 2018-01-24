@@ -7,7 +7,7 @@ thing fragment Msgs {
 thing TestInstanceInitializationOrder includes Test, Msgs
 @test "t # ABC"
 {
-	property inst : Char = '\'A\''	
+	property inst : Char = 'A'	
 
 	provided port p 
 	@sync_send "true"
@@ -73,10 +73,10 @@ configuration conf {
 	instance test : TestInstanceInitializationOrder
 
 	instance B : I
-	set B.inst = '\'B\''
+	set B.inst = 'B'
 	
 	instance C : I
-	set C.inst = '\'C\''
+	set C.inst = 'C'
 	
 	connector C.r => B.p
 	connector B.r => test.p

@@ -10,10 +10,10 @@ thing TestArrays includes Test
 	property array : Char[8]
 	
 	// First half of the array initialized here
-	set array[0] = '\'1\''
-	set array[1] = '\'2\''
-	set array[2] = '\'3\''
-	set array[3] = '\'4\''
+	set array[0] = '1'
+	set array[1] = '2'
+	set array[2] = '3'
+	set array[3] = '4'
 	// Other half of the array is initialized in the 
 	// configuration in order to make sure that it works too
     
@@ -22,12 +22,12 @@ thing TestArrays includes Test
     	state sstart {
     		transition -> initialized
 			event m : Test?In
-			guard m.c == '\'x\''
+			guard m.c == 'x'
     	}
     	
     	state initialized {
     	on entry do
-            TestOut('\'e\'')
+            TestOut('e')
     		// Test sequential read in both directions and that index are properly interpreted
     		index = 0
     		while (index < 8) do
@@ -35,7 +35,7 @@ thing TestArrays includes Test
                 TestOut(array[7-index])
                 index = index + 1
     		end
-            TestOut('\'e\'')
+            TestOut('e')
             // Test affectation of an array to another one
             // and affection of a variable from an array entry
             // and write into an array
@@ -44,7 +44,7 @@ thing TestArrays includes Test
             while (index < 8) do
                 var v : Char = array2[index]
                 TestOut(v)
-                array[index] = '\'w\''
+                array[index] = 'w'
                 TestOut(array[index])
                 index = index + 1
             end
@@ -58,8 +58,8 @@ thing TestArrays includes Test
 configuration conf {
 	instance test : TestArrays
 	
-	set test.array[7] = '\'8\''
-	set test.array[4] = '\'5\''
-	set test.array[5] = '\'6\''
-	set test.array[6] = '\'7\''
+	set test.array[7] = '8'
+	set test.array[4] = '5'
+	set test.array[5] = '6'
+	set test.array[6] = '7'
 }

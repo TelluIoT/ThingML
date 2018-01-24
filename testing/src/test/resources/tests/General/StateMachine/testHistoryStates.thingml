@@ -9,38 +9,38 @@ thing TestHistoryStates includes Test
 		action TestDone()
 	
 		state I {
-			on entry TestOut('\'I\'' as Char)
+			on entry TestOut('I')
 			
 			transition -> C1
 			event m : Test?In
-			guard m.c == '\'y\''
+			guard m.c == 'y'
 			
 			transition -> C2
 			event m : Test?In
-			guard m.c == '\'z\''
+			guard m.c == 'z'
 		}
 		
 		composite state C1 init C1S1 keeps history {
 		
 		transition -> I
 		event m : Test?In
-		guard m.c == '\'i\''
+		guard m.c == 'i'
 		transition -> C2
 		event m : Test?In
-		guard m.c == '\'z\''
+		guard m.c == 'z'
 		
 			state C1S1 {
-				on entry TestOut('\'1\'' as Char)
+				on entry TestOut('1')
 				transition -> C1S2
 				event m : Test?In
-				guard m.c == '\'n\''
+				guard m.c == 'n'
 			}
 			
 			state C1S2 {
-				on entry TestOut('\'2\'' as Char)
+				on entry TestOut('2')
 				transition -> C1S1
 				event m : Test?In
-				guard m.c == '\'n\''
+				guard m.c == 'n'
 			}
 		}	
 		
@@ -48,23 +48,23 @@ thing TestHistoryStates includes Test
 				
 			transition -> I
 			event m : Test?In
-			guard m.c == '\'i\''
+			guard m.c == 'i'
 			transition -> C1
 			event m : Test?In
-			guard m.c == '\'y\''
+			guard m.c == 'y'
 				
 			state C2S1 {	
-				on entry TestOut('\'3\'' as Char)
+				on entry TestOut('3')
 				transition -> C2S2
 				event m : Test?In
-				guard m.c == '\'n\''
+				guard m.c == 'n'
 			}
 				
 			state C2S2 {
-				on entry TestOut('\'4\'' as Char)
+				on entry TestOut('4')
 				transition -> C2S1
 				event m : Test?In
-				guard m.c == '\'n\''
+				guard m.c == 'n'
 			}
 		}
 	}

@@ -20,14 +20,14 @@ thing TestSession3 includes Test
     	state INIT {
 			internal
 			event e : Test?In
-			guard e.c == '\'x\''
+			guard e.c == 'x'
 			action fork s
     	}
 
 		session s<poolSize> init S1 {
 			state S1 {
 				on entry do
-                    TestOut('\'S\'')
+                    TestOut('S')
                     fork t
                 end
 
@@ -46,7 +46,7 @@ thing TestSession3 includes Test
 
             final state S3 {
                 on entry do
-                	TestOut('\'X\'')
+                	TestOut('X')
                 	TestDone()
                 end
             }
@@ -57,7 +57,7 @@ thing TestSession3 includes Test
 		session t<2> init T1 {
 				state T1 {
                     on entry do
-                        TestOut('\'T\'')
+                        TestOut('T')
                         sessionPort!ready()
                     end
 

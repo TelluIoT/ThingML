@@ -3,40 +3,40 @@ import "../../thingml.thingml"
 thing TestNaming includes Test 
 @test "tt # (AE|EA)BCD"
 {
-    property A : Char = '\'A\'' as Char
+    property A : Char = 'A' as Char
     
 	statechart TestNaming init A {
 	                    
-        property A : Char = '\'A\'' as Char
+        property A : Char = 'A' as Char
                             
 		state A {
-            property A : Char = '\'A\'' as Char
+            property A : Char = 'A' as Char
     
 			on entry do
-                var A : Char = '\'A\'' as Char
-                TestOut('\'A\'')
+                var A : Char = 'A' as Char
+                TestOut('A')
             end
 			transition t -> C
 			event m : Test?In
-			guard m.c == '\'t\''
+			guard m.c == 't'
 		}
 		
         composite state C init A {
-            on entry TestOut('\'B\'')
+            on entry TestOut('B')
             
             state A {
 			on entry do
-                var A : Char = '\'A\'' as Char
-                TestOut('\'C\'')
+                var A : Char = 'A' as Char
+                TestOut('C')
             end
 			transition t -> C
 			event m : Test?In
-			guard m.c == '\'t\''
+			guard m.c == 't'
 		    } 
 
    		   state C {
 			on entry do
-				TestOut('\'D\'')
+				TestOut('D')
 				TestDone()
 			end
 		  }   
@@ -46,8 +46,8 @@ thing TestNaming includes Test
 		region A init A {	
 			state A {
 				on entry do
-                    var A : Char = '\'A\'' as Char
-                    TestOut('\'E\'')
+                    var A : Char = 'A' as Char
+                    TestOut('E')
                 end
 			}
 		}			

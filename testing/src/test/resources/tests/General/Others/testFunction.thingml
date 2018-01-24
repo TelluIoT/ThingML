@@ -28,12 +28,12 @@ thing TestFunction includes Test
 			
     		transition -> INIT
 			event m : Test?In
-			guard m.c == '\'x\''
+			guard m.c == 'x'
 			action do
 				var result : ULong = foo(a, 5)
                 var index : ULong = 0
                 while (index < result) do
-				    TestOut('\'x\'')
+				    TestOut('x')
                     index = index + 1
                 end
                 TestDone()

@@ -8,7 +8,7 @@ thing TestImportFunction includes Test, B_Func
     	state INIT {
 			transition -> INIT
 			event m : Test?In
-			guard m.c == '\'x\''    
+			guard m.c == 'x'    
 			action do
 				TestOut(A())
 				TestOut(B())

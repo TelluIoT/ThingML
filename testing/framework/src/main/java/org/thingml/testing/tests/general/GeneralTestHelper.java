@@ -29,6 +29,7 @@ import org.thingml.xtext.thingML.AbstractConnector;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
@@ -258,8 +259,8 @@ public class GeneralTestHelper {
 				SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 				send.setPort(port);
 				send.setMessage(testIn);
-				ExternExpression character = ThingMLFactory.eINSTANCE.createExternExpression();
-				character.setExpression("\'"+c+"\'");
+				CharLiteral character = ThingMLFactory.eINSTANCE.createCharLiteral();
+				character.setCharValue((byte)c);
 				send.getParameters().add(character);
 				testHarnessSendCharsEntry.getActions().add(send);
 			}

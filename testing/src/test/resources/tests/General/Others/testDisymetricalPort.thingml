@@ -17,22 +17,22 @@ thing TestDisymetricalPort includes Test
 	statechart Chart init Init {
 		state Init {
 			on entry do
-				TestOut('\'I\'')
+				TestOut('I')
 			end
 
 			internal event e : Test?In
-			guard e.c == '\'1\''	
+			guard e.c == '1'	
 			action pout!m1()	
 
 			internal event e : Test?In
-			guard e.c == '\'2\''		
+			guard e.c == '2'		
 			action pout!m2()	
 
 			internal event pin?m1
-			action TestOut('\'1\'')
+			action TestOut('1')
 
 			internal event pin?m3
-			action TestOut('\'3\'')
+			action TestOut('3')
 			
 			
 			internal event Test?Done

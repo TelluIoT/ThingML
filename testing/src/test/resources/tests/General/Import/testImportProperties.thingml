@@ -8,7 +8,7 @@ thing TestImportProperties includes Test, B_Prop
     	state INIT {
 			transition -> INIT
 			event m : Test?In
-			guard m.c == '\'x\''
+			guard m.c == 'x'
 			action do
 				TestOut(A)
 				TestOut(B)

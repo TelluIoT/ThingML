@@ -13,15 +13,15 @@ thing TestInternalPort2 includes Test, Msg
 	statechart TestInternalPort init I {
 	
 		state I {
-			on entry TestOut('\'E\'')
+			on entry TestOut('E')
 
             internal event m : Test?In
-			guard m.c == '\'t\'' 
+			guard m.c == 't' 
             action p!m()
 			
 			internal event n : p?m
 			action do
-				TestOut('\'X\'')
+				TestOut('X')
 				received++
 			end
 			

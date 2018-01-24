@@ -3,32 +3,32 @@ import "../../thingml.thingml"
 thing TestChar includes Test
 @test "1234 # 1234"
 {
-	property min : Char = '\'\0\'' as Char
-	property max : Char = '\'~\'' as Char
-	property zero : Char = '\'0\'' as Char
-	property order : Char = '\'A\'' as Char
+	property min : Char = '\0' as Char
+	property max : Char = '~' as Char
+	property zero : Char = '0' as Char
+	property order : Char = 'A' as Char
 
     statechart TestType init S0 {
     	state S0 {
     		internal
 			event m : Test?In
-			guard (m.c == '\'1\'') and (min == '\'\0\'')
-			action TestOut('\'1\'')
+			guard (m.c == '1') and (min == '\0')
+			action TestOut('1')
 
     		internal
 			event m : Test?In
-			guard (m.c == '\'2\'') and (max == '\'~\'')
-			action TestOut('\'2\'')
+			guard (m.c == '2') and (max == '~')
+			action TestOut('2')
 
     		internal
 			event m : Test?In
-			guard (m.c == '\'3\'') and (zero ==  '\'0\'')
-			action TestOut('\'3\'')
+			guard (m.c == '3') and (zero ==  '0')
+			action TestOut('3')
 
     		internal
 			event m : Test?In
-			guard (m.c == '\'4\'') and (order == '\'A\'')
-			action TestOut('\'4\'')
+			guard (m.c == '4') and (order == 'A')
+			action TestOut('4')
 			
 			internal event Test?Done
 			action TestDone()

@@ -16,7 +16,7 @@ thing TestIncrement includes Test
 					K++
 				end
 				if(2<1) do
-					TestOut('\'X\'')
+					TestOut('X')
 				end
 				else do
 					I++
@@ -29,10 +29,10 @@ thing TestIncrement includes Test
 					K++
 				end
 				if(I == 4) do
-					TestOut('\'A\'')
+					TestOut('A')
 				end
 				if(K == 4) do
-					TestOut('\'B\'')
+					TestOut('B')
 				end
 				TestDone()
 			end
