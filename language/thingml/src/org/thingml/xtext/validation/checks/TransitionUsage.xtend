@@ -8,6 +8,7 @@ import org.thingml.xtext.thingML.ReceiveMessage
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.thingML.Transition
+import org.thingml.xtext.constraints.ThingMLHelpers
 
 class TransitionUsage extends ThingMLValidatorCheck {
 
@@ -44,7 +45,7 @@ class TransitionUsage extends ThingMLValidatorCheck {
 	
 	@Check(FAST)
 	def checkEmptyAutotransition(Transition t) {
-		val source = t.eContainer as State
+		val source = ThingMLHelpers.findContainingState(t)
 		if (t.event === null && t.guard === null && t.target == source) {
 			val msg = "Self Transition without guard and without event. Will loop forever.";
 			error(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Internal, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t), "self-transition-loop")
