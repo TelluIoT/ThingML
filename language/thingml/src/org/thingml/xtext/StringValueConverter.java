@@ -26,10 +26,14 @@ public class StringValueConverter extends AbstractLexerBasedConverter<String> {
 	public String toValue(String string, INode node) throws ValueConverterException {
 		return string.substring(1, string.length()-1);
 	}
+	
+	public static String ToString(String value) {
+		return "\"" + value + "\"";
+	}
 
 	@Override
 	public String toString(String value) {
-		return "\"" + value + "\"";
+		return ToString(value);
 	}
 	
 }

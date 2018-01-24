@@ -27,9 +27,13 @@ public class ByteValueConverter extends AbstractLexerBasedConverter<Byte> {
 		return (byte)Short.parseShort(string.substring(2), 16);
 	}
 	
+	public static String ToString(Byte value) {
+		return String.format("0x%02X", value);
+	}
+	
 	@Override
 	public String toString(Byte value) {
-		return String.format("0x%02X", value);
+		return ToString(value);
 	}
 
 }

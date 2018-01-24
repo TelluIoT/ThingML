@@ -19,6 +19,8 @@ package org.thingml.compilers.thing.common;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.xtext.ByteValueConverter;
+import org.thingml.xtext.CharValueConverter;
+import org.thingml.xtext.StringValueConverter;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Action;
@@ -28,6 +30,7 @@ import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
+import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.DivExpression;
@@ -303,7 +306,12 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     
     @Override
     public void generate(ByteLiteral expression, StringBuilder builder, Context ctx) {
-    	builder.append(String.format("0x%02X", expression.getByteValue()));
+    	builder.append(ByteValueConverter.ToString(expression.getByteValue()));
+    }
+    
+    @Override
+    public void generate(CharLiteral expression, StringBuilder builder, Context ctx) {
+    	builder.append(CharValueConverter.ToString(expression.getCharValue()));
     }
 
     @Override
@@ -318,7 +326,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        builder.append("\"" + expression.getStringValue() + "\"");
+    	builder.append(StringValueConverter.ToString(expression.getStringValue()));
     }
 
     @Override

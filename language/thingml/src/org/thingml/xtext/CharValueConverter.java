@@ -41,8 +41,7 @@ public class CharValueConverter extends AbstractLexerBasedConverter<Byte> {
 		}
 	}
 	
-	@Override
-	public String toString(Byte value) {
+	public static String ToString(Byte value) {
 		if (value >= 32 || value <= 126)
 			return "'"+(char)(byte)value+"'";
 		else if (value == 0)
@@ -55,6 +54,11 @@ public class CharValueConverter extends AbstractLexerBasedConverter<Byte> {
 			return "'\\r'";
 		else
 			return "''";
+	}
+	
+	@Override
+	public String toString(Byte value) {
+		return ToString(value);
 	}
 
 }
