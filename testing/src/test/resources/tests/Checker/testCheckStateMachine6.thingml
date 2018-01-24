@@ -1,0 +1,13 @@
+thing TestCheckStateMachine
+{	
+	//Should fail as we have an infinite loop
+    statechart TestStateMachine init INIT {
+    	state INIT {
+    		transition -> State2
+    	}
+    	
+    	state State2 {
+    		transition -> INIT
+    	}
+    }
+}

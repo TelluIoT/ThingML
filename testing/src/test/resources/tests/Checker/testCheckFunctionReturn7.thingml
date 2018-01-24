@@ -1,0 +1,10 @@
+import "../core/datatypes.thingml"
+
+thing TestCheckFunctionReturn
+{
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry return 0 //Should fail as return action can only be used in functions
+    	}
+    }
+}

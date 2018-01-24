@@ -1,0 +1,18 @@
+import "../core/datatypes.thingml"
+
+thing TestCheckFunctionReturn
+{
+	//should fail as third, etc returns are unreachable
+    function foo(a : Integer) do
+      println "nothing"
+    end
+    
+    function bar() : Integer do
+    	return foo(0) + 1 //Should fail as foo returns Void, not Integer
+    end
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}
