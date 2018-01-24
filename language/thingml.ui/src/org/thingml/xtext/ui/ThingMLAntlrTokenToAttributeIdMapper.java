@@ -49,24 +49,19 @@ public class ThingMLAntlrTokenToAttributeIdMapper extends AbstractAntlrTokenToAt
 	@Override
 	protected String calculateId(String tokenName, int tokenType) {
 		
-		
-		
-		
 		switch(tokenType) {
-		case InternalThingMLLexer.RULE_ANNOTATION_ID: 
+		case InternalThingMLLexer.RULE_ANNOTATION_ID:
 			return ThingMLHighlightingConfiguration.ANNOTATIONS_ID;
-		case InternalThingMLLexer.RULE_FLOAT: 
+		case InternalThingMLLexer.RULE_FLOAT:
+		case InternalThingMLLexer.RULE_INT:
+		case InternalThingMLLexer.RULE_CHAR:
+		case InternalThingMLLexer.RULE_BYTE:
+		case InternalThingMLLexer.RULE_STRING:
 			return ThingMLHighlightingConfiguration.DEFAULT_LITERAL_ID;
-		case InternalThingMLLexer.RULE_STRING_LIT: 
-			return ThingMLHighlightingConfiguration.DEFAULT_LITERAL_ID;
-		case InternalThingMLLexer.RULE_INT: 
-			return ThingMLHighlightingConfiguration.DEFAULT_LITERAL_ID;
-		case InternalThingMLLexer.RULE_ML_COMMENT: 
+		case InternalThingMLLexer.RULE_ML_COMMENT:
+		case InternalThingMLLexer.RULE_SL_COMMENT:
 			return ThingMLHighlightingConfiguration.COMMENTS_ID;
-		case InternalThingMLLexer.RULE_SL_COMMENT: 
-			return ThingMLHighlightingConfiguration.COMMENTS_ID;
-		case InternalThingMLLexer.RULE_STRING_EXT:
-		case InternalThingMLLexer.RULE_STRING_TIC:
+		case InternalThingMLLexer.RULE_EXTERN:
 			return ThingMLHighlightingConfiguration.EXTERN_ID;
 		case InternalThingMLLexer.RULE_ANY_OTHER: 
 			return ThingMLHighlightingConfiguration.DEFAULT_TEXT_ID;

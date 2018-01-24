@@ -37,6 +37,7 @@ import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
+import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.DoubleLiteral;
 import org.thingml.xtext.thingML.EnumLiteralRef;
@@ -99,6 +100,11 @@ public class TypeChecker extends ThingMLSwitch<Type> {
 	
 	@Override
 	public Type caseByteLiteral(ByteLiteral object) {
+		return Types.BYTE_TYPE;
+	}
+	
+	@Override
+	public Type caseCharLiteral(CharLiteral object) {
 		return Types.BYTE_TYPE;
 	}
 

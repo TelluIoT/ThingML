@@ -7,7 +7,7 @@ generate thingML "http://www.thingml.org/xtext/ThingML"
 
 ThingMLModel returns ThingMLModel:
 		//imports+=Import* 
-		( "import" importURI+=STRING_LIT )*
+		( "import" importURI+=STRING )*
 		(types+=Type | protocols+=Protocol | configs+=Configuration)*;	
 
 /*
@@ -16,7 +16,7 @@ Import returns ThingMLModel:
 ;
 */
 PlatformAnnotation returns PlatformAnnotation:
-	name=ANNOTATION_ID (value=STRING_LIT | value=STRING_TIC); 
+	name=ANNOTATION_ID (value=STRING | value=EXTERN); 
 
 
 NamedElement:
@@ -223,7 +223,7 @@ ActionBlock returns ActionBlock:
 	'do' (actions+=Action)* 'end';
 
 ExternStatement returns ExternStatement:
-	(statement=STRING_EXT | statement=STRING_TIC) ('&' segments+=Expression)*;
+	statement=EXTERN ('&' segments+=Expression)*;
 	
 LocalVariable returns LocalVariable:
 	(readonly?='readonly')? 'var' name=ID ':'  typeRef=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
@@ -337,12 +337,12 @@ ArrayIndexPostfix returns Expression:
 ;
 
 AtomicExpression returns Expression:
-	ExternExpression | EnumLiteralRef | ByteLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | FunctionCallExpression 
+	ExternExpression | EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | FunctionCallExpression 
 	 | EventReference 
 ;
 
 ExternExpression returns ExternExpression:
-	(expression=STRING_EXT | expression=STRING_TIC) ('&' segments+=Expression)*;
+	expression=EXTERN ('&' segments+=Expression)*;
 	
 	
 EnumLiteralRef returns EnumLiteralRef:
@@ -350,6 +350,9 @@ EnumLiteralRef returns EnumLiteralRef:
 	
 ByteLiteral returns ByteLiteral:
 	byteValue=BYTE;
+	
+CharLiteral returns CharLiteral:
+	charValue=CHAR;
 
 IntegerLiteral returns IntegerLiteral:
 	intValue=INT;
@@ -359,7 +362,7 @@ BooleanLiteral returns BooleanLiteral:
 	;
 
 StringLiteral returns StringLiteral:
-	stringValue=STRING_LIT;
+	stringValue=STRING;
 
 DoubleLiteral returns DoubleLiteral:
 	doubleValue = FLOAT;
@@ -416,6 +419,8 @@ terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 terminal BYTE returns ecore::EByte: "0x" ('0'..'9'|'a'..'f'|'A'..'F') ('0'..'9'|'a'..'f'|'A'..'F');
 
+terminal CHAR returns ecore::EByte: "'" (' '..'~'|'\\0'|'\\t'|'\\n'|'\\r') "'";
+
 terminal INT returns ecore::EInt: ('0'..'9')+;
 
 terminal FLOAT returns ecore::EDouble :
@@ -423,18 +428,14 @@ terminal FLOAT returns ecore::EDouble :
 | '.' ('0'..'9')+ (('e'|'E') ('+' | '-')? ('0'..'9')+)?
 | ('0'..'9')+ ('e'|'E') ('+' | '-')? ('0'..'9')+;
 
+
 terminal ANNOTATION_ID:
 	"@" ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 
-terminal STRING_EXT:  
-			"'" ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|"'") )* "'";
-
-terminal STRING_LIT	: 
-			'"' ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|'"') )* '"';
+terminal STRING: '"' ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|'"') )* '"';
 			
-terminal STRING_TIC	: 
-			'`' ( '\\' . | !('\\'|'`') )* '`';
+terminal EXTERN: '`' ( '\\' . | !('\\'|'`') )* '`';
 
 terminal ML_COMMENT	: '/*' -> '*/';
 terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;

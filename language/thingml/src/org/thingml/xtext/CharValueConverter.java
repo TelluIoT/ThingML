@@ -20,19 +20,41 @@ import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.impl.AbstractLexerBasedConverter;
 import org.eclipse.xtext.nodemodel.INode;
 
-public class StringTicValueConverter extends AbstractLexerBasedConverter<String> {
+public class CharValueConverter extends AbstractLexerBasedConverter<Byte> {
 
 	@Override
-	public String toValue(String string, INode node) throws ValueConverterException {
-		if(string != null && string.length() >= 2 && string.startsWith("`") && string.endsWith("`")) {
-			return string.substring(1, string.length()-1).replace("\\`", "`");
-    	}
-    	return string;
+	public Byte toValue(String string, INode node) throws ValueConverterException {
+		if (string.length() == 3)
+			return (byte)string.charAt(1);
+		else {
+			String str = string.substring(1, 3);
+			if (str.equals("\\0"))
+				return 0;
+			else if (str.equals("\\t"))
+				return 9;
+			else if (str.equals("\\n"))
+				return 10;
+			else if (str.equals("\\r"))
+				return 13;
+			else
+				throw new ValueConverterException("Invalid character literal", node, null);
+		}
 	}
 	
 	@Override
-	public String toString(String value) {
-		return "`" + value.replace("`", "\\`") + "`";
+	public String toString(Byte value) {
+		if (value >= 32 || value <= 126)
+			return "'"+(char)(byte)value+"'";
+		else if (value == 0)
+			return "'\\0'";
+		else if (value == 9)
+			return "'\\t'";
+		else if (value == 10)
+			return "'\\n'";
+		else if (value == 13)
+			return "'\\r'";
+		else
+			return "''";
 	}
 
 }
