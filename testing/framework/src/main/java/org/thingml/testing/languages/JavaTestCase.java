@@ -48,12 +48,10 @@ public class JavaTestCase extends ThingMLTestCase {
 	protected void populateFileDumper(Thing dumper, ActionBlock function, Property path) throws AssertionError {
 		ThingMLInjector.addActions(function,
 			"`try {`",
-			// Convert char to byte(s)
-			"`  char[] chars = new char[] { `&C&` };`",
-			"`  byte[] bytes = new java.lang.String(chars).getBytes(java.nio.charset.StandardCharsets.UTF_8);`",
 			// Write the byte(s) to the file
+			"`  byte[] chars = new byte[] { `&C&` };`",			
 			"`  java.io.File file = new java.io.File(`&DumpPath&`);`",
-			"`  java.nio.file.Files.write(file.toPath(), bytes, java.nio.file.StandardOpenOption.APPEND);`",
+			"`  java.nio.file.Files.write(file.toPath(), chars, java.nio.file.StandardOpenOption.APPEND);`",
 			"`} catch (java.lang.Exception e) {}`"
 		);
 	}

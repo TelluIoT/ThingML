@@ -1,0 +1,16 @@
+datatype DT<1>
+@type_checker "Byte";
+
+thing TestCheckStateMachine
+@checker_should_fail "false"
+{       
+    statechart TestAbstractFunction init INIT {
+    	state INIT {  
+    		on entry do    			
+    			var p : DT
+    			p = 'c' //should not fail as a char literal is a Byte
+    			if (p == 'b') do end
+    		end  		    
+    	}
+    }
+}

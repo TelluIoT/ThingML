@@ -80,26 +80,26 @@ thing TestSerialization includes Test
 
 			internal event e : Test?In
 			guard e.c == '8'
-			action pout!m8(`-1446609953`)
+			action pout!m8(-1446609953)
 
 			internal event e : pin?m8
-			guard e.p == `-1446609953`
+			guard e.p == -1446609953
 			action TestOut('8')
 
 			internal event e : Test?In
 			guard e.c == '9'
-			action pout!m9(`-3.14156`)
+			action pout!m9(-3.14156)
 
 			internal event e : pin?m9
-			guard e.p == `-3.14156`
+			guard e.p == -3.14156
 			action TestOut('9')
 
 			internal event e : Test?In
 			guard e.c == 'A'
-			action pout!m10(`-3.14156`, `3.14156`)
+			action pout!m10(-3.14156, 3.14156)
 
 			internal event e : pin?m10
-			guard ((e.p1 == `-3.14156`) and (e.p2 == `3.14156`))
+			guard ((e.p1 == -3.14156) and (e.p2 == 3.14156))
 			action TestOut('A')
 			
 			internal event Test?Done
