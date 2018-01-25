@@ -58,11 +58,25 @@ class VariableUsage extends ThingMLValidatorCheck {
 	}
 	
 	@Check(FAST)
+	def checkReadonlyVar(LocalVariable v) {
+		if (!v.readonly)
+			return;
+		if (v.init === null) {
+			val msg = "Readonly local variable " + v.name + " must be initialized on declaration"
+			val parent = v.eContainer.eGet(v.eContainingFeature)
+			if (parent instanceof EList)
+				error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "readonly-not-init")
+			else
+				error(msg, v.eContainer, v.eContainingFeature, "readonly-not-init")
+		}
+	}
+	
+	@Check(FAST)
 	def checkVariableAssignment(VariableAssignment va) {
 		// Check if the variable is read-only
 		if (va.property.typeRef.cardinality === null) {
 			//FIXME: Also handle array types
-			val readOnly =
+			val readOnly = 
 				if (va.property instanceof Property) (va.property as Property).readonly
 				else if (va.property instanceof LocalVariable) (va.property as LocalVariable).readonly
 				else false

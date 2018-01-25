@@ -1,0 +1,12 @@
+datatype DT<1>;
+
+thing TestCheckStateMachine
+{    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {    		  
+    		on entry do
+    			readonly var p : DT //Should fail because readonly var must be initialized on declaration
+    		end
+    	}
+    }
+}

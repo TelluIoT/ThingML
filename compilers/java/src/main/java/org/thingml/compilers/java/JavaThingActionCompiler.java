@@ -87,12 +87,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());		
 		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE) && TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
 			if (expression.getLhs() instanceof ExternExpression) {
-				final ExternExpression extL = (ExternExpression) expression.getLhs();
-				//A hack to workaround missing Characther literals...
-				if (extL.getExpression().startsWith("\'") && extL.getExpression().endsWith("\'") && extL.getExpression().length() == 3) {
-					super.generate(expression, builder, ctx);
-					return;
-				}
+				final ExternExpression extL = (ExternExpression) expression.getLhs();				
 				if (extL.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
 					super.generate(expression, builder, ctx);
 					return;
@@ -100,10 +95,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			}
 			if (expression.getRhs() instanceof ExternExpression) {
 				final ExternExpression extR = (ExternExpression) expression.getRhs();
-				if (extR.getExpression().startsWith("\'") && extR.getExpression().endsWith("\'") && extR.getExpression().length() == 3) {
-					super.generate(expression, builder, ctx);
-					return;
-				}
 				if (extR.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
 					super.generate(expression, builder, ctx);
 					return;
@@ -125,11 +116,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE) || TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
 			if (expression.getLhs() instanceof ExternExpression) {
 				final ExternExpression extL = (ExternExpression) expression.getLhs();
-				//A hack to workaround missing Characther literals...
-				if (extL.getExpression().startsWith("\'") && extL.getExpression().endsWith("\'") && extL.getExpression().length() == 3) {
-					super.generate(expression, builder, ctx);
-					return;
-				}
 				if (extL.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
 					super.generate(expression, builder, ctx);
 					return;
@@ -137,11 +123,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			}
 			if (expression.getRhs() instanceof ExternExpression) {
 				final ExternExpression extR = (ExternExpression) expression.getRhs();
-				//A hack to workaround missing Characther literals...
-				if (extR.getExpression().startsWith("\'") && extR.getExpression().endsWith("\'") && extR.getExpression().length() == 3) {
-					super.generate(expression, builder, ctx);
-					return;
-				}
 				if (extR.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
 					super.generate(expression, builder, ctx);
 					return;
@@ -292,11 +273,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			cast(action.getTypeRef().getType(), action.getTypeRef().isIsArray(), action.getInit(), builder, ctx);
 			builder.append(";\n");
 		} else {
-			if (action.isReadonly()) {
-				System.err.println(
-						"WARNING: non changeable variable (" + action.getName() + ") should have been initialized ");
-				builder.append("/*final variable should have been initialized. Please fix your ThingML model*/");
-			}
 			if (action.getTypeRef().getCardinality() != null) {
 				builder.append(" = new " + JavaHelper.getJavaType(action.getTypeRef().getType(), false, ctx) + "[");
 				generate(action.getTypeRef().getCardinality(), builder, ctx);
@@ -315,8 +291,15 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
 		for (Expression msg : action.getMsg()) {
+			final Type actual = TypeChecker.computeTypeOf(msg);
 			builder.append("System.err.print(");
-			generate(msg, builder, ctx);
+			if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
+				builder.append("String.format(\"0x%02X\",(");
+				generate(msg, builder, ctx);
+				builder.append("))");
+			} else {
+				generate(msg, builder, ctx);
+			}
 			builder.append(");\n");
 		}
 		if (action.isLine())
@@ -326,8 +309,15 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
 		for (Expression msg : action.getMsg()) {
+			final Type actual = TypeChecker.computeTypeOf(msg);
 			builder.append("System.out.print(");
-			generate(msg, builder, ctx);
+			if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
+				builder.append("String.format(\"0x%02X\",(");
+				generate(msg, builder, ctx);
+				builder.append("))");
+			} else {
+				generate(msg, builder, ctx);
+			}
 			builder.append(");\n");
 		}
 		if (action.isLine())
