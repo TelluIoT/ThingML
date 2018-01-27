@@ -1,8 +1,8 @@
 package org.thingml.generated.network;
 
 import org.thingml.generated.messages.*;
-import org.thingml.java.*;
-import org.thingml.java.ext.*;
+import no.sintef.jasm.*;
+import no.sintef.jasm.ext.*;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketFactory;

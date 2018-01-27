@@ -1,6 +1,6 @@
 package org.thingml.generated.network;
 
-import org.thingml.java.ext.*;
+import no.sintef.jasm.ext.*;
 
 import java.util.Arrays;
 
