@@ -17,6 +17,7 @@
 package org.thingml.compilers;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -205,7 +206,7 @@ public abstract class ThingMLCompiler {
     }
     
 
-    private static void save(ThingMLModel model, String location) {
+    private static void save(ThingMLModel model, String location) throws IOException {
     	
     	if (!model.getImportURI().isEmpty())
     		throw new Error("Only models without imports can be saved with this method. Use the 'flattenModel' method first.");
@@ -216,24 +217,21 @@ public abstract class ThingMLCompiler {
         res.getContents().add(model);
         EcoreUtil.resolveAll(res);
         
-        try {
-        	SaveOptions opt = SaveOptions.newBuilder().format().noValidation().getOptions();
-            res.save(opt.toOptionsMap());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+        SaveOptions opt = SaveOptions.newBuilder().format().noValidation().getOptions();
+        res.save(opt.toOptionsMap());
     }
 
     private static final Object saveLock = new Object(); // We can only save one at a time...
     
-    public static void saveAsXMI(final ThingMLModel model, String location) {
+    public static void saveAsXMI(final ThingMLModel model, String location) throws IOException {
     	synchronized (saveLock) {
     		ThingMLCompiler.registerXMIFactory();
             ThingMLCompiler.save(model, location);
 		}
     }
 
-    public static void saveAsThingML(final ThingMLModel model, String location) {
+    public static void saveAsThingML(final ThingMLModel model, String location) throws IOException {
     	synchronized (saveLock) {
     		ThingMLCompiler.registerThingMLFactory();
             ThingMLCompiler.save(model, location);
