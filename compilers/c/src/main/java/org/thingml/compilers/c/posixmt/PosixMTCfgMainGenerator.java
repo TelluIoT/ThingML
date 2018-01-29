@@ -445,7 +445,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                 builder.append(ctx.getMessageSerializationSize(m) - 2);
                 builder.append(") {\n");
                 
-                int idx_bis = 2;
+                long idx_bis = 2;
 
                 for (Parameter pt : m.getParameters()) {
                     builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");

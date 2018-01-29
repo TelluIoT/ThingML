@@ -57,7 +57,7 @@ public class CMSPSerializer extends CMessageSerializer {
 
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = ctx.getCByteSize(pt.getTypeRef().getType(), 0);
+            long i = ctx.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
             if (ctx.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.
@@ -106,7 +106,7 @@ public class CMSPSerializer extends CMessageSerializer {
 
             for (Parameter pt : m.getParameters()) {
 
-                for (int i = ctx.getCByteSize(pt.getTypeRef().getType(), 0) - 1; i >= 0; i--) {
+                for (long i = ctx.getCByteSize(pt.getTypeRef().getType(), 0) - 1; i >= 0; i--) {
                     builder.append("            msg_buf[index] = msg[" + (j + i) + "];\n");
                     builder.append("            index++;\n");
                 }

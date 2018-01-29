@@ -82,7 +82,7 @@ public class PosixTimerPlugin  extends NetworkPlugin {
 
             /* ----------- Outgoing messages ----------- */
             Set<Message> receivedMessages = new HashSet<>();
-            Integer longestIDParam = 0;
+            Long longestIDParam = 0L;
             StringBuilder enqueuers = new StringBuilder();
             for (ThingPortMessage tpm : this.getMessagesReceived(cfg, prot)) {
                 receivedMessages.add(tpm.m);

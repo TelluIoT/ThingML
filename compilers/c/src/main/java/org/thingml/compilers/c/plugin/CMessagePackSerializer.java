@@ -82,7 +82,7 @@ public class CMessagePackSerializer extends CMessageSerializer {
 
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = ctx.getCByteSize(pt.getTypeRef().getType(), 0);
+            long i = ctx.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
             if (ctx.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.

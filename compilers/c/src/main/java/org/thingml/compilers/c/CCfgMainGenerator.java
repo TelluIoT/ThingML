@@ -1282,7 +1282,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("dispatch_" + m.getName() + "(");
             builder.append("(mbuf[0] << 8) + mbuf[1] /* instance port*/");
 
-            int idx = 2;
+            long idx = 2;
 
             for (Parameter pt : m.getParameters()) {
                 //builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");

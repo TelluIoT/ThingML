@@ -68,7 +68,7 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
     }
     
     public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt, String fifo) {
-        int i = getCByteSize(t, 0);
+        long i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {
             // This should not happen and should be checked before.

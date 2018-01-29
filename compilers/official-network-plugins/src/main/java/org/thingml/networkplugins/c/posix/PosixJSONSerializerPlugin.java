@@ -323,7 +323,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
     /* ---------- PARSING----------*/
 
-    void generateParameterParser(Parameter p, Integer bytepos, CCompilerContext ctx) {
+    void generateParameterParser(Parameter p, Long bytepos, CCompilerContext ctx) {
         // Generate union
         messagesparser.append("            ");
         messagesparser.append("union u_"+p.getName()+"_t { ");
@@ -399,9 +399,9 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
     void generateMessageParser(Message m, CCompilerContext ctx) {
         // Find parameters that we should forward, and their position in the buffer
-        Map<Integer, Parameter> parameters = new HashMap<Integer, Parameter>();
-        Map<Integer, Parameter> not_forwarded = new HashMap<Integer, Parameter>();
-        Integer bytePos = 2; // The first two is for port/message code
+        Map<Long, Parameter> parameters = new HashMap<Long, Parameter>();
+        Map<Long, Parameter> not_forwarded = new HashMap<Long, Parameter>();
+        Long bytePos = 2L; // The first two is for port/message code
         Integer forwardedParameters = 0;
         for (Parameter p : m.getParameters()) {
             if (AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
@@ -448,7 +448,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         messagesparser.append("        if (!ptr) return -6;\n");
         messagesparser.append("        // Find matching parameter\n");
         messagesparser.append("        if (ptr-pstart < 1) return -7;\n");
-        for (Map.Entry<Integer, Parameter> pospar : parameters.entrySet()) {
+        for (Map.Entry<Long, Parameter> pospar : parameters.entrySet()) {
             String pName = getJSONParameterName(m, pospar.getValue(), ctx);
             messagesparser.append("        else if (strncmp(\""+pName+"\", start, end-start) == 0) {\n");
             generateParameterParser(pospar.getValue(), pospar.getKey(), ctx);
@@ -461,7 +461,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         // Set all non-forwarded parameters to zero-bytes
         messagesparser.append("    // Zero-init all non-forwarded messages\n");
-        for (Map.Entry<Integer, Parameter> pospar : not_forwarded.entrySet()) {
+        for (Map.Entry<Long, Parameter> pospar : not_forwarded.entrySet()) {
             messagesparser.append("    bzero(&out_buffer["+pospar.getKey()+"], "+ctx.getCByteSize(pospar.getValue().getTypeRef().getType(),0)+"); ");
             messagesparser.append("// "+pospar.getValue().getName()+"\n");
         }

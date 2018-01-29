@@ -735,7 +735,7 @@ public abstract class CCompilerContext extends Context {
         }
     }
 
-    public int getCByteSize(Type t, int pointerSize) {
+    public long getCByteSize(Type t, int pointerSize) {
         if (t instanceof ObjectType) {
             return pointerSize;
         } else if (t instanceof PrimitiveType) {
@@ -791,7 +791,7 @@ public abstract class CCompilerContext extends Context {
     */
 
     public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
-        int i = getCByteSize(t, 0);
+        long i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {
             // This should not happen and should be checked before.
@@ -851,7 +851,7 @@ public abstract class CCompilerContext extends Context {
 
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = this.getCByteSize(pt.getTypeRef().getType(), 0);
+            long i = this.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
             if (this.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.

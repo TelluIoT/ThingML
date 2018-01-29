@@ -70,7 +70,7 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
         int j = 3;
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
+            long i = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
             if (cctx.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.
@@ -111,7 +111,7 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
             builder.append("        case " + cctx.getHandlerCode(configuration, m) + ":\n");
             int j = 2;
             for (Parameter pt : m.getParameters()) {
-                for (int i = cctx.getCByteSize(pt.getTypeRef().getType(), 0) - 1; i >= 0; i--) {
+                for (long i = cctx.getCByteSize(pt.getTypeRef().getType(), 0) - 1; i >= 0; i--) {
                     builder.append("            msg_buf[index] = " + bufferName + "[" + (j + i) + "];\n");
                     builder.append("            index++;\n");
                 }

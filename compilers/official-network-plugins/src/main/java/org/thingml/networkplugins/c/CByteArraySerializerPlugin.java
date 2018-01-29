@@ -96,7 +96,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
         for (Parameter pt : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", pt.getName())) {
                 builder.append("\n// parameter " + pt.getName() + "\n");
-                int i;
+                long i;
                 String v = pt.getName();
                 if (cctx.isPointer(pt.getTypeRef().getType())) {
                     // This should not happen and should be checked before.

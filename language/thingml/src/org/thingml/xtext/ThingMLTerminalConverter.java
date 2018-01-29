@@ -58,4 +58,11 @@ public class ThingMLTerminalConverter extends DefaultTerminalConverters {
 	public IValueConverter<Byte> CHAR() {
 		return charValueConverter;
 	}
+	
+	@Inject
+	private IntValueConverter intValueConverter;
+	@ValueConverter(rule = "INT")
+	public IValueConverter<Long> LINT() {
+		return intValueConverter;
+	}
 }

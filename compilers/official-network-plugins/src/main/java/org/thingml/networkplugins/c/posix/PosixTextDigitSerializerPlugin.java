@@ -72,7 +72,7 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
 
         for (Parameter pt : m.getParameters()) {
             b.append("\n// parameter " + pt.getName() + "\n");
-            int i = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
+            long i = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
             if (cctx.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.
