@@ -419,7 +419,7 @@ terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 terminal BYTE returns ecore::EByte: "0x" ('0'..'9'|'a'..'f'|'A'..'F') ('0'..'9'|'a'..'f'|'A'..'F');
 
-terminal CHAR returns ecore::EByte: "'" (' '..'~'|'\\0'|'\\t'|'\\n'|'\\r') "'";
+terminal CHAR returns ecore::EByte: "'" ('\\0'|'\\t'|'\\n'|'\\r'|' '..'&'|'\\\''|'('..'['|'\\\\'|']'..'~') "'";
 
 terminal INT returns ecore::ELong: ('0'..'9')+;
 

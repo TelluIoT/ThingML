@@ -21,6 +21,7 @@ import java.util.List;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
@@ -244,5 +245,13 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
         builder.append("[");
         generate(expression.getIndex(), builder, ctx);
         builder.append("]");
+	}
+	
+	@Override
+	public void generate(CharLiteral expression, StringBuilder builder, Context ctx) {
+		if (expression.getCharValue() == 0)
+			builder.append("'\\x00'");
+		else
+			super.generate(expression, builder, ctx);
 	}
 }

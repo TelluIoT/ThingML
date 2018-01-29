@@ -36,13 +36,17 @@ public class CharValueConverter extends AbstractLexerBasedConverter<Byte> {
 				return 10;
 			else if (str.equals("\\r"))
 				return 13;
+			else if (str.equals("\\'"))
+				return 39;
+			else if (str.equals("\\\\"))
+				return 92;
 			else
 				throw new ValueConverterException("Invalid character literal", node, null);
 		}
 	}
 	
 	public static String ToString(Byte value) {
-		if (value >= 32 && value <= 126)
+		if (value >= 32 && value <= 126 && value != 39 && value != 92)
 			return "'"+(char)(byte)value+"'";
 		else if (value == 0)
 			return "'\\0'";
@@ -52,6 +56,10 @@ public class CharValueConverter extends AbstractLexerBasedConverter<Byte> {
 			return "'\\n'";
 		else if (value == 13)
 			return "'\\r'";
+		else if (value == 39)
+			return "'\\''";
+		else if (value == 92)
+			return "'\\\\'";
 		else
 			return "''";
 	}
