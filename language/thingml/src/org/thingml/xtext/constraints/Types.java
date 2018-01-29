@@ -54,7 +54,7 @@ public class Types {
         ERROR_TYPE.getAnnotations().add(error);
         
         BYTE_TYPE = factory.createPrimitiveType();
-        BYTE_TYPE.setName("Integer");
+        BYTE_TYPE.setName("Byte");
         PlatformAnnotation _byte = factory.createPlatformAnnotation();
         _byte.setName("type_checker");
         _byte.setValue("Byte");
