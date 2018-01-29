@@ -124,7 +124,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         copyInterface();
         builder.append("package org.thingml.generated.network;\n\n");
         builder.append("import org.thingml.generated.messages.*;\n");
-        builder.append("import org.thingml.java.ext.Event;\n");
+        builder.append("import no.sintef.jasm.ext.Event;\n");
         builder.append("import java.nio.ByteBuffer;\n");
         builder.append("import java.nio.ByteOrder;\n");
         builder.append("public class " + bufferName + " implements BinaryJava {\n");

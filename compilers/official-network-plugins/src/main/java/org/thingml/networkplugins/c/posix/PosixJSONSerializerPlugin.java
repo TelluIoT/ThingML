@@ -316,7 +316,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         builder.append("    //End of serialized message\n");
         builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"}}\");\n");
         builder.append("    if (result >= 0) { index += result; } else { return; }\n");
-        builder.append("    index += 1; //Also count zero-terminator\n");
+        //builder.append("    index += 1; //Also count zero-terminator\n");
 
         return "index";
     }

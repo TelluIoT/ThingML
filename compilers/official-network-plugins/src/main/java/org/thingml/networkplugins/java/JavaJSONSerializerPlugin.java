@@ -157,7 +157,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
         copyInterface();
         builder.append("package org.thingml.generated.network;\n\n");
         builder.append("import org.thingml.generated.messages.*;\n");
-        builder.append("import org.thingml.java.ext.Event;\n");
+        builder.append("import no.sintef.jasm.ext.Event;\n");
         builder.append("import com.eclipsesource.json.JsonObject;\nimport com.eclipsesource.json.JsonValue;\nimport com.eclipsesource.json.Json;\n");
         builder.append("public class " + bufferName + " implements StringJava {\n");
         for(Message m : messages) {
