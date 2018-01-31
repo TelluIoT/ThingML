@@ -1,6 +1,6 @@
 /* ThingML Framework */
 
-import "core/datatypes.thingml"
+import "datatypes.thingml" from stl
 import "core/scheduler.thingml"
 import "core/timer.thingml"
 import "core/test.thingml"

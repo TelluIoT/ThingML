@@ -1,4 +1,4 @@
-import "datatypes.thingml"
+import "datatypes.thingml" from stl
 /*
 thing fragment RandomMsg{
 	message request();

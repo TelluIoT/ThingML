@@ -1,4 +1,4 @@
-import "../core/datatypes.thingml"
+import "datatypes.thingml" from stl
 
 thing TestCheckFunctionReturn
 @checker_should_fail "false"

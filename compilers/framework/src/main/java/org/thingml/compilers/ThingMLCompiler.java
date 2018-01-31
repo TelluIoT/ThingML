@@ -193,8 +193,8 @@ public abstract class ThingMLCompiler {
         		result.getTypes().addAll(m.getTypes());
         	}
         }
-
-    	result.getImportURI().clear();
+    	
+    	result.getImports().clear();
     	
     	// Add the new model to a resource set
     	String uriString = "memory:/"+UUID.randomUUID().toString()+".thingml";
@@ -208,7 +208,7 @@ public abstract class ThingMLCompiler {
 
     private static void save(ThingMLModel model, String location) throws IOException {
     	
-    	if (!model.getImportURI().isEmpty())
+    	if (!model.getImports().isEmpty())
     		throw new Error("Only models without imports can be saved with this method. Use the 'flattenModel' method first.");
     	
         ResourceSet rs = new ResourceSetImpl();

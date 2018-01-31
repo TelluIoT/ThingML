@@ -29,6 +29,7 @@
  */
 package org.thingml.xtext.constraints;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +52,7 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
@@ -167,46 +169,45 @@ public class ThingMLHelpers {
 	/* ***********************************************************
 	 * Resolution of imported models / All available Things and Types
 	 * ***********************************************************/
+	private static URI getIncludedLibrary(String uri, String from) throws Exception {
+		URL url;
+		switch (from) {
+		case "stl":
+			url = ThingMLModel.class.getResource("/org/thingml/stl/"+uri);
+			break;
+		default:
+			throw new Exception(from+" is not a valid library");
+		}
+		if (url == null) throw new Exception(uri+" was not found in library "+from);
+		else return URI.createURI(url.toURI().toString());
+	}
 	
-	public static ThingMLModel getModelFromRelativeURI(ThingMLModel base, String uri) {
-		
-		try {
-			URI new_uri = URI.createURI(uri.replace('"', ' ').trim());
-			
+	public static ThingMLModel getModelFromRelativeURI(ThingMLModel base, String uri, String from) throws Exception {
+		URI new_uri;
+		if (from != null) {
+			// Import included library
+			new_uri = getIncludedLibrary(uri, from);
+		} else {
+			// Import local file
+			new_uri = URI.createURI(uri);
 			if (new_uri.isRelative()) {
 				new_uri = new_uri.resolve(base.eResource().getURI());
 			}
-			
-			Resource r = base.eResource().getResourceSet().getResource(new_uri, true);
-			
-			if (r != null && r.getContents().size() > 0 && r.getContents().get(0) instanceof ThingMLModel ) {
-				return (ThingMLModel)  r.getContents().get(0);
-			}
-			else {
-				System.err.println("No valid model found for ressource: " + new_uri);
-			}
-		}
-		catch(Exception e) {
-			System.out.println("Unable to load resource " + uri );
 		}
 		
-		return null;
+		// Load the file into the ResourceSet
+		Resource r = base.eResource().getResourceSet().getResource(new_uri, true);
+		if (r != null && r.getContents().size() > 0 && r.getContents().get(0) instanceof ThingMLModel ) {
+			return (ThingMLModel)r.getContents().get(0);
+		} else {
+			throw new Exception("No valid model found for resource "+uri);
+		}
 	}
 	
 	
 	public static ArrayList<ThingMLModel> allThingMLModelModels(ThingMLModel model) {
 		ArrayList<ThingMLModel> result = new ArrayList<ThingMLModel>();
 		result.add(model);
-		/*
-		ResourceSet rs = model.eResource().getResourceSet();
-		
-		for (String importuri : model.getImportURI()) {
-			importuri = importuri.substring(1);
-			importuri = importuri.substring(0, importuri.length()-1).trim();
-			ThingMLModel m = getModelFromRelativeURI(model, importuri);
-			if (m!=null) result.add(m);
-		}
-		*/
 
         ArrayList<ThingMLModel> temp = new ArrayList<ThingMLModel>();
 
@@ -214,14 +215,14 @@ public class ThingMLHelpers {
         int newSize = prevSize;
         do {
             for (ThingMLModel m : result) {
-                for(String m2_uri : m.getImportURI()) {
-                	ThingMLModel m2 = getModelFromRelativeURI(m, m2_uri);
-                	if(m2 == null) {
-                		continue;
-                	}
-                	if (!temp.contains(m2)) {
-                        temp.add(m2);
-                    }
+            	for (Import imp : m.getImports()) {
+            		try {
+            			ThingMLModel m2 = getModelFromRelativeURI(m, imp.getImportURI(), imp.getFrom());
+            			if (!temp.contains(m2)) {
+                            temp.add(m2);
+                        }
+            		} catch (Exception e) {}
+                	
                 }
             }
             for (ThingMLModel m : temp) {

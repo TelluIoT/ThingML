@@ -69,6 +69,7 @@ Workflow {
 				composedCheck = "org.thingml.xtext.validation.checks.ControlStructures"
 				composedCheck = "org.thingml.xtext.validation.checks.LostMessages"
 				composedCheck = "org.thingml.xtext.validation.checks.PropertyInitialization"
+				composedCheck = "org.thingml.xtext.validation.checks.Imports"
 			}
 			
 			quickFixProvider = {

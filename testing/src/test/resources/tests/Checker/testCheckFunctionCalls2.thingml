@@ -1,4 +1,4 @@
-import "../core/datatypes.thingml"
+import "datatypes.thingml" from stl
 
 thing TestCheckFunctionCalls2
 {
