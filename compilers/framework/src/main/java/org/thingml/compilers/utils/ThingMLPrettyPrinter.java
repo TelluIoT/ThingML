@@ -18,6 +18,8 @@ package org.thingml.compilers.utils;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.xtext.ByteValueConverter;
+import org.thingml.xtext.CharValueConverter;
 import org.thingml.xtext.thingML.*;
 
 /**
@@ -325,6 +327,16 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getProperty().getName());
+    }
+    
+    @Override
+    public void generate(ByteLiteral expression, StringBuilder builder, Context ctx) {
+    	builder.append(ByteValueConverter.ToString(expression.getByteValue()));
+    }
+    
+    @Override
+    public void generate(CharLiteral expression, StringBuilder builder, Context ctx) {
+    	builder.append(CharValueConverter.ToString(expression.getCharValue()));
     }
 
     @Override
