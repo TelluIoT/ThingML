@@ -1,0 +1,30 @@
+import "datatypes.thingml" from stl
+
+enumeration E 
+@type_checker "Integer"
+{
+	FIRST @enum_val "0"
+	SECOND @enum_val "1"
+}
+
+thing TestCheckFunctionCalls
+@checker_should_fail "false"
+{
+    function foo(a : Integer) : E do
+      return E:SECOND
+    end
+    
+    function bar(e : E) do
+    
+    end
+
+    statechart TestAbstractFunction init INIT {
+		//Should fail because foo is called is wrong number of params.
+    	state INIT {
+    		on entry do
+    			foo(E:FIRST) //E is an Integer
+    			bar(E:SECOND)
+    		end
+    	}
+    }
+}

@@ -284,7 +284,8 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     
     @Override
 	public Type caseEnumLiteralRef(EnumLiteralRef object) {
-    	return TyperHelper.getBroadType(object.getEnum());
+    	//return TyperHelper.getBroadType(object.getEnum());
+    	return object.getEnum();
 	}    
 
     @Override

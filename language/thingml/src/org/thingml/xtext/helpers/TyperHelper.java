@@ -17,6 +17,7 @@
 package org.thingml.xtext.helpers;
 
 import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Type;
 
@@ -25,32 +26,40 @@ import org.thingml.xtext.thingML.Type;
  */
 public class TyperHelper {
 
+	private static Type getType(String ty) {
+        if (ty.equals("Byte"))
+        	return Types.BYTE_TYPE;
+        else if (ty.equals("Integer"))
+            return Types.INTEGER_TYPE;
+        else if (ty.equals("Real"))
+            return Types.REAL_TYPE;
+        else if (ty.equals("Boolean"))
+            return Types.BOOLEAN_TYPE;
+        else if (ty.equals("Character"))
+            return Types.CHARACTER_TYPE;
+        else if (ty.equals("String"))
+            return Types.STRING_TYPE;
+        else if (ty.equals("Object"))
+            return Types.OBJECT_TYPE;
+        else if (ty.equals("Error"))
+            return Types.ERROR_TYPE;
+        else if (ty.equals("Void"))
+            return Types.VOID_TYPE;
+        else
+            return Types.ANY_TYPE;
+	}
+	
     public static Type getBroadType(Type self) {
-        if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
-            final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
-            if (ty.equals("Byte"))
-            	return Types.BYTE_TYPE;
-            else if (ty.equals("Integer"))
-                return Types.INTEGER_TYPE;
-            else if (ty.equals("Real"))
-                return Types.REAL_TYPE;
-            else if (ty.equals("Boolean"))
-                return Types.BOOLEAN_TYPE;
-            else if (ty.equals("Character"))
-                return Types.CHARACTER_TYPE;
-            else if (ty.equals("String"))
-                return Types.STRING_TYPE;
-            else if (ty.equals("Object"))
-                return Types.OBJECT_TYPE;
-            else if (ty.equals("Error"))
-                return Types.ERROR_TYPE;
-            else if (ty.equals("Void"))
-                return Types.VOID_TYPE;
-            else
-                return Types.ANY_TYPE;
-        } else if (self instanceof ObjectType) {
+    	if (self instanceof ObjectType) {
             return Types.OBJECT_TYPE;
         }
+    	if (self instanceof Enumeration) {
+    		return self;
+    	}
+        if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
+            final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
+            return getType(ty);
+        } 
         return Types.ANY_TYPE;
     }
 
@@ -69,7 +78,13 @@ public class TyperHelper {
         	return true;
         if ((self == Types.INTEGER_TYPE || self == Types.BYTE_TYPE) && t == Types.REAL_TYPE) //an Integer or a Byte is a Real
             return true;
-        //TODO: BYTE_TYPE
+    	if (self instanceof Enumeration) {
+    		if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
+    			final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
+    			final Type typ = getType(ty); 
+    			return isA(typ, t);
+    		}
+    	}
         return false;
     }
 }
