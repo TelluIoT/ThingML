@@ -46,6 +46,7 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.VariableAssignment;
 import org.thingml.xtext.validation.TypeChecker;
@@ -308,6 +309,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
+		final Thing t = ThingMLHelpers.findContainingThing(action);
+		if (AnnotatedElementHelper.isDefined(t, "stdout_sync", "true")) {
+			builder.append("synchronized(System.out) {\n");
+		}		
 		for (Expression msg : action.getMsg()) {
 			final Type actual = TypeChecker.computeTypeOf(msg);
 			builder.append("System.out.print(");
@@ -322,6 +327,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		}
 		if (action.isLine())
 			builder.append("System.out.println();\n");
+		if (AnnotatedElementHelper.isDefined(t, "stdout_sync", "true")) {
+			builder.append("}\n");
+		}
 	}
 
 	@Override
