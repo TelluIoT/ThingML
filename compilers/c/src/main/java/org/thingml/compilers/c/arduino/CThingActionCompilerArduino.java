@@ -20,6 +20,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingActionCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.PrintAction;
 
 /**
@@ -37,12 +38,21 @@ public class CThingActionCompilerArduino extends CThingActionCompiler {
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        final StringBuilder b = new StringBuilder();
-        generate(action.getMsg(), b, ctx);
-        if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
-            builder.append(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next() + ".print(" + b.toString() + ");\n");
-        } else {
-            builder.append("// PRINT: " + b.toString() + "\n");
+        for(Expression e : action.getMsg()) {
+            final StringBuilder b = new StringBuilder();
+            generate(e, b, ctx);
+        	if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
+                builder.append(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next() + ".print(" + b.toString() + ");\n");
+            } else {
+                builder.append("// PRINT: " + b.toString() + "\n");
+            }        	        	
+        }
+        if (action.isLine()) {
+        	if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
+                builder.append(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next() + ".print(\"\\n\");\n");
+            } else {
+                builder.append("// PRINT: \"\\n\"");
+            }
         }
     }
 
