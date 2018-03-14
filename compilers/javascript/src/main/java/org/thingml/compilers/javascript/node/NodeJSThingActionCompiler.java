@@ -46,6 +46,6 @@ public class NodeJSThingActionCompiler extends JSThingActionCompiler {
 	        builder.append(");\n");
     	}
     	if (action.isLine())
-    		builder.append("process.stderr.write('\\n');\n");
+    		builder.append("process.stdout.write('\\n');\n");
     }
 }
