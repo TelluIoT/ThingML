@@ -68,7 +68,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         if (action.getActions().size() > 1)
             temp.append("do");
         if (!HIDE_BLOCKS) {
-        	temp.append("\n");
+        	temp.append("\\n");
         }
         indent_level++;
         if (HIDE_BLOCKS && action.getActions().size() > 1) {
