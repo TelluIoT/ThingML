@@ -312,15 +312,16 @@ Addition returns Expression:
 ;
 
 Multiplication returns Expression:
-	Modulo (
-	( {TimesExpression.lhs=current} "*" rhs=Modulo ) |
-	( {DivExpression.lhs=current} "/" rhs=Modulo )
+	Primary (
+	( {TimesExpression.lhs=current} "*" rhs=Primary ) |
+	( {DivExpression.lhs=current} "/" rhs=Primary ) |
+	( {ModExpression.lhs=current} "%" rhs=Primary)
 	)*	
 ;
 
-Modulo returns Expression:
+/*Modulo returns Expression:
 	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
-;
+;*/
 
 
 Primary returns Expression:
