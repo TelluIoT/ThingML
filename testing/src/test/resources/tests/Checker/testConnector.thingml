@@ -1,0 +1,35 @@
+thing TestConnector1
+{
+	message m()
+	
+	required port p {
+		sends m
+	}
+	
+    //Should fail because function foo is not implemented
+    statechart init INIT {
+    	state INIT {}
+    }
+}
+
+thing TestConnector2
+{
+	message m()
+	
+	provided port p {
+		receives m
+	}
+	
+    //Should fail because function foo is not implemented
+    statechart init INIT {
+    	state INIT {}
+    }
+}
+
+configuration conf {
+	instance i : TestConnector1
+	instance j : TestConnector2
+	
+	connector i.p => j.p
+	connector i.p => j.p //Should fail as the very connector is already declared
+}
