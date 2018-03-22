@@ -1,0 +1,26 @@
+import "../../thingml.thingml"
+
+thing TestArithmetic includes Test 
+@test "x # x"
+{
+  
+    statechart TestPropertyPing init INIT {
+    	state INIT {
+			property x : Integer = 2
+
+    		transition -> STOP
+			event m : Test?In
+			guard m.c == 'x' 
+			action do
+				if (3 + x * 2 == 7) //this should parse as 3 + (x * 2) and ultimately be resolved as 7
+			    	TestOut('x')
+			    else
+			    	TestOut('z')
+            end			  		
+    	}
+
+		state STOP {
+			on entry TestDone()
+		}
+    }
+}
