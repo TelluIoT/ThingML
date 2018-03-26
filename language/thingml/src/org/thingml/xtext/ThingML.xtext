@@ -274,11 +274,7 @@ FunctionCallStatement returns FunctionCallStatement:
 	//ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
 
 
-Expression: CastExpression;
-
-CastExpression returns Expression:
-	OrExpression ({CastExpression.term=current} "as" type=[Type|ID] (^isArray?='['']')?)?
-;
+Expression: OrExpression;
 
 OrExpression returns Expression:
 	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
@@ -312,17 +308,16 @@ Addition returns Expression:
 ;
 
 Multiplication returns Expression:
-	Primary (
-	( {TimesExpression.lhs=current} "*" rhs=Primary ) |
-	( {DivExpression.lhs=current} "/" rhs=Primary ) |
-	( {ModExpression.lhs=current} "%" rhs=Primary)
+	CastExpression (
+	( {TimesExpression.lhs=current} "*" rhs=CastExpression ) |
+	( {DivExpression.lhs=current} "/" rhs=CastExpression ) |
+	( {ModExpression.lhs=current} "%" rhs=CastExpression)
 	)*	
 ;
 
-/*Modulo returns Expression:
-	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
-;*/
-
+CastExpression returns Expression:
+	Primary ({CastExpression.term=current} "as" type=[Type|ID] (^isArray?='['']')?)?
+;
 
 Primary returns Expression:
 	{ExpressionGroup} '(' term=Expression ')' |

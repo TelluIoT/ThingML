@@ -1,0 +1,23 @@
+import "datatypes.thingml" from stl
+
+datatype Boolean<1>
+@type_checker "Boolean";
+
+datatype Integer<1>
+@type_checker "Any";
+
+thing TestCheckCast
+@checker_should_fail "false" //FIXME: Should not fail and should not procude warning
+{
+    function foo() do
+    	var b : Boolean = true
+    	var i : Integer = 0
+    	
+    	if (b and i as Boolean) do end //b and i as Boolean should be parsed b and (i as Boolean), which should resolve as Boolean, not Error
+    end
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}
