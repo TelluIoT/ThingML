@@ -1,4 +1,0 @@
-region /*$NAME$*/ init /*$INIT_NAME$*/{
-
-    /*$BEHAVIOR$*/
-}

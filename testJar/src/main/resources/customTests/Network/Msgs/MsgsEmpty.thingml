@@ -1,6 +1,0 @@
-import "../../datatypes.thingml"
-
-thing fragment MsgsEmpty {
-	message m1() @code "65280";
-	message m2() @code "255";
-}

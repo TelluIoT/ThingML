@@ -1,6 +1,0 @@
-    transition -> /*$NEXT$*/
-    //guard nbSessions < maxSessions
-    action do
-        /*$ACTION1$*/
-        /*$ACTION2$*/
-    end

@@ -1,7 +1,0 @@
-import "MQTT.thingml"
-import "../Servers/ServerBool.thingml"
-
-configuration ServerBoolCfg @nodejs_silent_shutdown "true" {
-	instance s : Server
-	connector s.p over MQTT
-}

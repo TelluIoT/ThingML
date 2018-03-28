@@ -1,9 +1,0 @@
-protocol MQTT
-	@mqtt_broker_address "192.168.1.6"
-	@mqtt_port_number "44490"
-	@mqtt_escape_byte "125"
-	@mqtt_escape_null "true"
-	@url "192.168.1.6:44490"
-	@serializer "Binary"
-	@trace_level "0"
-	;
