@@ -160,8 +160,9 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			val firstReturn = block.actions.findFirst[a | returns(a)]
 			indexOfFirstReturn = block.actions.indexOf(firstReturn)			
 		} else {
-			val firstReturnAfter = block.actions.findFirst[a | block.actions.indexOf(a)>indexOfLastExtern && returns(a)]
-			indexOfFirstReturn = block.actions.indexOf(firstReturnAfter)
+			return;
+			/*val firstReturnAfter = block.actions.findFirst[a | block.actions.indexOf(a)>indexOfLastExtern && returns(a)]
+			indexOfFirstReturn = block.actions.indexOf(firstReturnAfter)*/
 		}
 		if (indexOfFirstReturn < block.actions.size - 1) {
 			val msg = "The code from here and below is unreachable (the code above will return in any case)"

@@ -3,16 +3,19 @@ import "datatypes.thingml" from stl
 thing TestCheckFunctionReturn
 @checker_should_fail "false"
 {
-	//should fail as third, etc returns are unreachable
     function foo(a : Integer) : Integer do
     	`if (blah) {`
-    		return 0 //should be ignored, as it is before the last extern statement
-    	`}`
-    	return 0 //OK, as this is the first return, which is also the last statement in the block
+    		return 0
+    	`}`//we do not check blocks with extern statements, so it does not matter if the return is not the latest statement here.
     end
 
     statechart TestAbstractFunction init INIT {
     	state INIT {
+    		on entry foo(0)
     	}
     }
+}
+
+configuration c {
+	instance i : TestCheckFunctionReturn
 }
