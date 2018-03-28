@@ -1,0 +1,21 @@
+import "datatypes.thingml" from stl
+
+thing TestCheckFunctionReturn
+@checker_should_fail "false"
+{
+    function foo(a : Integer) : Integer do
+    	`if (blah) {`
+    		return 0
+    	`}`//we do not check blocks with extern statements, so it does not matter if the return is not the latest statement here.
+    end
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry foo(0)
+    	}
+    }
+}
+
+configuration c {
+	instance i : TestCheckFunctionReturn
+}

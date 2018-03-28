@@ -27,12 +27,12 @@ class ControlStructures extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkConditionalAction(ConditionalAction ca) {
 		checkActionExpression(ca, ca.condition)
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkLoopAction(LoopAction la) {
 		checkActionExpression(la, la.condition)
 	}

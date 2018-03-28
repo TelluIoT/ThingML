@@ -10,6 +10,7 @@ import org.thingml.xtext.thingML.RequiredPort
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.Tarjan
 import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.thingML.Instance
 
 class PortsUsage extends ThingMLValidatorCheck {
 	
@@ -46,7 +47,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkDuplicates(Port p) {
 		p.sends.groupBy[m | m.name].forEach[name, messages |
 			if (messages.size > 1) {
@@ -60,5 +61,28 @@ class PortsUsage extends ThingMLValidatorCheck {
 				error(msg, p, ThingMLPackage.eINSTANCE.port_Sends, p.sends.indexOf(messages.get(0)), "duplicate-msg-in-port")				
 			}
 		]
-	}	
+	}
+	
+	@Check(NORMAL)	
+	def checkDuplicates(Configuration cfg) {
+		cfg.connectors.forEach[c1 |
+			cfg.connectors.forEach[c2 |
+				if (c1 instanceof Connector && c2 instanceof Connector) {
+					val conn1 = c1 as Connector
+					val conn2 = c2 as Connector
+					if (conn1 !== conn2 && conn1.cli === conn2.cli && conn1.required === conn2.required && conn1.provided === conn2.provided && conn1.srv === conn2.srv) {
+						val msg = ("This connector is already defined")
+						error(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Connectors, cfg.connectors.indexOf(c2), "duplicate-connector")
+					} 				
+				} else if (c1 instanceof ExternalConnector && c2 instanceof ExternalConnector) {
+					val conn1 = c1 as ExternalConnector
+					val conn2 = c2 as ExternalConnector
+					if (conn1 !== conn2 && conn1.inst === conn2.inst && conn1.port === conn2.port && conn1.protocol === conn2.protocol) {
+						val msg = ("This connector is already defined")
+						error(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Connectors, cfg.connectors.indexOf(c2), "duplicate-connector")
+					}
+				}
+			]
+		]
+	}
 }

@@ -25,6 +25,8 @@ import org.thingml.xtext.helpers.FunctionWithMultipleImplem
 import org.thingml.xtext.thingML.ConditionalAction
 import org.thingml.xtext.thingML.Action
 import org.thingml.xtext.thingML.ActionBlock
+import org.thingml.xtext.thingML.ExternStatement
+import org.thingml.xtext.thingML.LoopAction
 
 class FunctionUsage extends ThingMLValidatorCheck {
 	
@@ -117,10 +119,14 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			val ca = a as ConditionalAction
 			return returns(ca.action) && ca.elseAction !== null && returns(ca.elseAction)
 		}		
+		if (a instanceof LoopAction) {
+			val la = a as LoopAction
+			return returns(la.action)
+		}
 		return false
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkReturnOnlyInFunction(ReturnAction r) {
 		var parent = r.eContainer as EObject
 		while (parent !== null && !(parent instanceof Function)) {
@@ -136,19 +142,35 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(FAST)
-	def checkBlock(ActionBlock block) {
-		val firstReturn = block.actions.findFirst[a | returns(a)]
-		if (firstReturn !== null) {
-			val indexOfFirstReturn = block.actions.indexOf(firstReturn)
-			if (indexOfFirstReturn < block.actions.size - 1) {
-				val msg = "The code from here and below is unreachable (the code above will return in any case)"
-				error(msg, block, ThingMLPackage.eINSTANCE.actionBlock_Actions, indexOfFirstReturn + 1, "unreachable-code", indexOfFirstReturn.toString)					
-			}
+	private def indexOfLastExtern(ActionBlock block) {
+		var last = block.actions.findLast[a | a instanceof ExternStatement]
+		if (last !== null) {
+			return block.actions.indexOf(last)
 		}
+		return -1
+	}
+	
+	@Check(NORMAL)
+	def checkBlock(ActionBlock block) {
+		val f = if(block.eContainer instanceof Function) block.eContainer as Function else null
+		if (f === null || f.typeRef === null || f.typeRef.type === null) return;//This check only makes sense for functions that return something		
+		val indexOfLastExtern = indexOfLastExtern(block)
+		var indexOfFirstReturn = -1
+		if (indexOfLastExtern < 0) {
+			val firstReturn = block.actions.findFirst[a | returns(a)]
+			indexOfFirstReturn = block.actions.indexOf(firstReturn)			
+		} else {
+			return;
+			/*val firstReturnAfter = block.actions.findFirst[a | block.actions.indexOf(a)>indexOfLastExtern && returns(a)]
+			indexOfFirstReturn = block.actions.indexOf(firstReturnAfter)*/
+		}
+		if (indexOfFirstReturn < block.actions.size - 1) {
+			val msg = "The code from here and below is unreachable (the code above will return in any case)"
+			error(msg, block, ThingMLPackage.eINSTANCE.actionBlock_Actions, indexOfFirstReturn + 1, "unreachable-code", indexOfFirstReturn.toString)					
+		}						
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkReturnType2(Function f) {
 		if (!f.abstract && f.typeRef !== null && f.typeRef.type !== null) {
 			if (f.body instanceof ReturnAction || (f.body instanceof ConditionalAction && returns(f.body)))
@@ -162,7 +184,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkReturnType(Function f) {
 		if (!f.abstract) { // if function is concrete then we check its implementation
 			// Checks return type
@@ -195,12 +217,12 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		} 
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkFunctionCallAction(FunctionCallStatement call) {
 		checkFunctionCall(call.function, call.parameters, call)
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkFunctionCallExpression(FunctionCallExpression call) {
 		checkFunctionCall(call.function, call.parameters, call)
 	}	

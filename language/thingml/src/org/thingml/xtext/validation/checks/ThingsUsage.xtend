@@ -19,7 +19,7 @@ import org.thingml.xtext.helpers.ActionHelper
 
 class ThingsUsage extends ThingMLValidatorCheck {
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkInstance(Instance i) {
 		if (i.type.fragment) {
 			val msg = "Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() +
@@ -28,7 +28,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkInstanceUniqueness(Instance i) {
 		val cfg = i.eContainer as Configuration
 		val instances = cfg.instances.filter(i2 |
@@ -40,7 +40,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}	
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkPropertyUniqueness(Property p) {
 		val thing = ThingMLHelpers.findContainingThing(p)
 		val props = ThingMLHelpers.allProperties(thing).filter [ pr |
@@ -53,7 +53,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkMessageUniqueness(Message m) {
 		val thing = ThingMLHelpers.findContainingThing(m)
 		val msgs = ThingMLHelpers.allMessages(thing).filter [ m2 |
@@ -66,7 +66,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkPortUniqueness(Port p) {
 		val thing = ThingMLHelpers.findContainingThing(p)
 		val ports = ThingMLHelpers.allPorts(thing).filter [ p2 |
@@ -79,7 +79,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkFunctionUniqueness(Function f) {
 		val thing = ThingMLHelpers.findContainingThing(f)
 		val funcs = ThingMLHelpers.allFunctions(thing).filter [ f2 |

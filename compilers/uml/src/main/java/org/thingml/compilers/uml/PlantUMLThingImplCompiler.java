@@ -16,9 +16,19 @@
  */
 package org.thingml.compilers.uml;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Event;
@@ -26,6 +36,7 @@ import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.NamedElement;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.Region;
@@ -41,18 +52,29 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	public static boolean FACTORIZE_TRANSITIONS = true;
 
+	private static Map<String, List<NamedElement>> names = new HashMap<String, List<NamedElement>>();
+
+	private String getName(NamedElement s) {
+		final String name = (s.getName()!=null)?s.getName():"default";
+		final int index = names.get(name).indexOf(s);
+		if (index == 0)
+			return name;
+		return name + "_" + index;
+	}
+
 	private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
 		ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
 	}
 
 	private void buildActions(State s, StringBuilder builder, Context ctx) {
+		final String name = getName(s);
 		if (s.getEntry() != null) {//TODO: pretty-print ThingML actions and expressions
-			builder.append("\t" + s.getName() + " : entry / ");
+			builder.append("\t" + name + " : entry / ");
 			doBuildAction(s.getEntry(), builder, ctx);
 			builder.append("\n");
 		}
 		if (s.getExit() != null) {
-			builder.append("\t" + s.getName() + " : exit / ");
+			builder.append("\t" + name + " : exit / ");
 			doBuildAction(s.getExit(), builder, ctx);
 			builder.append("\n");
 		}
@@ -78,16 +100,37 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	protected void generateStateMachine(CompositeState sm, StringBuilder builder, Context ctx) {
+		List<NamedElement> l = new ArrayList<>();
+		l.add(sm);
+		names.put((sm.getName()!=null)?sm.getName():"default", l);
+		TreeIterator<EObject> content = sm.eAllContents();
+		while(content.hasNext()) {
+			final EObject c = content.next();
+			if (c instanceof NamedElement) {//FIXME: we might refine this condition to target states, regions, composites, sessions
+				final NamedElement e = (NamedElement)c;
+				final String name = (e.getName()!=null)?e.getName():"default";
+				if (names.get(name) == null) {
+					List<NamedElement> elems = new ArrayList<NamedElement>();
+					names.put(name, elems);
+				}
+				List<NamedElement> elems = names.get(name);
+				if (!elems.contains(e)) {
+					elems.add(e);
+				}
+			}
+		}
+
+		final String name = getName(sm);
 		builder.append("@startuml\n");
 		builder.append("skinparam defaultTextAlignment left\n");
 		builder.append("caption Behavior of thing " + ThingMLHelpers.findContainingThing(sm).getName() + "\n");
-		builder.append("[*] --> " + sm.getName() + "\n");
-		builder.append("state " + sm.getName() + "{\n");
+		builder.append("[*] --> " + name + "\n");
+		builder.append("state " + name + "{\n");
 		for (State s : sm.getSubstate()) {
 			if (!(s instanceof Session))
 				generateState(s, builder, ctx);
 		}
-		builder.append("[*] --> " + sm.getInitial().getName() + "\n");
+		builder.append("[*] --> " + getName(sm.getInitial()) + "\n");
 		buildActions(sm, builder, ctx);
 
 		generateHandlers(sm, builder, ctx);
@@ -105,12 +148,13 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	protected void generateCompositeState(StateContainer c, StringBuilder builder, Context ctx) {
-		builder.append("state " + c.getName() + "{\n");
+		final String name = getName(c);
+		builder.append("state " + name + "{\n");
 		for (State s : c.getSubstate()) {
 			if (!(s instanceof Session))
 				generateState(s, builder, ctx);
 		}
-		builder.append("[*] --> " + c.getInitial().getName() + "\n");
+		builder.append("[*] --> " + getName(c.getInitial()) + "\n");
 
 		if (c instanceof CompositeState) {
 			generateHandlers((CompositeState)c, builder, ctx);
@@ -129,7 +173,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
-		builder.append("state " + s.getName() + "{\n");
+		final String name = getName(s);
+		builder.append("state " + name + "{\n");
 		buildActions(s, builder, ctx);
 		generateHandlers(s, builder, ctx);
 		builder.append("}\n");
@@ -137,19 +182,19 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
 		generateAtomicState(s, builder, ctx);
-		builder.append(s.getName() + " --> [*]\n");
+		builder.append(getName(s) + " --> [*]\n");
 	}
 
 	public void generateRegion(Region r, StringBuilder builder, Context ctx) {
 		builder.append("--\n");
-		builder.append("[*] --> " + r.getInitial().getName() + "\n");
+		builder.append("[*] --> " + getName(r.getInitial()) + "\n");
 		for (State s : r.getSubstate()) {
 			generateState(s, builder, ctx);
 		}
 		if (r instanceof Session) {
-			builder.append("Note top of " + r.getInitial().getName() + " : Session " + r.getName() + "\n");
+			builder.append("Note top of " + getName(r.getInitial()) + " : Session " + getName(r) + "\n");
 		} else {
-			builder.append("Note top of " + r.getInitial().getName() + " : Region " + r.getName() + "\n");
+			builder.append("Note top of " + getName(r.getInitial()) + " : Region " + getName(r) + "\n");
 		}
 	}
 
@@ -170,7 +215,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
 		String content = builder.toString();
-		String transition = ((State)t.eContainer()).getName() + " --> " + t.getTarget().getName();
+		String transition = getName(((State)t.eContainer())) + " --> " + getName(t.getTarget());
 		if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
 			transition = transition + " : ";
 		}
@@ -187,7 +232,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.delete(0, builder.length());
 			builder.append(content);
 		} else {
-			builder.append("\n" + ((State)t.eContainer()).getName() + " --> " + t.getTarget().getName());
+			builder.append("\n" + getName(((State)t.eContainer())) + " --> " + getName(t.getTarget()));
 			if (t.getName()!=null || (msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
 				builder.append(" : ");
 			}
@@ -207,7 +252,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-		builder.append("\t" + ThingMLHelpers.findContainingState(t).getName() + " : ");
+		builder.append("\t" + getName(ThingMLHelpers.findContainingState(t)) + " : ");
 		if(t.getEvent() != null && ((ReceiveMessage)t.getEvent()).getName()!= null)
 			builder.append(((ReceiveMessage)t.getEvent()).getName() + ":");
 		if(p != null && msg != null)

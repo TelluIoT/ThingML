@@ -591,7 +591,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
 
         int nbConnectorSoFar = 0;
 
-        System.out.println("Instance initialization order");
+        //System.out.println("Instance initialization order");
         List<Instance> Instances = ConfigurationHelper.orderInstanceInit(cfg);
         Instance inst;
         while(!Instances.isEmpty()) {
