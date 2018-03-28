@@ -47,7 +47,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkDuplicates(Port p) {
 		p.sends.groupBy[m | m.name].forEach[name, messages |
 			if (messages.size > 1) {
@@ -63,7 +63,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(FAST)	
+	@Check(NORMAL)	
 	def checkDuplicates(Configuration cfg) {
 		cfg.connectors.forEach[c1 |
 			cfg.connectors.forEach[c2 |

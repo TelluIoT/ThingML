@@ -2,7 +2,7 @@ import "datatypes.thingml" from stl
 
 thing TestCheckFunctionReturn
 {
-	//should fail as third, etc returns are unreachable
+	//should not fail
     function foo(a : Integer) do
       println "nothing"
     end

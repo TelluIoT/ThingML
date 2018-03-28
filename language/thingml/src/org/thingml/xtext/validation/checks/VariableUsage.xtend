@@ -23,7 +23,7 @@ import org.thingml.xtext.thingML.CastExpression
 
 class VariableUsage extends ThingMLValidatorCheck {
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkCast(CastExpression cast) {
 		val actual = TypeChecker.computeTypeOf(cast.term)
 		if (!TyperHelper.isA(actual, cast.type)) {
@@ -57,7 +57,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkReadonlyVar(LocalVariable v) {
 		if (!v.readonly)
 			return;
@@ -71,7 +71,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkVariableAssignment(VariableAssignment va) {
 		// Check if the variable is read-only
 		if (va.property.typeRef.cardinality === null) {
@@ -95,13 +95,13 @@ class VariableUsage extends ThingMLValidatorCheck {
 		checkType(va.property, va.expression, va, ThingMLPackage.eINSTANCE.variableAssignment_Expression)
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkLocalVariable(LocalVariable lv) {
 		if (lv.init !== null)
 			checkType(lv, lv.init, lv, ThingMLPackage.eINSTANCE.localVariable_Init)
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkProperty(Property p) {
 		if (p.init !== null)
 			checkType(p, p.init, p, ThingMLPackage.eINSTANCE.property_Init)				

@@ -76,7 +76,7 @@ class MessageUsage extends ThingMLValidatorCheck {
 		]
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkSendAction(SendAction send) {
 		val msg = send.message
 		val params = send.parameters

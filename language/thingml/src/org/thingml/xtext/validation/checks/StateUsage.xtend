@@ -11,7 +11,7 @@ import org.thingml.xtext.thingML.Region
 
 class StateUsage extends ThingMLValidatorCheck {
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def chectStateUniqueness(org.thingml.xtext.thingML.State s) {
 		if (s.eContainer instanceof StateContainer) {
 			val c = s.eContainer as StateContainer
@@ -27,7 +27,7 @@ class StateUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def chectSessionUniqueness(Session s) {
 		val c = s.eContainer as CompositeState
 		val sessions = c.session.filter(
@@ -40,7 +40,7 @@ class StateUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(FAST)
+	@Check(NORMAL)
 	def chectRegionUniqueness(Region r) {
 		val c = r.eContainer as CompositeState
 		val regions = c.region.filter(
