@@ -8,6 +8,7 @@ import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.Region
+import org.thingml.xtext.thingML.Thing
 
 class StateUsage extends ThingMLValidatorCheck {
 
@@ -69,11 +70,16 @@ class StateUsage extends ThingMLValidatorCheck {
 
 	@Check(NORMAL)
 	def checkSinkState(StateContainer sc) {
+		if (sc instanceof CompositeState) {
+			val c = sc as CompositeState
+			if (!c.outgoing.empty) return;
+		}
+		
 		sc.substate.forEach [ s, i |
-			if (!(s instanceof FinalState || s instanceof CompositeState) && s.outgoing.empty) {
-				warning("State " + s.name + " is a sink state. Consider making it final", sc,
+			if (s instanceof FinalState) return;
+			if (!s.outgoing.empty) return;
+			warning("State " + s.name + " is a sink state. Consider making it final", sc,
 					ThingMLPackage.eINSTANCE.stateContainer_Substate, i, "state-sink", s.name)
-			}
 		]
 	}
 }
