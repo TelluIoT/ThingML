@@ -96,6 +96,9 @@ int /*PORT_NAME*/_setup() {
 		// see: http://unixwiz.net/techtips/termios-vmin-vtime.html
 		port_settings.c_cc[VMIN] = 0;
 		port_settings.c_cc[VTIME] = 20;
+		
+		cfmakeraw(&port_settings);
+		
 		if (tcsetattr(result, TCSANOW, &port_settings) < 0 ) {
                     /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port: could not set serial port attributes\n");
                     /*TRACE_LEVEL_1*/perror("Error opening Serial port: could not set serial port attributes");
@@ -196,6 +199,12 @@ void /*PORT_NAME*/_start_receiver_process()
 								serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
 
                                                                 /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Message received\n");
+                                                                /*
+                                                                int i=0;
+                                                                for (i=0; i<serialMsgSize; i++) printf(" %d", serialBuffer[i]);
+                                                                printf("\n");
+                                                                Serial_parser(serialBuffer, serialMsgSize);
+                                                                */
                                                                 /*PARSER_CALL*/
 
 							  } else if (buffer[i] == /*PORT_NAME*/_ESCAPE_BYTE) {
