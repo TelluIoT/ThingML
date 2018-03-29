@@ -116,7 +116,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 			val isUsed = usedProperties.contains(p)
 			if (!isUsed) {
 				val msg = "Property " + p.getName() + " of Thing " + thing.getName() + " is never used. Consider removing (or using) it.";
-				warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Properties, i, "property-not-used")
+				warning(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name, "property-not-used");
 			}
 		]
 		// Check all state properties
@@ -127,7 +127,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 					val isUsed = usedProperties.contains(p)
 					if (!isUsed) {
 						val msg = "Property " + p.getName() + " of Thing " + thing.getName() + " is never used. Consider removing (or using) it.";
-						warning(msg, state, p.eContainingFeature, i, "property-not-used")
+						warning(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name, "property-not-used");
 					}
 				]
 			]

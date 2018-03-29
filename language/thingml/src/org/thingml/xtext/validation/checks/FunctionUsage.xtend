@@ -54,7 +54,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		
 		if (!isUsed) {
 			val msg = "Function " + f.name + " is never called."
-			warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Functions, thing.functions.indexOf(f), "function-never-called", f.name)							
+			warning(msg, f, ThingMLPackage.eINSTANCE.namedElement_Name, "function-never-called", f.name);
 		}
 		
 	}
@@ -68,13 +68,13 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			} catch (UnimplementedFunction e) {
 				val origin = ThingMLHelpers.findContainingThing(f)
 				if (origin == t)
-					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Functions, t.functions.indexOf(f), "function-not-implemented", f.name)
+					error(e.message, f, ThingMLPackage.eINSTANCE.namedElement_Name, "function-not-implemented", f.name)
 				else
 					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(origin), "function-not-implemented", f.name)
 			} catch (FunctionWithMultipleImplem e) {
 				val origin = ThingMLHelpers.findContainingThing(f)
 				if (origin == t)
-					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Functions, t.functions.indexOf(f), "function-many-impl", f.name)
+					error(e.message, t, ThingMLPackage.eINSTANCE.namedElement_Name, "function-many-impl", f.name)
 				else
 					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(origin), "function-many-impl", f.name)
 			}
