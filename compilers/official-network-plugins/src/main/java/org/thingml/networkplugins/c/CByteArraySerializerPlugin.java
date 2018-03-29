@@ -37,6 +37,7 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Thing;
 
 public class CByteArraySerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
@@ -93,6 +94,9 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
         int j = 2;
 
+        // This annotoation will flip the endianness for messages sent on the serial line.
+        boolean reverseEndianness = AnnotatedElementHelper.isDefined(this.protocol, "reverse_endianness", "true");
+
         for (Parameter pt : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", pt.getName())) {
                 builder.append("\n// parameter " + pt.getName() + "\n");
@@ -108,21 +112,21 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                         builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
                         builder.append("} u_" + v + ";\n");
                         builder.append("u_" + v + ".p = " + v + ";\n");
-                        //if(cctx.networkMSBFirst) {
-                            /*i = 0;
-                            while (i < cctx.getCByteSize(pt.getType(), 0)) {
+                        if(reverseEndianness) {
+                            i = 0;
+                            while (i < cctx.getCByteSize(pt.getTypeRef().getType(), 0)) {
                                 builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                                 i++;
                                 j++;
                             }
-                        /*} else {*/
+                        } else {
                             i = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
                             while (i > 0) {
                                 i = i - 1;
                                 builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                                 j++;
                             }
-                        //}*/
+                        }
                     }
                 }
             }

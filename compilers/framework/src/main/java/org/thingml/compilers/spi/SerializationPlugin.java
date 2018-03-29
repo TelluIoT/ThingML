@@ -87,6 +87,7 @@ public abstract class SerializationPlugin {
      * Note: All parameters annotated as ignored must be ignored.
     */
     public abstract String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco);
+    
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         return generateSerialization(builder, bufferName, m, null);
     }
