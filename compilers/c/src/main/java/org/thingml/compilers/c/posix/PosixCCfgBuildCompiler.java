@@ -56,10 +56,15 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
                 sources.append(mods[i].trim() + ".c ");
                 objects.append(mods[i].trim() + ".o ");
               
+                
+                
                 // If .c (and .h) files exist in the current input directory, copy them to the output
                 // TODO: Jakob, paths within the output??
                 File indir = ctx.getInputDirectory();
                 File cfile = new File(indir, mods[i].trim() + ".c");              
+                
+                System.out.println(" ctx.getInputDirectory() = " + indir + "\n");
+                
                 if (cfile.exists()) {
                     ctx.addFileToCopy(mods[i].trim() + ".c", cfile);
                     File hfile = new File(indir, mods[i].trim() + ".h");

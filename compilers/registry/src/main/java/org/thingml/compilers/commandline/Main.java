@@ -261,7 +261,7 @@ public class Main {
                         outdir = new File(outdir, cfg.getName());
                     thingmlCompiler.setOutputDirectory(outdir);
                     thingmlCompiler.setInputDirectory(indir);
-                    System.out.println("Generating code for configuration: " + cfg.getName());
+                    System.out.println("Generating code for configuration: " + cfg.getName() + ". InputDirectory is " + indir);
                     thingmlCompiler.compile(cfg);
                 }
             }
