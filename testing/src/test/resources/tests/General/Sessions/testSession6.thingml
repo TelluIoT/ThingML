@@ -1,0 +1,41 @@
+import "../../thingml.thingml"
+
+thing TestSession6 includes Test
+@test "ABC # BC"
+{
+	property ID : Char = 'M'
+
+	statechart Chart init INIT {
+		internal event Test?Done
+		action TestDone()
+    
+    	state INIT {
+			internal 
+			event e : Test?In
+			guard e.c == 'A'
+			action do
+				ID = e.c
+				fork s
+				ID = 'M'
+			end
+    	}
+
+		session s<5> init S1 {
+			state S1 {
+				internal 
+				event e : Test?In
+				guard not e.c == 'C'
+				action do
+					TestOut(ID)       //The session created on an event should not receive this event
+				end
+				
+				transition -> S2
+				event e : Test?In
+				guard e.c == 'C'
+			}
+			final state S2 {
+				on entry TestOut('C')
+			}		
+		}
+    }
+}
