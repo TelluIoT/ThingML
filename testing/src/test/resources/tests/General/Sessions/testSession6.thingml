@@ -6,9 +6,6 @@ thing TestSession6 includes Test
 	property ID : Char = 'M'
 
 	statechart Chart init INIT {
-		internal event Test?Done
-		action TestDone()
-    
     	state INIT {
 			internal 
 			event e : Test?In
@@ -24,17 +21,15 @@ thing TestSession6 includes Test
 			state S1 {
 				internal 
 				event e : Test?In
-				guard e.c != 'C'
 				action do
-					TestOut(ID)       //The session created on an event should not receive this event
+					TestOut(e.c)       //The session created on an event should not receive this event
 				end
 				
 				transition -> S2
-				event e : Test?In
-				guard e.c == 'C'
+				event Test?Done
 			}
 			final state S2 {
-				on entry TestOut('C')
+				on entry TestDone()
 			}		
 		}
     }
