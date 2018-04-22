@@ -3,30 +3,29 @@ import "../../thingml.thingml"
 thing TestSession6 includes Test
 @test "ABC # BC"
 {
-	property ID : Char = 'M'
-
 	statechart Chart init INIT {
     	state INIT {
 			internal 
 			event e : Test?In
 			guard e.c == 'A'
 			action do
-				ID = e.c
 				fork s
-				ID = 'M'
 			end
     	}
 
 		session s<5> init S1 {
 			state S1 {
+				property i : Integer = 0
+				
 				internal 
 				event e : Test?In
 				action do
-					TestOut(e.c)       //The session created on an event should not receive this event
+					TestOut(e.c) //The session created on an event should not receive this event
+					i = i + 1       
 				end
 				
 				transition -> S2
-				event Test?Done
+				guard i >= 2
 			}
 			final state S2 {
 				on entry TestDone()
