@@ -24,7 +24,7 @@ thing TestSession6 includes Test
 			state S1 {
 				internal 
 				event e : Test?In
-				guard not e.c == 'C'
+				guard e.c != 'C'
 				action do
 					TestOut(ID)       //The session created on an event should not receive this event
 				end
