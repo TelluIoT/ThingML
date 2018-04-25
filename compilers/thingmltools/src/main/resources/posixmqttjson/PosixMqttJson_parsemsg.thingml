@@ -1,0 +1,41 @@
+		if (`strcmp(`&topic&`, "/*MSG_NAME*/") == 0`) do
+
+/*VARDEF*/
+						
+			// Check for parse errors
+			if (parse_result < 0) do
+				error "JSON ERROR: Parse error for /*MSG_NAME*/ message payload\n"
+				return false
+			end
+			
+			// Check that we have room for all parameters (1 object + 2 nodes per parameter)
+			if (parse_result < /*NBNODES*/) do
+				error "JSON ERROR: incomplete payload for /*MSG_NAME*/ message\n"
+				return false
+			end
+			
+			// Check that we have one object as the root which contains enough parameters
+			if (`tokens[0].type` != 1 or `tokens[0].size` < 2) do
+				error "JSON ERROR: wrong payload format for /*MSG_NAME*/ message\n"
+				return false
+			end
+			
+			// parse parameters
+			var i : UInt16 = 1
+			while (i<parse_result-1) do
+			
+				// We should have an attribute: type == 3 size == 1
+				if (`tokens[`&i&`].type` != 3 or `tokens[`&i&`].size` != 1) do
+					error "JSON ERROR: unexpected token parsing parameters for /*MSG_NAME*/ message\n"
+					return false
+				end
+				
+/*PARSEPARAMS*/				
+				do
+					print "JSON WARNING: got unknown parameters for /*MSG_NAME*/ message\n"
+				end
+				i = i + 2 
+			end
+/*FWMSG*/
+		end 
+		else 

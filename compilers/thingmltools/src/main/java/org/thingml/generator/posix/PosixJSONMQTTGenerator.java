@@ -26,9 +26,6 @@ import java.io.File;
 import org.thingml.thingmltools.ThingMLTool;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ThingHelper;
-import org.thingml.xtext.helpers.TyperHelper;
-import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
@@ -113,6 +110,13 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	template = template.replace("/*SUBSCRIBE*/", subscriptions.toString());
     	template = template.replace("/*SEND_HANDLERS*/", sendfunctions.toString());
     
+    	StringBuilder parsemsgs = new StringBuilder();
+    	for (Message m : p.getSends()) {
+    		if (m != p.getSends().get(0))parsemsgs.append(" ");
+    		else parsemsgs.append("\t\t\t");
+    		generate_parsing_msg(p, m ,parsemsgs);
+    	}
+    	template = template.replace("/*PARSEMSG*/", parsemsgs.toString());
     	
     	StringBuilder builder = new StringBuilder(template);
     	
@@ -146,7 +150,69 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	
     	b.append("\t\tend\n\n");
     	
+    }
+    
+    public void generate_parsing_msg(Port p, Message m, StringBuilder b) {
+    	String template = getTemplateByID("posixmqttjson/PosixMqttJson_parsemsg.thingml");
+    	template = template.replace("/*MSG_NAME*/", m.getName());
+    	template = template.replace("/*NBNODES*/", "1 + " + m.getParameters().size());
     	
+    	StringBuilder vardef = new StringBuilder();
+    	for (Parameter param : m.getParameters()) {
+    		vardef.append("\t\t\tvar "); vardef.append(param.getName()); vardef.append(" : ");
+    		vardef.append(param.getTypeRef().getType().getName()); vardef.append("\n");
+    		vardef.append("\t\t\tvar _found_"); vardef.append(param.getName()); 
+    		vardef.append(" : Boolean = false\n");
+    	}
+    	template = template.replace("/*VARDEF*/", vardef.toString());
+    	
+    	StringBuilder parseparams = new StringBuilder();
+    	
+    	for (Parameter param : m.getParameters()) {
+    		if (param != m.getParameters().get(0)) parseparams.append(" ");
+    		else parseparams.append("\t\t\t\t");
+    		generate_parsing_param(p,m, param, parseparams);
+    	}
+    	template = template.replace("/*PARSEPARAMS*/", parseparams.toString());
+    	
+    	StringBuilder forwardmsg = new StringBuilder();
+    	// Report errors for missing parameters
+    	for (Parameter param : m.getParameters()) {
+    		forwardmsg.append("\t\t\tif (not _found_"); forwardmsg.append(param.getName()); 
+    		forwardmsg.append(") error \"JSON ERROR: Missing "+param.getName()+" parameter for message "+m.getName()+"\\n\"\n");
+    	}
+    	forwardmsg.append("\n");
+    	// Check if we got all parameters
+    	forwardmsg.append("\t\t\tif(");
+    	for (Parameter param : m.getParameters()) {
+    		if (param != m.getParameters().get(0)) forwardmsg.append(" and ");
+    		forwardmsg.append("_found_"); forwardmsg.append(param.getName()); 
+    	}
+    	forwardmsg.append(") do\n");
+    	// Forward the message
+    	forwardmsg.append("\t\t\t\t");forwardmsg.append(p.getName());forwardmsg.append("!");
+    	forwardmsg.append(m.getName());forwardmsg.append("(");
+    	for (Parameter param : m.getParameters()) {
+    		if (param != m.getParameters().get(0)) forwardmsg.append(", ");
+    		forwardmsg.append(param.getName()); 
+    	}
+    	forwardmsg.append(")\n");
+    	forwardmsg.append("\t\t\t\treturn true\n");
+    	forwardmsg.append("\t\t\tend\n");
+    	forwardmsg.append("\t\t\telse return false\n");
+    	template = template.replace("/*FWMSG*/", forwardmsg.toString());
+    	
+    	b.append(template.trim());
+    }
+    
+    public void generate_parsing_param(Port p, Message m, Parameter param, StringBuilder b) {
+    	String template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam.thingml");
+    	template = template.replace("/*MSG_NAME*/", m.getName());
+    	template = template.replace("/*PARAMNAME*/", param.getName());
+    	
+    	//TODO: Proper parsing according to the type of the parameter
+    	
+    	b.append(template.trim());
     }
     
     
