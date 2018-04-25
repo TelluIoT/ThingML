@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.thingml.generator.posix.PosixJSONMQTTGenerator;
 /**
  * Created by vassik on 05.04.17.
  */
@@ -39,6 +40,7 @@ public class ThingMLToolRegistry {
         if (instance == null) {
             instance = new ThingMLToolRegistry();
             instance.addTool(new TestConfigurationGenerator());
+            instance.addTool(new PosixJSONMQTTGenerator());
 
         }
 

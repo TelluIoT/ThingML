@@ -22,10 +22,13 @@
 package org.thingml.thingmltools;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
@@ -89,6 +92,18 @@ public abstract class ThingMLTool {
         for (Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {
             writeTextFile(e.getKey(), e.getValue().toString());
         }
+    }
+    
+    public String getTemplateByID(String template_id) {
+    	try {
+    		try (final InputStream template = this.getClass().getClassLoader().getResourceAsStream(template_id)) {
+    			return IOUtils.toString(template, Charset.forName("UTF-8"));
+    		}
+    	} catch (Throwable t) {
+			System.err.println("Template '"+template_id+"' not found.");
+			t.printStackTrace(System.err);
+    		return null;
+    	}
     }
 
     /**
