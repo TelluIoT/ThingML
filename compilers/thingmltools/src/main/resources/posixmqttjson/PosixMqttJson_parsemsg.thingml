@@ -14,8 +14,8 @@
 				return false
 			end
 			
-			// Check that we have one object as the root which contains enough parameters
-			if (`tokens[0].type` != 1 or `tokens[0].size` < 2) do
+			// Check that we have one object as the root 
+			if (`tokens[0].type` != 1) do
 				error "JSON ERROR: wrong payload format for /*MSG_NAME*/ message\n"
 				return false
 			end
