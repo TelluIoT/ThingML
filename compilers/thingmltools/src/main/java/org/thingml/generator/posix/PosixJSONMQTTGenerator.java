@@ -182,13 +182,16 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     		forwardmsg.append(") error \"JSON ERROR: Missing "+param.getName()+" parameter for message "+m.getName()+"\\n\"\n");
     	}
     	forwardmsg.append("\n");
-    	// Check if we got all parameters
-    	forwardmsg.append("\t\t\tif(");
-    	for (Parameter param : m.getParameters()) {
-    		if (param != m.getParameters().get(0)) forwardmsg.append(" and ");
-    		forwardmsg.append("_found_"); forwardmsg.append(param.getName()); 
+    	
+    	if (!m.getParameters().isEmpty()) {
+	    	// Check if we got all parameters
+	    	forwardmsg.append("\t\t\tif(");
+	    	for (Parameter param : m.getParameters()) {
+	    		if (param != m.getParameters().get(0)) forwardmsg.append(" and ");
+	    		forwardmsg.append("_found_"); forwardmsg.append(param.getName()); 
+	    	}
+	    	forwardmsg.append(") do\n");
     	}
-    	forwardmsg.append(") do\n");
     	// Forward the message
     	forwardmsg.append("\t\t\t\t");forwardmsg.append(p.getName());forwardmsg.append("!");
     	forwardmsg.append(m.getName());forwardmsg.append("(");
@@ -198,8 +201,13 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	}
     	forwardmsg.append(")\n");
     	forwardmsg.append("\t\t\t\treturn true\n");
-    	forwardmsg.append("\t\t\tend\n");
-    	forwardmsg.append("\t\t\telse return false\n");
+    	
+    	
+    	if (!m.getParameters().isEmpty()) {
+    		forwardmsg.append("\t\t\tend\n");
+    		forwardmsg.append("\t\t\telse return false\n");
+    	}
+    	
     	template = template.replace("/*FWMSG*/", forwardmsg.toString());
     	
     	b.append(template.trim());
