@@ -1,8 +1,3 @@
-clone:
-  git:
-    image: plugins/git
-    depth: 0
-
 # Always built on x86_64
 platform: linux/amd64
 
@@ -44,3 +39,8 @@ pipeline:
     auto_tag: true
     auto_tag_suffix: arm32v7
     secrets: [ docker_username, docker_password ]
+
+clone:
+  git:
+    image: plugins/git
+    depth: 1
