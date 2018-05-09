@@ -1,0 +1,35 @@
+# Always built on x86_64
+platform: linux/amd64
+
+pipeline:
+  build:
+    image: maven:3-jdk-8
+    commands:
+      - mvn -Dmaven.test.failure.ignore clean install
+      - cd language
+      - mvn -Dmaven.test.failure.ignore -pl !thingml.ui.tests install
+      - cd ..
+    volumes:
+      - /tmp/.m2/:/root/.m2/
+  testing:
+    image: maven:3-jdk-8
+    commands:
+      - mvn -Dmaven.test.failure.ignore test thingmlreport:generate
+    volumes:
+      - /tmp/.m2/:/root/.m2/
+  docker-amd64:
+    group: docker
+    image: plugins/docker
+    dockerfile: Dockerfile-amd64
+    repo: tellu/thingml
+    auto_tag: true
+    auto_tag_suffix: amd64
+    secrets: [ docker_username, docker_password ]
+  docker-arm32v7:
+    group: docker
+    image: plugins/docker
+    dockerfile: Dockerfile-arm32v7
+    repo: tellu/thingml
+    auto_tag: true
+    auto_tag_suffix: arm32v7
+    secrets: [ docker_username, docker_password ]
