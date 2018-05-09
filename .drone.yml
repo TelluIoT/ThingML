@@ -9,14 +9,18 @@ pipeline:
       - cd language
       - mvn -Dmaven.test.failure.ignore -pl !thingml.ui.tests install
       - cd ..
+    # Use the .m2 folder as cache
     volumes:
       - /tmp/.m2/:/root/.m2/
   testing:
     image: maven:3-jdk-8
     commands:
       - mvn -Dmaven.test.failure.ignore test thingmlreport:generate
+    # Use the .m2 folder as cache
     volumes:
       - /tmp/.m2/:/root/.m2/
+
+  # Publish the amd64 docker container
   docker-amd64:
     group: docker
     image: plugins/docker
@@ -25,6 +29,8 @@ pipeline:
     auto_tag: true
     auto_tag_suffix: amd64
     secrets: [ docker_username, docker_password ]
+
+  # Publish the arm32v7 docker container
   docker-arm32v7:
     group: docker
     image: plugins/docker
