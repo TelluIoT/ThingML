@@ -18,7 +18,6 @@ pipeline:
       - mvn --batch-mode -Dmaven.test.failure.ignore clean install
       - cd language
       - mvn --batch-mode -Dmaven.test.failure.ignore -pl !thingml.ui.tests install
-      - cd ..
       - mv /root/.m2 ./.m2
   
   testing:
