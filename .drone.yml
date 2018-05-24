@@ -20,13 +20,13 @@ pipeline:
       - mvn --batch-mode -Dmaven.test.failure.ignore -pl !thingml.ui.tests install
       - mv /root/.m2 ./.m2
   
-  testing:
-    image: maven:3-jdk-8
-    commands:
-      - mkdir -p ./.m2
-      - mv ./.m2 /root/.m2
-      - mvn --batch-mode -Dmaven.test.failure.ignore test
-      - mv /root/.m2 ./.m2
+#  testing:
+#    image: maven:3-jdk-8
+#    commands:
+#      - mkdir -p ./.m2
+#      - mv ./.m2 /root/.m2
+#      - mvn --batch-mode -Dmaven.test.failure.ignore test
+#      - mv /root/.m2 ./.m2
     
   rebuild-cache:
     image: drillster/drone-volume-cache
