@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -49,6 +50,10 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             if (pack == null) pack = "org.thingml.generated";
             pom = pom.replace("<!--PACK-->", pack);
 
+            for (String src : JavaHelper.allSrcFolders(cfg)) {
+            	FileUtils.copyDirectory(new File(src), new File(ctx.getOutputDirectory(), "src/main/java/"));
+            }
+            
             for (String dep : JavaHelper.allMavenDep(cfg)) {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }

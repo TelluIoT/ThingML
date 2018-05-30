@@ -16,6 +16,9 @@
  */
 package org.thingml.compilers.java;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -116,12 +119,24 @@ public class JavaHelper {
         }
     }
 
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public static Set<String> allMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
+    public static Set<String> allSrcFolders(Configuration cfg) {
+        Set<String> result = new HashSet<String>();
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (String dep : AnnotatedElementHelper.annotation(t, "src")) {
+            	final Path p = Paths.get(new File(t.eResource().getURI().toFileString()).getParent()).resolve(Paths.get(dep));
+            	result.add(p.toString());
+            }
+        }
+        for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
+            for (String dep : AnnotatedElementHelper.annotation(t, "src")) {
+            	final Path p = Paths.get(new File(t.eResource().getURI().toFileString()).getParent()).resolve(Paths.get(dep));
+            	result.add(p.toString());
+            }
+        }
+        return result;
+    }
+    
+    public static Set<String> allMavenDep(Configuration cfg) {
         Set<String> result = new HashSet<String>();
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             for (String dep : AnnotatedElementHelper.annotation(t, "maven_dep")) {
@@ -138,12 +153,7 @@ public class JavaHelper {
         return result;
     }
     
-    /**
-    *
-    * @return
-    * @generated NOT
-    */
-   public static Set<String> allMavenRepo(Configuration cfg) {//FIXME: should be moved in a JavaHelper
+   public static Set<String> allMavenRepo(Configuration cfg) {
        Set<String> result = new HashSet<String>();
        for (Thing t : ConfigurationHelper.allThings(cfg)) {
            for (String dep : AnnotatedElementHelper.annotation(t, "maven_repo")) {

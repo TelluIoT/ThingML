@@ -21,8 +21,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by ffl on 10.05.2016.
@@ -49,7 +51,16 @@ public class AnnotatedElementHelper {
 	}
 	
     public static List<PlatformAnnotation> allAnnotations(AnnotatedElement self) {
-        return self.getAnnotations();
+    	final List<PlatformAnnotation> annotations = new ArrayList<>();
+    	if (self instanceof Thing) {
+    		final Thing thing = (Thing) self;
+    		for (Thing t : ThingMLHelpers.allThingFragments(thing)) {
+    			annotations.addAll(t.getAnnotations());
+    		}
+    	} else {
+    		annotations.addAll(self.getAnnotations());
+    	}
+        return annotations;
     }
 
 
@@ -76,7 +87,7 @@ public class AnnotatedElementHelper {
 
     public static List<String> annotation(AnnotatedElement self, String name) {
         List<String> result = new ArrayList<String>();
-        for (PlatformAnnotation a : self.getAnnotations()) {
+        for (PlatformAnnotation a : allAnnotations(self)) {
             if (a.getName().equals(name)) {
                 result.add(cleanAnnotation(a.getValue()));
             }
