@@ -16,10 +16,14 @@
  */
 package compilers.go;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -37,7 +41,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		super(new GoThingActionCompiler(),
 			  new GoThingApiCompiler(),
 			  new GoCfgMainGenerator(),
-			  new GoCfgBuildCompiler(),
+			  new CfgBuildCompiler(),
 			  new GoThingImplCompiler());
 	}
 
@@ -109,8 +113,17 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		
 		// Generate main function
 		getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
-        ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
+		getCfgBuildCompiler().generateDockerFile(cfg, ctx);
 		ctx.writeGeneratedCodeToFiles();
+		
+		try {//FIXME: dirty-trick to get the Dockerfile dumped to a file...
+		final StringBuilder dockerfile = ctx.getBuilder("Dockerfile");
+		final PrintWriter oprint = new PrintWriter(new FileWriter("DockerFile"));
+		oprint.println(dockerfile.toString());
+		oprint.close();
+		} catch (Exception e) {
+			
+		}
 		return true;
 	}
 	
@@ -128,8 +141,10 @@ public class GoCompiler extends OpaqueThingMLCompiler {
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
         return "RUN mkdir -p /go/src/" + cfg.getName() + "\n" +
         		"WORKDIR /go/src/" + cfg.getName() + "\n" +
+        		"RUN apk add --no-cache build-base git\n" +
+        		"RUN go get github.com/jakhog/gosm\n" +
         		"COPY . .\n" +
-        		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -a " + cfg.getName() + ".go\n" +
+        		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go\n" +
         		"FROM scratch\n" +
         		"COPY --from=0 /go/src/" + cfg.getName() + "/" + cfg.getName() + " /" + cfg.getName() + "\n";
     }
