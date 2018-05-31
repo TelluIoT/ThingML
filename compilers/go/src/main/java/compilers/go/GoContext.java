@@ -72,6 +72,7 @@ public class GoContext extends Context {
 	
 	@Override
 	public void writeGeneratedCodeToFiles() {
+		super.writeGeneratedCodeToFiles();
 		try {
 			for (Entry<String, GoSourceBuilder> generatedFile : generatedFiles.entrySet()) {
 				File outFile = new File(this.getOutputDirectory(), generatedFile.getKey());

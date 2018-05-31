@@ -120,15 +120,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 		getCfgBuildCompiler().generateDockerFile(cfg, ctx);
 		ctx.writeGeneratedCodeToFiles();
-		
-		try {//FIXME: dirty-trick to get the Dockerfile dumped to a file...
-		final StringBuilder dockerfile = ctx.getBuilder("Dockerfile");
-		final PrintWriter oprint = new PrintWriter(new FileWriter("DockerFile"));
-		oprint.println(dockerfile.toString());
-		oprint.close();
-		} catch (Exception e) {
-			
-		}
+
 		return true;
 	}
 	
