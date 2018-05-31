@@ -59,15 +59,7 @@ public class CfgBuildCompiler {
                     System.out.println("[WARNING] No docker base image found for compiler " + ctx.getCompiler().getID());
                 }
             }
-            dockerfileTemplate = dockerfileTemplate.replace("#BASE_IMAGE", baseImage);
-            
-            String maintainer;
-            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_maintainer")) {
-                maintainer = "MAINTAINER" + AnnotatedElementHelper.annotation(cfg, "docker_maintainer").iterator().next();
-            } else {
-                maintainer = "";
-            }
-            dockerfileTemplate = dockerfileTemplate.replace("#MAINTAINER", maintainer);
+            dockerfileTemplate = dockerfileTemplate.replace("#BASE_IMAGE", baseImage);            
             
             String expose;
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_expose")) {
@@ -117,7 +109,6 @@ public class CfgBuildCompiler {
             String param = "";
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_parameter")) {
                 Iterator<String> paramIt = AnnotatedElementHelper.annotation(cfg, "docker_parameter").iterator();
-                boolean first = true;
                 while(paramIt.hasNext()) {
                     param += ", ";
                     param += "\"" + paramIt.next() + "\"";
@@ -130,31 +121,4 @@ public class CfgBuildCompiler {
             
         }
     }
-/*
-    protected Set<String> properties = new HashSet<String>();
-    protected Set<String> deps = new HashSet<String>();
-    protected Set<String> devDeps = new HashSet<String>();
-    protected Set<String> repos = new HashSet<String>();
-    protected Set<String> scripts = new HashSet<String>();
-
-    public void addDependency(String dep) {
-        deps.add(dep);
-    }
-
-    public void addDevDependency(String dep) {
-        devDeps.add(dep);
-    }
-
-    public void addConfigProperty(String prop) {
-        properties.add(prop);
-    }
-
-    public void addRepository(String repo) {
-        repos.add(repo);
-    }
-
-    public void addScripts(String script) {
-        scripts.add(script);
-    }
-*/
 }

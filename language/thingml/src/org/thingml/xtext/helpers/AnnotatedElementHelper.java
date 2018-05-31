@@ -50,22 +50,21 @@ public class AnnotatedElementHelper {
 		return stripped.toString();
 	}
 	
-    public static List<PlatformAnnotation> allAnnotations(AnnotatedElement self) {
-    	final List<PlatformAnnotation> annotations = new ArrayList<>();
-    	if (self instanceof Thing) {
-    		final Thing thing = (Thing) self;
-    		for (Thing t : ThingMLHelpers.allThingFragments(thing)) {
-    			annotations.addAll(t.getAnnotations());
+    public static List<String> allAnnotation(Thing self, String name) {
+    	final List<String> annotations = new ArrayList<>();
+    	for (Thing t : ThingMLHelpers.allThingFragments(self)) {
+    		for(PlatformAnnotation a : t.getAnnotations()) {
+    			if (a.getName().equals(name))
+    				annotations.add(a.getValue());	
     		}
-    	} else {
-    		annotations.addAll(self.getAnnotations());
-    	}
+    		
+    	}    	
         return annotations;
     }
 
 
     public static boolean isDefined(AnnotatedElement self, String annotation, String value) {
-        for (PlatformAnnotation a : allAnnotations(self)) {
+        for (PlatformAnnotation a : self.getAnnotations()) {
             if (a.getName().equals(annotation)) {
                 if (cleanAnnotation(a.getValue()).equals(value))
                     return true;
@@ -76,7 +75,7 @@ public class AnnotatedElementHelper {
 
 
     public static boolean hasAnnotation(AnnotatedElement self, String name) {
-        for (PlatformAnnotation a : allAnnotations(self)) {
+        for (PlatformAnnotation a : self.getAnnotations()) {
             if (a.getName().equals(name)) {
                 return true;
             }
@@ -87,7 +86,7 @@ public class AnnotatedElementHelper {
 
     public static List<String> annotation(AnnotatedElement self, String name) {
         List<String> result = new ArrayList<String>();
-        for (PlatformAnnotation a : allAnnotations(self)) {
+        for (PlatformAnnotation a : self.getAnnotations()) {
             if (a.getName().equals(name)) {
                 result.add(cleanAnnotation(a.getValue()));
             }

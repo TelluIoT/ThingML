@@ -122,14 +122,14 @@ public class JavaHelper {
     public static Set<String> allSrcFolders(Configuration cfg) {
         Set<String> result = new HashSet<String>();
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            for (String dep : AnnotatedElementHelper.annotation(t, "src")) {
-            	final Path p = Paths.get(new File(t.eResource().getURI().toFileString()).getParent()).resolve(Paths.get(dep));
+            for (String dep : AnnotatedElementHelper.allAnnotation(t, "src")) {
+            	final Path p = Paths.get(new File(t.eResource().getURI().toFileString()).getParent()).resolve(Paths.get(dep)).toAbsolutePath();
             	result.add(p.toString());
             }
         }
         for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
             for (String dep : AnnotatedElementHelper.annotation(t, "src")) {
-            	final Path p = Paths.get(new File(t.eResource().getURI().toFileString()).getParent()).resolve(Paths.get(dep));
+            	final Path p = Paths.get(new File(t.eResource().getURI().toFileString()).getParent()).resolve(Paths.get(dep)).toAbsolutePath();
             	result.add(p.toString());
             }
         }

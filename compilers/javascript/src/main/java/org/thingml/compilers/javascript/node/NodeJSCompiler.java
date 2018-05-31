@@ -57,7 +57,7 @@ public class NodeJSCompiler extends JSCompiler {
 
 	@Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return "node:latest";
+        return "node:alpine";
     }
     
     @Override
@@ -67,8 +67,9 @@ public class NodeJSCompiler extends JSCompiler {
     
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "COPY ./*.js /work/\n" + 
-                "COPY ./node_modules /work/node_modules\n";
+        return "COPY package.json package.json\n" +
+        		"RUN npm install --production\n" +
+        		"COPY . .\n";
     }
 
 	@Override

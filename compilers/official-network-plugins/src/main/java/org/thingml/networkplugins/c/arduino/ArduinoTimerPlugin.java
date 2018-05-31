@@ -574,25 +574,21 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     if (AnnotatedElementHelper.hasAnnotation(m, "timer_start")) {
                         String paramID = "id", paramTime = "time";
                         for (Parameter pt : m.getParameters()) {
-                            if (AnnotatedElementHelper.allAnnotations(pt) != null) {
-                                if (AnnotatedElementHelper.hasAnnotation(pt, "id")) {
-                                    paramID = pt.getName();
-                                }
-                                if (AnnotatedElementHelper.hasAnnotation(pt, "time")) {
-                                    paramTime = pt.getName();
-                                }
+                            if (AnnotatedElementHelper.hasAnnotation(pt, "id")) {
+                                paramID = pt.getName();
                             }
+                            if (AnnotatedElementHelper.hasAnnotation(pt, "time")) {
+                                paramTime = pt.getName();
+                            }                            
                         }
 
                         builder.append(timerName + "_timer_start(" + paramID + ", " + paramTime + ");");
                     }
                     if (AnnotatedElementHelper.hasAnnotation(m, "timer_cancel")) {
                         String paramID = "id";
-                        for (Parameter pt : m.getParameters()) {
-                            if (AnnotatedElementHelper.allAnnotations(pt) != null) {
-                                if (AnnotatedElementHelper.hasAnnotation(pt, "id")) {
-                                    paramID = pt.getName();
-                                }
+                        for (Parameter pt : m.getParameters()) {                            
+                            if (AnnotatedElementHelper.hasAnnotation(pt, "id")) {
+                                paramID = pt.getName();
                             }
                         }
 
