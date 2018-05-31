@@ -166,7 +166,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
             } else if (t instanceof Enumeration) {
                 builder.append("enumeration " + t.getName() + "\n");
             }
-            for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(t)) {
+            for (PlatformAnnotation pan : t.getAnnotations()) {
                 builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
             }
             if (t instanceof Enumeration) {
@@ -174,7 +174,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append("{\n");
                 for (EnumerationLiteral l : et.getLiterals()) {
                     builder.append(l.getName());
-                    for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(l)) {
+                    for (PlatformAnnotation pan : l.getAnnotations()) {
                         builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
                     }
                     builder.append("\n");
@@ -189,7 +189,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         builder.append("protocol Websocket\n");
         builder.append("  @serializer \"PosixJSONSerializerPlugin\";");
         builder.append("protocol " + eco.getProtocol().getName());
-        for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(eco.getProtocol())) {
+        for (PlatformAnnotation pan : eco.getProtocol().getAnnotations()) {
             builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
         }
         builder.append(";\n\n");
@@ -240,7 +240,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(p.getName() + " : " + p.getTypeRef().getType().getName());
             }
             builder.append(")");
-            for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(m)) {
+            for (PlatformAnnotation pan : m.getAnnotations()) {
                 builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
             }
             builder.append(";\n");

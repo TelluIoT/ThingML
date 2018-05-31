@@ -79,7 +79,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("websockets");
-            AnnotatedElementHelper.allAnnotations(cfg).add(pan);
+            cfg.getAnnotations().add(pan);
         }
     }
 

@@ -16,13 +16,10 @@
  */
 package compilers.go;
 
-import java.util.List;
-import java.util.Set;
-
+import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
-import org.thingml.compilers.builder.SourceBuilder;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -33,7 +30,6 @@ import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.thingML.Type;
 
 public class GoCompiler extends OpaqueThingMLCompiler {
 	
@@ -113,8 +109,28 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		
 		// Generate main function
 		getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
-		
+        ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
 		ctx.writeGeneratedCodeToFiles();
 		return true;
 	}
+	
+	@Override
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return "golang:alpine";
+    }
+    
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "/" + cfg.getName();
+    }
+    
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        return "RUN mkdir -p /go/src/" + cfg.getName() + "\n" +
+        		"WORKDIR /go/src/" + cfg.getName() + "\n" +
+        		"COPY . .\n" +
+        		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -a " + cfg.getName() + ".go\n" +
+        		"FROM scratch\n" +
+        		"COPY --from=0 /go/src/" + cfg.getName() + "/" + cfg.getName() + " /" + cfg.getName() + "\n";
+    }
 }

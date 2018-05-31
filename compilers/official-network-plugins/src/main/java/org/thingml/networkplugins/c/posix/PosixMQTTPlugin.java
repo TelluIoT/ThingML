@@ -83,7 +83,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("mosquitto");
-            AnnotatedElementHelper.allAnnotations(cfg).add(pan);
+            cfg.getAnnotations().add(pan);
         }
     }
 

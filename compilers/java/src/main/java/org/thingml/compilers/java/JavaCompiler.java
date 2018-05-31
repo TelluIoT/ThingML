@@ -98,16 +98,21 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     
     @Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return "java:8-jre-alpine";
+    	return "maven:alpine";
     }
     
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
-        return "java\", \"-jar\", \"" + cfg.getName() + "-1.0-SNAPSHOT-jar-with-dependencies.jar"; 
+        return "java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar"; 
     }
     
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "COPY ./target/" + cfg.getName() + "-1.0-SNAPSHOT-jar-with-dependencies.jar /work/\n";
+        return "RUN mkdir -p /java/src/" + cfg.getName() + "\n" +
+        		"WORKDIR /java/src/" + cfg.getName() + "\n" +
+        		"COPY . .\n" +
+        		"RUN mvn clean install\n" +
+        		"FROM openjdk:jre-alpine\n" +
+        		"COPY --from=0 /java/src/" + cfg.getName() + "/target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar .\n";
     }
 }

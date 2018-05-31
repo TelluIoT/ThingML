@@ -17,6 +17,7 @@
 package org.thingml.compilers.java;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -51,7 +52,10 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             pom = pom.replace("<!--PACK-->", pack);
 
             for (String src : JavaHelper.allSrcFolders(cfg)) {
-            	FileUtils.copyDirectory(new File(src), new File(ctx.getOutputDirectory(), "src/main/java/"));
+            	final File srcFile = new File(src);
+            	if (!srcFile.exists())
+            		throw new FileNotFoundException("@src folder not found: " + srcFile.toString());
+            	FileUtils.copyDirectory(srcFile, new File(ctx.getOutputDirectory(), "src/main/java/"));
             }
             
             for (String dep : JavaHelper.allMavenDep(cfg)) {
