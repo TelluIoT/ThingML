@@ -185,16 +185,19 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
 
                 Integer maxMsgSize = 0;
+                System.out.println("Arduino Serial Plugin: Compute Max MSG Size");
                 for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
                     Message m = tpm.m;
-                    if (m != null)
-                        System.out.print("m: " + m.getName());
+                    System.out.println("message " + m.getName() + " getMessageSerializationSize=" + ctx.getMessageSerializationSize(m));
                     messages.add(m);
                     if (ctx.getMessageSerializationSize(m) > maxMsgSize) {
-                        maxMsgSize = ctx.getMessageSerializationSize(m) - 2;
+                        maxMsgSize = ctx.getMessageSerializationSize(m);
                     }
                 }
-
+                
+                maxMsgSize = maxMsgSize - 2;
+                System.out.println("Arduino Serial Plugin: maxMsgSize=" + maxMsgSize);
+                
                 ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
                 if (ring) {

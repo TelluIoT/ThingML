@@ -20,11 +20,15 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    
     <parent>
-        <groupId>org.thingml</groupId>
         <artifactId>compilers</artifactId>
+        <groupId>org.thingml</groupId>
         <version>2.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
+    
     <groupId>org.thingml</groupId>
     <artifactId>official-network-plugins</artifactId>
     <name>ThingML :: Compilers :: Network Plugins</name>
@@ -64,8 +68,38 @@
 
     <build>
         <plugins>
+        
+        <!-- We need to include the plugin.properties of org.eclipse.emf.ecore for the validation/checker to work for the standalone compiler -->
+        	<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-dependency-plugin</artifactId>
+        		<version>3.0.2</version>
+        		<executions>
+        			<execution>
+        				<id>unpack</id>
+        				<phase>package</phase>
+        				<goals>
+        					<goal>unpack</goal>
+        				</goals>
+        				<configuration>
+        					<artifactItems>
+        						<artifactItem>
+        							<groupId>org.eclipse.emf</groupId>
+        							<artifactId>org.eclipse.emf.ecore</artifactId>
+        							<version>2.12.0</version>
+        							<type>jar</type>
+        							<overWrite>false</overWrite>
+        							<outputDirectory>${project.build.directory}/unpack</outputDirectory>
+        							<includes>plugin.properties</includes>
+        						</artifactItem>
+        					</artifactItems>
+        				</configuration>
+        			</execution>
+        		</executions>
+        	</plugin>
 
-            <plugin>
+
+			<plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
@@ -73,9 +107,10 @@
                             <mainClass>org.thingml.compilers.commandline.Main</mainClass>
                         </manifest>
                     </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <!-- This custom descriptor also copies the special plugin.properties file -->
+                    <descriptors>
+                        <descriptor>src/assembly/src.xml</descriptor>
+                    </descriptors>
                 </configuration>
                 <executions>
                     <execution>
@@ -89,6 +124,7 @@
                     </execution>
                 </executions>
             </plugin>
+
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
