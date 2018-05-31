@@ -87,6 +87,9 @@ public class GoContext extends Context {
 		}
 	}
 	
+	/* --- Auto-casting --- */
+	public boolean shouldAutocast = false;
+	
 	/* --- Naming helpers --- */
 	public String getTypesPath() {
 		return "Types.go";

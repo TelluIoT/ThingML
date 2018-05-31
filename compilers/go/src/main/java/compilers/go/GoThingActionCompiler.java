@@ -25,21 +25,30 @@ import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.GreaterExpression;
+import org.thingml.xtext.thingML.GreaterOrEqualExpression;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.LoopAction;
+import org.thingml.xtext.thingML.LowerExpression;
+import org.thingml.xtext.thingML.LowerOrEqualExpression;
+import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
@@ -96,7 +105,12 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 		for (int i = 0; i < parameters.size(); i++) {
 			builder.append("\t");
 			builder.append(parameters.get(i).getName()).append(": ");
+			if (gctx.shouldAutocast) {
+				builder.append(gctx.getTypeRef(parameters.get(i).getTypeRef()));
+				builder.append("(");
+			}
 			generate(values.get(i), builder, ctx);
+			if (gctx.shouldAutocast) builder.append(")");
 			builder.append(",\n");
 		}
 		builder.append("})\n");
@@ -254,4 +268,88 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 		else
 			super.generate(expression, builder, ctx);
 	}
+	
+	protected TypeRef tryGetExpressionType(Expression exp, GoContext gctx) {
+		// TODO: Some more work might be needed here
+		TypeRef result = null;
+		if (exp instanceof PropertyReference) {
+			result = ((PropertyReference)exp).getProperty().getTypeRef();
+		} else if (exp instanceof FunctionCallExpression) {
+			result = ((FunctionCallExpression)exp).getFunction().getTypeRef();
+		}
+		// We can only do logic on primitive types
+		if (result != null && !(result.getType() instanceof PrimitiveType)) {
+			result = null;
+		}
+		return result;
+	}
+	
+	protected void castComparisonIfNeccessary(Expression lhs, Expression rhs, StringBuilder builder, String operator, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
+		TypeRef lht = tryGetExpressionType(lhs, gctx);
+		TypeRef rht = tryGetExpressionType(rhs, gctx);
+		if (gctx.shouldAutocast && (lht != null || rht != null)) {
+			boolean castLeft;
+			// Figure out which type to use
+			if (rht == null) castLeft = false;
+			else if (lht == null) castLeft = true;
+			else {
+				// Pick largest type
+				long lsize = ((PrimitiveType)lht.getType()).getByteSize();
+				long rsize = ((PrimitiveType)rht.getType()).getByteSize();
+				if (lsize >= rsize) castLeft = false;
+				else castLeft = true;
+			}
+			// Cast the correct side
+			if (castLeft) {
+				builder.append(gctx.getTypeRef(rht));
+				builder.append("(");
+				generate(lhs, builder, gctx);
+				builder.append(")");
+				builder.append(operator);
+				generate(rhs, builder, gctx);
+			} else {
+				generate(lhs, builder, gctx);
+				builder.append(operator);
+				builder.append(gctx.getTypeRef(lht));
+				builder.append("(");
+				generate(rhs, builder, gctx);
+				builder.append(")");
+			}
+		} else {
+			generate(lhs, builder, ctx);
+			builder.append(operator);
+			generate(rhs, builder, ctx);
+		}
+	}
+	
+	@Override
+    public void generate(LowerExpression expression, StringBuilder builder, Context ctx) {
+		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " < ", ctx);
+    }
+
+    @Override
+    public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
+    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " > ", ctx);
+    }
+
+    @Override
+    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
+    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " <= ", ctx);
+    }
+
+    @Override
+    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
+    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " >= ", ctx);
+    }
+
+    @Override
+    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
+    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " == ", ctx);
+    }
+    
+    @Override
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
+    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " != ", ctx);
+    }
 }
