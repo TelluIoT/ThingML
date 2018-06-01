@@ -16,6 +16,7 @@
  */
 package org.thingml.xtext.validation;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,11 @@ import org.thingml.xtext.thingML.ThingMLModel;
 
 public class Checker {
 	private List<Issue> issues;
+	
+	private final Comparator<Issue> issueComparator = Comparator
+	.comparing(Issue::getUriToProblem, (uri1, uri2) -> {
+          return uri1.toFileString().compareTo(uri2.toFileString());
+     }).thenComparing(Issue::getLineNumber);
 	
 	public Checker() {
 		issues = new LinkedList<Issue>();
@@ -72,15 +78,21 @@ public class Checker {
     }
     
     public List<Issue> getErrors() {
-    	return getIssueBySeverity(Severity.ERROR);
+    	final List<Issue> sorted = getIssueBySeverity(Severity.ERROR);
+    	sorted.sort(issueComparator);
+    	return sorted;    	
     }
     
     public List<Issue> getWarnings() {
-    	return getIssueBySeverity(Severity.WARNING);
+    	final List<Issue> sorted = getIssueBySeverity(Severity.WARNING);
+    	sorted.sort(issueComparator);
+    	return sorted;   
     }
     
     public List<Issue> getInfos() {
-    	return getIssueBySeverity(Severity.INFO);    	
+    	final List<Issue> sorted = getIssueBySeverity(Severity.INFO);
+    	sorted.sort(issueComparator);
+    	return sorted;   
     }
     
     public boolean hasErrors() {

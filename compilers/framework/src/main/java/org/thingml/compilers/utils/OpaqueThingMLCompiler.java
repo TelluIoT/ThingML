@@ -97,9 +97,13 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 				return true;
 			}
 		} else {
+			String location = "";
 			for (Issue error : checker.getErrors()) {
-				// TODO: Some line information as well!
-				log.error("Error [l" + error.getLineNumber() + " in " + error.getUriToProblem().toFileString() + "]: " + error.getMessage());
+				if (!location.equals(error.getUriToProblem().toFileString())) {
+					log.error("Error(s) in " + error.getUriToProblem().toFileString());
+					location = error.getUriToProblem().toFileString();
+				}
+				log.error("\t[line " + error.getLineNumber() + "]: " + error.getMessage());
 			}
 		}
 		// Failed

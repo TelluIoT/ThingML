@@ -244,9 +244,13 @@ public class CompileThingFile implements IHandler {
 					ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.\n");
 				} else {
 					ThingMLConsole.getInstance().printError("Configuration " + cfg.getName() + " could not be compiled because of errors [" + new Date() + "].\n");
+					String location = "";
 					for (Issue error : checker.getErrors()) {
-						// TODO: Some line information as well!
-						ThingMLConsole.getInstance().printError("\tError [l" + error.getLineNumber() + " in " + error.getUriToProblem().toFileString() + "]: " + error.getMessage() + "\n");
+						if (!location.equals(error.getUriToProblem().toFileString())) {
+							ThingMLConsole.getInstance().printError("Error(s) in " + error.getUriToProblem().toFileString() + "\n");
+							location = error.getUriToProblem().toFileString();
+						}
+						ThingMLConsole.getInstance().printError("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
 					}
 				}
 			}
