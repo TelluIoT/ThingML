@@ -17,10 +17,13 @@
 package org.thingml.compilers.registry;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -109,7 +112,9 @@ public class ThingMLCompilerRegistry {
     }
 
     public Collection<ThingMLCompiler> getCompilerPrototypes() {
-        return compilers.values();
+    	final List<ThingMLCompiler> c = new ArrayList<ThingMLCompiler>(compilers.values());
+    	c.sort(Comparator.comparing(ThingMLCompiler::getID));
+        return c;
     }
 
     public void addCompiler(ThingMLCompiler c) {
