@@ -221,7 +221,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
 		if (AnnotatedElementHelper.isDefined(action.getFunction(), "fork_thread", "true")
-				&& action.getFunction().getTypeRef().getType() != null) {
+				&& action.getFunction().getTypeRef() != null) {
 			System.err.println("function " + action.getFunction().getName()
 					+ "cannot be called with @fork_thread, as its return type ("
 					+ action.getFunction().getTypeRef().getType().getName() + ") is not void");
