@@ -54,7 +54,7 @@ public class AnnotatedElementHelper {
     	final List<String> annotations = new ArrayList<>();
     	for (Thing t : ThingMLHelpers.allThingFragments(self)) {
     		for(PlatformAnnotation a : t.getAnnotations()) {
-    			if (a.getName().equals(name))
+    			if (a.getName().equals(name) && a.getValue() != null)
     				annotations.add(a.getValue());	
     		}
     		
@@ -66,7 +66,7 @@ public class AnnotatedElementHelper {
     public static boolean isDefined(AnnotatedElement self, String annotation, String value) {
         for (PlatformAnnotation a : self.getAnnotations()) {
             if (a.getName().equals(annotation)) {
-                if (cleanAnnotation(a.getValue()).equals(value))
+                if (value.equals(cleanAnnotation(a.getValue())))
                     return true;
             }
         }
@@ -76,7 +76,16 @@ public class AnnotatedElementHelper {
 
     public static boolean hasAnnotation(AnnotatedElement self, String name) {
         for (PlatformAnnotation a : self.getAnnotations()) {
-            if (a.getName().equals(name)) {
+            if (a.getName().equals(name) && a.getValue() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static boolean hasFlag(AnnotatedElement self, String name) {
+        for (PlatformAnnotation a : self.getAnnotations()) {
+            if (a.getName().equals(name) && a.getValue() == null) {
                 return true;
             }
         }
@@ -87,7 +96,7 @@ public class AnnotatedElementHelper {
     public static List<String> annotation(AnnotatedElement self, String name) {
         List<String> result = new ArrayList<String>();
         for (PlatformAnnotation a : self.getAnnotations()) {
-            if (a.getName().equals(name)) {
+            if (a.getName().equals(name) && a.getValue() != null) {
                 result.add(cleanAnnotation(a.getValue()));
             }
         }

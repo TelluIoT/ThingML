@@ -1,0 +1,14 @@
+import "datatypes.thingml" from stl
+
+enumeration enum as Integer {
+	lit1 = 1
+	lit2 //Should fail as enumeration is types and all literals must be initialized
+}
+
+thing TestCheckCast
+{
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}

@@ -1,0 +1,15 @@
+import "datatypes.thingml" from stl
+
+enumeration enum as Integer {
+	lit1 = 1
+	lit2 = 2
+}
+
+thing TestCheckCast
+@checker_should_fail "false" //All literals are initialized. Should not failed.
+{
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}

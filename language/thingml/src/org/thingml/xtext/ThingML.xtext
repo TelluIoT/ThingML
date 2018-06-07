@@ -15,7 +15,7 @@ Import returns Import:
 
 
 PlatformAnnotation returns PlatformAnnotation:
-	name=ANNOTATION_ID (value=STRING | value=EXTERN); 
+	name=ANNOTATION_ID (value=STRING | value=EXTERN)?; 
 
 
 NamedElement:
@@ -52,10 +52,10 @@ ObjectType returns ObjectType:
 	'object' name=ID ( annotations+=PlatformAnnotation )* (';')?;
 
 Enumeration returns Enumeration:
-	'enumeration' name=ID ( annotations+=PlatformAnnotation )* '{' (literals+=EnumerationLiteral)* '}';
+	'enumeration' name=ID ('as' typeRef=TypeRef)? ( annotations+=PlatformAnnotation )* '{' (literals+=EnumerationLiteral)* '}';
 
 EnumerationLiteral returns EnumerationLiteral:
-	name=ID ( annotations+=PlatformAnnotation )* ;
+	name=ID ('=' init=Literal)? ( annotations+=PlatformAnnotation )* ;
 
 /*****************************************************************************
  *       THING / COMPONENT MODEL                                             *
@@ -72,7 +72,7 @@ PropertyAssign returns PropertyAssign:
 	'set' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 Protocol returns Protocol:
-	'protocol' name=ID ( annotations+=PlatformAnnotation )* ';';
+	'protocol' name=ID ( annotations+=PlatformAnnotation )* (';')?;
 
 Function returns Function:
 	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' typeRef=TypeRef)? 
@@ -332,13 +332,16 @@ ArrayIndexPostfix returns Expression:
 ;
 
 AtomicExpression returns Expression:
-	ExternExpression | EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | FunctionCallExpression 
+	ExternExpression | Literal |  PropertyReference | FunctionCallExpression 
 	 | EventReference 
 ;
 
 ExternExpression returns ExternExpression:
 	expression=EXTERN ('&' segments+=Expression)*;
 	
+Literal returns Expression:
+	EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral
+;
 	
 EnumLiteralRef returns EnumLiteralRef:
 	^enum=[Enumeration|ID] ':' literal=[EnumerationLiteral|ID];

@@ -7,6 +7,11 @@ import org.thingml.xtext.thingML.Property
 import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.thingML.Enumeration
+import org.thingml.xtext.constraints.ThingMLHelpers
+import org.thingml.xtext.thingML.ThingMLModel
+import org.thingml.xtext.validation.TypeChecker
+import org.thingml.xtext.helpers.TyperHelper
 
 class PropertyInitialization extends ThingMLValidatorCheck {
 	
@@ -45,4 +50,23 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			}
 		]
 	}
+	
+	@Check(NORMAL)
+	def checkEnumInitialization(Enumeration e) {
+		if (e.typeRef !== null) {//all literal must be initialized
+			if (e.literals.exists[l | l.init === null]) {
+				val msg = "Enumeration " + e.name + " is typed. All literals must be initialized."
+				error(msg, ThingMLHelpers.findContainingModel(e), ThingMLPackage.eINSTANCE.thingMLModel_Types, (ThingMLHelpers.findContainingModel(e) as ThingMLModel).types.indexOf(e))
+			}
+			e.literals.forEach[l, i |
+				if (l.init !== null) {
+					val litType = TypeChecker.computeTypeOf(l.init)
+					if(!TyperHelper.isA(litType, e.typeRef.type)) {
+						val msg = "Literal " + l.name + " must be of type " + TyperHelper.getBroadType(e.typeRef.type).name + ". Found " + TyperHelper.getBroadType(litType).name
+						error(msg, e, ThingMLPackage.eINSTANCE.enumeration_Literals, i)				
+					}				
+				}
+			]
+		}
+	}	
 }
