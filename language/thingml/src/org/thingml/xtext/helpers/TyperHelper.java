@@ -79,6 +79,9 @@ public class TyperHelper {
         if ((self == Types.INTEGER_TYPE || self == Types.BYTE_TYPE) && t == Types.REAL_TYPE) //an Integer or a Byte is a Real
             return true;
     	if (self instanceof Enumeration) {
+    		if (((Enumeration) self).getTypeRef() != null) {
+    			return isA(((Enumeration) self).getTypeRef().getType(), t);
+    		}
     		if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
     			final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
     			final Type typ = getType(ty); 

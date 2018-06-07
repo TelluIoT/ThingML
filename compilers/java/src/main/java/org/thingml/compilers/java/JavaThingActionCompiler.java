@@ -355,18 +355,23 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
 		final EnumerationLiteral lit = expression.getLiteral();
-		if (AnnotatedElementHelper.hasAnnotation(lit, "enum_val")) {
-			final String value = AnnotatedElementHelper.annotation(lit, "enum_val").get(0);
-			try {
-				Double d = Double.parseDouble(value);
-				builder.append(AnnotatedElementHelper.annotation(lit, "enum_val").get(0));
-			} catch (NumberFormatException nfe) {
-				builder.append("\"" + AnnotatedElementHelper.annotation(lit, "enum_val").get(0) + "\"");
+		if (((Enumeration)lit.eContainer()).getTypeRef() != null) {
+			generate(lit.getInit(), builder, ctx);
+		}
+		else {
+			if (AnnotatedElementHelper.hasAnnotation(lit, "enum_val")) {
+				final String value = AnnotatedElementHelper.annotation(lit, "enum_val").get(0);
+				try {
+					Double.parseDouble(value);
+					builder.append(AnnotatedElementHelper.annotation(lit, "enum_val").get(0));
+				} catch (NumberFormatException nfe) {
+					builder.append("\"" + AnnotatedElementHelper.annotation(lit, "enum_val").get(0) + "\"");
+				}
+			} else {
+				builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM."
+						+ ((Enumeration) expression.getLiteral().eContainer()).getName().toUpperCase() + "_"
+						+ expression.getLiteral().getName().toUpperCase());
 			}
-		} else {
-			builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM."
-					+ ((Enumeration) expression.getLiteral().eContainer()).getName().toUpperCase() + "_"
-					+ expression.getLiteral().getName().toUpperCase());
 		}
 	}
 

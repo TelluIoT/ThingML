@@ -1,0 +1,39 @@
+import "../../thingml.thingml"
+
+enumeration Enum as Boolean {
+	TRUE = true
+	FALSE = false
+}
+
+thing TestEnumeration includes Test 
+@test "tt # aba"
+{
+    
+    property status : Enum = Enum:TRUE
+    
+    statechart TestNaming init A {
+    	internal event Test?Done
+		action TestDone()
+		
+	     state A {
+            on entry do
+                TestOut('a')
+            end
+            
+            transition -> B
+            event m : Test?In
+			guard m.c == 't' and status
+         }               
+         
+         state B {
+             on entry do
+                TestOut('b')
+                status = Enum:FALSE  
+             end
+             
+            transition -> A
+            event m : Test?In
+			guard m.c == 't' and not status
+         }
+    }
+}

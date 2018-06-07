@@ -80,14 +80,20 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 				Section literals = sec.section("literals").lines().indent();
 				for (EnumerationLiteral l : e.getLiterals()) {
 					Section literal = literals.section("literal");
-					literal.append(l.getName().toUpperCase()).append(": ");
-					
-					String val = AnnotatedElementHelper.annotationOrElse(l, "enum_val", l.getName());
-					try {
-						literal.append(Integer.parseInt(val));
-					} catch (NumberFormatException ex) {
-						literal.append('"').append(val).append('"');
+					literal.append(l.getName().toUpperCase()).append(": ");										
+					if (e.getTypeRef() == null) {
+						String val = AnnotatedElementHelper.annotationOrElse(l, "enum_val", l.getName());
+						try {
+							literal.append(Integer.parseInt(val));
+						} catch (NumberFormatException ex) {
+							literal.append('\'').append(val).append('\'');
+						}
 					}
+					else {
+						final StringBuilder temp = new java.lang.StringBuilder();
+						ctx.getCompiler().getThingActionCompiler().generate(l.getInit(), temp, ctx);
+						literal.append(temp.toString());
+					}											
 					literal.append(",");
 				}
 				sec.append("});");

@@ -1,0 +1,39 @@
+import "../../thingml.thingml"
+
+enumeration Enum as Integer {
+	lit0 = 0
+	lit1 = 1
+}
+
+thing TestEnumeration includes Test 
+@test "tt # aba"
+{
+    
+    property status : Enum = Enum:lit0
+    
+    statechart TestNaming init A {
+    	internal event Test?Done
+		action TestDone()
+		
+	     state A {
+            on entry do
+                TestOut('a')
+            end
+            
+            transition -> B
+            event m : Test?In
+			guard m.c == 't' and status == Enum:lit0
+         }               
+         
+         state B {
+             on entry do
+                TestOut('b')
+                status = Enum:lit1  
+             end
+             
+            transition -> A
+            event m : Test?In
+			guard m.c == 't' and status == Enum:lit1
+         }
+    }
+}
