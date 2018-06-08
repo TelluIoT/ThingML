@@ -87,15 +87,31 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		log.info("Checking configuration...");
 		final long startChecker = System.currentTimeMillis();
 		final boolean isValid = checker.validateConfiguration(cfg);
-		log.info("Checking configuration... Done! Took " + (System.currentTimeMillis() - startChecker) + " ms.");
-		
-		final long start = System.currentTimeMillis();
+		log.info("Checking configuration... Done! Took " + (System.currentTimeMillis() - startChecker) + " ms.");			
 		if (isValid) {
+			String location = "";
+			for (Issue error : checker.getWarnings()) {
+				if (!location.equals(error.getUriToProblem().toFileString())) {
+					log.info("Warnings(s) in " + error.getUriToProblem().toFileString());
+					location = error.getUriToProblem().toFileString();
+				}
+				log.info("\t[line " + error.getLineNumber() + "]: " + error.getMessage());
+			}
+			location = "";
+			for (Issue error : checker.getInfos()) {
+				if (!location.equals(error.getUriToProblem().toFileString())) {
+					log.debug("Infos(s) in " + error.getUriToProblem().toFileString());
+					location = error.getUriToProblem().toFileString();
+				}
+				log.debug("\t[line " + error.getLineNumber() + "]: " + error.getMessage());
+			}
 			//Compile
+			final long start = System.currentTimeMillis();
 			if (do_call_compiler(cfg, log, options)) {
 				log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
 				return true;
 			}
+			log.error("Compilation failed [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
 		} else {
 			String location = "";
 			for (Issue error : checker.getErrors()) {
@@ -107,7 +123,6 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 			}
 		}
 		// Failed
-		log.error("Compilation failed [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
 		return false;
 		
 	}

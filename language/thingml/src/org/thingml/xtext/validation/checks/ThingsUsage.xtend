@@ -19,7 +19,7 @@ import org.thingml.xtext.helpers.ActionHelper
 
 class ThingsUsage extends ThingMLValidatorCheck {
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkInstance(Instance i) {
 		if (i.type.fragment) {
 			val msg = "Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() +
@@ -92,7 +92,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	/*@Check(NORMAL)
 	def checkIncludedPSMinPIM(Thing t) {
 		val uri = t.eResource.URI.toString
 		if (uri.contains("_")) return;
@@ -103,9 +103,9 @@ class ThingsUsage extends ThingMLValidatorCheck {
 			val msg = "This PIM thing includes PSM thing " + i.name + " making it PSM." 
 			warning(msg, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(i), "include-psm")
 		]
-	}
+	}*/
 
-	@Check(NORMAL)
+	/* @Check(NORMAL)
 	def checkPSM(ExternStatement e) {
 		checkPSM(ThingMLHelpers.findContainingThing(e), e)	
 	}
@@ -124,6 +124,6 @@ class ThingsUsage extends ThingMLValidatorCheck {
 			info(msg, e.eContainer, e.eContainingFeature, (parent as EList).indexOf(e), "psm-in-basedir")
 		else
 			info(msg, e.eContainer, e.eContainingFeature, "psm-in-basedir")
-	}
+	}*/
 	
 }

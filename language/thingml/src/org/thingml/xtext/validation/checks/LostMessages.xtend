@@ -58,7 +58,7 @@ class LostMessages extends ThingMLValidatorCheck {
 			]
 			
 			if (!notReceived.empty) {
-				val msg = notReceived.join("Messages (",", ",") are never received from other instances")[it]
+				val msg = notReceived.join("Messages (",", ",") are never received by other instances")[it]
 				info(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances,i,"messages-not-received")
 			}
 			if (!sentNotReceived.empty) {

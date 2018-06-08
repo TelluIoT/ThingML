@@ -1,0 +1,25 @@
+import "../../thingml.thingml"
+
+thing TestForkFunction includes Test
+@test "x # x"
+{
+    //Define implementation of function foo
+    function foo() @fork_thread "true" do
+        TestOut('x')
+        TestDone()
+    end
+
+    statechart TestAbstractFunction init INIT {
+
+    	state INIT {
+
+			transition -> INIT
+			event m : Test?In
+			guard m.c == 'x'
+			action do
+				foo()
+			end
+
+    	}
+    }
+}

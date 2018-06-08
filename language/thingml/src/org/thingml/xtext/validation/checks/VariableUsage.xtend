@@ -71,7 +71,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkVariableAssignment(VariableAssignment va) {
 		// Check if the variable is read-only
 		if (va.property.typeRef.cardinality === null) {
@@ -95,13 +95,13 @@ class VariableUsage extends ThingMLValidatorCheck {
 		checkType(va.property, va.expression, va, ThingMLPackage.eINSTANCE.variableAssignment_Expression)
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkLocalVariable(LocalVariable lv) {
 		if (lv.init !== null)
 			checkType(lv, lv.init, lv, ThingMLPackage.eINSTANCE.localVariable_Init)
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkProperty(Property p) {
 		if (p.init !== null)
 			checkType(p, p.init, p, ThingMLPackage.eINSTANCE.property_Init)				

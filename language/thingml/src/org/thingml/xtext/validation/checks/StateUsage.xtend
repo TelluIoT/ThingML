@@ -29,7 +29,7 @@ class StateUsage extends ThingMLValidatorCheck {
 	}
 
 	@Check(NORMAL)
-	def chectSessionUniqueness(Session s) {
+	def checkSessionUniqueness(Session s) {
 		val c = s.eContainer as CompositeState
 		val sessions = c.session.filter(
 			s2 |
@@ -54,7 +54,7 @@ class StateUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkUnreachableState(StateContainer sc) {
 		sc.substate.forEach [ s, i |
 			if(sc.initial === s) return // initial state might otherwise be unreachable

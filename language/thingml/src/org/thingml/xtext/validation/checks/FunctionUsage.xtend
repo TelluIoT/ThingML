@@ -27,8 +27,19 @@ import org.thingml.xtext.thingML.Action
 import org.thingml.xtext.thingML.ActionBlock
 import org.thingml.xtext.thingML.ExternStatement
 import org.thingml.xtext.thingML.LoopAction
+import org.thingml.xtext.helpers.AnnotatedElementHelper
 
 class FunctionUsage extends ThingMLValidatorCheck {
+	
+	@Check(FAST)
+	def checkThread(Function f) {
+		if (AnnotatedElementHelper.isDefined(f, "fork_thread", "true") || AnnotatedElementHelper.hasFlag(f, "fork_thread")) {
+			if (f.typeRef !== null && f.typeRef.type !== null) {
+				val msg = "Function " + f.name + " forks a thread. It cannot return a result."
+				warning(msg, f, ThingMLPackage.eINSTANCE.namedElement_Name, "function-thread-cannot-return", f.name);
+			}
+		}
+	}
 	
 	@Check(NORMAL)
 	def checkUsage(Function f) {
@@ -59,7 +70,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkConcrete(Thing t) {
 		if (t.fragment) return;
 		ThingMLHelpers.allFunctions(t).filter[f | f.abstract].forEach[f |
@@ -79,6 +90,14 @@ class FunctionUsage extends ThingMLValidatorCheck {
 					error(e.message, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(origin), "function-many-impl", f.name)
 			}
 		]
+	}
+	
+	@Check(FAST)
+	def checkAbstract(Function f) {
+		var thing = f.eContainer as Thing
+		if (!thing.fragment && f.abstract) {
+			error("Thing "+thing.name+" is not a fragment, so it cannot contain abstract functions", thing, f.eContainingFeature, thing.functions.indexOf(f), "abstract-function-fragment", f.name)
+		}
 	}
 
 	@Check(NORMAL)
@@ -100,11 +119,6 @@ class FunctionUsage extends ThingMLValidatorCheck {
 					}
 				]
 			]
-		} else {
-			var thing = f.eContainer as Thing
-			if (!thing.fragment) {
-				error("Thing "+thing.name+" is not a fragment, so it cannot contain abstract functions", thing, f.eContainingFeature, thing.functions.indexOf(f), "abstract-function-fragment", f.name)
-			}
 		}
 	}
 	
@@ -184,7 +198,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkReturnType(Function f) {
 		if (!f.abstract) { // if function is concrete then we check its implementation
 			// Checks return type
@@ -217,12 +231,12 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		} 
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkFunctionCallAction(FunctionCallStatement call) {
 		checkFunctionCall(call.function, call.parameters, call)
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkFunctionCallExpression(FunctionCallExpression call) {
 		checkFunctionCall(call.function, call.parameters, call)
 	}	

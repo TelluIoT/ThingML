@@ -19,12 +19,21 @@ package org.thingml.xtext.helpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by ffl on 10.05.2016.
  */
 public class TyperHelper {
+	
+	public static boolean isSerializable(Type t) {
+		if (t instanceof PrimitiveType) return true;
+		if (AnnotatedElementHelper.hasFlag(t, "serializable")) return true;
+		if (t instanceof Enumeration) 
+			return (((Enumeration)t).getTypeRef() == null)? false : isSerializable(((Enumeration)t).getTypeRef().getType());		
+		return false;
+	}
 
 	private static Type getType(String ty) {
         if (ty.equals("Byte"))

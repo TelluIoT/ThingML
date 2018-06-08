@@ -28,7 +28,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkDanglingPorts(Configuration cfg) {
 		cfg.instances.forEach[inst, i|
 			inst.type.ports.filter[port | port instanceof RequiredPort && !(port as RequiredPort).optional].filter[requiredPort|

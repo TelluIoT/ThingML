@@ -12,7 +12,7 @@ import org.thingml.xtext.constraints.ThingMLHelpers
 
 class TransitionUsage extends ThingMLValidatorCheck {
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkNonDeterministicTransition(org.thingml.xtext.thingML.State s) {
 		s.outgoing.forEach [ t1 |
 			s.outgoing.forEach [ t2 |
@@ -43,7 +43,7 @@ class TransitionUsage extends ThingMLValidatorCheck {
 
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkEmptyAutotransition(Transition t) {
 		val source = ThingMLHelpers.findContainingState(t)
 		if (t.event === null && t.guard === null && t.target == source) {
@@ -52,7 +52,7 @@ class TransitionUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkEmptyInternal(InternalTransition t) {
 		if (t.event === null && t.guard === null) {
 			val msg = "Internal Transition without guard and without event. Will loop forever.";
