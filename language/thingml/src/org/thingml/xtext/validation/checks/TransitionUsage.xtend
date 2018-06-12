@@ -47,8 +47,8 @@ class TransitionUsage extends ThingMLValidatorCheck {
 	def checkEmptyAutotransition(Transition t) {
 		val source = ThingMLHelpers.findContainingState(t)
 		if (t.event === null && t.guard === null && t.target == source) {
-			val msg = "Self Transition without guard and without event. Will loop forever.";
-			error(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Internal, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t), "self-transition-loop")
+			val msg = "Self Transition without guard and without event. Will loop forever.";			
+			error(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Outgoing, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t), "self-transition-loop")
 		}
 	}
 	

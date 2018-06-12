@@ -79,8 +79,7 @@ class StateUsage extends ThingMLValidatorCheck {
 			if (s instanceof FinalState) return;
 			if (AnnotatedElementHelper.isDefined(s, "ignore", "sink")) return;
 			if (!s.outgoing.empty) return;
-			warning("State " + s.name + " is a sink state. Consider making it final or use @ignore \"sink\"", sc,
-					ThingMLPackage.eINSTANCE.stateContainer_Substate, i, "state-sink", s.name)
+			warning("State " + s.name + " is a sink state. Consider making it final or use @ignore \"sink\"", s, ThingMLPackage.eINSTANCE.namedElement_Name, "state-sink", s.name)
 		]
 	}
 }

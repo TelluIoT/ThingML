@@ -178,7 +178,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			/*val firstReturnAfter = block.actions.findFirst[a | block.actions.indexOf(a)>indexOfLastExtern && returns(a)]
 			indexOfFirstReturn = block.actions.indexOf(firstReturnAfter)*/
 		}
-		if (indexOfFirstReturn < block.actions.size - 1) {
+		if (indexOfFirstReturn >= 0 && indexOfFirstReturn < block.actions.size - 1) {
 			val msg = "The code from here and below is unreachable (the code above will return in any case)"
 			error(msg, block, ThingMLPackage.eINSTANCE.actionBlock_Actions, indexOfFirstReturn + 1, "unreachable-code", indexOfFirstReturn.toString)					
 		}						
@@ -191,8 +191,8 @@ class FunctionUsage extends ThingMLValidatorCheck {
 				return;
 			if (!returns(f.body)) {
 				val actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
-				val msg = "Function " + f.name + " must return " + actualType.name + ". Found no return action."
-				error(msg, f.eContainer, f.eContainingFeature, (f.eContainer as Thing).functions.indexOf(f), "missing-return")
+				val msg = "Function " + f.name + " must return " + actualType.name + ". Found no return action."				
+				error(msg, f, ThingMLPackage.eINSTANCE.namedElement_Name, "missing-return", f.name)
 				return;
 			}
 		}

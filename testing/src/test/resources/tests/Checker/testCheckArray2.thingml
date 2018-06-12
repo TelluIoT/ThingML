@@ -1,0 +1,12 @@
+import "datatypes.thingml" from stl
+
+thing TestCheckAbstractFunction
+@checker_should_fail "false"
+{
+	readonly property size : Integer = 8
+	property arr : Integer[size] //Should not fail because size is readonly with the proper type
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}

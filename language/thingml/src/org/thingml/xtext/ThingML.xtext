@@ -39,7 +39,7 @@ Variable:
  *****************************************************************************/
 
 TypeRef returns TypeRef:
-	type=[Type|ID] (^isArray?='[' (cardinality=Expression)? ']')?
+	type=[Type|ID] (^isArray?='[' (cardinality=(IntegerLiteral|PropertyReference))? ']')?
 ;
 
 Type:
@@ -332,7 +332,7 @@ ArrayIndexPostfix returns Expression:
 ;
 
 AtomicExpression returns Expression:
-	ExternExpression | Literal |  PropertyReference | FunctionCallExpression 
+	ExternExpression | Literal | ArrayInit |  PropertyReference | FunctionCallExpression 
 	 | EventReference 
 ;
 
@@ -341,6 +341,10 @@ ExternExpression returns ExternExpression:
 	
 Literal returns Expression:
 	EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral
+;
+
+ArrayInit returns ArrayInit:
+	'{' values+=Literal (',' values+=Literal)* '}'
 ;
 	
 EnumLiteralRef returns EnumLiteralRef:

@@ -12,6 +12,10 @@ import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.validation.TypeChecker
 import org.thingml.xtext.helpers.TyperHelper
+import org.thingml.xtext.thingML.Variable
+import org.thingml.xtext.thingML.PropertyReference
+import org.thingml.xtext.thingML.LocalVariable
+import org.thingml.xtext.constraints.Types
 
 class PropertyInitialization extends ThingMLValidatorCheck {
 	
@@ -49,6 +53,30 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 				warning(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "properties-not-initialized")
 			}
 		]
+	}
+	
+	@Check(FAST)
+	def checkArray(Variable p) {
+		if (p.typeRef.cardinality !== null) {
+			if (p.typeRef.cardinality instanceof PropertyReference) {
+				val prop = (p.typeRef.cardinality as PropertyReference).property
+				var isReadonly = false;
+				if (prop instanceof Property) {
+					isReadonly = (prop as Property).readonly
+				} else if (prop instanceof LocalVariable) {
+					isReadonly = (prop as LocalVariable).readonly
+				}
+				if (!isReadonly) {
+					val msg = "Array cardinality must be an integer literal or a read-only property/variable. Variable " + prop.name + " is not read-only."
+					error(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name)
+				}
+				val actualType = TyperHelper.getBroadType(prop.getTypeRef().getType());
+				if (!TyperHelper.isA(actualType, Types.INTEGER_TYPE)) {
+					val msg = "Array cardinality must resolve to Integer. Property/Variable " + prop.name + " is " + actualType.name + "."
+					error(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name)
+				}
+			}
+		}
 	}
 	
 	@Check(FAST)

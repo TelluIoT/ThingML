@@ -237,7 +237,7 @@ public class CompileThingFile implements IHandler {
 				if (isValid) {
 					String location = "";
 					for (Issue error : checker.getWarnings()) {
-						if (!location.equals(error.getUriToProblem().toFileString())) {
+						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
 							ThingMLConsole.getInstance().printWarn("Warnings(s) in " + error.getUriToProblem().toFileString() + "\n");
 							location = error.getUriToProblem().toFileString();
 						}
@@ -245,7 +245,7 @@ public class CompileThingFile implements IHandler {
 					}
 					location = "";
 					for (Issue error : checker.getInfos()) {
-						if (!location.equals(error.getUriToProblem().toFileString())) {
+						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
 							ThingMLConsole.getInstance().printMessage("Infos(s) in " + error.getUriToProblem().toFileString() + "\n");
 							location = error.getUriToProblem().toFileString();
 						}
@@ -262,7 +262,7 @@ public class CompileThingFile implements IHandler {
 					ThingMLConsole.getInstance().printError("Configuration " + cfg.getName() + " could not be compiled because of errors [" + new Date() + "].\n");
 					String location = "";
 					for (Issue error : checker.getErrors()) {
-						if (error.getUriToProblem()!=null && !location.equals(error.getUriToProblem().toFileString())) {
+						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
 							ThingMLConsole.getInstance().printError("Error(s) in " + error.getUriToProblem().toFileString() + "\n");
 							location = error.getUriToProblem().toFileString();
 						}

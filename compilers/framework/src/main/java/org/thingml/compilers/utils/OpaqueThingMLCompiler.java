@@ -91,7 +91,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		if (isValid) {
 			String location = "";
 			for (Issue error : checker.getWarnings()) {
-				if (!location.equals(error.getUriToProblem().toFileString())) {
+				if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
 					log.info("Warnings(s) in " + error.getUriToProblem().toFileString());
 					location = error.getUriToProblem().toFileString();
 				}
@@ -99,7 +99,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 			}
 			location = "";
 			for (Issue error : checker.getInfos()) {
-				if (!location.equals(error.getUriToProblem().toFileString())) {
+				if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
 					log.debug("Infos(s) in " + error.getUriToProblem().toFileString());
 					location = error.getUriToProblem().toFileString();
 				}
@@ -115,7 +115,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		} else {
 			String location = "";
 			for (Issue error : checker.getErrors()) {
-				if (!location.equals(error.getUriToProblem().toFileString())) {
+				if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
 					log.error("Error(s) in " + error.getUriToProblem().toFileString());
 					location = error.getUriToProblem().toFileString();
 				}
