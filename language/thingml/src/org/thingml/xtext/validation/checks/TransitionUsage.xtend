@@ -32,7 +32,7 @@ class TransitionUsage extends ThingMLValidatorCheck {
 		]
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkGreedyTransition(org.thingml.xtext.thingML.State s) {
 		val t = s.outgoing.findFirst[t|t.event === null && t.guard === null]
 		if (t !== null && s.outgoing.size > 1) {
@@ -60,7 +60,7 @@ class TransitionUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkInternalWithoutAction(InternalTransition t) {
 		if (t.action === null) {
 			val msg = "Internal Transition without action, consider removing.";

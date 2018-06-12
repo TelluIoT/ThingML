@@ -10,7 +10,7 @@ import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.thingML.InternalPort
 
 class LostMessages extends ThingMLValidatorCheck {
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkLostMessages(Configuration cfg) {
 		cfg.instances.forEach[inst, i|
 			val notReceived = newArrayList()

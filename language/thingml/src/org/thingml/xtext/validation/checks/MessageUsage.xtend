@@ -53,7 +53,7 @@ class MessageUsage extends ThingMLValidatorCheck {
 		]
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkMessageNotReceived(Thing thing) {
 		if (thing.fragment) return;
 		val handlers = StateHelper.allMessageHandlers(thing)

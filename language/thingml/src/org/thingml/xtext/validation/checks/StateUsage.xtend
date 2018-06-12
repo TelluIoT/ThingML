@@ -1,18 +1,18 @@
 package org.thingml.xtext.validation.checks
 
 import org.eclipse.xtext.validation.Check
+import org.thingml.xtext.helpers.AnnotatedElementHelper
 import org.thingml.xtext.thingML.CompositeState
 import org.thingml.xtext.thingML.FinalState
+import org.thingml.xtext.thingML.Region
+import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.StateContainer
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
-import org.thingml.xtext.thingML.Session
-import org.thingml.xtext.thingML.Region
-import org.thingml.xtext.thingML.Thing
 
 class StateUsage extends ThingMLValidatorCheck {
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def chectStateUniqueness(org.thingml.xtext.thingML.State s) {
 		if (s.eContainer instanceof StateContainer) {
 			val c = s.eContainer as StateContainer
@@ -28,7 +28,7 @@ class StateUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkSessionUniqueness(Session s) {
 		val c = s.eContainer as CompositeState
 		val sessions = c.session.filter(
@@ -41,7 +41,7 @@ class StateUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def chectRegionUniqueness(Region r) {
 		val c = r.eContainer as CompositeState
 		val regions = c.region.filter(
@@ -68,17 +68,18 @@ class StateUsage extends ThingMLValidatorCheck {
 		]
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkSinkState(StateContainer sc) {
 		if (sc instanceof CompositeState) {
 			val c = sc as CompositeState
 			if (!c.outgoing.empty) return;
 		}
-		
+		if (AnnotatedElementHelper.isDefined(sc, "ignore", "sink")) return;
 		sc.substate.forEach [ s, i |
 			if (s instanceof FinalState) return;
+			if (AnnotatedElementHelper.isDefined(s, "ignore", "sink")) return;
 			if (!s.outgoing.empty) return;
-			warning("State " + s.name + " is a sink state. Consider making it final", sc,
+			warning("State " + s.name + " is a sink state. Consider making it final or use @ignore \"sink\"", sc,
 					ThingMLPackage.eINSTANCE.stateContainer_Substate, i, "state-sink", s.name)
 		]
 	}

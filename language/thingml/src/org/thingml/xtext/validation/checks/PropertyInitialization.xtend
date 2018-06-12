@@ -34,7 +34,7 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 		return props
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkPropertyInitialization(Configuration cfg) {
 		cfg.instances.forEach[inst, i|
 			val props = getUninitializedProperties(inst.type)
@@ -51,7 +51,7 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkEnumInitialization(Enumeration e) {
 		if (e.typeRef !== null) {//all literal must be initialized
 			if (e.literals.exists[l | l.init === null]) {

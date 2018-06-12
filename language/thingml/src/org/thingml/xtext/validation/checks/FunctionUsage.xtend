@@ -7,11 +7,20 @@ import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.constraints.Types
 import org.thingml.xtext.helpers.ActionHelper
+import org.thingml.xtext.helpers.AnnotatedElementHelper
+import org.thingml.xtext.helpers.FunctionWithMultipleImplem
+import org.thingml.xtext.helpers.ThingHelper
 import org.thingml.xtext.helpers.TyperHelper
+import org.thingml.xtext.helpers.UnimplementedFunction
+import org.thingml.xtext.thingML.Action
+import org.thingml.xtext.thingML.ActionBlock
+import org.thingml.xtext.thingML.ConditionalAction
 import org.thingml.xtext.thingML.Expression
+import org.thingml.xtext.thingML.ExternStatement
 import org.thingml.xtext.thingML.Function
 import org.thingml.xtext.thingML.FunctionCallExpression
 import org.thingml.xtext.thingML.FunctionCallStatement
+import org.thingml.xtext.thingML.LoopAction
 import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.ReturnAction
 import org.thingml.xtext.thingML.Thing
@@ -19,15 +28,6 @@ import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
-import org.thingml.xtext.helpers.ThingHelper
-import org.thingml.xtext.helpers.UnimplementedFunction
-import org.thingml.xtext.helpers.FunctionWithMultipleImplem
-import org.thingml.xtext.thingML.ConditionalAction
-import org.thingml.xtext.thingML.Action
-import org.thingml.xtext.thingML.ActionBlock
-import org.thingml.xtext.thingML.ExternStatement
-import org.thingml.xtext.thingML.LoopAction
-import org.thingml.xtext.helpers.AnnotatedElementHelper
 
 class FunctionUsage extends ThingMLValidatorCheck {
 	
@@ -140,7 +140,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		return false
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkReturnOnlyInFunction(ReturnAction r) {
 		var parent = r.eContainer as EObject
 		while (parent !== null && !(parent instanceof Function)) {
@@ -164,7 +164,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		return -1
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkBlock(ActionBlock block) {
 		val f = if(block.eContainer instanceof Function) block.eContainer as Function else null
 		if (f === null || f.typeRef === null || f.typeRef.type === null) return;//This check only makes sense for functions that return something		
@@ -184,7 +184,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		}						
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkReturnType2(Function f) {
 		if (!f.abstract && f.typeRef !== null && f.typeRef.type !== null) {
 			if (f.body instanceof ReturnAction || (f.body instanceof ConditionalAction && returns(f.body)))
@@ -233,15 +233,19 @@ class FunctionUsage extends ThingMLValidatorCheck {
 
 	@Check(FAST)
 	def checkFunctionCallAction(FunctionCallStatement call) {
-		checkFunctionCall(call.function, call.parameters, call)
+		val t = ThingMLHelpers.findContainingThing(call);
+		val ignore = AnnotatedElementHelper.isDefined(t, "ignore", "type-warning") || AnnotatedElementHelper.isDefined(call.function, "ignore", "type-warning"); 		
+		checkFunctionCall(call.function, call.parameters, call, ignore)
 	}
 	
 	@Check(FAST)
 	def checkFunctionCallExpression(FunctionCallExpression call) {
-		checkFunctionCall(call.function, call.parameters, call)
+		val t = ThingMLHelpers.findContainingThing(call);
+		val ignore = AnnotatedElementHelper.isDefined(t, "ignore", "type-warning") || AnnotatedElementHelper.isDefined(call.function, "ignore", "type-warning");
+		checkFunctionCall(call.function, call.parameters, call, ignore)
 	}	
 
-	def checkFunctionCall(Function function, List<Expression> params, EObject o) {
+	def checkFunctionCall(Function function, List<Expression> params, EObject o, boolean ignore) {
 		val parent = o.eContainer.eGet(o.eContainingFeature)
 		// Check that the function is called with the right number of parameters
 		if (function.parameters.size !== params.size) {
@@ -251,8 +255,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			else
 				error(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-length")
 			return;
-		}
-
+		}		
 		// Check that the parameters are properly typed
 		function.parameters.forEach [ p, i |
 			val e = params.get(i);
@@ -265,8 +268,8 @@ class FunctionUsage extends ThingMLValidatorCheck {
 						error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
 						error(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-type")
-				} else if (actual.equals(Types.ANY_TYPE)) {
-					val msg = "Function "+function.name+" is called with a parameter which cannot be typed. Consider using a cast (<exp> as <type>)."
+				} else if (!ignore && actual.equals(Types.ANY_TYPE)) {
+					val msg = "Function "+function.name+" is called with a parameter which cannot be typed. Consider using a cast (<exp> as <type>), or using @ignore \"type-warning\"."
 					if (parent instanceof EList)
 						warning(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
