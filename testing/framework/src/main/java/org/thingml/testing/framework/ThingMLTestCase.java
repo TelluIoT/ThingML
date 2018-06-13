@@ -17,6 +17,8 @@
 package org.thingml.testing.framework;
 
 import java.io.File;
+import java.io.PrintStream;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -107,7 +109,11 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 		} catch (InterruptedException e) {
 			error = new ThingMLTimeoutError();
 		} catch (Exception e) {
-			error = new AssertionError("Exception while running test case", e);
+			String stackTrace = "";
+			for(StackTraceElement el : e.getStackTrace()) {
+				stackTrace += "\n\t" + el.toString();
+			}	
+			error = new AssertionError("Exception while running test case" + stackTrace, e);
 		}
 		
 		if (error != null)
