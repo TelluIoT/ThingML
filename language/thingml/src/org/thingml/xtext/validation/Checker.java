@@ -37,7 +37,12 @@ public class Checker {
 	
 	private final Comparator<Issue> issueComparator = Comparator
 	.comparing(Issue::getUriToProblem, (uri1, uri2) -> {
-          return (uri1!=null && uri1.toFileString()!=null && uri2!=null && uri2.toFileString()!=null) ? uri1.toFileString().compareTo(uri2.toFileString()) : 0;
+          return (uri1!=null 
+        		  && uri1.toFileString()!=null 
+        		  && uri2!=null 
+        		  && uri2.toFileString()!=null) ? 
+        				  uri1.toFileString().compareTo(uri2.toFileString()) 
+        				  : 0;
      }).thenComparing(Issue::getLineNumber);
 	
 	public Checker() {
