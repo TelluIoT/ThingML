@@ -21,6 +21,7 @@ import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Decrement;
@@ -104,9 +105,9 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         builder.append(propertyName);
 
-        for (Expression idx : action.getIndex()) {
+        if(action.getIndex() != null) {
             builder.append("[");
-            this.generate(idx, builder, context);
+            this.generate(action.getIndex(), builder, context);
             builder.append("]");
         }
         builder.append(" = ");
@@ -311,4 +312,15 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     }
 
     //TODO: check if some inherited methods should be overidden
+    
+	@Override
+	public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
+		builder.append("{");
+		for(Expression e : expression.getValues()) {
+			if (expression.getValues().indexOf(e)>0)
+				builder.append(", ");
+			generate(e, builder, ctx);
+		}
+		builder.append("}");
+	}
 }

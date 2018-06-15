@@ -21,6 +21,7 @@ import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
@@ -176,6 +177,8 @@ public class ThingActionCompiler {
     public void generate(Expression expression, StringBuilder builder, Context ctx) {
         if (expression instanceof ArrayIndex) {
             generate((ArrayIndex) expression, builder, ctx);
+        } else if (expression instanceof ArrayInit) {
+            generate((ArrayInit) expression, builder, ctx);
         } else if (expression instanceof OrExpression) {
             generate((OrExpression) expression, builder, ctx);
         } else if (expression instanceof AndExpression) {
@@ -235,6 +238,10 @@ public class ThingActionCompiler {
         } else {
             throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
+    }
+    
+    public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
     
     public void generate(CastExpression expression, StringBuilder builder, Context ctx) {

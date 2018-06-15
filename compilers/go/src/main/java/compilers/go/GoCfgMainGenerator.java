@@ -72,9 +72,9 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 			propAssign.append(assign.getInstance().getName())
 				.append(".")
 				.append(assign.getProperty().getName());
-			for (Expression indexExpression : assign.getIndex()) {
+			if(assign.getIndex() != null) {
 				propAssign.append("[");
-				gctx.getCompiler().getThingActionCompiler().generate(indexExpression, propAssign.stringbuilder("index"), gctx);
+				gctx.getCompiler().getThingActionCompiler().generate(assign.getIndex(), propAssign.stringbuilder("index"), gctx);
 				propAssign.append("]");
 			}
 			propAssign.append(" = ");

@@ -69,7 +69,7 @@ Thing returns Thing:
 	'}';
 
 PropertyAssign returns PropertyAssign:
-	'set' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
+	'set' property=[Property|ID] ('[' index=Expression ']')? '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 Protocol returns Protocol:
 	'protocol' name=ID ( annotations+=PlatformAnnotation )* (';')?;
@@ -232,7 +232,7 @@ SendAction returns SendAction:
 	port=[Port|ID] '!' message=[Message|ID] '(' (parameters+=Expression ( "," parameters+=Expression)*)? ')';
 
 VariableAssignment returns VariableAssignment:
-	property=[Variable|ID] ('[' index+=Expression ']')* '=' expression=Expression;
+	property=[Variable|ID] ('[' index=Expression ']')? '=' expression=Expression;
 
 
 Increment returns Increment:
@@ -397,7 +397,8 @@ Instance returns Instance:
 	'instance' name=ID ':' type=[Thing|ID] ( annotations+=PlatformAnnotation )*;
 
 ConfigPropertyAssign returns ConfigPropertyAssign:
-	'set' instance=[Instance|ID] '.' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
+	'set' instance=[Instance|ID] '.' property=[Property|ID] ('[' index=Expression ']'
+	)? '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 
 AbstractConnector:

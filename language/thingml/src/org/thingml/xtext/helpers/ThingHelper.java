@@ -23,10 +23,12 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
@@ -35,6 +37,7 @@ import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.Variable;
@@ -188,11 +191,26 @@ public class ThingHelper {
 					result.addAll(ThingHelper.initExpressionsForArray(t,p));
 			}
 			// collect assignments in this thing
-			List<PropertyAssign> assigns = null;
-			for(PropertyAssign pa : self.getAssign()) {
-				if (pa.getProperty().equals(p))
-					result.add(pa);
+			if (p.getInit() != null && p.getInit() instanceof ArrayInit) {
+				final ArrayInit ai = (ArrayInit)p.getInit();
+				int index = 0;
+				for(Expression e : ai.getValues()) {
+					final PropertyAssign pa = ThingMLFactory.eINSTANCE.createPropertyAssign();
+					pa.setInit(EcoreUtil.copy(e));
+					pa.setProperty(p);
+					final IntegerLiteral il = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					il.setIntValue(index);
+					pa.setIndex(il);
+					self.getAssign().add(pa);
+					index++;
+				}
 			}
+			
+			for(PropertyAssign pa : self.getAssign()) {
+				if (pa.getProperty().equals(p)) {
+					result.add(pa);
+				}
+			}						
 		}
 		else { // It is a property of a state machine
 			// No way to initialize arrays in state machines (so far)

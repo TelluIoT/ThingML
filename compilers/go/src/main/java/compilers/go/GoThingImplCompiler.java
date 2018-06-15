@@ -698,9 +698,9 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 			gctx.setCurrentInstanceStatename("instance");
 			Section assign = initBody.appendSection("propertyassign");
 			assign.append("instance.").append(propAssign.getProperty().getName());
-			for (Expression i : propAssign.getIndex()) {
+			if (propAssign.getIndex() != null) {
 				assign.append("[");
-				gctx.getCompiler().getThingActionCompiler().generate(i, assign.stringbuilder("index"), gctx);
+				gctx.getCompiler().getThingActionCompiler().generate(propAssign.getIndex(), assign.stringbuilder("index"), gctx);
 				assign.append("]");
 			}
 			assign.append(" = ");

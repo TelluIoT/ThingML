@@ -83,17 +83,14 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         traceVariablePre(action, builder, ctx);
         if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
-            for (Expression i : action.getIndex()) {
                 builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
-                generate(i, tempBuilder, ctx);
+                generate(action.getIndex(), tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
                 builder.append(" = ");
                 cast(action.getProperty().getTypeRef().getType(), false, action.getExpression(), builder, ctx);
                 //generateMainAndInit(action.getExpression(), builder, ctx);
                 builder.append(";\n");
-
-            }
         } else {//simple variable or we re-affect the whole array
             if (action.getProperty().eContainer() instanceof Thing) {
                 builder.append(ctx.getContextAnnotation("thisRef"));
