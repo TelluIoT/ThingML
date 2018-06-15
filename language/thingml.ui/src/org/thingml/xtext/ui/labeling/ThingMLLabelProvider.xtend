@@ -176,6 +176,6 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 	
 	def String typeString (TypeRef ref) {
 		if (ref === null) ''
-		else ref.type.name + if (ref.isIsArray) '[' + if(ref.cardinality instanceof IntegerLiteral) ref.cardinality.toString else '' + ']' else '' 
+		else ref.type.name + if (ref.isIsArray) '[' + if(ref.cardinality instanceof IntegerLiteral) (ref.cardinality as IntegerLiteral).intValue else '' + ']' else '' 
 	}
 }
