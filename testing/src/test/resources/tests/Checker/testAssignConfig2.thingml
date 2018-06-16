@@ -1,0 +1,16 @@
+datatype DT<1>
+@type_checker "Integer";
+
+thing TestCheckAssign
+{
+	readonly property p : DT = 0
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}
+
+configuration cfg {
+	instance i : TestCheckAssign
+	set i.p = false    //wrong type
+}

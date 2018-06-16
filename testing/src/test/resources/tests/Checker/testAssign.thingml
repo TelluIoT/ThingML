@@ -1,0 +1,13 @@
+datatype DT<1>
+@type_checker "Integer";
+
+thing TestCheckStateMachine
+@checker_should_fail "false"
+{
+	readonly property p : DT = 0
+	set p = 1    //ok, right type
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}

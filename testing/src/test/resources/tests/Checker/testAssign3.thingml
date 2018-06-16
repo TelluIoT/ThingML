@@ -1,0 +1,12 @@
+datatype DT<1>
+@type_checker "Integer";
+
+thing TestCheckStateMachine
+{
+	readonly property p : DT = 0
+	set p[0] = 1    //cannot index scalar
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}
