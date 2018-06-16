@@ -16,12 +16,12 @@ thing TestInstanceInitializationOrder includes Test, Msgs
 		receives m
 	}
 
-	required port r 
+	/*required port r 
 	@sync_send "true"
 	{
 		sends m
 		receives m
-	}
+	}*/
 
 	statechart TestOnEntry init I {
 		internal event Test?Done
