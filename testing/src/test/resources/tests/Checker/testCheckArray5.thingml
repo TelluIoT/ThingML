@@ -1,0 +1,12 @@
+import "datatypes.thingml" from stl
+
+thing TestCheckAbstractFunction
+{
+	property v : Integer = 8
+	readonly property size : Integer = 2
+	property arr : Integer[size] = {1, v}//Should fail as only literals and refs to readonly properties are allowed here
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}

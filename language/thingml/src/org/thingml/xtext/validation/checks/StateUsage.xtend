@@ -9,6 +9,8 @@ import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.StateContainer
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.thingML.InternalTransition
+import org.thingml.xtext.thingML.Transition
 
 class StateUsage extends ThingMLValidatorCheck {
 
@@ -72,13 +74,16 @@ class StateUsage extends ThingMLValidatorCheck {
 	def checkSinkState(StateContainer sc) {
 		if (sc instanceof CompositeState) {
 			val c = sc as CompositeState
+			if (!c.internal.empty) return;
 			if (!c.outgoing.empty) return;
+			if (c instanceof FinalState) return;
 		}
 		if (AnnotatedElementHelper.isDefined(sc, "ignore", "sink")) return;
 		sc.substate.forEach [ s, i |
+			if (!s.internal.empty) return;
+			if (!s.outgoing.empty) return;
 			if (s instanceof FinalState) return;
 			if (AnnotatedElementHelper.isDefined(s, "ignore", "sink")) return;
-			if (!s.outgoing.empty) return;
 			warning("State " + s.name + " is a sink state. Consider making it final or use @ignore \"sink\"", s, ThingMLPackage.eINSTANCE.namedElement_Name, "state-sink", s.name)
 		]
 	}

@@ -16,6 +16,13 @@ import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.LocalVariable
 import org.thingml.xtext.constraints.Types
+import org.thingml.xtext.thingML.ArrayInit
+import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage.Literals
+import org.thingml.xtext.thingML.Literal
+import org.thingml.xtext.thingML.UnaryMinus
+import org.thingml.xtext.thingML.Type
+import org.eclipse.emf.ecore.EObject
+import org.thingml.xtext.thingML.TypeRef
 
 class PropertyInitialization extends ThingMLValidatorCheck {
 	
@@ -97,4 +104,38 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			]
 		}
 	}	
+	
+	@Check(FAST)
+	def checkArrayInit(ArrayInit ai) {
+		ai.values.forEach[e, i |
+			var ok = false;
+			if (e instanceof Literal) {ok = true;}
+			else if (e instanceof PropertyReference) {
+				val pr = e as PropertyReference
+				if (pr.property instanceof Property) {ok = (pr.property as Property).readonly;}
+				else if (pr.property instanceof LocalVariable) {ok = (pr.property as LocalVariable).readonly;}
+			} else if (e instanceof UnaryMinus) {
+				val um = e as UnaryMinus
+				if (um.term instanceof Literal) {ok = true;}
+				else if (um.term instanceof PropertyReference) {
+					val pr = um.term as PropertyReference
+					if (pr.property instanceof Property) {ok = (pr.property as Property).readonly;}
+					else if (pr.property instanceof LocalVariable) {ok = (pr.property as LocalVariable).readonly;}
+				}
+			}
+			if (!ok) {
+				val msg = "Arrays can only be initialized with literals or references to read-only properties."
+				error(msg, ai, ThingMLPackage.eINSTANCE.arrayInit_Values, i)
+			} else {//right type of expression, let's check the type
+				val et = TypeChecker.computeTypeOf(e)
+				val container = ai.eContainer();
+				val typeref = container.eGet(ThingMLPackage.eINSTANCE.getVariable_TypeRef()) as TypeRef;
+				val t = TyperHelper.getBroadType(typeref.getType());
+				if(!TyperHelper.isA(et, t)) {
+					val msg = "Wrong type. Expected " + t.name + ". Found " + et.name
+					error(msg, ai, ThingMLPackage.eINSTANCE.arrayInit_Values, i)
+				}
+			}
+		]
+	}
 }

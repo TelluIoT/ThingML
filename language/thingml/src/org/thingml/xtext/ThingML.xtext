@@ -331,6 +331,7 @@ ArrayIndexPostfix returns Expression:
 	AtomicExpression ( {ArrayIndex.array=current} '[' index=Expression ']')?
 ;
 
+
 AtomicExpression returns Expression:
 	ExternExpression | Literal | ArrayInit |  PropertyReference | FunctionCallExpression 
 	 | EventReference 
@@ -339,12 +340,12 @@ AtomicExpression returns Expression:
 ExternExpression returns ExternExpression:
 	expression=EXTERN ('&' segments+=Expression)*;
 	
-Literal returns Expression:
+Literal returns Literal:
 	EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral
 ;
 
 ArrayInit returns ArrayInit:
-	'{' values+=Literal (',' values+=Literal)* '}'
+	'{' values+=(Expression) (',' values+=(Expression))* '}'
 ;
 	
 EnumLiteralRef returns EnumLiteralRef:
