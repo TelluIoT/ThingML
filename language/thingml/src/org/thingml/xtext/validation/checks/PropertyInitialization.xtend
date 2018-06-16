@@ -23,6 +23,8 @@ import org.thingml.xtext.thingML.UnaryMinus
 import org.thingml.xtext.thingML.Type
 import org.eclipse.emf.ecore.EObject
 import org.thingml.xtext.thingML.TypeRef
+import org.thingml.xtext.thingML.PropertyAssign
+import org.thingml.xtext.thingML.ConfigPropertyAssign
 
 class PropertyInitialization extends ThingMLValidatorCheck {
 	
@@ -44,6 +46,35 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 		
 		return props
 	}
+	
+	@Check(FAST) 
+	def checkPropertyAssign(PropertyAssign pa) {
+		if (pa.property.typeRef.cardinality === null && pa.index !== null) {
+			val msg = "Property " + pa.property.name + " is not an array."
+			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
+			return;//no need to check more until this is fixed
+		}
+		val pt = TyperHelper.getBroadType(pa.property.typeRef.type)
+		val vt = TypeChecker.computeTypeOf(pa.init)
+		if(!TyperHelper.isA(vt, pt)) {
+			val msg = "Wrong type. Expected " + pt.name + ". Found " + vt.name
+			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
+		}
+	}
+	
+	@Check(FAST) 
+	def checkPropertyAssign(ConfigPropertyAssign pa) {
+		if (pa.property.typeRef.cardinality === null && pa.index !== null) {
+			val msg = "Property " + pa.property.name + " is not an array."
+			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))			return;//no need to check more until this is fixed
+		}
+		val pt = TyperHelper.getBroadType(pa.property.typeRef.type)
+		val vt = TypeChecker.computeTypeOf(pa.init)
+		if(!TyperHelper.isA(vt, pt)) {
+			val msg = "Wrong type. Expected " + pt.name + ". Found " + vt.name
+			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))
+		}
+	}	
 	
 	@Check(FAST)
 	def checkPropertyInitialization(Configuration cfg) {
