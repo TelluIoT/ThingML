@@ -8,9 +8,9 @@ thing TestArrays includes Test
 	property index : UInt16 = 0
 	
 	property array : Char[8] = {'1', '1', '1', '1', '5', '6', '7', '8'}
-	set array[1] = 2
-	set array[2] = 3
-	set array[3] = 4
+	set array[1] = '2'
+	set array[2] = '3'
+	set array[3] = '4'
 	
     statechart TestArrays init sstart {
     
