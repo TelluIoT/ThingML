@@ -2,7 +2,7 @@ import "datatypes.thingml" from stl
 
 thing TestCheckFor
 {
-	property arr : Integer
+	property arr : Integer[1] = {1}
 	
     statechart TestAbstractFunction init INIT {
     	state INIT {

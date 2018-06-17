@@ -21,8 +21,40 @@ import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
+import org.thingml.xtext.thingML.ForAction
 
 class VariableUsage extends ThingMLValidatorCheck {
+	
+	@Check(FAST)
+	def checkFor(ForAction fa) {
+		if (fa.array.property.typeRef.cardinality === null) {
+			val msg = "Cannot iterate over " + fa.array.property.name + ". This is not an array."
+			error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Array)
+			return;
+		}
+		if (fa.variable.init !== null) {
+			val msg = "Variable " + fa.variable.name + " cannot be explicitly initialized."
+			error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Variable)
+		}
+		val vt = TyperHelper.getBroadType(fa.variable.typeRef.type)
+		val arrayType = TyperHelper.getBroadType(fa.array.property.typeRef.type)
+		if(!TyperHelper.isA(arrayType, vt)) {
+			val msg = "Variable " + fa.variable.name + " should be " + arrayType.name + ". Found " + vt.name
+			error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Variable)
+		}
+		
+		if (fa.index !== null) {
+			if (fa.index.init !== null) {
+				val msg = "Variable " + fa.index.name + " cannot be explicitly initialized."
+				error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Index)
+			}
+			val indexT = TyperHelper.getBroadType(fa.index.typeRef.type)
+			if(!TyperHelper.isA(Types.INTEGER_TYPE, indexT)) {
+				val msg = "Variable " + fa.index.name + " should be Integer. Found " + indexT.name + "."
+				error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Index)
+			}
+		}
+	}
 	
 	@Check(FAST)
 	def checkCast(CastExpression cast) {
