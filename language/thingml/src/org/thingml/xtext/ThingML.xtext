@@ -213,7 +213,7 @@ ReceiveMessage returns ReceiveMessage:
  *****************************************************************************/
  
 Action returns Action:
-	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
+	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction | ForAction |
 	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 
 
@@ -240,6 +240,9 @@ Increment returns Increment:
 
 Decrement returns Decrement:
 	var=[Variable|ID] '--';
+
+ForAction returns ForAction:
+	'for' '(' variable=LocalVariable (',' index=LocalVariable)? 'in' array=PropertyReference ')' action=Action;
 
 LoopAction returns LoopAction:
 	'while' '(' condition=Expression ')' action=Action;

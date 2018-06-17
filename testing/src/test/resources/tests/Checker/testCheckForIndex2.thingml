@@ -1,0 +1,16 @@
+import "datatypes.thingml" from stl
+
+thing TestCheckFor
+{
+	property arr : Integer[3] = {1, 2, 3}
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry do
+    			for(var v : Integer, var i : Boolean in arr) do //i must be integer
+    				println v, i
+    			end
+    		end
+    	}
+    }
+}

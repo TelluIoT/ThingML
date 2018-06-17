@@ -50,6 +50,7 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Import;
@@ -122,6 +123,10 @@ public class ThingMLHelpers {
 	public static ActionBlock findContainingActionBlock(EObject object) {
 		return findContainer(object,ActionBlock.class);
 	}
+	
+	public static ForAction findContainingForLoop(EObject object) {
+		return findContainer(object,ForAction.class);
+	}	
 
 	public static Thing findContainingThing(EObject object) {
 		return findContainer(object,Thing.class);
@@ -670,26 +675,31 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> allVisibleVariables (EObject container) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		
-
-		
 		// Add the variables of the block if we are in a block
 		ActionBlock b = findContainingActionBlock(container);
 		if (b != null) {
 			for (Action a : b.getActions()) {
 				if (a == container || a.eContents().contains(container)) continue; // ignore variables defined after the current statement
 				if (a instanceof Variable) result.add((Variable)a);
-			}
-			
+			}	
 			result.addAll(allVisibleVariables(b.eContainer()));
-
-			return result;
+			//return result;
+		}
+		
+		ForAction fa = findContainingForLoop(container);
+		if (fa != null) {
+			result.add(fa.getVariable());
+			if (fa.getIndex() != null)
+				result.add(fa.getIndex());
+			result.addAll(allVisibleVariables(fa.eContainer()));
+			//return result;
 		}
 		
 		// Add the variables of the state if we are in a state
 		State s = findContainingState(container);
 		if (s != null) {
 			result.addAll(allProperties(s));
-			return result;
+			//return result;
 		}
 		
 		// Add parameters of the function if we are in a function 
@@ -706,7 +716,7 @@ public class ThingMLHelpers {
 		if (t != null) {
 			// Properties from the thing
 			result.addAll(allProperties(t));
-			return result;
+			//return result;
 		}		
 				
 		return result;		

@@ -1,0 +1,16 @@
+import "datatypes.thingml" from stl
+
+thing TestCheckFor
+{
+	property arr : Integer
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		on entry do
+    			for(var i : Integer in arr) do //cannot iterate over scalar
+    				println i
+    			end
+    		end
+    	}
+    }
+}

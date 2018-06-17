@@ -1,0 +1,33 @@
+import "../../thingml.thingml"
+
+thing TestFor includes Test 
+@test "x # hello"
+{
+
+	property hello : Char[5]
+	
+	set hello[0] = 'h'
+	set hello[1] = 'e'
+	set hello[2] = 'l'
+	set hello[3] = 'l'
+	set hello[4] = 'o'
+    
+    statechart TestPropertyPing init state1 {
+    	state state1 {
+    		transition -> state2
+			event m : Test?In
+			guard m.c == 'x'
+			action do
+				for (var c : Char in hello) do
+					TestOut(c)
+				end
+			end
+    	}
+    	
+    	state state2 {
+    		internal event Test?Done
+			action TestDone()
+    	}	
+	
+    }
+}
