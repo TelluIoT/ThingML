@@ -49,7 +49,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 				error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Index)
 			}
 			val indexT = TyperHelper.getBroadType(fa.index.typeRef.type)
-			if(!TyperHelper.isA(Types.INTEGER_TYPE, indexT)) {
+			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPE)) {
 				val msg = "Variable " + fa.index.name + " should be Integer. Found " + indexT.name + "."
 				error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Index)
 			}

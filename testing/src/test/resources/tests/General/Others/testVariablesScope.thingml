@@ -23,7 +23,7 @@ thing TestVariables includes Test
 				var p : Char = 'e'
 				do
 					var p : Char = 'd'
-					for(var p : Char in arr) do
+					for(var p : Char <- arr) do
 						Test!Out(p)
 					end
 					Test!Out(p)

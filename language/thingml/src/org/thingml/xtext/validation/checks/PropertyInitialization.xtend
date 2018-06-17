@@ -60,6 +60,13 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			val msg = "Wrong type. Expected " + pt.name + ". Found " + vt.name
 			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
 		}
+		if (pa.index !== null) {
+			val indexT = TypeChecker.computeTypeOf(pa.index)
+			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPE)) {
+			val msg = "Index must be an integer. Found " + indexT.name
+			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))				
+			}
+		}
 	}
 	
 	@Check(FAST) 
@@ -73,6 +80,13 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 		if(!TyperHelper.isA(vt, pt)) {
 			val msg = "Wrong type. Expected " + pt.name + ". Found " + vt.name
 			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))
+		}
+		if (pa.index !== null) {
+			val indexT = TypeChecker.computeTypeOf(pa.index)
+			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPE)) {
+			val msg = "Index must be an integer. Found " + indexT.name
+			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))				
+			}
 		}
 	}	
 	
