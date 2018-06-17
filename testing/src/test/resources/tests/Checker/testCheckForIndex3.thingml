@@ -2,13 +2,13 @@ import "datatypes.thingml" from stl
 
 thing TestCheckFor
 {
-	property arr : Integer
+	property arr : Integer[3] = {1, 2, 3}
 	
     statechart TestAbstractFunction init INIT {
     	state INIT {
     		on entry do
-    			for(var i : Integer <- arr) do //cannot iterate over scalar
-    				println i
+    			for(var v : Integer, var i : Integer = 2 <- arr) do //v and i cannot have init expressions
+    				println v, i
     			end
     		end
     	}

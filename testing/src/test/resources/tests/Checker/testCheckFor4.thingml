@@ -7,8 +7,8 @@ thing TestCheckFor
     statechart TestAbstractFunction init INIT {
     	state INIT {
     		on entry do
-    			for(var i : Integer <- arr) do //cannot iterate over scalar
-    				println i
+    			for(var v : Integer = 3 <- arr) do //v cannot have init expression
+    				println v
     			end
     		end
     	}
