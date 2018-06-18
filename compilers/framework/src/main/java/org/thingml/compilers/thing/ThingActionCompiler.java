@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.GreaterExpression;
@@ -111,6 +112,8 @@ public class ThingActionCompiler {
             generate((Decrement) action, builder, ctx);
         else if (action instanceof StartSession) 
             generate((StartSession) action, builder, ctx);
+        else if (action instanceof ForAction) 
+            generate((ForAction) action, builder, ctx);        
         else {
             throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
@@ -169,6 +172,10 @@ public class ThingActionCompiler {
     }
 
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+    
+    public void generate(ForAction action, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 

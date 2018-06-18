@@ -26,6 +26,7 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
@@ -36,6 +37,7 @@ import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
@@ -450,4 +452,22 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		builder.append("}");
 	}
 
+	@Override
+	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
+		if (fa.getIndex() != null) {
+			builder.append("{\n");
+			final String t = JavaHelper.getJavaType(fa.getIndex().getTypeRef().getType(), false, ctx);
+			builder.append(t + " " + ctx.getVariableName(fa.getIndex()) + " = 0;\n");
+		}
+		final String t = JavaHelper.getJavaType(fa.getVariable().getTypeRef().getType(), false, ctx);
+		builder.append("for(" + t + " " + ctx.getVariableName(fa.getVariable()) + " : " + ctx.getVariableName(fa.getArray().getProperty()) + ") {\n");
+		generate(fa.getAction(), builder, ctx);
+		if (fa.getIndex() != null) {
+			builder.append(ctx.getVariableName(fa.getIndex()) + "++;\n");
+		}
+		builder.append("}\n");
+		if (fa.getIndex() != null) {
+			builder.append("}\n");
+		}
+	}
 }
