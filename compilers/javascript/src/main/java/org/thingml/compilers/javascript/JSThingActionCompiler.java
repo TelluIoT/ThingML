@@ -361,7 +361,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		if (fa.getArray().getProperty() instanceof Property) {
 			builder.append(ctx.getContextAnnotation("thisRef"));
 		}
-		builder.append(ctx.getVariableName(fa.getArray().getProperty()) + ".forEach(function(" + ctx.getVariableName(fa.getVariable()) + ") {\n");
+		builder.append(ctx.getVariableName(fa.getArray().getProperty()) + ".forEach((" + ctx.getVariableName(fa.getVariable()) + ") => {\n");
 		generate(fa.getAction(), builder, ctx);
 		if (fa.getIndex() != null) {
 			builder.append(ctx.getVariableName(fa.getIndex()) + "++;\n");
