@@ -28,6 +28,7 @@ import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
@@ -322,5 +323,22 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 			generate(e, builder, ctx);
 		}
 		builder.append("}");
+	}
+	
+	@Override
+	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
+		CCompilerContext context = (CCompilerContext) ctx;
+		String index = fa.getArray().getProperty().getName() + "_index";
+		String indexT = "int";
+		if (fa.getIndex() != null) {
+			index = ctx.getVariableName(fa.getIndex());
+			indexT = context.getCType(fa.getIndex().getTypeRef().getType());
+		}
+		String var = ctx.getVariableName(fa.getVariable());
+		String varT = context.getCType(fa.getVariable().getTypeRef().getType());
+		builder.append("for(" + indexT + " " + index + " = 0; " + index + " < " + ctx.getVariableName(fa.getArray().getProperty()) + "_size; " + index + "++){\n");
+		builder.append(varT + " " + var + " = " + ctx.getVariableName(fa.getArray().getProperty()) + "[" + index + "];\n");
+		generate(fa.getAction(), builder, ctx);
+		builder.append("}\n");		
 	}
 }
