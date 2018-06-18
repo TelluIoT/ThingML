@@ -34,6 +34,7 @@ import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
@@ -351,4 +352,20 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		}
 		builder.append("]");
 	}	
+	
+	@Override
+	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
+		if (fa.getIndex() != null) {			
+			builder.append("var " + ctx.getVariableName(fa.getIndex()) + " = 0;\n");
+		}
+		if (fa.getArray().getProperty() instanceof Property) {
+			builder.append(ctx.getContextAnnotation("thisRef"));
+		}
+		builder.append(ctx.getVariableName(fa.getArray().getProperty()) + ".forEach(function(" + ctx.getVariableName(fa.getVariable()) + ") {\n");
+		generate(fa.getAction(), builder, ctx);
+		if (fa.getIndex() != null) {
+			builder.append(ctx.getVariableName(fa.getIndex()) + "++;\n");
+		}
+		builder.append("});\n");		
+	}
 }
