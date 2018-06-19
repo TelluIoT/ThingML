@@ -235,6 +235,22 @@ public class CompileThingFile implements IHandler {
 				ThingMLConsole.getInstance().printMessage("Checking configuration... Done! Took " + (System.currentTimeMillis() - startChecker) + " ms.\n");
 				
 				if (isValid) {
+					String location = "";
+					for (Issue error : checker.getWarnings()) {
+						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
+							ThingMLConsole.getInstance().printWarn("Warnings(s) in " + error.getUriToProblem().toFileString() + "\n");
+							location = error.getUriToProblem().toFileString();
+						}
+						ThingMLConsole.getInstance().printWarn("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
+					}
+					location = "";
+					for (Issue error : checker.getInfos()) {
+						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
+							ThingMLConsole.getInstance().printMessage("Infos(s) in " + error.getUriToProblem().toFileString() + "\n");
+							location = error.getUriToProblem().toFileString();
+						}
+						ThingMLConsole.getInstance().printMessage("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
+					}
 					final long start = System.currentTimeMillis();
 					compiler.compile(cfg, options);
 					if(subCompiler != null) {
@@ -246,7 +262,7 @@ public class CompileThingFile implements IHandler {
 					ThingMLConsole.getInstance().printError("Configuration " + cfg.getName() + " could not be compiled because of errors [" + new Date() + "].\n");
 					String location = "";
 					for (Issue error : checker.getErrors()) {
-						if (error.getUriToProblem()!=null && !location.equals(error.getUriToProblem().toFileString())) {
+						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
 							ThingMLConsole.getInstance().printError("Error(s) in " + error.getUriToProblem().toFileString() + "\n");
 							location = error.getUriToProblem().toFileString();
 						}

@@ -1,0 +1,43 @@
+import "../../thingml.thingml"
+
+
+thing TestArrays includes Test 
+@test "x # e1827364554637281e"
+{
+
+	property index : UInt16 = 0
+	
+	property array : Char[8] = {'1', '1', '1', '1', '5', '6', '7', '8'}
+	set array[1] = '2'
+	set array[2] = '3'
+	set array[3] = '4'
+	
+    statechart TestArrays init sstart {
+    
+    	state sstart {
+    		transition -> initialized
+			event m : Test?In
+			guard m.c == 'x'
+    	}
+    	
+    	state initialized {
+    	on entry do
+            TestOut('e')
+    		// Test sequential read in both directions and that index are properly interpreted
+    		index = 0
+    		while (index < 8) do
+                TestOut(array[index])
+                TestOut(array[7-index])
+                index = index + 1
+    		end
+            TestOut('e')
+            TestDone()
+    	end
+    	}
+
+    }
+}
+
+configuration conf {
+	instance test : TestArrays
+}

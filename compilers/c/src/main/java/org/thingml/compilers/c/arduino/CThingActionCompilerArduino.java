@@ -51,7 +51,7 @@ public class CThingActionCompilerArduino extends CThingActionCompiler {
         	if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
                 builder.append(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next() + ".print(\"\\n\");\n");
             } else {
-                builder.append("// PRINT: \"\\n\"");
+                builder.append("// PRINT: \"\\n\"\n");
             }
         }
     }

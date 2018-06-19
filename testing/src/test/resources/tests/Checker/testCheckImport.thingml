@@ -1,0 +1,9 @@
+import "datatype.thingml" from stl
+
+thing TestCheckCast //should fail as there is a typo in the import
+{
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    	}
+    }
+}

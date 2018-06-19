@@ -8,7 +8,7 @@ import org.thingml.xtext.validation.ThingMLValidatorCheck
 
 class AutotransitionCycles extends ThingMLValidatorCheck {
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkAutotransitionCycles(StateContainer c) {
 		val verts = newHashSet()
 		verts.addAll(c.substate)

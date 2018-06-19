@@ -21,6 +21,7 @@ import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
@@ -37,6 +38,7 @@ import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.GreaterExpression;
@@ -110,6 +112,8 @@ public class ThingActionCompiler {
             generate((Decrement) action, builder, ctx);
         else if (action instanceof StartSession) 
             generate((StartSession) action, builder, ctx);
+        else if (action instanceof ForAction) 
+            generate((ForAction) action, builder, ctx);        
         else {
             throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
@@ -170,12 +174,18 @@ public class ThingActionCompiler {
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
+    
+    public void generate(ForAction action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
 
 
     //ThingML Expressions
     public void generate(Expression expression, StringBuilder builder, Context ctx) {
         if (expression instanceof ArrayIndex) {
             generate((ArrayIndex) expression, builder, ctx);
+        } else if (expression instanceof ArrayInit) {
+            generate((ArrayInit) expression, builder, ctx);
         } else if (expression instanceof OrExpression) {
             generate((OrExpression) expression, builder, ctx);
         } else if (expression instanceof AndExpression) {
@@ -235,6 +245,10 @@ public class ThingActionCompiler {
         } else {
             throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
+    }
+    
+    public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
     
     public void generate(CastExpression expression, StringBuilder builder, Context ctx) {

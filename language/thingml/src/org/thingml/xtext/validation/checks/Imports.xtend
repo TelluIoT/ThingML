@@ -8,7 +8,7 @@ import org.thingml.xtext.validation.ThingMLValidatorCheck
 
 class Imports extends ThingMLValidatorCheck {
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkImports(ThingMLModel model) {
 		model.imports.forEach[imp,i|
 			try {

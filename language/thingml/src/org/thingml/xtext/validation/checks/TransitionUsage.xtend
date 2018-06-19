@@ -12,7 +12,7 @@ import org.thingml.xtext.constraints.ThingMLHelpers
 
 class TransitionUsage extends ThingMLValidatorCheck {
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkNonDeterministicTransition(org.thingml.xtext.thingML.State s) {
 		s.outgoing.forEach [ t1 |
 			s.outgoing.forEach [ t2 |
@@ -32,7 +32,7 @@ class TransitionUsage extends ThingMLValidatorCheck {
 		]
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkGreedyTransition(org.thingml.xtext.thingML.State s) {
 		val t = s.outgoing.findFirst[t|t.event === null && t.guard === null]
 		if (t !== null && s.outgoing.size > 1) {
@@ -43,16 +43,16 @@ class TransitionUsage extends ThingMLValidatorCheck {
 
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkEmptyAutotransition(Transition t) {
 		val source = ThingMLHelpers.findContainingState(t)
 		if (t.event === null && t.guard === null && t.target == source) {
-			val msg = "Self Transition without guard and without event. Will loop forever.";
-			error(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Internal, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t), "self-transition-loop")
+			val msg = "Self Transition without guard and without event. Will loop forever.";			
+			error(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Outgoing, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t), "self-transition-loop")
 		}
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkEmptyInternal(InternalTransition t) {
 		if (t.event === null && t.guard === null) {
 			val msg = "Internal Transition without guard and without event. Will loop forever.";
@@ -60,7 +60,7 @@ class TransitionUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkInternalWithoutAction(InternalTransition t) {
 		if (t.action === null) {
 			val msg = "Internal Transition without action, consider removing.";

@@ -28,6 +28,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.AbstractConnector;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
@@ -35,6 +36,7 @@ import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
@@ -46,6 +48,7 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLFactory;
 
 /**
  * Created by ffl on 10.05.2016.
@@ -160,8 +163,8 @@ public class ConfigurationHelper {
 
 			String id = inst_name + "_" + a.getProperty().getName();
 
-			if (a.getIndex().size() > 0)  { // It is an array
-				id += a.getIndex().get(0);
+			if (a.getIndex() != null)  { // It is an array
+				id += a.getIndex();
 				//println(id)
 			}
 
@@ -300,7 +303,7 @@ public class ConfigurationHelper {
 	public static List<Property> allArrays(Configuration self, Instance i) {
 		List<Property> result = new ArrayList<Property>();
 		for(Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
-			if (p.getTypeRef().getCardinality() != null)
+			if (p.getTypeRef().getCardinality() != null || p.getTypeRef().isIsArray())
 				result.add(p);
 		}
 		return result;
@@ -381,18 +384,20 @@ public class ConfigurationHelper {
 
 
 	public static Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> initExpressionsForInstanceArrays(Configuration self, Instance i) {
-
 		Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> result = new HashMap<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>>();
 
 		for(Property p : allArrays(self, i)) {
 			// look for assignements in the things:
-
 			for(PropertyAssign a : ThingHelper.initExpressionsForArray(i.getType(), p)) {
-				initExpressionsForInstanceArraysHelper(self, result, "in thing " + ((Thing)a.eContainer()).getName(), p, a.getIndex().size(), (Expression)a.getIndex().toArray()[0], a.getInit());
+				if (a.getIndex() != null) {
+					initExpressionsForInstanceArraysHelper(self, result, "in thing " + ((Thing)a.eContainer()).getName(), p, 1, a.getIndex(), a.getInit());
+				}				
 			}
 			for(ConfigPropertyAssign a : allPropAssigns(self)) {
 				if(EcoreUtil.equals(a.getProperty(), p)) {
-					initExpressionsForInstanceArraysHelper(self, result, "in instance " + i.getName(), p, a.getIndex().size(), (Expression) a.getIndex().toArray()[0], a.getInit());
+					if (a.getIndex() != null) {
+						initExpressionsForInstanceArraysHelper(self, result, "in instance " + i.getName(), p, 1, a.getIndex(), a.getInit());
+					}									
 				}
 			}
 		}

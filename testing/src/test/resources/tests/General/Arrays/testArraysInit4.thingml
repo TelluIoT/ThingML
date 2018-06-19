@@ -1,0 +1,25 @@
+import "../../thingml.thingml"
+
+
+thing TestArrays includes Test 
+@test "x # "
+{
+
+	property index : UInt16 = 0
+	
+	property array : Double[6] = {-1, 1, -1.5, 1.5, 2, -2} //Check that we can parse double literal in array init
+	
+    statechart TestArrays init sstart {
+    
+    	state sstart {
+    		internal event m : Test?In
+			guard m.c == 'x'
+			action TestDone()
+    	}
+
+    }
+}
+
+configuration conf {
+	instance test : TestArrays
+}

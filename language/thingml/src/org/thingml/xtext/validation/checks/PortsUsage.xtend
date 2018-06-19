@@ -10,7 +10,6 @@ import org.thingml.xtext.thingML.RequiredPort
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.Tarjan
 import org.thingml.xtext.validation.ThingMLValidatorCheck
-import org.thingml.xtext.thingML.Instance
 
 class PortsUsage extends ThingMLValidatorCheck {
 	
@@ -28,7 +27,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkDanglingPorts(Configuration cfg) {
 		cfg.instances.forEach[inst, i|
 			inst.type.ports.filter[port | port instanceof RequiredPort && !(port as RequiredPort).optional].filter[requiredPort|
@@ -47,7 +46,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkDuplicates(Port p) {
 		p.sends.groupBy[m | m.name].forEach[name, messages |
 			if (messages.size > 1) {
@@ -63,7 +62,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 		]
 	}
 	
-	@Check(NORMAL)	
+	@Check(FAST)	
 	def checkDuplicates(Configuration cfg) {
 		cfg.connectors.forEach[c1 |
 			cfg.connectors.forEach[c2 |

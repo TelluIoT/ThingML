@@ -37,6 +37,8 @@ import org.thingml.xtext.thingML.Transition
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.thingML.StateContainer
 import java.util.Arrays
+import java.util.List
+import java.util.Collections
 
 /**
  * This class contains custom scoping description.
@@ -150,8 +152,8 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 
 	}
 	
-	protected ArrayList EMPTY = new ArrayList();
-	
+	protected List EMPTY = Collections.EMPTY_LIST;
+		
 	def protected IScope scopeForStateContainer_Initial(StateContainer context) {
 		Scopes.scopeFor(context.substate);
 	}

@@ -34,6 +34,7 @@ import org.thingml.xtext.thingML.Transition
 import org.thingml.xtext.thingML.InternalTransition
 import org.thingml.xtext.thingML.ReceiveMessage
 import org.thingml.xtext.thingML.Handler
+import org.thingml.xtext.thingML.IntegerLiteral
 
 /**
  * Provides labels for EObjects.
@@ -175,6 +176,6 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 	
 	def String typeString (TypeRef ref) {
 		if (ref === null) ''
-		else ref.type.name + if (ref.isIsArray) '[]' else '' 
+		else ref.type.name + if (ref.isIsArray) '[' + (if(ref.cardinality instanceof IntegerLiteral) (ref.cardinality as IntegerLiteral).intValue else '') + ']' else '' 
 	}
 }

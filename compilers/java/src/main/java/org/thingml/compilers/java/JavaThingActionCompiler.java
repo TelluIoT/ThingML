@@ -16,6 +16,8 @@
  */
 package org.thingml.compilers.java;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -24,6 +26,8 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
@@ -33,6 +37,7 @@ import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
@@ -47,7 +52,9 @@ import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.VariableAssignment;
 import org.thingml.xtext.validation.TypeChecker;
 
@@ -429,5 +436,38 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		if (expression.getIntValue() > 2147483647 || expression.getIntValue() < -2147483647)
 			builder.append("L");
 	}
+	
+	@Override
+	public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
+		final EObject container = expression.eContainer();
+		final TypeRef typeref = (TypeRef) container.eGet(ThingMLPackage.eINSTANCE.getVariable_TypeRef());				
+		final Type t = typeref.getType();		
+		builder.append("new " + JavaHelper.getJavaType(t, false, ctx) + "[]");
+		builder.append("{");
+		for(Expression e : expression.getValues()) {
+			if (expression.getValues().indexOf(e)>0)
+				builder.append(", ");
+			generate(e, builder, ctx);
+		}
+		builder.append("}");
+	}
 
+	@Override
+	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
+		if (fa.getIndex() != null) {
+			builder.append("{\n");
+			final String t = JavaHelper.getJavaType(fa.getIndex().getTypeRef().getType(), false, ctx);
+			builder.append(t + " " + ctx.getVariableName(fa.getIndex()) + " = 0;\n");
+		}
+		final String t = JavaHelper.getJavaType(fa.getVariable().getTypeRef().getType(), false, ctx);
+		builder.append("for(" + t + " " + ctx.getVariableName(fa.getVariable()) + " : " + ctx.getVariableName(fa.getArray().getProperty()) + ") {\n");
+		generate(fa.getAction(), builder, ctx);
+		if (fa.getIndex() != null) {
+			builder.append(ctx.getVariableName(fa.getIndex()) + "++;\n");
+		}
+		builder.append("}\n");
+		if (fa.getIndex() != null) {
+			builder.append("}\n");
+		}
+	}
 }

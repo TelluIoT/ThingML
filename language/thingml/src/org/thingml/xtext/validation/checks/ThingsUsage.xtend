@@ -1,25 +1,19 @@
 package org.thingml.xtext.validation.checks
 
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.thingML.Configuration
-import org.thingml.xtext.thingML.ExternExpression
-import org.thingml.xtext.thingML.ExternStatement
 import org.thingml.xtext.thingML.Function
 import org.thingml.xtext.thingML.Instance
 import org.thingml.xtext.thingML.Message
 import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.Property
-import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
-import org.thingml.xtext.helpers.ActionHelper
 
 class ThingsUsage extends ThingMLValidatorCheck {
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkInstance(Instance i) {
 		if (i.type.fragment) {
 			val msg = "Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() +
@@ -28,7 +22,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkInstanceUniqueness(Instance i) {
 		val cfg = i.eContainer as Configuration
 		val instances = cfg.instances.filter(i2 |
@@ -40,7 +34,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}	
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkPropertyUniqueness(Property p) {
 		val thing = ThingMLHelpers.findContainingThing(p)
 		val props = ThingMLHelpers.allProperties(thing).filter [ pr |
@@ -53,7 +47,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkMessageUniqueness(Message m) {
 		val thing = ThingMLHelpers.findContainingThing(m)
 		val msgs = ThingMLHelpers.allMessages(thing).filter [ m2 |
@@ -66,7 +60,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkPortUniqueness(Port p) {
 		val thing = ThingMLHelpers.findContainingThing(p)
 		val ports = ThingMLHelpers.allPorts(thing).filter [ p2 |
@@ -79,7 +73,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkFunctionUniqueness(Function f) {
 		val thing = ThingMLHelpers.findContainingThing(f)
 		val funcs = ThingMLHelpers.allFunctions(thing).filter [ f2 |
@@ -92,7 +86,7 @@ class ThingsUsage extends ThingMLValidatorCheck {
 		}
 	}
 
-	@Check(NORMAL)
+	/*@Check(NORMAL)
 	def checkIncludedPSMinPIM(Thing t) {
 		val uri = t.eResource.URI.toString
 		if (uri.contains("_")) return;
@@ -103,9 +97,9 @@ class ThingsUsage extends ThingMLValidatorCheck {
 			val msg = "This PIM thing includes PSM thing " + i.name + " making it PSM." 
 			warning(msg, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(i), "include-psm")
 		]
-	}
+	}*/
 
-	@Check(NORMAL)
+	/* @Check(NORMAL)
 	def checkPSM(ExternStatement e) {
 		checkPSM(ThingMLHelpers.findContainingThing(e), e)	
 	}
@@ -124,6 +118,6 @@ class ThingsUsage extends ThingMLValidatorCheck {
 			info(msg, e.eContainer, e.eContainingFeature, (parent as EList).indexOf(e), "psm-in-basedir")
 		else
 			info(msg, e.eContainer, e.eContainingFeature, "psm-in-basedir")
-	}
+	}*/
 	
 }

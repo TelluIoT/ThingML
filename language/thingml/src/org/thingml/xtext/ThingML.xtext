@@ -39,7 +39,7 @@ Variable:
  *****************************************************************************/
 
 TypeRef returns TypeRef:
-	type=[Type|ID] (^isArray?='[' (cardinality=Expression)? ']')?
+	type=[Type|ID] (^isArray?='[' (cardinality=(IntegerLiteral|PropertyReference))? ']')?
 ;
 
 Type:
@@ -69,7 +69,7 @@ Thing returns Thing:
 	'}';
 
 PropertyAssign returns PropertyAssign:
-	'set' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
+	'set' property=[Property|ID] ('[' index=Expression ']')? '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 Protocol returns Protocol:
 	'protocol' name=ID ( annotations+=PlatformAnnotation )* (';')?;
@@ -213,7 +213,7 @@ ReceiveMessage returns ReceiveMessage:
  *****************************************************************************/
  
 Action returns Action:
-	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
+	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction | ForAction |
 	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 
 
@@ -232,7 +232,7 @@ SendAction returns SendAction:
 	port=[Port|ID] '!' message=[Message|ID] '(' (parameters+=Expression ( "," parameters+=Expression)*)? ')';
 
 VariableAssignment returns VariableAssignment:
-	property=[Variable|ID] ('[' index+=Expression ']')* '=' expression=Expression;
+	property=[Variable|ID] ('[' index=Expression ']')? '=' expression=Expression;
 
 
 Increment returns Increment:
@@ -240,6 +240,9 @@ Increment returns Increment:
 
 Decrement returns Decrement:
 	var=[Variable|ID] '--';
+
+ForAction returns ForAction:
+	'for' '(' variable=LocalVariable (',' index=LocalVariable)? '<-' array=PropertyReference ')' action=Action;
 
 LoopAction returns LoopAction:
 	'while' '(' condition=Expression ')' action=Action;
@@ -331,16 +334,21 @@ ArrayIndexPostfix returns Expression:
 	AtomicExpression ( {ArrayIndex.array=current} '[' index=Expression ']')?
 ;
 
+
 AtomicExpression returns Expression:
-	ExternExpression | Literal |  PropertyReference | FunctionCallExpression 
+	ExternExpression | Literal | ArrayInit |  PropertyReference | FunctionCallExpression 
 	 | EventReference 
 ;
 
 ExternExpression returns ExternExpression:
 	expression=EXTERN ('&' segments+=Expression)*;
 	
-Literal returns Expression:
+Literal returns Literal:
 	EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral
+;
+
+ArrayInit returns ArrayInit:
+	'{' values+=(Expression) (',' values+=(Expression))* '}'
 ;
 	
 EnumLiteralRef returns EnumLiteralRef:
@@ -393,7 +401,8 @@ Instance returns Instance:
 	'instance' name=ID ':' type=[Thing|ID] ( annotations+=PlatformAnnotation )*;
 
 ConfigPropertyAssign returns ConfigPropertyAssign:
-	'set' instance=[Instance|ID] '.' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
+	'set' instance=[Instance|ID] '.' property=[Property|ID] ('[' index=Expression ']'
+	)? '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 
 AbstractConnector:

@@ -1,0 +1,12 @@
+import "datatypes.thingml" from stl
+
+thing TestCheckAbstractFunction
+{
+	property arr : Integer[2]
+	set arr[0] = 1
+	set arr[1] = false //should fail as value has wrong type
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}

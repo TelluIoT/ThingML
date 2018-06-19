@@ -21,12 +21,14 @@ import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
@@ -104,9 +106,9 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         builder.append(propertyName);
 
-        for (Expression idx : action.getIndex()) {
+        if(action.getIndex() != null) {
             builder.append("[");
-            this.generate(idx, builder, context);
+            this.generate(action.getIndex(), builder, context);
             builder.append("]");
         }
         builder.append(" = ");
@@ -311,4 +313,32 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     }
 
     //TODO: check if some inherited methods should be overidden
+    
+	@Override
+	public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
+		builder.append("{");
+		for(Expression e : expression.getValues()) {
+			if (expression.getValues().indexOf(e)>0)
+				builder.append(", ");
+			generate(e, builder, ctx);
+		}
+		builder.append("}");
+	}
+	
+	@Override
+	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
+		CCompilerContext context = (CCompilerContext) ctx;
+		String index = fa.getArray().getProperty().getName() + "_index";
+		String indexT = "int";
+		if (fa.getIndex() != null) {
+			index = ctx.getVariableName(fa.getIndex());
+			indexT = context.getCType(fa.getIndex().getTypeRef().getType());
+		}
+		String var = ctx.getVariableName(fa.getVariable());
+		String varT = context.getCType(fa.getVariable().getTypeRef().getType());
+		builder.append("for(" + indexT + " " + index + " = 0; " + index + " < " + ctx.getVariableName(fa.getArray().getProperty()) + "_size; " + index + "++){\n");
+		builder.append(varT + " " + var + " = " + ctx.getVariableName(fa.getArray().getProperty()) + "[" + index + "];\n");
+		generate(fa.getAction(), builder, ctx);
+		builder.append("}\n");		
+	}
 }

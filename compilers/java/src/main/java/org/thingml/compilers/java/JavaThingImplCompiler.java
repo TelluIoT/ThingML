@@ -370,6 +370,12 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 				builder.append(") ");
 				ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
 				builder.append(";\n");
+			} else if (p.getTypeRef().getCardinality()!=null) {
+				builder.append(ctx.getVariableName(p) + " = new ");
+				builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx));
+				builder.append("[");
+				ctx.getCompiler().getThingActionCompiler().generate(p.getTypeRef().getCardinality(), builder, ctx);
+				builder.append("];\n");
 			}
 		}
 		builder.append("}\n\n");

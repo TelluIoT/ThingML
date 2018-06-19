@@ -20,7 +20,9 @@ import java.util.List;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
+import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
@@ -51,6 +53,7 @@ import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
+import org.thingml.xtext.validation.TypeChecker;
 
 public class GoThingActionCompiler extends CommonThingActionCompiler {
 	public void variable(Variable variable, StringBuilder builder, Context ctx) {	
@@ -169,9 +172,9 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
 		variable(action.getProperty(), builder, ctx);
-		for (Expression i : action.getIndex()) {
+		if(action.getIndex() != null) {
 			builder.append("[");
-			generate(i, builder, ctx);
+			generate(action.getIndex(), builder, ctx);
 			builder.append("]");
 		}
 		builder.append(" = ");
@@ -351,5 +354,22 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
     	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " != ", ctx);
+    }
+    
+    @Override
+    public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
+    	if (expression.getValues().size() > 0) {
+    		builder.append("[" + expression.getValues().size() + "]");
+    		final GoContext goctx = (GoContext)ctx;
+    		final Type t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getValues().get(0)));
+    		builder.append(goctx.getTypeName(t));
+    		builder.append("{");
+    		for(Expression e : expression.getValues()) {
+    			if (expression.getValues().indexOf(e)>0)
+    				builder.append(", ");
+    			generate(e, builder, ctx);
+    		}
+    		builder.append("}");
+    	}
     }
 }

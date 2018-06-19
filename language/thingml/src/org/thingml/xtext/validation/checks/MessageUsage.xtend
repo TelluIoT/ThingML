@@ -7,27 +7,24 @@ import org.thingml.xtext.constraints.Types
 import org.thingml.xtext.helpers.ActionHelper
 import org.thingml.xtext.helpers.StateHelper
 import org.thingml.xtext.helpers.TyperHelper
+import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.ExternalConnector
+import org.thingml.xtext.thingML.Message
 import org.thingml.xtext.thingML.SendAction
 import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
-import org.thingml.xtext.thingML.ExternalConnector
-import org.thingml.xtext.thingML.Message
-import org.thingml.xtext.thingML.PrimitiveType
-import org.thingml.xtext.helpers.AnnotatedElementHelper
-import org.thingml.xtext.thingML.Configuration
 
 class MessageUsage extends ThingMLValidatorCheck {
 	
 	def boolean isSerializable(Message m) {
 		return m.parameters.forall[ p |
-			p.typeRef !== null && p.typeRef.type !== null 
-			&& (p.typeRef.type instanceof PrimitiveType || AnnotatedElementHelper.isDefined(p.typeRef.type, "serializable", "true"))
+			p.typeRef !== null && p.typeRef.type !== null && TyperHelper.isSerializable(p.typeRef.type ) 			
 		]
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkSerialization(ExternalConnector c) {
 		val nonSerializable = c.port.receives.filter[m | !isSerializable(m)].toSet
 		nonSerializable.addAll(c.port.sends.filter[m | !isSerializable(m)])
@@ -37,7 +34,7 @@ class MessageUsage extends ThingMLValidatorCheck {
 		}				
 	}
 	
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkMessageNotSent(Thing thing) {
 		if (thing.fragment) return
 		val allSendActions = ActionHelper.getAllActions(thing, SendAction)
@@ -56,7 +53,7 @@ class MessageUsage extends ThingMLValidatorCheck {
 		]
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkMessageNotReceived(Thing thing) {
 		if (thing.fragment) return;
 		val handlers = StateHelper.allMessageHandlers(thing)
@@ -76,7 +73,7 @@ class MessageUsage extends ThingMLValidatorCheck {
 		]
 	}
 
-	@Check(NORMAL)
+	@Check(FAST)
 	def checkSendAction(SendAction send) {
 		val msg = send.message
 		val params = send.parameters

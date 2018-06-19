@@ -30,8 +30,8 @@
 	</parent>
 
 	<properties>
-		<tycho-version>0.25.0</tycho-version>
-		<xtextVersion>2.11.0</xtextVersion>
+		<tycho-version>1.2.0</tycho-version>
+		<xtextVersion>2.14.0</xtextVersion>
 		<project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>

@@ -50,6 +50,7 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Import;
@@ -122,6 +123,10 @@ public class ThingMLHelpers {
 	public static ActionBlock findContainingActionBlock(EObject object) {
 		return findContainer(object,ActionBlock.class);
 	}
+	
+	public static ForAction findContainingForLoop(EObject object) {
+		return findContainer(object,ForAction.class);
+	}	
 
 	public static Thing findContainingThing(EObject object) {
 		return findContainer(object,Thing.class);
@@ -668,28 +673,34 @@ public class ThingMLHelpers {
 	}
 	
 	public static ArrayList<Variable> allVisibleVariables (EObject container) {
-		ArrayList<Variable> result = new ArrayList<Variable>();
-		
-
+		ArrayList<Variable> result = new ArrayList<Variable>();		
+		ForAction fa = findContainingForLoop(container);
+		if (fa != null) {
+			result.add(fa.getVariable());
+			if (fa.getIndex() != null)
+				result.add(fa.getIndex());
+			result.addAll(allVisibleVariables(fa.eContainer()));
+			//return result;
+		}
 		
 		// Add the variables of the block if we are in a block
 		ActionBlock b = findContainingActionBlock(container);
 		if (b != null) {
 			for (Action a : b.getActions()) {
 				if (a == container || a.eContents().contains(container)) continue; // ignore variables defined after the current statement
-				if (a instanceof Variable) result.add((Variable)a);
-			}
-			
+				if (a instanceof Variable) {
+					result.add((Variable)a);
+				}
+			}	
 			result.addAll(allVisibleVariables(b.eContainer()));
-
-			return result;
+			//return result;
 		}
 		
 		// Add the variables of the state if we are in a state
 		State s = findContainingState(container);
 		if (s != null) {
 			result.addAll(allProperties(s));
-			return result;
+			//return result;
 		}
 		
 		// Add parameters of the function if we are in a function 
@@ -706,7 +717,7 @@ public class ThingMLHelpers {
 		if (t != null) {
 			// Properties from the thing
 			result.addAll(allProperties(t));
-			return result;
+			//return result;
 		}		
 				
 		return result;		
@@ -787,66 +798,6 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-
-	/*
-	public static ArrayList<Configuration> allConfigurationFragments(Configuration config) {
-		ArrayList<Configuration> result = new ArrayList<Configuration>();
-		result.add(config);
-		for (Configuration t : config.getIncludes())
-			for (Configuration c : allConfigurationFragments(t))
-				if (!result.contains(c))result.add(c);
-		return result;
-	}
-	*/
-	/*
-	public static ArrayList<ConfigInclude> allConfigurationFragments(Configuration config) {
-		ArrayList<Configuration> result = new ArrayList<Configuration>();
-		result.add(config);
-		for (Configuration t : config.getIncludes())
-			for (Configuration c : allConfigurationFragments(t))
-				if (!result.contains(c))result.add(c);
-		return result;
-	} 
-	
-	public static ArrayList<Instance> allInstances(Configuration config) {
-		ArrayList<Instance> result = new ArrayList<Instance>();
-		for (Configuration t : allConfigurationFragments(config)) {
-			result.addAll(t.getInstances());
-		}
-		return result;
-	}
-	
-	public static ArrayList<Connector> allConnectors(Configuration config) {
-		ArrayList<Connector> result = new ArrayList<Connector>();
-		for (Configuration t : allConfigurationFragments(config)) {
-			result.addAll(t.getConnectors());
-		}
-		return result;
-	}
-	
-	
-	public static ArrayList<Instance> findInstance(Configuration config, String name, boolean fuzzy) {
-		ArrayList<Instance> result = new ArrayList<Instance>();
-		for (Instance i : allInstances(config)) {
-			if (i.getName().startsWith(name)) {
-				if (fuzzy) result.add(i);
-				else if (i.getName().equals(name)) result.add(i);
-			}
-		}
-		return result;
-	}
-	
-	public static ArrayList<Connector> findConnector(Configuration config, String name, boolean fuzzy) {
-		ArrayList<Connector> result = new ArrayList<Connector>();
-		for (Connector i : allConnectors(config)) {
-			if (i.getName().startsWith(name)) {
-				if (fuzzy) result.add(i);
-				else if (i.getName().equals(name)) result.add(i);
-			}
-		}
-		return result;
-	}
-	*/
 
 	public static Expression findRootExpressions(Expression expression) {
 		Expression result = expression;

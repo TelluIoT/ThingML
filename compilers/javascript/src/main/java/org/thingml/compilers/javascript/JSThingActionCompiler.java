@@ -25,6 +25,7 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.DivExpression;
@@ -33,6 +34,7 @@ import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
@@ -84,19 +86,16 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		traceVariablePre(action, builder, ctx);
 		if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {
 			// this is an array (and we want to affect just one index)
-			for (Expression i : action.getIndex()) {
 				if (action.getProperty() instanceof Property) {
 					builder.append(ctx.getContextAnnotation("thisRef"));
 				}
 				builder.append(ctx.getVariableName(action.getProperty()));
 				StringBuilder tempBuilder = new StringBuilder();
-				generate(i, tempBuilder, ctx);
+				generate(action.getIndex(), tempBuilder, ctx);
 				builder.append("[" + tempBuilder.toString() + "]");
 				builder.append(" = ");
 				cast(action.getProperty().getTypeRef().getType(), false, action.getExpression(), builder, ctx);
 				builder.append(";\n");
-
-			}
 		} else {
 			// simple variable or we re-affect the whole array
 			if (action.getProperty() instanceof Property) {
@@ -341,5 +340,32 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 			builder.append(ctx.getContextAnnotation("thisRef"));
 		}
 		super.generate(action, builder, ctx);
+	}
+	
+	@Override
+	public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
+		builder.append("[");
+		for(Expression e : expression.getValues()) {
+			if (expression.getValues().indexOf(e)>0)
+				builder.append(", ");
+			generate(e, builder, ctx);
+		}
+		builder.append("]");
+	}	
+	
+	@Override
+	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
+		if (fa.getIndex() != null) {			
+			builder.append("var " + ctx.getVariableName(fa.getIndex()) + " = 0;\n");
+		}
+		if (fa.getArray().getProperty() instanceof Property) {
+			builder.append(ctx.getContextAnnotation("thisRef"));
+		}
+		builder.append(ctx.getVariableName(fa.getArray().getProperty()) + ".forEach((" + ctx.getVariableName(fa.getVariable()) + ") => {\n");
+		generate(fa.getAction(), builder, ctx);
+		if (fa.getIndex() != null) {
+			builder.append(ctx.getVariableName(fa.getIndex()) + "++;\n");
+		}
+		builder.append("});\n");		
 	}
 }
