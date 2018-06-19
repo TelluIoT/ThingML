@@ -46,13 +46,13 @@ Type:
 	PrimitiveType | ObjectType | Enumeration | Thing ;
 
 PrimitiveType returns PrimitiveType:
-	'datatype' name=ID '<' ByteSize=INT '>'	( annotations+=PlatformAnnotation )* (';')?;
+	'datatype' name=ID =>'<' ByteSize=INT '>'	( annotations+=PlatformAnnotation )* (';')?;
 	
 ObjectType returns ObjectType:
 	'object' name=ID ( annotations+=PlatformAnnotation )* (';')?;
 
 Enumeration returns Enumeration:
-	'enumeration' name=ID ('as' typeRef=TypeRef)? ( annotations+=PlatformAnnotation )* '{' (literals+=EnumerationLiteral)* '}';
+	'enumeration' name=ID (=>'as' typeRef=TypeRef)? ( annotations+=PlatformAnnotation )* '{' (literals+=EnumerationLiteral)* '}';
 
 EnumerationLiteral returns EnumerationLiteral:
 	name=ID ('=' init=Literal)? ( annotations+=PlatformAnnotation )* ;
@@ -69,7 +69,7 @@ Thing returns Thing:
 	'}';
 
 PropertyAssign returns PropertyAssign:
-	'set' property=[Property|ID] ('[' index=Expression ']')? '=' init=Expression ( annotations+=PlatformAnnotation )*;
+	'set' property=[Property|ID] (=>'[' index=Expression ']')? '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 Protocol returns Protocol:
 	'protocol' name=ID ( annotations+=PlatformAnnotation )* (';')?;
@@ -232,7 +232,7 @@ SendAction returns SendAction:
 	port=[Port|ID] '!' message=[Message|ID] '(' (parameters+=Expression ( "," parameters+=Expression)*)? ')';
 
 VariableAssignment returns VariableAssignment:
-	property=[Variable|ID] ('[' index=Expression ']')? '=' expression=Expression;
+	property=[Variable|ID] (=>'[' index=Expression ']')? '=' expression=Expression;
 
 
 Increment returns Increment:
@@ -248,7 +248,7 @@ LoopAction returns LoopAction:
 	'while' '(' condition=Expression ')' action=Action;
 
 ConditionalAction returns ConditionalAction:
-	'if' '(' condition=Expression ')' action=Action ('else' elseAction=Action)?;
+	'if' '(' condition=Expression ')' action=Action (=>'else' elseAction=Action)?;
 
 ReturnAction returns ReturnAction:
 	'return' exp=Expression;
@@ -401,8 +401,7 @@ Instance returns Instance:
 	'instance' name=ID ':' type=[Thing|ID] ( annotations+=PlatformAnnotation )*;
 
 ConfigPropertyAssign returns ConfigPropertyAssign:
-	'set' instance=[Instance|ID] '.' property=[Property|ID] ('[' index=Expression ']'
-	)? '=' init=Expression ( annotations+=PlatformAnnotation )*;
+	'set' instance=[Instance|ID] '.' property=[Property|ID] (=>'[' index=Expression ']')? '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 
 AbstractConnector:
