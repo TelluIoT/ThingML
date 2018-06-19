@@ -239,8 +239,26 @@ public class ConfigurationHelper {
 	public static Set<ConfigPropertyAssign> allPropAssigns(Configuration self) {
 		Set<ConfigPropertyAssign> result = new HashSet<ConfigPropertyAssign>();
 		MergedConfigurationCache.clearCache();
-		//result.addAll(merge(self).getPropassigns());
-		result.addAll(self.getPropassigns());
+
+		for(ConfigPropertyAssign cpa : self.getPropassigns()) {
+			if (cpa.getInit() != null && cpa.getInit() instanceof ArrayInit) {
+				final ArrayInit ai = (ArrayInit)cpa.getInit();
+				int index = 0;
+				for(Expression e : ai.getValues()) {
+					final ConfigPropertyAssign pa = ThingMLFactory.eINSTANCE.createConfigPropertyAssign();
+					pa.setInstance(cpa.getInstance());
+					pa.setInit(EcoreUtil.copy(e));
+					pa.setProperty(cpa.getProperty());
+					final IntegerLiteral il = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					il.setIntValue(index);
+					pa.setIndex(il);
+					result.add(pa);
+					index++;
+				}
+			} else {
+				result.add(cpa);
+			}
+		}
 		return result;
 	}
 
