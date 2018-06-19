@@ -56,7 +56,7 @@ import org.thingml.xtext.thingML.ThingMLFactory;
 public class ConfigurationHelper {
 
 
-	public static class MergedConfigurationCache {
+	/*public static class MergedConfigurationCache {
 
 		static Map<Configuration, Configuration> cache = new HashMap<Configuration, Configuration>();
 
@@ -72,107 +72,7 @@ public class ConfigurationHelper {
 			cache.clear();
 		}
 
-	}
-
-	/*
-    private static Configuration merge(Configuration self) {
-
-        if (MergedConfigurationCache.getMergedConfiguration(self) != null)
-            return MergedConfigurationCache.getMergedConfiguration(self);
-
-        final Configuration copy = EcoreUtil.copy(self);
-        final Map<String, Instance> instances = new HashMap<String, Instance>();
-        final List<AbstractConnector> connectors = new ArrayList<AbstractConnector>();
-        final Map<String, ConfigPropertyAssign> assigns = new HashMap<String, ConfigPropertyAssign>();
-
-        _merge(self, instances, connectors, assigns);
-
-        copy.getInstances().clear();
-        copy.getConnectors().clear();
-        copy.getPropassigns().clear();
-
-        copy.getInstances().addAll(instances.values());
-        copy.getConnectors().addAll(connectors);
-        copy.getPropassigns().addAll(assigns.values());
-
-        MergedConfigurationCache.cacheMergedConfiguration(self, copy);
-
-        return copy;
-    }
-	 */
-
-	private static void _merge(Configuration self, Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns) {
-		// Add the instances of this configuration (actually a copy)
-		for(Instance inst : self.getInstances()) {
-
-			//final String key = prefix + "_" + inst.getName();
-			Instance copy = null;
-
-			if (ThingHelper.isSingleton(inst.getType())) {
-				// TODO: This could become slow if we have a large number of instances
-				List<Instance> others = new ArrayList<Instance>();
-				for(Instance i : instances.values()) {
-					if (EcoreUtil.equals(i.getType(), inst.getType())) {
-						others.add(i);
-					}
-				}
-				if (others.isEmpty()) {
-					copy = EcoreUtil.copy(inst);
-					copy.setName(inst.getName()); // no prefix needed
-				}
-				else copy = others.get(0); // There will be only one in the list
-			}
-			else {
-				copy = EcoreUtil.copy(inst);
-				copy.setName(inst.getName()); // rename the instance with the prefix
-			}
-
-			instances.put(inst.getName(), copy);
-		}
-
-		// Add the connectors
-		for(Connector c : ConfigurationHelper.getInternalConnectors(self)) {
-			Connector copy = EcoreUtil.copy(c);
-			// look for the instances:
-			Instance cli = instances.get(c.getCli().getName());
-			Instance srv = instances.get(c.getSrv().getName());
-
-			copy.setCli(cli);
-			copy.setSrv(srv);
-
-			connectors.add(copy);
-		}
-
-		for(ExternalConnector c : ConfigurationHelper.getExternalConnectors(self)) {
-			ExternalConnector copy = EcoreUtil.copy(c);
-			// look for the instances:
-			Instance cli = instances.get(c.getInst().getName());
-
-			copy.setInst(cli);
-
-			connectors.add(copy);
-		}
-
-		for(ConfigPropertyAssign a : self.getPropassigns()) {
-			ConfigPropertyAssign copy = EcoreUtil.copy(a);
-
-			String inst_name = a.getInstance().getName();
-
-			Instance inst = instances.get(inst_name);
-			copy.setInstance(inst);
-
-			String id = inst_name + "_" + a.getProperty().getName();
-
-			if (a.getIndex() != null)  { // It is an array
-				id += a.getIndex();
-				//println(id)
-			}
-
-			assigns.put(id, copy); // This will replace any previous initialization of the variable
-		}
-
-	}
-
+	}*/
 
 	public static Map<Instance, String[]> allRemoteInstances(Configuration self) {
 		Map<Instance, String[]> result = new HashMap<Instance, String[]>();
@@ -191,7 +91,7 @@ public class ConfigurationHelper {
 
 
 	public static Set<Instance> allInstances(Configuration self) {
-		MergedConfigurationCache.clearCache();
+		//MergedConfigurationCache.clearCache();
 		Set<Instance> result = new HashSet<Instance>();
 		//result.addAll(merge(self).getInstances());
 		result.addAll(self.getInstances());
@@ -208,16 +108,16 @@ public class ConfigurationHelper {
 		Map<Instance, List<Message>> result = new HashMap<>();
 		for(Connector c : allConnectors(self)) {
 			if (EcoreUtil.equals(c.getCli(), i)) {
-				List messages = result.get(c.getSrv());
+				List<Message> messages = result.get(c.getSrv());
 				if (messages == null) {
-					messages = new ArrayList();
+					messages = new ArrayList<Message>();
 				}
 				messages.addAll(c.getProvided().getSends());
 				result.put(c.getSrv(), messages);
 			} else if (EcoreUtil.equals(c.getSrv(), i)) {
-				List messages = result.get(c.getCli());
+				List<Message> messages = result.get(c.getCli());
 				if (messages == null) {
-					messages = new ArrayList();
+					messages = new ArrayList<Message>();
 				}
 				messages.addAll(c.getRequired().getSends());
 				result.put(c.getCli(), messages);
@@ -229,7 +129,7 @@ public class ConfigurationHelper {
 
 	public static Set<Connector> allConnectors(Configuration self) {
 		Set<Connector> result = new HashSet<Connector>();
-		MergedConfigurationCache.clearCache();
+		//MergedConfigurationCache.clearCache();
 		//result.addAll(ConfigurationHelper.getInternalConnectors(merge(self)));
 		result.addAll(ConfigurationHelper.getInternalConnectors(self));
 		return result;
@@ -238,7 +138,7 @@ public class ConfigurationHelper {
 
 	public static Set<ConfigPropertyAssign> allPropAssigns(Configuration self) {
 		Set<ConfigPropertyAssign> result = new HashSet<ConfigPropertyAssign>();
-		MergedConfigurationCache.clearCache();
+		//MergedConfigurationCache.clearCache();
 
 		for(ConfigPropertyAssign cpa : self.getPropassigns()) {
 			if (cpa.getInit() != null && cpa.getInit() instanceof ArrayInit) {
@@ -255,10 +155,13 @@ public class ConfigurationHelper {
 					result.add(pa);
 					index++;
 				}
-			} else {
+			} 
+		}
+		for(ConfigPropertyAssign cpa : self.getPropassigns()) {
+			if (cpa.getInit() != null && !(cpa.getInit() instanceof ArrayInit)) {
 				result.add(cpa);
 			}
-		}
+		}		
 		return result;
 	}
 
@@ -457,7 +360,7 @@ public class ConfigurationHelper {
 				for(Connector c : allConnectors(self)) {
 					if(EcoreUtil.equals(c.getCli(), i) && EcoreUtil.equals(c.getRequired(), p)) {
 						for(Message m : p.getSends()) {
-							MSGLOOP: for(Message m2 : c.getProvided().getReceives()) { //TODO: we should implement a derived property on Thing to compute input and output messages, to avoid duplicating code (see below)
+							for(Message m2 : c.getProvided().getReceives()) { //TODO: we should implement a derived property on Thing to compute input and output messages, to avoid duplicating code (see below)
 								if (EcoreUtil.equals(m, m2)) {
 									Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
 									if (mtable == null) {
@@ -470,7 +373,6 @@ public class ConfigurationHelper {
 										mtable.put(i, itable);
 									}
 									itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getSrv(), c.getProvided()));
-									//break MSGLOOP;
 								}
 							}
 						}
@@ -479,7 +381,7 @@ public class ConfigurationHelper {
 				for(Connector c : allConnectors(self)) {
 					if(EcoreUtil.equals(c.getSrv(), i) && EcoreUtil.equals(c.getProvided(), p)) {
 						for(Message m : p.getSends()) {
-							MSGLOOP: for(Message m2 : c.getRequired().getReceives()) { //TODO: remove duplicated code
+							for(Message m2 : c.getRequired().getReceives()) { //TODO: remove duplicated code
 								if (EcoreUtil.equals(m, m2)) {
 									Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = result.get(m);
 									if (mtable == null) {
@@ -492,7 +394,6 @@ public class ConfigurationHelper {
 										mtable.put(i, itable);
 									}
 									itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getCli(), c.getRequired()));
-									//break MSGLOOP;
 								}
 							}
 						}

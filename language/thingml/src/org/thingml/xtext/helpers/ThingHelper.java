@@ -201,7 +201,7 @@ public class ThingHelper {
 					final IntegerLiteral il = ThingMLFactory.eINSTANCE.createIntegerLiteral();
 					il.setIntValue(index);
 					pa.setIndex(il);
-					self.getAssign().add(pa);
+					self.getAssign().add(0, pa);//We insert ArrayInit at the beginning, so as it can be overridden by set
 					index++;
 				}
 			}
