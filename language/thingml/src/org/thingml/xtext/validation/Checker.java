@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -36,14 +37,11 @@ public class Checker {
 	private List<Issue> issues;
 	
 	private final Comparator<Issue> issueComparator = Comparator
-	.comparing(Issue::getUriToProblem, (uri1, uri2) -> {
-          return (uri1!=null 
-        		  && uri1.toFileString()!=null 
-        		  && uri2!=null 
-        		  && uri2.toFileString()!=null) ? 
-        				  uri1.toFileString().compareTo(uri2.toFileString()) 
-        				  : 0;
-     }).thenComparing(Issue::getLineNumber);
+		// Sort by URI first (nulls first)
+		.comparing(Issue::getUriToProblem, Comparator.nullsFirst(Comparator.comparing(URI::toFileString, Comparator.nullsFirst(Comparator.naturalOrder()))))
+		// Then sort by line number (nulls first)
+		.thenComparing(Issue::getLineNumber, Comparator.nullsFirst(Comparator.naturalOrder()))
+	;
 	
 	public Checker() {
 		issues = new LinkedList<Issue>();
