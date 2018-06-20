@@ -1,0 +1,11 @@
+import "datatypes.thingml" from stl
+
+thing TestCheckAbstractFunction
+{
+	readonly property size : Integer = 8
+	property arr : Integer[size] = 42 //should fail as 42 is not an array and not an array initializer
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}

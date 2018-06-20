@@ -153,17 +153,16 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                 } else {
                     System.err.println("ERROR: Array " + propertyName + " should be assigned from an array. " + pr.getProperty() + " is not an array.");
                 }
-            } else {
+            } else if (action.getInit() != null) {
             	builder.append(" = ");
                 generate(action.getInit(), builder, context);
-                builder.append(";\n");
             }
         }
         else if (action.getInit() != null) {
             builder.append(" = ");
             generate(action.getInit(), builder, context);
-            builder.append(";\n");
         }        
+        builder.append(";\n");
     }
 
     @Override

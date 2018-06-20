@@ -1,0 +1,12 @@
+datatype DT<1>
+@type_checker "Integer";
+
+thing TestCheckStateMachine
+{
+	readonly property p : DT[1] = {0}
+	set p = 1    //arrays should be assigned an array initializers or be set index by index
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}
