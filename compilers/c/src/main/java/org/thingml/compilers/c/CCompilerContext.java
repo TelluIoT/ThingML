@@ -36,7 +36,6 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Expression;
-import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Message;
@@ -279,64 +278,6 @@ public abstract class CCompilerContext extends Context {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thingml_typedefs.h");
     }
 
-    public String getCEPLibTemplateClass() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_class.h");
-        }
-        return null;
-    }
-
-    public String getCEPLibTemplateMethodsSignatures() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_methods_signatures.h");
-        }
-        return null;
-    }
-
-    public String getCEPLibTemplateAttributesSignatures() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_attributes_signatures.h");
-        }
-        return null;
-    }
-
-    public String getCEPLibTemplateMessageConstants() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_message_constants.h");
-        }
-        return null;
-    }
-
-    public String getCEPLibTemplateStreamConstants() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_stream_constants.h");
-        }
-        return null;
-    }
-
-    public String getCEPLibTemplateClassImpl() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_classImpl.cpp");
-        }
-        return null;
-    }
-
-    public String getCEPLibTemplatesMessageImpl() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_messageImpl.cpp");
-        }
-        return null;
-    }
-
-    public boolean hasAnnotationWithValue(Configuration cfg, String annotation, String value) {
-        for (String st : AnnotatedElementHelper.annotation(cfg, annotation)) {
-            if (st.compareToIgnoreCase(value) == 0) {
-               return true;
-            }
-        }
-        return false;
-    }
-
     public boolean containsParam(List<Parameter> list, Parameter element) {
         for (Parameter e : list) {
             if (EcoreUtil.equals(e, element))
@@ -443,15 +384,9 @@ public abstract class CCompilerContext extends Context {
     public int numberInstancesAndPort(Configuration cfg) {
         int result = 0;
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            //result++;
-            for (Port p : ThingMLHelpers.allPorts(i.getType())) {
-                result++;
-            }
+            result += ThingMLHelpers.allPorts(i.getType()).size();        	
         }
-        int i = result - 1;
-        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
-            result++;
-        }
+        result += ConfigurationHelper.getExternalConnectors(cfg).size();
         return result;
     }
     
@@ -718,20 +653,15 @@ public abstract class CCompilerContext extends Context {
     // FUNCTIONS FOR TYPES
 
     public String getCType(Type t) {
+    	if (t instanceof Enumeration) {
+    		final Enumeration e = (Enumeration) t;
+    		if (e.getTypeRef() != null && e.getTypeRef().getType() != null)
+    			t = e.getTypeRef().getType();
+    	}
         if (AnnotatedElementHelper.hasAnnotation(t, "c_type")) {
             return AnnotatedElementHelper.annotation(t, "c_type").iterator().next();
         } else {
-            System.err.println("Warning: Missing annotation c_type for type " + t.getName() + ", using " + t.getName() + " as the C type.");
-            return t.getName();
-        }
-    }
-
-    public String getROSType(Type t) {
-        if (AnnotatedElementHelper.hasAnnotation(t, "ros_type")) {
-            return AnnotatedElementHelper.annotation(t, "ros_type").iterator().next();
-        } else {
-            System.err.println("Warning: Missing annotation ros_type for type " + t.getName() + ", using " + t.getName() + " as the ROS type.");
-            return t.getName();
+        	throw new Error("ERROR: Missing annotation c_type for type " + t.getName() + ", using " + t.getName() + " as the C type.");
         }
     }
 
@@ -742,6 +672,10 @@ public abstract class CCompilerContext extends Context {
             PrimitiveType pt = (PrimitiveType) t;
             return pt.getByteSize();
         } else if (t instanceof Enumeration) {
+        	final Enumeration e = (Enumeration) t;
+        	if (e.getTypeRef() != null && e.getTypeRef().getType() != null) {
+        		return getCByteSize(e.getTypeRef().getType(), pointerSize);
+        	}
             if (AnnotatedElementHelper.hasAnnotation(t, "c_byte_size"))
                 return Integer.parseInt(AnnotatedElementHelper.annotationOrElse(t, "c_byte_size", "0"));
             else
