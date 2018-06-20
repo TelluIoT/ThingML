@@ -174,7 +174,18 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			} else {//right type of expression, let's check the type
 				val et = TypeChecker.computeTypeOf(e)
 				val container = ai.eContainer();
-				val typeref = container.eGet(ThingMLPackage.eINSTANCE.getVariable_TypeRef()) as TypeRef;
+				var TypeRef typeref = null
+				if (container instanceof Variable) {
+					val v = container as Variable
+					typeref = v.typeRef					
+				}
+				else if (container instanceof PropertyAssign) {
+					val pa = container as PropertyAssign
+					typeref = pa.property.typeRef
+				} else if (container instanceof ConfigPropertyAssign) {
+					val pa = container as ConfigPropertyAssign
+					typeref = pa.property.typeRef					
+				}
 				val t = TyperHelper.getBroadType(typeref.getType());
 				if(!TyperHelper.isA(et, t)) {
 					val msg = "Wrong type. Expected " + t.name + ". Found " + et.name

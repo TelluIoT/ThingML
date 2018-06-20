@@ -22,6 +22,9 @@ import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
 import org.thingml.xtext.thingML.ForAction
+import org.thingml.xtext.thingML.ArrayInit
+import org.thingml.xtext.thingML.PropertyReference
+import org.thingml.xtext.thingML.Literal
 
 class VariableUsage extends ThingMLValidatorCheck {
 	
@@ -91,19 +94,6 @@ class VariableUsage extends ThingMLValidatorCheck {
 		}
 	}
 	
-	@Check(FAST)
-	def checkReadonlyVar(LocalVariable v) {
-		if (!v.readonly)
-			return;
-		if (v.init === null) {
-			val msg = "Readonly local variable " + v.name + " must be initialized on declaration"
-			val parent = v.eContainer.eGet(v.eContainingFeature)
-			if (parent instanceof EList)
-				error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "readonly-not-init")
-			else
-				error(msg, v.eContainer, v.eContainingFeature, "readonly-not-init")
-		}
-	}
 	
 	@Check(FAST)
 	def checkVariableAssignment(VariableAssignment va) {
@@ -130,15 +120,68 @@ class VariableUsage extends ThingMLValidatorCheck {
 	}
 
 	@Check(FAST)
-	def checkLocalVariable(LocalVariable lv) {
-		if (lv.init !== null)
-			checkType(lv, lv.init, lv, ThingMLPackage.eINSTANCE.localVariable_Init)
+	def checkLocalVariable(LocalVariable v) {
+		if (v.readonly && v.init === null) {
+			val msg = "Readonly local variable " + v.name + " must be initialized on declaration"
+			val parent = v.eContainer.eGet(v.eContainingFeature)
+			if (parent instanceof EList)
+				error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "readonly-not-init")
+			else
+				error(msg, v.eContainer, v.eContainingFeature, "readonly-not-init")
+		}
+		if (v.init !== null)
+			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.localVariable_Init)
+		if (v.typeRef.cardinality !== null) {
+			if (v.init !== null) {
+				val msg = "Arrays can only be assigned from an array initializers {...} or from another array."
+				val i = v.init
+				if (i instanceof ArrayInit) return;
+				if (i instanceof Literal)
+					error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")
+				if (i instanceof PropertyReference) {
+					val pr = i as PropertyReference 
+					if (pr.property.typeRef.cardinality === null) {						
+						error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")
+					}
+				}
+			}	
+		}		
 	}
 
 	@Check(FAST)
-	def checkProperty(Property p) {
-		if (p.init !== null)
-			checkType(p, p.init, p, ThingMLPackage.eINSTANCE.property_Init)				
+	def checkProperty(Property v) {
+		val parent = v.eContainer.eGet(v.eContainingFeature)
+		if (v.readonly && v.init === null) {
+			val msg = "Readonly property " + v.name + " must be initialized on declaration"			
+			if (parent instanceof EList)
+				error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "readonly-not-init")
+			else
+				error(msg, v.eContainer, v.eContainingFeature, "readonly-not-init")
+		}
+		if (v.init !== null)
+			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.localVariable_Init)
+		if (v.typeRef.cardinality !== null) {
+			if (v.init !== null) {
+				val msg = "Arrays can only be assigned from an array initializers {...} or from another array."
+				val i = v.init
+				if (i instanceof ArrayInit) return;
+				if (i instanceof Literal) {
+					if (parent instanceof EList)
+						error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "array-wrong-assign")
+					else
+						error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")
+				}
+				if (i instanceof PropertyReference) {
+					val pr = i as PropertyReference 
+					if (pr.property.typeRef.cardinality === null) {
+						if (parent instanceof EList)
+							error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "array-wrong-assign")
+						else
+							error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")						
+					}
+				}
+			}	
+		}				
 	}
 	
 	@Check(FAST)

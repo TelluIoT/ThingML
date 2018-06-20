@@ -73,7 +73,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
 
     private void addDependencies() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
-        if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "websockets")) {
+        if (!AnnotatedElementHelper.isDefined(cfg, "add_c_libraries", "websockets")) {
             ThingMLFactory factory;
             factory = ThingMLFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();

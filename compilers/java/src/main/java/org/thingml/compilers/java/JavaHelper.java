@@ -26,6 +26,7 @@ import org.thingml.compilers.Context;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
@@ -59,11 +60,17 @@ public class JavaHelper {
             return "null";
     }
 
-    public static String getJavaType(final Type type, final boolean isArray, final Context ctx) {
+    public static String getJavaType(Type type, boolean isArray, Context ctx) {
         StringBuilder builder = new StringBuilder();
         if (type == null) {//void
             builder.append("void");
         } else {
+        	if (type instanceof Enumeration) {
+        		final Enumeration e = (Enumeration) type;
+        		if (e.getTypeRef() != null && e.getTypeRef().getType() != null) {
+        			type = e.getTypeRef().getType();
+        		}
+        	}
             if (AnnotatedElementHelper.hasAnnotation(type, "java_type")) {
                 builder.append(AnnotatedElementHelper.annotation(type, "java_type").toArray()[0]);
             } else {

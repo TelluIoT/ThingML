@@ -3,7 +3,9 @@ import "../../thingml.thingml"
 thing TestSession2 includes Test
 @test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
 {
-	property ID : Char = 'M'
+	property ID : Char
+
+	property counter : Integer = 0
 
 	message m(id : Char)
 	message n(id : Char)
@@ -15,13 +17,15 @@ thing TestSession2 includes Test
 	}
 
 	statechart Chart init INIT {
-		internal event Test?Done
-		action TestDone()
+		/*internal event Test?Done
+		action TestDone()*/
 		
 		internal
 		event e : p?n
 		action do
+			counter = counter + 1
 			TestOut(e.id)
+			if (counter == 3) TestDone()
 		end
 
     	state INIT {
@@ -35,18 +39,11 @@ thing TestSession2 includes Test
     	
     	state WAIT {
     		transition -> INIT
-    		event r : p?ready
-    		guard r.id == ID
-    		action do
-    			ID = 'M'
-    			p!m(ID)    			
-    		end
+    		action p!m(ID)    			
     	}
 
 		session s <5> init S1 {
-			state S1 {		
-				on entry p!ready(ID)
-						
+			state S1 {								
 				transition -> S2
 				event e : p?m
 				guard e.id == ID

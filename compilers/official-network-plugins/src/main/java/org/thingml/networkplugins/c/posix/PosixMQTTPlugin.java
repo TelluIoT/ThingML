@@ -77,7 +77,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
     }
 
     private void addDependencies() {
-        if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "mosquitto")) {
+        if (!AnnotatedElementHelper.isDefined(cfg, "add_c_libraries", "mosquitto")) {
             ThingMLFactory factory;
             factory = ThingMLFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
