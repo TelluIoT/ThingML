@@ -9,8 +9,6 @@ import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.StateContainer
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.ThingMLValidatorCheck
-import org.thingml.xtext.thingML.InternalTransition
-import org.thingml.xtext.thingML.Transition
 
 class StateUsage extends ThingMLValidatorCheck {
 

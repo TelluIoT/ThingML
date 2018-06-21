@@ -2,29 +2,26 @@ package org.thingml.xtext.validation.checks
 
 import java.util.Set
 import org.eclipse.xtext.validation.Check
-import org.thingml.xtext.thingML.Configuration
-import org.thingml.xtext.thingML.Property
-import org.thingml.xtext.thingML.Thing
-import org.thingml.xtext.thingML.ThingMLPackage
-import org.thingml.xtext.validation.ThingMLValidatorCheck
-import org.thingml.xtext.thingML.Enumeration
 import org.thingml.xtext.constraints.ThingMLHelpers
-import org.thingml.xtext.thingML.ThingMLModel
-import org.thingml.xtext.validation.TypeChecker
-import org.thingml.xtext.helpers.TyperHelper
-import org.thingml.xtext.thingML.Variable
-import org.thingml.xtext.thingML.PropertyReference
-import org.thingml.xtext.thingML.LocalVariable
 import org.thingml.xtext.constraints.Types
+import org.thingml.xtext.helpers.TyperHelper
 import org.thingml.xtext.thingML.ArrayInit
-import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage.Literals
-import org.thingml.xtext.thingML.Literal
-import org.thingml.xtext.thingML.UnaryMinus
-import org.thingml.xtext.thingML.Type
-import org.eclipse.emf.ecore.EObject
-import org.thingml.xtext.thingML.TypeRef
-import org.thingml.xtext.thingML.PropertyAssign
 import org.thingml.xtext.thingML.ConfigPropertyAssign
+import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.Enumeration
+import org.thingml.xtext.thingML.Literal
+import org.thingml.xtext.thingML.LocalVariable
+import org.thingml.xtext.thingML.Property
+import org.thingml.xtext.thingML.PropertyAssign
+import org.thingml.xtext.thingML.PropertyReference
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.ThingMLModel
+import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.thingML.TypeRef
+import org.thingml.xtext.thingML.UnaryMinus
+import org.thingml.xtext.thingML.Variable
+import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.validation.TypeChecker
 
 class PropertyInitialization extends ThingMLValidatorCheck {
 	
@@ -93,7 +90,7 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 	@Check(FAST)
 	def checkPropertyInitialization(Configuration cfg) {
 		cfg.instances.forEach[inst, i|
-			val props = getUninitializedProperties(inst.type)
+			val props = getUninitializedProperties(inst.type).filter[p | p.readonly].toSet;
 			
 			// Remove properties initialised by set statements
 			cfg.propassigns.forEach[propAssign|
@@ -102,7 +99,7 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			
 			if (!props.empty) {
 				val msg = props.join("Properties (",", ",") are not initialized")[it.name]
-				warning(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "properties-not-initialized")
+				error(msg, cfg, ThingMLPackage.eINSTANCE.configuration_Instances, i, "properties-not-initialized")
 			}
 		]
 	}

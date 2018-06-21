@@ -1,0 +1,14 @@
+datatype DT<1>;
+
+thing TestCheckReadonly
+{    
+	readonly property p : DT
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}
+
+configuration cfg {
+	instance i : TestCheckReadonly //should fail as p is not initialized
+}

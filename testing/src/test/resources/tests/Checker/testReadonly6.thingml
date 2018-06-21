@@ -1,0 +1,12 @@
+datatype DT<1>;
+
+thing TestCheckReadonly
+@checker_should_fail "false" //OK, p is initialized in a set statement
+{    
+	readonly property p : DT
+	set p = 0
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}

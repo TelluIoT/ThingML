@@ -43,7 +43,7 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 
-public abstract class CThingActionCompiler extends CommonThingActionCompiler {
+public class CThingActionCompiler extends CommonThingActionCompiler {
     
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {

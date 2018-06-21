@@ -124,7 +124,7 @@ datatype Double<8>
 	@c_byte_size "8"
 	@java_type "double"
 	@java_primitive "true"
-	@go_type "float64";
+	@go_type "float32";
 
 
 object String

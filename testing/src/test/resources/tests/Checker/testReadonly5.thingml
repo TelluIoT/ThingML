@@ -1,0 +1,16 @@
+datatype DT<1>;
+
+thing TestCheckReadonly
+@checker_should_fail "false" //OK, p is initialized in cfg
+{    
+	readonly property p : DT
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}
+
+configuration cfg {
+	instance i : TestCheckReadonly
+	set i.p = 0
+}
