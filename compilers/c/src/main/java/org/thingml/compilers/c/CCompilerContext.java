@@ -78,14 +78,19 @@ public abstract class CCompilerContext extends Context {
         NetworkLibraryGenerators = new HashSet<NetworkLibraryGenerator>();
     }
     
-    public String getVariableName(Variable var) {
-    	
+    public String getVariableName(Variable var) {    	
     	String propertyName = var.getName();
-
         if (var instanceof Property) {
             propertyName = this.getInstanceVarName() + "->" + ThingMLElementHelper.qname(var, "_") + "_var";
-        }
-        
+        }        
+        return propertyName;
+    }
+    
+    public String getVariableName(String instance, Variable var) {    	
+    	String propertyName = var.getName();
+        if (var instanceof Property) {
+            propertyName = instance + "->" + ThingMLElementHelper.qname(var, "_") + "_var";
+        }        
         return propertyName;
     }
     

@@ -911,16 +911,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("    //Copy of properties\n");
             for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
                 if (!p.getTypeRef().isIsArray()) {//Not an array
-                    builder.append("new_session->" + ctx.getVariableName(p) + " = ");
-                    builder.append("_instance->" + ctx.getVariableName(p));
+                    builder.append(ctx.getVariableName("new_session", p) + " = ");
+                    builder.append(ctx.getVariableName(p));
                     builder.append(";\n");
                 } else {
-                    builder.append("new_session->" + ctx.getVariableName(p) + "_size = ");
-                    builder.append("_instance->" + ctx.getVariableName(p) + "_size");
+                    builder.append(ctx.getVariableName("new_session", p) + "_size = ");
+                    builder.append(ctx.getVariableName(p) + "_size");
                     builder.append(";\n");
-                    builder.append("memcpy(&(new_session->" + ctx.getVariableName(p) + "[0]), "
-                            + "&(_instance->" + ctx.getVariableName(p) + "[0]), _instance->"
-                            + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getTypeRef().getType()) + "));\n");
+                    builder.append("memcpy(&(" + ctx.getVariableName("new_session", p) + "[0]), "
+                            + "&(" + ctx.getVariableName(p) + "[0]), " + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getTypeRef().getType()) + "));\n");
                 }
             }
             builder.append("    //Copy of port id\n");
