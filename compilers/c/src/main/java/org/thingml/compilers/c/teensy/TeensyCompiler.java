@@ -19,6 +19,7 @@ package org.thingml.compilers.c.teensy;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CThingActionCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
@@ -30,7 +31,7 @@ import org.thingml.xtext.thingML.Thing;
 public class TeensyCompiler extends OpaqueThingMLCompiler{
 
 	public TeensyCompiler() {
-		super(new CThingActionCompilerTeensy(), new CThingApiCompilerTeensy(), new CCfgMainGenerator(),
+		super(new CThingActionCompiler(), new CThingApiCompilerTeensy(), new CCfgMainGenerator(),
                 new TeensyCCfgBuildCompiler(), new CThingImplCompiler());
 	}
 

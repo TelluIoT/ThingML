@@ -151,13 +151,6 @@ class VariableUsage extends ThingMLValidatorCheck {
 	@Check(FAST)
 	def checkProperty(Property v) {
 		val parent = v.eContainer.eGet(v.eContainingFeature)
-		if (v.readonly && v.init === null) {
-			val msg = "Readonly property " + v.name + " must be initialized on declaration"			
-			if (parent instanceof EList)
-				error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "readonly-not-init")
-			else
-				error(msg, v.eContainer, v.eContainingFeature, "readonly-not-init")
-		}
 		if (v.init !== null)
 			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.localVariable_Init)
 		if (v.typeRef.cardinality !== null) {

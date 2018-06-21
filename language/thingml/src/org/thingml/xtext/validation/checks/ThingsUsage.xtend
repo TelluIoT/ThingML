@@ -84,40 +84,5 @@ class ThingsUsage extends ThingMLValidatorCheck {
 				" is duplicated (possibly from an included thing).";
 			error(msg, thing, ThingMLPackage.eINSTANCE.thing_Functions, thing.functions.indexOf(f), "duplicate-function")
 		}
-	}
-
-	/*@Check(NORMAL)
-	def checkIncludedPSMinPIM(Thing t) {
-		val uri = t.eResource.URI.toString
-		if (uri.contains("_")) return;
-		t.includes.filter[i | 
-			ThingMLHelpers.getAllExpressions(i, ExternExpression).size > 0
-			|| ActionHelper.getAllActions(i, ExternStatement).size > 0
-		].forEach[i |
-			val msg = "This PIM thing includes PSM thing " + i.name + " making it PSM." 
-			warning(msg, t, ThingMLPackage.eINSTANCE.thing_Includes, t.includes.indexOf(i), "include-psm")
-		]
-	}*/
-
-	/* @Check(NORMAL)
-	def checkPSM(ExternStatement e) {
-		checkPSM(ThingMLHelpers.findContainingThing(e), e)	
-	}
-	
-	@Check(NORMAL)
-	def checkPSM(ExternExpression e) {
-		checkPSM(ThingMLHelpers.findContainingThing(e), e)	
-	}
-	
-	def checkPSM(Thing t, EObject e) {
-		val uri = t.eResource.URI.toString
-		if (uri.contains("_")) return;
-		val parent = e.eContainer.eGet(e.eContainingFeature)
-		val msg = "This expression makes thing " + t.name + " PSM. Consider moving the thing in a _platform folder."
-		if (parent instanceof EList)
-			info(msg, e.eContainer, e.eContainingFeature, (parent as EList).indexOf(e), "psm-in-basedir")
-		else
-			info(msg, e.eContainer, e.eContainingFeature, "psm-in-basedir")
-	}*/
-	
+	}	
 }

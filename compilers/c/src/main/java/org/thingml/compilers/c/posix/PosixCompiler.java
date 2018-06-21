@@ -22,6 +22,8 @@ import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CExternalThingEnabledApiCompiler;
 import org.thingml.compilers.c.CExternalThingEnabledImplCompiler;
+import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -35,9 +37,9 @@ import org.thingml.xtext.thingML.Thing;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new CThingActionCompilerPosix(), new CExternalThingEnabledApiCompiler(new PosixThingApiCompiler()),
+        super(new CThingActionCompilerPosix(), new CExternalThingEnabledApiCompiler(new CThingApiCompiler()),
                 new CCfgMainGenerator(), new PosixCCfgBuildCompiler(),
-                new CExternalThingEnabledImplCompiler(new PosixThingImplCompiler()));
+                new CExternalThingEnabledImplCompiler(new CThingImplCompiler()));
     }
 
     @Override
