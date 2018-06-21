@@ -63,14 +63,13 @@ If you are going to compile Go code from ThingML, please:
 
 The easiest way to get started with ThingML is to use the ThingML plugins in the Eclipse IDE.
 
-If you have docker, you can use the build container with Eclipse and ThingML at the [thingmleditor repository](https://github.com/madkira/thingmleditor) or the [thingmleditor docker hub](https://hub.docker.com/r/madkira/thingmleditor/)
-
-Otherwise:
 1. [Eclipse IDE for Java and DSL Developers](https://eclipse.org/downloads/eclipse-packages/)
 2. Install and Launch Eclipse
 3. Install the ThingML plugins: `Help -> Install New Software... -> Add...` and input `ThingML` as name and `http://thingml.org/dist/update2/` as location, and then `OK`. Select ThingML and continue with the install procedure &#x23F3;
 
 You are now ready to use ThingML. &#x270C;
+
+*Docker based alternative:* If you have docker, you can use the build container with Eclipse and ThingML at the [thingmleditor repository](https://github.com/madkira/thingmleditor) or the [thingmleditor docker hub](https://hub.docker.com/r/madkira/thingmleditor/)
 
 ### &#x1F539; Compiling ThingML code
 
