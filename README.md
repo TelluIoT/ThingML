@@ -10,74 +10,55 @@ The ThingML language is supported by a set of tools, which include editors, tran
 
 > ThingML is distributed under the *[Apache 2.0 licence](https://www.apache.org/licenses/LICENSE-2.0)*, and has been developed by @ffleurey and @brice-morin of the Networked Systems and Services department of SINTEF in Oslo, Norway, together with a vibrant [open-source community](https://github.com/TelluIoT/ThingML/graphs/contributors). ThingML is now owned by [Tellu](http://www.tellucloud.com/), but remains open-source.
 
-> **Issues, bug reports and feature requests should be submitted to the [issue tracker on GitHub](https://github.com/TelluIoT/ThingML/issues)**
+**Issues, bug reports and feature requests should be submitted to the [issue tracker on GitHub](https://github.com/TelluIoT/ThingML/issues)**
 
-## &#x1F537; Prerequisites &#x2757;
 
-ThingML can compile code for various platforms and languages. Please make sure you follow the required steps
+## Installing ThingML
 
-### &#x1F539; Java
-If you are going to compile Java code from ThingML, please:
+*This section should contain up to date information about getting the latest version of ThingML and getting started with it.*
 
-- Make sure you have a proper [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (a JRE is not sufficient)
-- Install [Maven](http://maven.apache.org/)
+### Versions and Distribution
 
-### &#x1F539; Javascript
-If you are going to compile Javascript code from ThingML, for:
+The current **recommended version of ThingML is version 2.X.X**. Some tagged versions are available on the [Github release page](https://github.com/TelluIoT/ThingML/releases) but the latest version is distributed as:
 
-- NodeJS: Install [Node.JS](https://nodejs.org/en/)
-- Browser: Make sure you have a decent web browser (Chrome or Firefox should work fine, and probably some others)
+* A standalone JAR which can be used from the command line: [http://thingml.org/dist/ThingML2CLI.jar](http://thingml.org/dist/ThingML2CLI.jar)
+* An eclipse update site to install the ThingML IDE in eclipse: [http://thingml.org/dist/update2](http://thingml.org/dist/update2)
 
-### &#x1F539; UML
-If you are going to compile UML Diagrams from ThingML, please:
+> **Version 1.X.X** is not maintained and should not be used (maintenance was stopped in Q3 2017). Version 2.X.X introduces a complete rewrite of the parser and editors based on XText. A few syntactical changes make the ThingML programs written for version 1 not compatible with version 2. There are also a few constructs which were evaluated in version 1 and were not re-implemented in version 2 (e.g. groups, streams, etc).
 
-- Install [Graphviz](http://www.graphviz.org/Download.php)
+### ThingML Command Line Compiler
 
-### &#x1F539; Arduino
-If you are going to compile Arduino code from ThingML, please:
+The ThingML command line compiler is distributed as a standalone JAR. It **requires Java 8 or newer**. The latest version can be found at [http://thingml.org/dist/ThingML2CLI.jar](http://thingml.org/dist/ThingML2CLI.jar)
 
-- Install [Arduino IDE](https://www.arduino.cc/en/Main/Software)
+The command line tool contains all the code generators and plugins which are part of this repository.
 
-### &#x1F539; Teensy
-If you are going to compile Teensy code from ThingML, please:
+Running `java -jar ThingML2CLI.jar` will give a list of options.
 
-- Install [Teensyduino IDE](https://www.pjrc.com/teensy/td_download.html)
+### ThingML Eclipse-Based IDE
 
-or
-- Install [cross compiled arm toochain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
-- Install [teensy command line loader](https://www.pjrc.com/teensy/loader_cli.html)
+1. Download and install "Eclipse IDE for Java and DSL Developers" from [the eclipse website](https://eclipse.org/downloads/eclipse-packages/)
+2. Launch Eclipse
+3. Install the ThingML plugins: `Help -> Install New Software... -> Add...` and input `ThingML` as name and `http://thingml.org/dist/update2` as location, and then `OK`. 
+4. Select ThingML and continue with the install procedure
 
-### &#x1F539; C
-If you are going to compile C code from ThingML, please:
 
-- Use a C-friendly OS (such as Linux) with a decent build toolchain (`make`, `gcc`), potentially in a Virtual Box
+> **Installing alternative versions:** The update site `http://thingml.org/dist/update2` contains the latest version. To install another version, download the zip containing the update site and point the eclipse installer to the zip file. To install a version of ThingML you have built locally, you can point the Eclipse installer to directory `ThingML/language/thingml.repository/target/repository`. It may be necessary to uninstall the ThingML plugins if you want to downgrade.
 
-### &#x1F539; Go
-If you are going to compile Go code from ThingML, please:
-- Install the appropriate [Go distribution](https://golang.org/doc/install)
-- Install the [Go state-machine library used by ThingML](https://github.com/jakhog/gosm) `go get github.com/jakhog/gosm`
 
-## &#x1F537; Getting Started
 
-### &#x1F539; Installation
+### Docker-Based Distribution
 
-The easiest way to get started with ThingML is to use the ThingML plugins in the Eclipse IDE.
+> **Warning:** Currently the image on Dockerub is not automatically updated. Make sure you build the images before using.
 
-1. [Eclipse IDE for Java and DSL Developers](https://eclipse.org/downloads/eclipse-packages/)
-2. Install and Launch Eclipse
-3. Install the ThingML plugins: `Help -> Install New Software... -> Add...` and input `ThingML` as name and `http://thingml.org/dist/update2/` as location, and then `OK`. Select ThingML and continue with the install procedure &#x23F3;
+If you have docker, you can use the build container with Eclipse and ThingML at the [thingmleditor repository](https://github.com/madkira/thingmleditor) or the [thingmleditor docker hub](https://hub.docker.com/r/madkira/thingmleditor/)
 
-You are now ready to use ThingML. &#x270C;
 
-*Docker based alternative:* If you have docker, you can use the build container with Eclipse and ThingML at the [thingmleditor repository](https://github.com/madkira/thingmleditor) or the [thingmleditor docker hub](https://hub.docker.com/r/madkira/thingmleditor/)
+## Finding some examples
 
-### &#x1F539; Compiling ThingML code
+TODO
 
-Once you have created (or imported) ThingML files in your workspace, simply right click on a ThingML file in order to compile it. A `HEADS / ThingML` should be present in the menu and you can then select which compiler to use: Java, JavaScript, C, etc.
+## Compiling to the different platforms
 
-> The ThingML file you want to compile should contain a `configuration`
-
-> The generated code will be located in a `thingml-gen` folder in your current project
 
 #### How to compile and run generated Java code
 
@@ -132,6 +113,72 @@ Nothing special. Open the generated `index.html` file in your System Browser (id
 - To compile to an executable file: `go build *.go`
 
 > For more information about Go package structures, have a look at the [Go documentation](https://golang.org/doc/code.html)
+
+
+## &#x1F537; Prerequisites &#x2757;
+
+ThingML can compile code for various platforms and languages. Please make sure you follow the required steps
+
+### &#x1F539; Java
+If you are going to compile Java code from ThingML, please:
+
+- Make sure you have a proper [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (a JRE is not sufficient)
+- Install [Maven](http://maven.apache.org/)
+
+### &#x1F539; Javascript
+If you are going to compile Javascript code from ThingML, for:
+
+- NodeJS: Install [Node.JS](https://nodejs.org/en/)
+- Browser: Make sure you have a decent web browser (Chrome or Firefox should work fine, and probably some others)
+
+### &#x1F539; UML
+If you are going to compile UML Diagrams from ThingML, please:
+
+- Install [Graphviz](http://www.graphviz.org/Download.php)
+
+### &#x1F539; Arduino
+If you are going to compile Arduino code from ThingML, please:
+
+- Install [Arduino IDE](https://www.arduino.cc/en/Main/Software)
+
+### &#x1F539; Teensy
+If you are going to compile Teensy code from ThingML, please:
+
+- Install [Teensyduino IDE](https://www.pjrc.com/teensy/td_download.html)
+
+or
+- Install [cross compiled arm toochain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
+- Install [teensy command line loader](https://www.pjrc.com/teensy/loader_cli.html)
+
+### &#x1F539; C
+If you are going to compile C code from ThingML, please:
+
+- Use a C-friendly OS (such as Linux) with a decent build toolchain (`make`, `gcc`), potentially in a Virtual Box
+
+### &#x1F539; Go
+If you are going to compile Go code from ThingML, please:
+- Install the appropriate [Go distribution](https://golang.org/doc/install)
+- Install the [Go state-machine library used by ThingML](https://github.com/jakhog/gosm) `go get github.com/jakhog/gosm`
+
+## &#x1F537; Getting Started
+
+### &#x1F539; Installation
+
+The easiest way to get started with ThingML is to use the ThingML plugins in the Eclipse IDE.
+
+
+
+*Docker based alternative:* If you have docker, you can use the build container with Eclipse and ThingML at the [thingmleditor repository](https://github.com/madkira/thingmleditor) or the [thingmleditor docker hub](https://hub.docker.com/r/madkira/thingmleditor/)
+
+### &#x1F539; Compiling ThingML code
+
+Once you have created (or imported) ThingML files in your workspace, simply right click on a ThingML file in order to compile it. A `HEADS / ThingML` should be present in the menu and you can then select which compiler to use: Java, JavaScript, C, etc.
+
+> The ThingML file you want to compile should contain a `configuration`
+
+> The generated code will be located in a `thingml-gen` folder in your current project
+
+
 
 ## &#x1F537; Compile ThingML from the sources
 
