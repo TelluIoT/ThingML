@@ -64,44 +64,9 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             if (AnnotatedElementHelper.hasAnnotation(i.getType(), "mock")) {
                 builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + "Mock) new " + ctx.firstToUpper(i.getType().getName()) + "Mock(\"" + ctx.getInstanceName(i) + "\").buildBehavior(null, null);\n");
             } else {
-
-
-                for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-                    builder.append("final " + JavaHelper.getJavaType(a.getTypeRef().getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getTypeRef().getType(), false, ctx) + "[");
-                    ctx.generateFixedAtInitValue(cfg, i, a.getTypeRef().getCardinality(), builder);
-                    builder.append("];\n");
-                }
-
-                for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
-                    for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
-                        String result = "";
-                        StringBuilder tempBuilder = new StringBuilder();
-                        result += i.getName() + "_" + entry.getKey().getName() + "_array [";
-                        ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, ctx);
-                        result += tempBuilder.toString();
-                        result += "] = ";
-                        tempBuilder = new StringBuilder();
-                        ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, ctx);
-                        result += tempBuilder.toString() + ";\n";
-                        builder.append(result);
-                    }
-                }
-
-                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "()");
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-                	if (p.getKey().getTypeRef().getCardinality() == null && p.getValue() != null) {
-                		builder.append(".init" + ctx.firstToUpper(ctx.getVariableName(p.getKey())) + "(");
-                		builder.append(generateInitialValue(cfg, i, p.getKey(), p.getValue(), ctx));
-                		builder.append(")");
-                	}
-                }
-                for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-                	builder.append(".init" +  ctx.firstToUpper(ctx.getVariableName(a)) + "(");
-                	builder.append(i.getName() + "_" + a.getName() + "_array");
-                	builder.append(")");
-                }
-                builder.append(".buildBehavior(null, null);\n");
+                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "();\n");  
+                builder.append(ctx.getInstanceName(i) + ".buildBehavior(null, null);\n");
+                builder.append(ctx.getInstanceName(i) + ".init();\n");
             }
         }
 
@@ -125,6 +90,44 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceName(c.getSrv()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
             }
         }
+        
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+        	ctx.currentInstance = i;
+            for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+                builder.append("final " + JavaHelper.getJavaType(a.getTypeRef().getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getTypeRef().getType(), false, ctx) + "[");
+                ctx.generateFixedAtInitValue(cfg, i, a.getTypeRef().getCardinality(), builder);
+                builder.append("];\n");
+            }
+
+            for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
+                for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
+                    String result = "";
+                    StringBuilder tempBuilder = new StringBuilder();
+                    result += i.getName() + "_" + entry.getKey().getName() + "_array [";
+                    ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, ctx);
+                    result += tempBuilder.toString();
+                    result += "] = ";
+                    tempBuilder = new StringBuilder();
+                    ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, ctx);
+                    result += tempBuilder.toString() + ";\n";
+                    builder.append(result);
+                }
+            }
+        	
+        	for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
+        		if (p.getKey().getTypeRef().getCardinality() == null && p.getValue() != null) {
+        			builder.append(ctx.getInstanceName(i) + ".init" + ctx.firstToUpper(ctx.getVariableName(p.getKey())) + "(");
+        			builder.append(generateInitialValue(cfg, i, p.getKey(), p.getValue(), ctx));
+        			builder.append(");\n");
+        		}
+        	}
+        	for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+        		builder.append(ctx.getInstanceName(i) + ".init" +  ctx.firstToUpper(ctx.getVariableName(a)) + "(");
+        		builder.append(i.getName() + "_" + a.getName() + "_array");
+        		builder.append(");\n");
+        	}
+        }
+        ctx.currentInstance = null;
     }
 
     @Override
@@ -198,7 +201,6 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceName(i) + ".instanceName = \"" + i.getName() + "\";\n");
                 builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
             }
-            builder.append(ctx.getInstanceName(i) + ".init();\n");
             if (debugInst || debug) {
                 //builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
                 builder.append(ctx.getInstanceName(i) + ".printDebug(\"" + ctx.traceInit(i.getType()) + "\");\n");

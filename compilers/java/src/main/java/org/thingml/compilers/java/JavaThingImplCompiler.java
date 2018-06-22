@@ -162,12 +162,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
 		DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
-		if (AnnotatedElementHelper.hasAnnotation(f, "override")
-				|| AnnotatedElementHelper.hasAnnotation(f, "implements")) {
-			builder.append("public ");
-		} else {
-			builder.append("private ");
-		}
 		final String returnType = JavaHelper.getJavaType(((f.getTypeRef() != null) ? f.getTypeRef().getType() : null),
 				((f.getTypeRef() != null) ? f.getTypeRef().isIsArray() : false), ctx);
 		builder.append(returnType + " " + f.getName() + "(");
@@ -325,45 +319,27 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		}
 
 		builder.append("//Attributes\n");
-		/*for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			builder.append("private ");
-			//if (p.isReadonly()) {
-			//	builder.append("final ");
-			//}
-			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
-					+ ctx.getVariableName(p) + ";\n");
-		}*/
-		
-		
 		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
 			builder.append("private ");
 			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));						
-			Expression e = ThingHelper.initExpression(thing, p);
-			if (e != null) {
-				builder.append(" = (");
-				builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx));
-				builder.append(") ");
-				ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-			}			
+			Expression e = ThingHelper.initExpression(thing, p);		
 			builder.append(";\n");
 		}
 		
-		
-
 		if (debugProfile.isActive()) {
-		for (Property p : ThingHelper.allPropertiesInDepth(
-				thing)/* debugProfile.getDebugProperties() */) {// FIXME: we
-																// should only
-																// generate
-																// overhead for
-																// the
-																// properties we
-																// actually want
-																// to debug!
-			builder.append("private ");
-			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " debug_"
-					+ ctx.getVariableName(p) + ";\n");
-		}
+			for (Property p : ThingHelper.allPropertiesInDepth(
+					thing)/* debugProfile.getDebugProperties() */) {// FIXME: we
+				// should only
+				// generate
+				// overhead for
+				// the
+				// properties we
+				// actually want
+				// to debug!
+				builder.append("private ");
+				builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " debug_"
+						+ ctx.getVariableName(p) + ";\n");
+			}
 		}
 
 		builder.append("//Ports\n");

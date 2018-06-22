@@ -384,6 +384,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
+		if (ctx.currentInstance != null)
+			builder.append(ctx.getInstanceName(ctx.currentInstance) + ".");
 		builder.append(expression.getFunction().getName() + "(");
 
 		int i = 0;
