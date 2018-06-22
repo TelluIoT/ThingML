@@ -1,0 +1,94 @@
+import "../../thingml.thingml"
+
+thing fragment PortMsgs 
+{
+	message A();
+	message B();
+	message C();
+	
+	optional required port MsgOut {
+		sends A, B, C
+	}
+	
+	provided port MsgIn {
+		receives A, B, C
+	}
+}
+
+thing A includes PortMsgs
+{
+	statechart A init I {
+		on entry MsgOut!A()
+		
+		state I {}
+	}
+}
+
+thing B includes PortMsgs
+{
+	statechart B init I {
+		state I {
+			on entry MsgOut!B()
+		}
+	}
+}
+
+thing C includes PortMsgs
+{
+	statechart C init I {
+		state I {
+			on entry MsgOut!C()
+			
+			internal event MsgIn?B
+			action MsgOut!B()
+		}
+	}
+}
+
+thing TestInitMessages includes Test, PortMsgs 
+@test " # ABC|ACB|BAC|BCA|CAB|CBA"
+{
+	statechart TestInit init I {
+		property HasA : Boolean = false
+		property HasB : Boolean = false
+		property HasC : Boolean = false
+	
+		state I {
+			internal event MsgIn?A
+			action do
+				TestOut('A')
+				HasA = true
+			end
+			
+			internal event MsgIn?B
+			action do
+				TestOut('B')
+				HasB = true
+			end
+			
+			internal event MsgIn?C
+			action do
+				TestOut('C')
+				HasC = true
+			end
+			
+			transition -> Done
+			guard (HasA and HasB and HasC)
+		}
+		
+		state Done {
+			on entry TestDone()
+		}
+	}
+}
+
+configuration conf
+{
+	instance a : A
+	instance b : B
+	instance c : C
+	instance test : TestInitMessages
+	connector a.MsgOut => test.MsgIn
+	connector c.MsgOut => test.MsgIn
+	connector b.MsgOut => c.MsgIn
+}
