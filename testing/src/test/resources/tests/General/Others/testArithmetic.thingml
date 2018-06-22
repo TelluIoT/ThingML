@@ -3,11 +3,9 @@ import "../../thingml.thingml"
 thing TestArithmetic includes Test 
 @test "x # x"
 {
-  
+  			property x : Integer = 2
     statechart TestPropertyPing init INIT {
     	state INIT {
-			property x : Integer = 2
-
     		transition -> STOP
 			event m : Test?In
 			guard m.c == 'x' and (3 + x) * ((6 - 4) * 2) == 20

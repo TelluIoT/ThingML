@@ -108,8 +108,10 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		}
 		
 		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {
-			Section property = section.section("propertyInit");
-			property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(prop)) + "(" + i.getName() + "_" + prop.getName() + ");");
+			if(prop.eContainer() instanceof Thing) {
+				Section property = section.section("propertyInit");
+				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(prop)) + "(" + i.getName() + "_" + prop.getName() + ");");
+			}
 		}
 	}
 
