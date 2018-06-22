@@ -56,7 +56,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         }
         return tempbuilder.toString();
 	}
-
+	
+	
     public static void generateInstances(Configuration cfg, Context ctx, StringBuilder builder) {
         builder.append("//Things\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
@@ -86,21 +87,21 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
 
-                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + " (" + i.getType().getName() + ")\"");
+                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "()");
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: not optimal, to be improved
-                    for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-                        if (p.getKey().equals(prop) && prop.getTypeRef().getCardinality() == null) {
-                            builder.append(", " + generateInitialValue(cfg, i, p.getKey(), p.getValue(), ctx));                            
-                        }
-                    }
-                    for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-                        if (prop.equals(a)) {
-                            builder.append(", " + i.getName() + "_" + a.getName() + "_array");
-                        }
-                    }
+                for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
+                	if (p.getKey().getTypeRef().getCardinality() == null && p.getValue() != null) {
+                		builder.append(".init" + ctx.firstToUpper(ctx.getVariableName(p.getKey())) + "(");
+                		builder.append(generateInitialValue(cfg, i, p.getKey(), p.getValue(), ctx));
+                		builder.append(")");
+                	}
                 }
-                builder.append(").buildBehavior(null, null);\n");
+                for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+                	builder.append(".init" +  ctx.firstToUpper(ctx.getVariableName(a)) + "(");
+                	builder.append(i.getName() + "_" + a.getName() + "_array");
+                	builder.append(")");
+                }
+                builder.append(".buildBehavior(null, null);\n");
             }
         }
 

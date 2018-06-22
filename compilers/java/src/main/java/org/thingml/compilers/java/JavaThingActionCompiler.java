@@ -199,10 +199,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(StartSession action, StringBuilder builder, Context ctx) {
 		builder.append("final Component " + action.getSession().getName() + " = new "
-				+ ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + "(\""
-				+ action.getSession().getName() + "\"");
+				+ ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + "()");
 		for (Property p : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(action.getSession()))) {
-			builder.append(", ");
+			builder.append(".init" + ctx.firstToUpper(ctx.getVariableName(p)) + "(");
 			if (p.getTypeRef().isIsArray() || p.getTypeRef().getCardinality() != null) {
 				builder.append("Arrays.copyOf("
 						+ ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this."
@@ -213,8 +212,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 				builder.append(ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName())
 						+ ".this." + ctx.getVariableName(p));
 			}
+			builder.append(")");
 		}
-		builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", "
+		builder.append(".buildBehavior(\"" + action.getSession().getName() + "\", "
 				+ ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this);\n");
 		builder.append("final Component root = ("
 				+ ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName())
