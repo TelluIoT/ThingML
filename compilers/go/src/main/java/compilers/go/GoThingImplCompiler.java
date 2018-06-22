@@ -693,170 +693,6 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		}
 		builder.append("");
 		
-		// TODO: Also add clones and session things...
-		
-		
-		
-
-		// ---------------------------------------------------------------------------------------------------------------------------
-		// TODO: Old code is below here
-		/*
-		// Add the initializer function
-		builder.comment(" -- Instance initialization -- ");
-		GoFunction initializer = builder.function("InitializeThing"+thing.getName());
-		initializer.addReturns(null, "*Thing"+thing.getName());
-		GoSection initBody = initializer.body();
-		
-		// Initialize component
-		initBody.comment(" Initialize instance struct ");
-		StructInitializer instInit = initBody.structInitializer("instance", "&Thing"+thing.getName());
-		List<Property> deferredPropertyInits = new ArrayList<Property>();
-		for (Property property : thing.getProperties()) {
-			if (property.getInit() != null && !property.getTypeRef().isIsArray()) {
-				// Check if the initialisation uses other fields, if that is the case it has to be initialised later
-				// FIXME: What about set-statements in super-things? Maybe we should defer some initializations for later?
-				StringBuilder dummy = new StringBuilder();
-				gctx.currentThingContext.instanceUsedInInitialisation = false;
-				gctx.getCompiler().getThingActionCompiler().generate(property.getInit(), dummy, gctx);
-				
-				if (!gctx.currentThingContext.instanceUsedInInitialisation) {
-					StringBuilder initExpression = instInit.addField(property.getName()).stringbuilder("expression");
-					gctx.getCompiler().getThingActionCompiler().generate(property.getInit(), initExpression, gctx);
-				} else {
-					deferredPropertyInits.add(property);
-				}
-			}
-		}
-		// Initialise deferred properties
-		gctx.setCurrentInstanceStatename("instance");
-		for (Property property : deferredPropertyInits) {
-			Section init = initBody.appendSection("deferredpropertyinit");
-			init.append("instance.").append(property.getName()).append(" = ");
-			gctx.getCompiler().getThingActionCompiler().generate(property.getInit(), init.stringbuilder("expression"), gctx);
-		}
-		gctx.resetCurrentInstanceStateName();
-		
-		initBody.comment(" Initialize included ");
-		for (Thing i : thing.getIncludes()) {
-			Element includedStatechart = new Element(", statechartThing"+i.getName());
-			initBody.appendSection("included")
-				.append("instanceThing"+i.getName())
-				.append(includedStatechart)
-				.append(" := initializeFragmentThing"+i.getName()+"()");
-			initBody.append("instance.Thing"+i.getName()+" = instanceThing"+i.getName());
-			if (i.getBehaviour() == null) includedStatechart.disable();
-			
-			// Set concrete function implementations of abstract functions
-			for (Function incf : i.getFunctions()) {
-				if (incf.isAbstract()) {
-					for (Function ownf : thing.getFunctions()) {
-						if (!ownf.isAbstract() && incf.getName().equals(ownf.getName())) {
-							Section abstractAssign = initBody.appendSection("abstractassign").lines();
-							Section before = abstractAssign.appendSection("before");
-							Section body = abstractAssign.appendSection("body").lines().indent();
-							Section after = abstractAssign.appendSection("after");
-							before.append("instance.Thing"+i.getName())
-								  .append(".abstract"+incf.getName())
-								  .append(" = func");
-							Section abstractArgs = before.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-							for (Parameter p : incf.getParameters())
-								abstractArgs.append(p.getName()+" "+gctx.getTypeRef(p.getTypeRef()));
-							if (incf.getTypeRef() != null)
-								before.append(" "+gctx.getTypeRef(incf.getTypeRef()));
-							before.append(" {");
-							Section call = body.appendSection("call");
-							call.append("instance."+incf.getName());
-							Section callArgs = call.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-							for (Parameter p : incf.getParameters())
-								callArgs.append(p.getName());
-							if (incf.getTypeRef() != null)
-								call.prepend("return ");
-							after.append("}");
-						}
-					}
-				}
-			}
-		}
-		
-		// Initialize behaviour
-		if (thing.getBehaviour() != null) {
-			initBody.comment(" Initialize state structs ");
-			generateStateStructInitializers(thing.getBehaviour(), initBody, builder, gctx);
-			
-			initBody.comment(" Initialize regions ");
-			generateRegionInitializers(thing.getBehaviour(), initBody, builder, gctx);
-			
-			initBody.comment(" Set state links ");
-			generateStateLinks(thing.getBehaviour(), initBody, builder, gctx);
-		}
-		
-		initBody.comment(" Initialize arrays ");
-		for (Property property : thing.getProperties()) {
-			if (property.getTypeRef().isIsArray()) {
-				gctx.setCurrentInstanceStatename("instance");
-				Section arrInit = initBody.appendSection("arrayinitialization");
-				arrInit.append("instance.").append(property.getName())
-					   .append(" = make(")
-					   .append(gctx.getTypeRef(property.getTypeRef()))
-					   .append(", ");
-				gctx.getCompiler().getThingActionCompiler().generate(property.getTypeRef().getCardinality(), arrInit.stringbuilder("init"), gctx);
-				arrInit.append(")");
-				gctx.resetCurrentInstanceStateName();
-			}
-		}
-		initBody.comment(" Property assigns ");
-		for (PropertyAssign propAssign : thing.getAssign()) {
-			gctx.setCurrentInstanceStatename("instance");
-			Section assign = initBody.appendSection("propertyassign");
-			assign.append("instance.").append(propAssign.getProperty().getName());
-			if (propAssign.getIndex() != null) {
-				assign.append("[");
-				gctx.getCompiler().getThingActionCompiler().generate(propAssign.getIndex(), assign.stringbuilder("index"), gctx);
-				assign.append("]");
-			}
-			assign.append(" = ");
-			gctx.getCompiler().getThingActionCompiler().generate(propAssign.getInit(), assign.stringbuilder("init"), gctx);
-			gctx.resetCurrentInstanceStateName();
-		}
-		// TODO: Also for states
-		
-		// Finally
-		if (thing.isFragment()) {
-			// Return the component struct, and the fragment statechart
-			initializer.name.set("initializeFragmentThing"+thing.getName());
-			if (thing.getBehaviour() != null) {
-				initializer.addReturns(null, "*"+gctx.getStateName(thing.getBehaviour()));
-				initBody.append("return instance, state"+gctx.getStateName(thing.getBehaviour()));
-			} else {
-				initBody.append("return instance");
-			}
-		} else {
-			gctx.currentThingImportGosm();
-			// Call the library to initialize ports and other necessities
-			initBody.comment(" Make component ");
-			Section arguments = initBody.appendSection("makecomponent").append("component := gosm.MakeComponent")
-									.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-			// Size of the message channel buffer
-			arguments.append("100"); // TODO: Calculate this from port annotations as well
-			// All the statecharts
-			initBody.append("instance.Component = component");
-			if (thing.getBehaviour() != null)
-				arguments.append("state"+gctx.getStateName(thing.getBehaviour()));
-			
-			for (Thing i : thing.getIncludes()) {
-				initBody.append("instanceThing"+i.getName()+".Component = component");
-				if (i.getBehaviour() != null)
-					arguments.append("statechartThing"+i.getName());
-			}
-			
-			// Create internal port connectors
-			initBody.comment(" Internal ports ");
-			generateInternalPorts(thing, initBody, gctx);
-				
-			initBody.append("return instance");
-		}
-		builder.append("");
-		
 		// TODO: Only print this if the clone is actually used somewhere!
 		// Add cloning function for use in sessions
 		GoFunction cloner = builder.function("cloneThing"+thing.getName());
@@ -867,8 +703,14 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		for (Thing included : thing.getIncludes())
 			cloneInit.addField("Thing"+included.getName(), "cloneThing"+included.getName()+"(original.Thing"+included.getName()+")");
 		// Clone properties
-		for (Property property : thing.getProperties())
-			cloneInit.addField(property.getName(), "original."+property.getName());
+		for (Property property : thing.getProperties()) {
+			if (property.getTypeRef().isIsArray()) {
+				// Arrays needs to be copied
+				cloneInit.addField(property.getName(), "append("+gctx.getTypeRef(property.getTypeRef())+"{}, original."+property.getName()+"...)");
+			} else {
+				cloneInit.addField(property.getName(), "original."+property.getName());
+			}
+		}
 		// Return clone
 		cloner.body().append("return clone");
 		
@@ -877,6 +719,5 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 			builder.comment(" -- Session forks -- ");
 			generateSessionForks(thing, thing.getBehaviour(), builder, gctx);
 		}
-		*/
 	}
 }

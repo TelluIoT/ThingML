@@ -68,10 +68,15 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 	private void generateEnumerations(ThingMLModel model, GoSourceBuilder builder, GoContext gctx) {
 		for (Enumeration enumeration : ThingMLHelpers.allEnumerations(model)) {
 			Section enumS = builder.appendSection("enumeration").lines();
+			Element enumType = new Element("int");
 			enumS.appendSection("type")
 				 .append("type ")
 				 .append(gctx.getTypeName(enumeration))
-				 .append(" int"); // TODO: Use @go_type if present on enum
+				 .append(" ")
+				 .append(enumType);
+			if (enumeration.getTypeRef() != null)
+				enumType.set(gctx.getTypeRef(enumeration.getTypeRef()));
+				
 			Section constS = enumS.appendSection("consts").lines();
 			constS.appendSection("before")
 				  .append("const (");
@@ -85,6 +90,13 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 						 .append(gctx.getTypeName(enumeration))
 						 .append(" = ")
 						 .append(value);
+				if (literal.getInit() != null) {
+					StringBuilder initBuilder = new StringBuilder();
+					gctx.getCompiler().getThingActionCompiler().generate(literal.getInit(), initBuilder, gctx);
+					value.set(initBuilder.toString());
+				}
+				
+				// FIXME: Remove this. Currently kept for backwards compatibility
 				if (AnnotatedElementHelper.hasAnnotation(literal, "enum_val"))
 					value.set(AnnotatedElementHelper.firstAnnotation(literal, "enum_val"));
 				

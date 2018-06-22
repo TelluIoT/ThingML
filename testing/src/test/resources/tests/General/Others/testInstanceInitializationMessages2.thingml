@@ -1,0 +1,56 @@
+import "../../thingml.thingml"
+
+thing fragment PortMsgs 
+{
+	message A();
+	
+	optional required port MsgOut {
+		sends A
+	}
+	
+	provided port MsgIn {
+		receives A
+	}
+}
+
+thing A includes PortMsgs
+{
+	property A : Integer = F()
+	
+	function F() : Integer do
+		MsgOut!A()
+		return 1
+	end
+	
+	statechart A init I {
+		state I {}
+	}
+}
+
+thing TestInitMessages includes Test, PortMsgs 
+@test " # AB|BA"
+{
+	property B : Integer = F()
+
+	function F() : Integer do
+		TestOut('B')
+		return 2
+	end
+
+	statechart TestInit init I {
+		state I {
+			internal event MsgIn?A
+			action do
+				TestOut('A')
+				TestDone()
+			end
+		}
+	}
+}
+
+configuration conf
+{
+	instance a : A
+	instance test : TestInitMessages
+	connector a.MsgOut => test.MsgIn
+}
