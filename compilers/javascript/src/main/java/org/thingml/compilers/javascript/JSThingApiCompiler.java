@@ -29,6 +29,7 @@ import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 
 public class JSThingApiCompiler extends ThingApiCompiler {
@@ -128,9 +129,22 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         			.append("setTimeout(()=>this._receive(msg),0);")
         			.after("}");
         	}
-        	
         	generatePublicPort(thing, thingClass, jctx);
+        } else {
+        	JSFunction initFunction = thingClass.addMethod("_init");
+    		Section body = initFunction.body();
+    		body.comment("no state machine");
         }
+    	generatePropertyInit(thing, thingClass, jctx);
+	}
+	
+	protected void generatePropertyInit(Thing thing, JSClass thingClass, JSContext jctx) {
+		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+			JSFunction receiveFunction = thingClass.addMethod("init" + jctx.firstToUpper(jctx.getVariableName(p)));
+			receiveFunction.addArgument(jctx.getVariableName(p));
+			Section body = receiveFunction.body();
+			body.append("this." + jctx.getVariableName(p) + " = " + jctx.getVariableName(p) + ";");
+		}
 	}
 	
 	protected void generatePublicPort(Thing thing, JSClass thingClass, JSContext jctx) {

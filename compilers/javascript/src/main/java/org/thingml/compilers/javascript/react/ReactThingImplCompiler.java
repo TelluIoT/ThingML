@@ -105,7 +105,6 @@ public class ReactThingImplCompiler extends JSThingImplCompiler {
 		parent.append("");
 	}
 	
-	@Override
 	protected void generateProperties(Thing thing, Section parent, JSContext jctx) {
 		parent.append("extendObservable(this, {");
 		Section properties = parent.section("properties").lines().indent();

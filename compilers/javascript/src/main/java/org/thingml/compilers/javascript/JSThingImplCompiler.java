@@ -28,13 +28,11 @@ import org.thingml.compilers.javascript.JSSourceBuilder.StateJSState;
 import org.thingml.compilers.javascript.JSSourceBuilder.StateJSTransition;
 import org.thingml.compilers.thing.common.NewFSMBasedThingImplCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
-import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.InternalTransition;
@@ -55,27 +53,6 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		parent.comment("Children");
 		parent.append("this.forks = [];");
 		parent.append("");
-	}
-	
-	protected void generateProperties(Thing thing, Section parent, JSContext jctx) {
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-		//for (Property p : ThingHelper.allUsedProperties(thing)) { //FIXME: allUsedProperties does not work in some cases where we use includes...
-			Section property = parent.section("property");
-			if (AnnotatedElementHelper.isDefined(p, "private", "true") || !(p.eContainer() instanceof Thing)) {
-				property.append("this.");
-				property.append(ThingMLElementHelper.qname(p, "_") + "_var");
-				Expression initExp = ThingHelper.initExpression(thing, p);
-				if (initExp != null) {
-					property.append(" = ");
-					jctx.getCompiler().getThingActionCompiler().generate(initExp, property.stringbuilder("initexpression"), jctx);
-				}
-				property.append(";");
-			} else {
-				property.lines();
-				property.append("this." + ThingMLElementHelper.qname(p, "_") + "_var = " + ThingMLElementHelper.qname(p, "_") + "_var;");
-				property.append("this.debug_" + ThingMLElementHelper.qname(p, "_") + "_var = " + ThingMLElementHelper.qname(p, "_") + "_var;");
-			}
-		}
 	}
 	
 	@Override
@@ -114,20 +91,13 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		constructor.enable();
 		constructor.addArgument("name");
 		constructor.addArgument("root");
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-		//for (Property p : ThingHelper.allUsedProperties(thing)) {  //FIXME: allUsedProperties does not work in some cases where we use includes...
-			if (!AnnotatedElementHelper.isDefined(p, "private", "true") && p.eContainer() instanceof Thing) {
-				constructor.addArgument(ThingMLElementHelper.qname(p, "_") + "_var");
-			}
-		}//TODO: changeable properties?
-		constructor.addArgument("debug");
 		{
 			Section body = constructor.body();
 			
 			// Common constructor body
 			body.append("this.name = name;")
 				.append("this.root = (root === null)? this : root;")
-				.append("this.debug = debug;")
+				//.append("this.debug = debug;")
 				.append("this.ready = false;")
 				.append("this.bus = (root === null)? new EventEmitter() : this.root.bus;")
 				.append("");
@@ -135,11 +105,6 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 			// Session forks
 			if (ThingHelper.hasSession(thing))
 				generateChildren(thing, body, jctx);
-			
-			// Properties
-			body.comment("Attributes");
-			generateProperties(thing, body, jctx);
-			body.append("");
 			
 			// Call state-machine builder
 			body.append("this.build(name);");

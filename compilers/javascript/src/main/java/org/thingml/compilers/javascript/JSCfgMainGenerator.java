@@ -105,13 +105,15 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 					property.append(getDefaultValue(prop.getTypeRef().getType()) + ";");
 				}
 			}
-		}		
+		}
+		
+		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {
+			Section property = section.section("propertyInit");
+			property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(prop)) + "(" + i.getName() + "_" + prop.getName() + ");");
+		}
 	}
 
-	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {
-		Section instanceProperties = section.section("properties").lines();
-		generatePropertyDecl(i, cfg, instanceProperties, jctx);
-		
+	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {		
 		Section instance = section.section("instance");
 		instance.append("const ")
 		        .append(i.getName())
@@ -122,13 +124,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		instanceArgs.append("'"+i.getName()+"'")
 		            .append("null");
 
-		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//use allUsedProperties
-			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
-				instanceArgs.append(i.getName() + "_" + prop.getName());
-			}
-		}
-
-		DebugProfile debugProfile = jctx.getCompiler().getDebugProfiles().get(i.getType());
+		/*DebugProfile debugProfile = jctx.getCompiler().getDebugProfiles().get(i.getType());
 		boolean debugInst = false;
 		for (Instance inst : debugProfile.getDebugInstances()) {
 			if (i.getName().equals(inst.getName())) {
@@ -137,7 +133,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 		if (debugInst) instanceArgs.append("true");
-		else instanceArgs.append("false");
+		else instanceArgs.append("false");*/
 
 		/*if (useThis) { //FIXME: have a pass on debug traces
             if (debug || debugProfile.getDebugInstances().contains(i)) {
@@ -149,6 +145,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             }
         }*/
 		
+		Section instanceProperties = section.section("properties").lines();
+		generatePropertyDecl(i, cfg, instanceProperties, jctx);
+		
 	}
 
 	protected void generateInstances(Configuration cfg, Section section, JSContext jctx) {
@@ -156,9 +155,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			generateInstance(i, cfg, section, jctx);
 		}
 	}
-	
-	
-	
 	
 	protected void generateOnEvent(Section section, Message msg, String client, String clientPort, String server, String serverPort) {
 		Section connector = section.section("connector");
