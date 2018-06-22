@@ -64,13 +64,19 @@ public class ThingMLTestRunner extends Runner {
 			catch (AssertionError e) {} // Just keep them for later in the cache
 		}
 		
+		// Find the timeout to use during testing
+		int timeout = 30;
+		try {
+			timeout = Integer.parseUnsignedInt(System.getProperty("timeout", "30"));
+		} catch (NumberFormatException e) {}
+		
 		// There seems to be a bug where the first task submitted is not actually executed?
 		executor.submit(new Runnable() { @Override public void run() {}}, 1);
 		
 		// Submit all the tests
 		for (ThingMLTest test : tests) {
 			test.setNotifier(notifier);
-			executor.submit(test, 30);
+			executor.submit(test, timeout);
 		}
 		
 		// Wait for all tasks to be completed

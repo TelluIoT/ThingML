@@ -78,6 +78,7 @@
 		        		<noRun></noRun>
 		        		<tests></tests>
 		        		<compilers></compilers>
+		        		<timeout>30</timeout>
 		        	</systemPropertyVariables>
 		        </configuration>
 		      </plugin>
