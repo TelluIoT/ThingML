@@ -378,7 +378,16 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
     
     @Override
     public void generate(ForAction action, StringBuilder builder, Context ctx) {
-    	// TODO Auto-generated method stub
-    	super.generate(action, builder, ctx);
+    	// TODO: What about types
+    	// Check if index is used
+    	String indexName = "_";
+    	if (action.getIndex() != null) indexName = action.getIndex().getName();
+    	// Generate for range
+    	builder.append("for ").append(indexName).append(", ").append(action.getVariable().getName());
+    	builder.append(" := range ");
+    	variable(action.getArray().getProperty(), builder, ctx);
+    	builder.append(" {\n");
+    	generate(action.getAction(), builder, ctx);
+    	builder.append("}\n");
     }
 }
