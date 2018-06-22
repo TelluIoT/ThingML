@@ -325,15 +325,32 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		}
 
 		builder.append("//Attributes\n");
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+		/*for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
 			builder.append("private ");
-			if (p.isReadonly()) {
-				builder.append("final ");
-			}
+			//if (p.isReadonly()) {
+			//	builder.append("final ");
+			//}
 			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
 					+ ctx.getVariableName(p) + ";\n");
+		}*/
+		
+		
+		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+			builder.append("private ");
+			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));						
+			Expression e = ThingHelper.initExpression(thing, p);
+			if (e != null) {
+				builder.append(" = (");
+				builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx));
+				builder.append(") ");
+				ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+			}			
+			builder.append(";\n");
 		}
+		
+		
 
+		if (debugProfile.isActive()) {
 		for (Property p : ThingHelper.allPropertiesInDepth(
 				thing)/* debugProfile.getDebugProperties() */) {// FIXME: we
 																// should only
@@ -346,6 +363,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append("private ");
 			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " debug_"
 					+ ctx.getVariableName(p) + ";\n");
+		}
 		}
 
 		builder.append("//Ports\n");
@@ -362,68 +380,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 		builder.append("//Empty Constructor\n");
 		builder.append("public " + ctx.firstToUpper(thing.getName()) + "() {\nsuper();\n");
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			Expression e = ThingHelper.initExpression(thing, p);
-			if (e != null) {
-				builder.append(ctx.getVariableName(p) + " = (");
-				builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx));
-				builder.append(") ");
-				ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-				builder.append(";\n");
-			} else if (p.getTypeRef().getCardinality()!=null) {
-				builder.append(ctx.getVariableName(p) + " = new ");
-				builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx));
-				builder.append("[");
-				ctx.getCompiler().getThingActionCompiler().generate(p.getTypeRef().getCardinality(), builder, ctx);
-				builder.append("];\n");
-			}
-		}
-		builder.append("}\n\n");
-
-		boolean hasReadonly = false;
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			if (p.isReadonly()) {
-				hasReadonly = true;
-				break;
-			}
-		}
-
-		if (hasReadonly) {
-			builder.append("//Constructor (only readonly (final) attributes)\n");
-			builder.append("public " + ctx.firstToUpper(thing.getName()) + "(");
-			int i = 0;
-			for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-				if (p.isReadonly()) {
-					if (i > 0)
-						builder.append(", ");
-					builder.append(
-							"final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx)
-									+ " " + ctx.getVariableName(p));
-					i++;
-				}
-			}
-			builder.append(") {\n");
-			builder.append("super();\n");
-			for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-				if (p.isReadonly()) {
-					builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
-				}
-			}
-			builder.append("}\n\n");
-		}
-
-		builder.append("//Constructor (all attributes)\n");
-		builder.append("public " + ctx.firstToUpper(thing.getName()) + "(String name");
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			builder.append(
-					", final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
-							+ ctx.getVariableName(p));
-		}
-		builder.append(") {\n");
-		builder.append("super(name);\n");
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
-		}
 		builder.append("}\n\n");
 
 		builder.append("//Getters and Setters for non readonly/final attributes\n");
@@ -437,6 +393,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 						+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
 						+ ctx.getVariableName(p) + ";\n}\n\n");
 			}
+			builder.append("public " + thing.getName() + " init" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
+					+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+					+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
+					+ ctx.getVariableName(p) + ";\nreturn this;\n}\n\n");
 		}
 
 		builder.append("//Getters for Ports\n");
@@ -491,9 +451,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	protected void generateStateMachine(CompositeState sm, StringBuilder builder, Context ctx) {
 		generateCompositeState(sm, builder, ctx);
-	}
-
-	private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
 	}
 
 	protected void generateCompositeState(StateContainer c, StringBuilder builder, Context ctx) {
@@ -692,7 +649,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	private void buildTransition(StringBuilder builder, Context ctx, State s, Handler i, ReceiveMessage msg) {
 		// TODO:Insert debug logs if needed from the profile
-		DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(ThingMLHelpers.findContainingThing(s));
+		//DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(ThingMLHelpers.findContainingThing(s));
 		String handler_name = "";
 		if (i.getName() != null)
 			handler_name = i.getName();
@@ -752,9 +709,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		} else {
 			buildTransition(builder, ctx, s, i, null);
 		}
-	}
-
-	private void generateHandlerAction(Handler h, StringBuilder builder, Context ctx) {
 	}
 
 	protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
