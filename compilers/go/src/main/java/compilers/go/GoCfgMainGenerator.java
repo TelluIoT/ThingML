@@ -16,6 +16,10 @@
  */
 package compilers.go;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -26,11 +30,68 @@ import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.PropertyAssign;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 import compilers.go.GoSourceBuilder.GoSection;
 
 public class GoCfgMainGenerator extends CfgMainGenerator {
+	private void generatePropertyInits(GoContext gctx, Section sec, Thing thing, Instance inst, Map<Property, Map<Expression, Expression>> initExpressions) {
+		// Update the expressions with any set-statements here (if not already defined above)
+		for (PropertyAssign propAssign : thing.getAssign()) {
+			Map<Expression, Expression> exprs = initExpressions.getOrDefault(propAssign.getProperty(), new HashMap<Expression, Expression>());
+			exprs.putIfAbsent(propAssign.getIndex(), propAssign.getInit());
+			initExpressions.put(propAssign.getProperty(), exprs);
+		}
+		
+		// Initialize properties for included things
+		for (Thing included : thing.getIncludes())
+			generatePropertyInits(gctx, sec, included, inst, initExpressions);
+		
+		gctx.setCurrentInstanceStatename(inst.getName());
+		// Finally, initialize our own properties
+		for (Property prop : thing.getProperties()) {
+			Map<Expression, Expression> exprs = initExpressions.getOrDefault(prop, new HashMap<Expression, Expression>());
+			exprs.putIfAbsent(null, prop.getInit());
+			
+			Expression init = exprs.get(null);
+			if (init != null) {
+				// Generate the init expression
+				Section propInit = sec.appendSection("property");
+				propInit.append(inst.getName()).append(".").append(prop.getName()).append(" = ");
+				gctx.setCurrentVariableAssignmentType(prop.getTypeRef());
+				gctx.getCompiler().getThingActionCompiler().generate(init, propInit.stringbuilder("expression"), gctx);
+				gctx.resetCurrentVariableAssignmentType();
+			} else if (prop.getTypeRef().isIsArray()) {
+				// If no init expression is specified, create an empty slice for arrays
+				Section arrInit = sec.appendSection("arrayproperty");
+				arrInit.append(inst.getName()).append(".").append(prop.getName()).append(" = ");
+				arrInit.append("make(").append(gctx.getTypeRef(prop.getTypeRef())).append(", ");
+				gctx.getCompiler().getThingActionCompiler().generate(prop.getTypeRef().getCardinality(), arrInit.stringbuilder("init"), gctx);
+				arrInit.append(")");
+			}
+			
+			if (prop.getTypeRef().isIsArray()) {
+				for(Entry<Expression, Expression> arrayElementInit : exprs.entrySet()) {
+					if (arrayElementInit.getKey() != null) {
+						Section eleInit = sec.appendSection("arraypropertyelement");
+						eleInit.append(inst.getName()).append(".").append(prop.getName());
+						eleInit.append("[");
+						gctx.getCompiler().getThingActionCompiler().generate(arrayElementInit.getKey(), eleInit.stringbuilder("index"), gctx);
+						eleInit.append("]");
+						eleInit.append(" = ");
+						gctx.setCurrentVariableAssignmentType(prop.getTypeRef());
+						gctx.getCompiler().getThingActionCompiler().generate(arrayElementInit.getValue(), eleInit.stringbuilder("expression"), gctx);
+						gctx.resetCurrentVariableAssignmentType();
+					}
+				}
+			}
+		}
+		gctx.resetCurrentInstanceStateName();
+	}
+	
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
@@ -51,38 +112,19 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		// Add the initializer function
 		GoSection mainBody = builder.function("main").body();
 		
-		// Initialize all instances
-		mainBody.comment(" -- Initialize instances -- ");
-		Section instancesInitializers = mainBody.appendSection("instanceinitializers").lines();
+		// Construct all instances
+		mainBody.comment(" -- Construct instances -- ");
+		Section instancesConstructors = mainBody.appendSection("instanceconstructors").lines();
 		for (Instance inst : cfg.getInstances()) {
-			instancesInitializers.appendSection("instance")
+			instancesConstructors.appendSection("instance")
 				.append(inst.getName())
 				.append(" := ")
-				.append("InitializeThing"+inst.getType().getName())
+				.append("NewThing"+inst.getType().getName())
 				.append("()");
 		}
 		mainBody.append("");
 		
-		// Set properties
-		// TODO: What if a property is set that defines the size of an array??
-		mainBody.comment(" -- Set instance properties -- ");
-		Section propAssigns = mainBody.appendSection("propertyassigns").lines();
-		for (ConfigPropertyAssign assign : cfg.getPropassigns()) {
-			Section propAssign = propAssigns.appendSection("propertyassign");
-			propAssign.append(assign.getInstance().getName())
-				.append(".")
-				.append(assign.getProperty().getName());
-			if(assign.getIndex() != null) {
-				propAssign.append("[");
-				gctx.getCompiler().getThingActionCompiler().generate(assign.getIndex(), propAssign.stringbuilder("index"), gctx);
-				propAssign.append("]");
-			}
-			propAssign.append(" = ");
-			gctx.getCompiler().getThingActionCompiler().generate(assign.getInit(), propAssign.stringbuilder("init"), gctx);
-		}
-		mainBody.append("");
-		
-		// Add connectors
+		// Add connectors (if messages are sent during initialization)
 		mainBody.comment(" -- Create connectors -- ");
 		Section connectors = mainBody.appendSection("connectors").lines();
 		for (AbstractConnector aConnector : cfg.getConnectors()) {
@@ -101,6 +143,21 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		}
 		mainBody.append("");
 		
+		mainBody.comment(" -- Set instance properties -- ");
+		// Keep track of all final expressions to give properties for each instance
+		Map<Instance, Map<Property, Map<Expression, Expression>>> initExpressions = new HashMap<Instance, Map<Property, Map<Expression, Expression>>>();
+		for (Instance i : cfg.getInstances())
+			initExpressions.put(i, new HashMap<Property, Map<Expression, Expression>>());
+		for (ConfigPropertyAssign cfgAssign : cfg.getPropassigns()) {
+			Map<Expression, Expression> exprs = initExpressions.get(cfgAssign.getInstance()).getOrDefault(cfgAssign.getProperty(), new HashMap<Expression, Expression>());
+			exprs.put(cfgAssign.getIndex(), cfgAssign.getInit());
+			initExpressions.get(cfgAssign.getInstance()).put(cfgAssign.getProperty(), exprs);
+		}
+		// Set the property values for all instances
+		Section propertyInits = mainBody.appendSection("propertyinits").lines();
+		for (Instance i : cfg.getInstances())
+			generatePropertyInits(gctx, propertyInits, i.getType(), i, initExpressions.get(i));
+
 		// Start execution
 		mainBody.comment(" -- Start execution -- ");
 		Section runInstances = mainBody.appendSection("startexecution")

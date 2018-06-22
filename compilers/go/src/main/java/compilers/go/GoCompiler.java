@@ -96,7 +96,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 
 	@Override
 	public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {		
-		GoContext ctx = new GoContext(this);
+		GoContext ctx = new GoContext(this, log);
 		
 		// Check if we should do auto-casting
 		if (AnnotatedElementHelper.isDefined(cfg, "go_autocast", "true")) {

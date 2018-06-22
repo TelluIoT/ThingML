@@ -32,6 +32,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
@@ -50,13 +51,15 @@ import org.thingml.xtext.thingML.TypeRef;
 public class GoContext extends Context {
 	
 	private Map<String, GoSourceBuilder> generatedFiles = new HashMap<String, GoSourceBuilder>();
+	private Logger logger;
 
-	public GoContext(ThingMLCompiler compiler) {
+	public GoContext(ThingMLCompiler compiler, Logger log) {
 		super(compiler, "break","case","chan","const","continue",
                         "default","defer","else","fallthrough","for",
                         "func","go","goto","if","import",
                         "interface","map","package","range","return",
                         "select","struct","switch","type","var");
+		this.logger = log;
 	}
 	
 
@@ -86,6 +89,10 @@ public class GoContext extends Context {
 			System.err.println("Problem while dumping the code");
             e.printStackTrace();
 		}
+	}
+	
+	public Logger Logger() {
+		return this.logger;
 	}
 	
 	/* --- Auto-casting --- */
@@ -215,6 +222,19 @@ public class GoContext extends Context {
 			this.currentThingContext.addImports(imports);
 	}
 	public void currentThingImportGosm() { this.currentThingImport("github.com/jakhog/gosm"); }
+	
+	/* --- Variable assignment type (for arrays mostly) --- */
+	private TypeRef currentVariableAssignmentType = null;
+	public TypeRef getCurrentVariableAssignmentType() {
+		return this.currentVariableAssignmentType;
+	}
+	public void setCurrentVariableAssignmentType(TypeRef type) {
+		this.currentVariableAssignmentType = type;
+	}
+	public void resetCurrentVariableAssignmentType() {
+		this.currentVariableAssignmentType = null;
+	}
+	
 	
 	
 	/* --- Some logging helpers --- */

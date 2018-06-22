@@ -25,6 +25,7 @@ import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.builder.StringBuilderSection;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Event;
@@ -590,6 +591,116 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 			generateStateHandlers(thing, thing.getBehaviour(), builder, gctx);
 		}
 		
+		// Add the constructor function
+		builder.comment(" -- Instance Constructor -- ");
+		GoFunction constructor = builder.function("NewThing"+thing.getName());
+		constructor.addReturns(null, "*Thing"+thing.getName());
+		GoSection constBody = constructor.body();
+		constBody.comment(" Create instance struct ");
+		constBody.append("instance := &Thing"+thing.getName()+"{}");
+		
+		// Construct included things
+		constBody.comment(" Construct included ");
+		for (Thing i : thing.getIncludes()) {
+			Element includedStatechart = new Element(", statechartThing"+i.getName());
+			constBody.appendSection("included")
+				.append("instanceThing"+i.getName())
+				.append(includedStatechart)
+				.append(" := newFragment"+i.getName()+"()");
+			constBody.append("instance.Thing"+i.getName()+" = instanceThing"+i.getName());
+			if (i.getBehaviour() == null) includedStatechart.disable();
+		}
+		
+		// Bind abstract functions
+		if (!thing.isFragment()) {
+			constBody.comment(" Bind abstract functions ");
+			for (Thing i : ThingHelper.allIncludedThings(thing)) {
+				for (Function incf : i.getFunctions()) {
+					if (incf.isAbstract()) {						
+						// Create an anonymous function and call the actual one
+						Section abstractAssign = constBody.appendSection("abstractassign").lines();
+						Section before = abstractAssign.appendSection("before");
+						Section body = abstractAssign.appendSection("body").lines().indent();
+						Section after = abstractAssign.appendSection("after");
+						before.append("instance.Thing"+i.getName())
+							  .append(".abstract"+incf.getName())
+							  .append(" = func");
+						Section abstractArgs = before.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
+						for (Parameter p : incf.getParameters())
+							abstractArgs.append(p.getName()+" "+gctx.getTypeRef(p.getTypeRef()));
+						if (incf.getTypeRef() != null)
+							before.append(" "+gctx.getTypeRef(incf.getTypeRef()));
+						before.append(" {");
+						Section call = body.appendSection("call");
+						call.append("instance."+incf.getName());
+						Section callArgs = call.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
+						for (Parameter p : incf.getParameters())
+							callArgs.append(p.getName());
+						if (incf.getTypeRef() != null)
+							call.prepend("return ");
+						after.append("}");
+					}
+				}
+			}
+		}
+		
+		// Construct behaviour
+		if (thing.getBehaviour() != null) {
+			constBody.comment(" Initialize state structs ");
+			generateStateStructInitializers(thing.getBehaviour(), constBody, builder, gctx); // TODO: Check this
+			
+			constBody.comment(" Initialize regions ");
+			generateRegionInitializers(thing.getBehaviour(), constBody, builder, gctx); // TODO: Check this
+			
+			constBody.comment(" Set state links ");
+			generateStateLinks(thing.getBehaviour(), constBody, builder, gctx); // TODO: Check this
+		}
+		
+		// Finally
+		if (thing.isFragment()) {
+			// Return the component struct, and the fragment statechart
+			constructor.name.set("newFragment"+thing.getName());
+			if (thing.getBehaviour() != null) {
+				constructor.addReturns(null, "*"+gctx.getStateName(thing.getBehaviour()));
+				constBody.append("return instance, state"+gctx.getStateName(thing.getBehaviour()));
+			} else {
+				constBody.append("return instance");
+			}
+		} else {
+			gctx.currentThingImportGosm();
+			// Call the library to initialize ports and other necessities
+			constBody.comment(" Make component ");
+			Section arguments = constBody.appendSection("makecomponent").append("component := gosm.MakeComponent")
+									.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
+			// Size of the message channel buffer
+			arguments.append("100"); // TODO: Calculate this from port annotations as well
+			// All the statecharts
+			constBody.append("instance.Component = component");
+			if (thing.getBehaviour() != null)
+				arguments.append("state"+gctx.getStateName(thing.getBehaviour()));
+			
+			for (Thing i : thing.getIncludes()) {
+				constBody.append("instanceThing"+i.getName()+".Component = component");
+				if (i.getBehaviour() != null)
+					arguments.append("statechartThing"+i.getName());
+			}
+			
+			// Create internal port connectors
+			constBody.comment(" Internal ports ");
+			generateInternalPorts(thing, constBody, gctx); // TODO: Check this
+				
+			constBody.append("return instance");
+		}
+		builder.append("");
+		
+		// TODO: Also add clones and session things...
+		
+		
+		
+
+		// ---------------------------------------------------------------------------------------------------------------------------
+		// TODO: Old code is below here
+		/*
 		// Add the initializer function
 		builder.comment(" -- Instance initialization -- ");
 		GoFunction initializer = builder.function("InitializeThing"+thing.getName());
@@ -766,5 +877,6 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 			builder.comment(" -- Session forks -- ");
 			generateSessionForks(thing, thing.getBehaviour(), builder, gctx);
 		}
+		*/
 	}
 }

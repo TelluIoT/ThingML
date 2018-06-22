@@ -31,6 +31,7 @@ import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ForAction;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.GreaterExpression;
@@ -148,7 +149,9 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 		builder.append(gctx.getTypeRef(action.getTypeRef()));
 		if (action.getInit() != null) {
 			builder.append(" = ");
+			gctx.setCurrentVariableAssignmentType(action.getTypeRef());
 			generate(action.getInit(), builder, ctx);
+			gctx.resetCurrentVariableAssignmentType();
 		} else if (action.getTypeRef().isIsArray()) {
 			builder.append(" = make(");
 			builder.append(gctx.getTypeRef(action.getTypeRef()));
@@ -171,6 +174,7 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 	
 	@Override
 	public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
 		variable(action.getProperty(), builder, ctx);
 		if(action.getIndex() != null) {
 			builder.append("[");
@@ -178,7 +182,9 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 			builder.append("]");
 		}
 		builder.append(" = ");
+		gctx.setCurrentVariableAssignmentType(action.getProperty().getTypeRef());
 		generate(action.getExpression(), builder, ctx);
+		gctx.resetCurrentVariableAssignmentType();
 		builder.append("\n");
 	}
 	
@@ -358,18 +364,21 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
     
     @Override
     public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
-    	if (expression.getValues().size() > 0) {
-    		builder.append("[" + expression.getValues().size() + "]");
-    		final GoContext goctx = (GoContext)ctx;
-    		final Type t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getValues().get(0)));
-    		builder.append(goctx.getTypeName(t));
-    		builder.append("{");
-    		for(Expression e : expression.getValues()) {
-    			if (expression.getValues().indexOf(e)>0)
-    				builder.append(", ");
-    			generate(e, builder, ctx);
-    		}
-    		builder.append("}");
+    	GoContext gctx = (GoContext)ctx;
+    	builder.append(gctx.getTypeRef(gctx.getCurrentVariableAssignmentType()));
+    	builder.append("{");
+    	boolean first = true;
+    	for (Expression val : expression.getValues()) {
+    		if (first) first = false;
+    		else builder.append(", ");
+    		generate(val, builder, ctx);
     	}
+    	builder.append("}");
+    }
+    
+    @Override
+    public void generate(ForAction action, StringBuilder builder, Context ctx) {
+    	// TODO Auto-generated method stub
+    	super.generate(action, builder, ctx);
     }
 }
