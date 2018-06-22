@@ -1,0 +1,70 @@
+import "../../thingml.thingml"
+
+thing fragment A
+{
+	abstract function FF(c : Char) : Integer
+
+	property A : Integer = FF('A')
+	property B : Integer = FF('B')
+}
+
+thing fragment B includes A
+{
+	property C : Integer = FF('C')
+	property D : Integer = FF('D')
+}
+
+thing fragment C
+{
+	abstract function FF(c : Char) : Integer
+
+	readonly property E : Integer = FF('E')
+	readonly property F : Integer = FF('F')
+}
+
+thing fragment InitMsgs
+{
+	message InitMsg(c : Char)
+}
+
+thing Initializer includes InitMsgs, B, C
+{
+	property G : Integer = FF('G')
+	property H : Integer = FF('H')
+	
+	required port InitPort {
+		sends InitMsg
+	}
+	
+	function FF(c : Char) : Integer do
+		InitPort!InitMsg(c)
+		return 1
+	end
+} 
+
+
+
+thing TestPropertiesInitOrder includes Test, InitMsgs
+@test " # ABCDEFGH"
+{
+	provided port InitPort {
+		receives InitMsg
+	}
+
+	statechart TestPropertyInitExecutionOrder init I {
+		state I {
+			internal event m : InitPort?InitMsg
+			action TestOut(m.c)
+			
+			internal event Test?Done
+			action TestDone()
+		}
+	}
+}
+
+configuration conf {
+	instance i : Initializer
+	instance test : TestPropertiesInitOrder
+	
+	connector i.InitPort => test.InitPort
+}

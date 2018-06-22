@@ -1,0 +1,64 @@
+import "../../thingml.thingml"
+
+thing fragment InitMsgs
+{
+	message InitMsg(c : Char)
+}
+
+thing fragment InitA includes InitMsgs
+{
+	property A : Integer = 1
+	
+	required port InitPort {
+		sends InitMsg
+	}
+	
+	function F(c : Char) : Integer do
+		InitPort!InitMsg(c)
+		return 2
+	end
+	
+	set A = F('A')
+}
+
+thing Initializer includes InitA
+{
+	set A = F('B')
+
+	statechart Initializer init I {
+		state I {
+			on entry do
+				if (A == 3) InitPort!InitMsg('C')
+			end
+		}
+	}
+}
+
+
+
+thing TestPropertyInitExecution includes Test, InitMsgs 
+@test " # C"
+{
+	provided port InitPort {
+		receives InitMsg
+	}
+
+	statechart TestPropertyInitExecution init I {
+		state I {
+			internal event m : InitPort?InitMsg
+			action TestOut(m.c)
+			
+			internal event Test?Done
+			action TestDone()
+		}
+	}
+}
+
+configuration conf {
+	instance i : Initializer
+	set i.A = 3
+	
+	instance test : TestPropertyInitExecution
+	
+	connector i.InitPort => test.InitPort
+}
