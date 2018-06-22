@@ -70,6 +70,12 @@
             <version>${thingml.version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>compilers.framework</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+        
 
         <!--this dependency should be removed-->
         <dependency>
