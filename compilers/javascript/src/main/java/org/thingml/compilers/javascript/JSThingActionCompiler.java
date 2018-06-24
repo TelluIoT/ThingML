@@ -156,23 +156,16 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		Session session = action.getSession();
 		builder.append("const " + session.getName() + " = new "
 				+ ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName()
-				+ "\", this");
-		for (Property p : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(session))) {
-			if (!AnnotatedElementHelper.isDefined(p, "private", "true") && p.eContainer() instanceof Thing) {
-				if (p.getTypeRef().isIsArray() || p.getTypeRef().getCardinality() != null) {
-					builder.append(", ");
-					builder.append(ctx.getContextAnnotation("thisRef"));
-					builder.append(ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
+				+ "\", this);\n");
+		for (Property prop : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(session))) {
+			if(prop.eContainer() instanceof Thing) {
+				if (prop.getTypeRef().isIsArray() || prop.getTypeRef().getCardinality() != null) {
+					builder.append(session.getName() + ".init" + ctx.firstToUpper(ctx.getVariableName(prop)) + "(" + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var.slice(0));\n");
 				} else {
-					builder.append(", ");
-					builder.append(ctx.getContextAnnotation("thisRef"));
-					builder.append(ThingMLElementHelper.qname(p, "_") + "_var");
+					builder.append(session.getName() + ".init" + ctx.firstToUpper(ctx.getVariableName(prop)) + "(" + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var);\n");
 				}
 			}
 		}
-		builder.append(", ");
-		builder.append(ctx.getContextAnnotation("thisRef"));
-		builder.append("debug);\n");
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("forks.push(" + session.getName() + ");\n");
 		builder.append(session.getName() + "._init();\n");

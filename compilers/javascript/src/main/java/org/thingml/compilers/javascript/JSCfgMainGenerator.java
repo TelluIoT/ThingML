@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
