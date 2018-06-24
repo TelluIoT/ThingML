@@ -138,9 +138,7 @@ public class ThingHelper {
 
 
 	public static Expression initExpression(Thing self, Property p) {
-
 		if (ThingMLHelpers.allProperties(self).contains(p)) {  // It is a property of the thing
-
 			List<PropertyAssign> assigns = new ArrayList<PropertyAssign>();
 			for (PropertyAssign e : self.getAssign()) {
 				if (e.getProperty().equals(p))

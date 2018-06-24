@@ -19,7 +19,6 @@ package org.thingml.xtext.constraints;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.thingML.impl.ThingMLPackageImpl;
 
 /**
  * Created by bmori on 04.12.2015.

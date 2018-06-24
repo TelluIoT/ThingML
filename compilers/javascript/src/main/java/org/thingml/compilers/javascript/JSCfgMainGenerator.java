@@ -62,7 +62,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
 	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
 		//FIXME: enumerations
-
 		Section arrays = section.section("arrays");
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
 			arrays.append("var " + i.getName() + "_" + a.getName() + " = [];");
@@ -83,38 +82,20 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 
-		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: use allUsedProperties when fixed
-			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
-				boolean isInit = false;
-				Section property = section.section("property");
-				property.append("var " + i.getName() + "_" + prop.getName() + " = ");
-				for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-					if (EcoreUtil.equals(p.getKey(),prop) && prop.getTypeRef().getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
-						if (p.getValue() != null) {
-							StringBuilder tempbuilder = new StringBuilder();
-							jctx.currentInstance = i;
-							jctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
-							jctx.currentInstance = null;
-							property.append(tempbuilder.toString() + ";");
-							isInit = true;
-						}
-					}
-				}
-				if (!isInit) {
-					property.append(getDefaultValue(prop.getTypeRef().getType()) + ";");
-				}
-			}
-		}
-		
-		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {
-			if(prop.eContainer() instanceof Thing) {
-				Section property = section.section("propertyInit");
-				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(prop)) + "(" + i.getName() + "_" + prop.getName() + ");");
+		Section property = section.section("property");
+		for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
+			if (p.getValue() != null) {
+				StringBuilder tempbuilder = new StringBuilder();
+				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p.getKey())) + "(");
+				jctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
+				property.append(tempbuilder.toString());
+				property.append(");");
 			}
 		}
 	}
 
-	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {		
+	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {
+    	jctx.currentInstance = i;
 		Section instance = section.section("instance");
 		instance.append("const ")
 		        .append(i.getName())

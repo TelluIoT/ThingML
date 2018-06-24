@@ -281,9 +281,6 @@ public class ConfigurationHelper {
 
 	public static List<AbstractMap.SimpleImmutableEntry<Property, Expression>> initExpressionsForInstance(Configuration self, Instance i) {
 		List<AbstractMap.SimpleImmutableEntry<Property, Expression>> result = new ArrayList<AbstractMap.SimpleImmutableEntry<Property, Expression>>();
-
-		//println("init instance " + i.getName + " " + i.toString)
-
 		for(Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
 
 			Set<ConfigPropertyAssign> confassigns = new HashSet<ConfigPropertyAssign>();

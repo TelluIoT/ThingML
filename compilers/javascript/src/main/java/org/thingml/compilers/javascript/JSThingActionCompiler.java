@@ -158,13 +158,13 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 				+ ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName()
 				+ "\", this);\n");
 		for (Property prop : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(session))) {
-			if(prop.eContainer() instanceof Thing) {
+			//if(prop.eContainer() instanceof Thing) {
 				if (prop.getTypeRef().isIsArray() || prop.getTypeRef().getCardinality() != null) {
 					builder.append(session.getName() + ".init" + ctx.firstToUpper(ctx.getVariableName(prop)) + "(" + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var.slice(0));\n");
 				} else {
 					builder.append(session.getName() + ".init" + ctx.firstToUpper(ctx.getVariableName(prop)) + "(" + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var);\n");
 				}
-			}
+			//}
 		}
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("forks.push(" + session.getName() + ");\n");
