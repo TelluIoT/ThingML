@@ -25,7 +25,6 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Expression;
@@ -34,7 +33,6 @@ import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 
 public class JSCfgMainGenerator extends CfgMainGenerator {
@@ -61,12 +59,10 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 	}
 
 	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
-		//FIXME: enumerations
-		Section arrays = section.section("arrays");
+		Section property = section.section("property");
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-			arrays.append("var " + i.getName() + "_" + a.getName() + " = [];");
+			property.append("var " + i.getName() + "_" + a.getName() + " = [];");
 		}
-
 		for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
 			for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
 				String result = "";
@@ -77,14 +73,18 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 				result += "] = ";
 				tempBuilder = new StringBuilder();
 				jctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, jctx);
-				result += tempBuilder.toString() + ";";
-				arrays.append(result);
+				result += tempBuilder.toString() + ";\n";
+				property.append(result);
 			}
 		}
-
-		Section property = section.section("property");
+		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+			property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(a)) + "(");
+			property.append(i.getName() + "_" + a.getName());
+			property.append(");\n");
+		}
+		
 		for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-			if (p.getValue() != null) {
+			if (p.getKey().getTypeRef().getCardinality() == null && p.getValue() != null) {
 				StringBuilder tempbuilder = new StringBuilder();
 				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p.getKey())) + "(");
 				jctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
