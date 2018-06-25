@@ -18,7 +18,7 @@ thing TestFor includes Test
 			event m : Test?In
 			guard m.c == 'x'
 			action do
-				for (var c : Char, var i : Integer <- hello) do
+				for (c : Char, i : Integer in hello) do
 					TestOut(c)
 					if (i == 4) TestOut('!')
 				end

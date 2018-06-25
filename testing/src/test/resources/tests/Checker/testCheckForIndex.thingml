@@ -8,7 +8,7 @@ thing TestCheckFor
     statechart TestAbstractFunction init INIT {
     	state INIT {
     		on entry do
-    			for(var v : Integer, var i : Integer <- arr) do //ok
+    			for(v : Integer, i : Integer in arr) do //ok
     				println v, i
     			end
     		end

@@ -38,7 +38,7 @@ public class ThingMLAntlrTokenToAttributeIdMapper extends AbstractAntlrTokenToAt
 					, "'session'", "'internal'", "'transition'", "'?'"}));
 	
 	HashSet<String> action = new HashSet<String>(java.util.Arrays.asList(new String[]
-			{"'var'", "'return'", "'do'", "'end'", "'if'", "'else'", "'while'", "'for'"
+			{"'var'", "'return'", "'do'", "'end'", "'if'", "'else'", "'while'", "'for'", "'in'"
 					, "'print'", "'println'", "'error'", "'errorln'", "'not'", "'and'", "'or'"
 					, "'init'", "'keeps'", "'history'", "'exit'", "'->'"
 					, "'fork'", "'set'", "'as'", "'!'"}));

@@ -5,11 +5,11 @@ thing TestSelfMessage2 includes Test
 {
     message selfMessage(i : Integer);
     
-    provided port in {
+    provided port In {
         receives selfMessage    
     }
     
-    required port out {
+    required port Out {
         sends selfMessage    
     }
     
@@ -19,13 +19,13 @@ thing TestSelfMessage2 includes Test
 			
 			internal event m : Test?In
 			guard m.c == 't'
-            action out!selfMessage(1+1)
+            action Out!selfMessage(1+1)
             
-            internal event m : in?selfMessage
+            internal event m : In?selfMessage
             guard m.i == 2
             action do
 				TestOut('J')
-				out!selfMessage(m.i+1)
+				Out!selfMessage(m.i+1)
 		    end
 		    
 		    internal event Test?Done
@@ -36,5 +36,5 @@ thing TestSelfMessage2 includes Test
 
 configuration conf {
 	instance test : TestSelfMessage2
-	connector test.out => test.in
+	connector test.Out => test.In
 }

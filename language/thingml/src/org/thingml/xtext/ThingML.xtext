@@ -242,7 +242,7 @@ Decrement returns Decrement:
 	var=[Variable|ID] '--';
 
 ForAction returns ForAction:
-	'for' '(' variable=LocalVariable (',' index=LocalVariable)? '<-' array=PropertyReference ')' action=Action;
+	'for' '(' variable=Parameter (',' index=Parameter)? 'in' array=PropertyReference ')' action=Action;
 
 LoopAction returns LoopAction:
 	'while' '(' condition=Expression ')' action=Action;

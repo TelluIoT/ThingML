@@ -7,11 +7,11 @@ thing TestSelfMessageB includes Test
 	
     message selfMessage(c : Char);
     
-    required port in {
+    required port In {
         receives selfMessage    
     }
     
-    provided port out {
+    provided port Out {
         sends selfMessage    
     }
     
@@ -21,9 +21,9 @@ thing TestSelfMessageB includes Test
 			
 			internal event m : Test?In
 			guard m.c == 't'
-            action out!selfMessage(m.c)
+            action Out!selfMessage(m.c)
             
-            internal event m : in?selfMessage
+            internal event m : In?selfMessage
             guard m.c == 't'
             action do
             	TestOut('J')
@@ -36,5 +36,5 @@ thing TestSelfMessageB includes Test
 
 configuration conf {
 	instance test : TestSelfMessageB
-	connector test.in => test.out
+	connector test.In => test.Out
 }

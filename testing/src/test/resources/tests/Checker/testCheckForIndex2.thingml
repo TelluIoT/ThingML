@@ -7,7 +7,7 @@ thing TestCheckFor
     statechart TestAbstractFunction init INIT {
     	state INIT {
     		on entry do
-    			for(var v : Integer, var i : Boolean <- arr) do //i must be integer
+    			for(v : Integer, i : Boolean in arr) do //i must be integer
     				println v, i
     			end
     		end

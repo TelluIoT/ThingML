@@ -35,10 +35,6 @@ class VariableUsage extends ThingMLValidatorCheck {
 			error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Array)
 			return;
 		}
-		if (fa.variable.init !== null) {
-			val msg = "Variable " + fa.variable.name + " cannot be explicitly initialized."
-			error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Variable)
-		}
 		val vt = TyperHelper.getBroadType(fa.variable.typeRef.type)
 		val arrayType = TyperHelper.getBroadType(fa.array.property.typeRef.type)
 		if(!TyperHelper.isA(arrayType, vt)) {
@@ -47,10 +43,6 @@ class VariableUsage extends ThingMLValidatorCheck {
 		}
 		
 		if (fa.index !== null) {
-			if (fa.index.init !== null) {
-				val msg = "Variable " + fa.index.name + " cannot be explicitly initialized."
-				error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Index)
-			}
 			val indexT = TyperHelper.getBroadType(fa.index.typeRef.type)
 			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPE)) {
 				val msg = "Variable " + fa.index.name + " should be Integer. Found " + indexT.name + "."
