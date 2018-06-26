@@ -35,6 +35,7 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
@@ -132,6 +133,14 @@ public class ThingHelper {
 		result.addAll(ThingMLHelpers.allProperties(self));
 		for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
 			result.addAll(CompositeStateHelper.allContainedProperties(sm));
+		}
+		return result;
+	}
+	
+	public static Set<Property> allSessionsProperties(Thing self) {
+		Set<Property> result = new HashSet<Property>();
+		for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
+			result.addAll(CompositeStateHelper.allContainedSessionsProperties(sm));
 		}
 		return result;
 	}

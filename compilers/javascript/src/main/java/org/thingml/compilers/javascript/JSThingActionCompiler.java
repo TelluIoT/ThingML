@@ -168,7 +168,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		}
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("forks.push(" + session.getName() + ");\n");
+		builder.append("setImmediate(() => {\n");
 		builder.append(session.getName() + "._init();\n");
+		builder.append("});\n");
 	}
 
 	@Override

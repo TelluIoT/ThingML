@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -194,6 +195,19 @@ public class CompositeStateHelper {
     public static List<Session> allContainedSessions(CompositeState self) {
     	List<Session> result = new ArrayList<Session>();
         result.addAll(ThingMLHelpers.<Session>allContainedElementsOfType(self, Session.class));
+        return result;
+    }
+    
+    public static List<Property> allContainedSessionsProperties(CompositeState self) {
+        List<Property> result = new ArrayList<Property>();
+        for(Session s : allContainedSessions(self)) {
+        	final TreeIterator<EObject> content = s.eAllContents();
+        	while(content.hasNext()) {
+        		final EObject o = content.next();
+        		if (o instanceof Property)
+        			result.add((Property)o);
+        	}
+        }
         return result;
     }
 

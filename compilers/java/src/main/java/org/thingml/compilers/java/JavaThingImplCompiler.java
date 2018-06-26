@@ -322,9 +322,32 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
 			builder.append("private ");
 			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));						
-			Expression e = ThingHelper.initExpression(thing, p);		
 			builder.append(";\n");
 		}
+		for (Property p : ThingHelper.allSessionsProperties(thing)) {
+			builder.append("private ");
+			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));						
+			Expression e = ThingHelper.initExpression(thing, p);
+			if (e != null) {
+				builder.append(" = ");
+				ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+			}
+			builder.append(";\n");	
+			builder.append("private " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx)
+			+ " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p)
+			+ ";\n}\n\n");
+			if (!p.isReadonly()) {
+				builder.append("private void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
+						+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+						+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
+						+ ctx.getVariableName(p) + ";\n}\n\n");
+			}
+			builder.append("public " + thing.getName() + " init" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
+					+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+					+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
+					+ ctx.getVariableName(p) + ";\nreturn this;\n}\n\n");
+		}
+		
 		
 		if (debugProfile.isActive()) {
 			for (Property p : ThingHelper.allPropertiesInDepth(
