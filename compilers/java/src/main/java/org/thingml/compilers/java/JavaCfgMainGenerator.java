@@ -17,6 +17,7 @@
 package org.thingml.compilers.java;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,9 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Enumeration;
@@ -115,7 +118,13 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         	
             for(Thing t : ThingMLHelpers.allThingFragments(i.getType())) {
-            	for(Property p : t.getProperties()) {
+            	List<Property> props = new ArrayList<Property>();
+            	props.addAll(t.getProperties());
+            	if (t.getBehaviour() != null) {
+            		props.addAll(CompositeStateHelper.allContainedProperties(t.getBehaviour()));
+            		props.addAll(CompositeStateHelper.allContainedSessionsProperties(t.getBehaviour()));
+            	}
+            	for(Property p : props) {
             		if (p.getTypeRef().getCardinality() == null) {
             			builder.append(ctx.getInstanceName(i) + ".init" + ctx.firstToUpper(ctx.getVariableName(p)) + "(");
             			builder.append(generateInitialValue(cfg, i, p, ConfigurationHelper.initExpression(cfg, i, p), ctx));
@@ -123,6 +132,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             		}
             	}
             }
+            
+            
             
         	for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
         		builder.append(ctx.getInstanceName(i) + ".init" +  ctx.firstToUpper(ctx.getVariableName(a)) + "(");

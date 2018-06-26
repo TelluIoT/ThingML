@@ -17,6 +17,7 @@
 package org.thingml.compilers.javascript;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
@@ -86,7 +88,13 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		}
 		
         for(Thing t : ThingMLHelpers.allThingFragments(i.getType())) {
-        	for(Property p : t.getProperties()) {
+        	List<Property> props = new ArrayList<Property>();
+        	props.addAll(t.getProperties());
+        	if (t.getBehaviour() != null) {
+        		props.addAll(CompositeStateHelper.allContainedProperties(t.getBehaviour()));
+        		props.addAll(CompositeStateHelper.allContainedSessionsProperties(t.getBehaviour()));
+        	}
+        	for(Property p : props) {
         		if (p.getTypeRef().getCardinality() == null) {
         			StringBuilder tempbuilder = new StringBuilder();
     				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p)) + "(");
