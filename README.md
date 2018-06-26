@@ -38,7 +38,8 @@ The command line tool contains all the code generators and plugins which are par
 
 1. Download and install "Eclipse IDE for Java and DSL Developers" from [the eclipse website](https://eclipse.org/downloads/eclipse-packages/)
 2. Launch Eclipse
-3. Install the ThingML plugins: `Help -> Install New Software... -> Add...` and input `ThingML` as name and `http://thingml.org/dist/update2` as location, and then `OK`. 
+3. Install XText version 2.14. The update site URL is: http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/ (More info at https://www.eclipse.org/Xtext/download.html)
+3. Install the ThingML plugins: `Help -> Install New Software... -> Add...` and input `ThingML` as name and `http://thingml.org/dist/update2` as location, and then `OK`. If the ThingML plugin refuses to install, it is most likely because you have an old version of XText installed.
 4. Select ThingML and continue with the install procedure
 
 **Usage:** Once ThingML plugins are installed, `*.thingml` files will open with the ThingML editors. Right-click on `*.thingml` files and use `HEADS / ThingML` sub-menu to compile a ThingML file. Generated code will be put in a `thingml-gen` folder at the root of the eclipse project. Remember that only ThingML files containing a `configuration` can be compiled.    
