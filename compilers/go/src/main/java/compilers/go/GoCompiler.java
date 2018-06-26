@@ -16,9 +16,6 @@
  */
 package compilers.go;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
-
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.builder.Element;

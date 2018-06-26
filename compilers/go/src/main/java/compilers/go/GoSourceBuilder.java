@@ -19,7 +19,6 @@ package compilers.go;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.builder.SourceBuilder;
-import org.thingml.compilers.builder.StringBuilderSection;
 import org.thingml.xtext.thingML.State;
 
 import compilers.go.GoSourceBuilder.GoSection.GoFunction;

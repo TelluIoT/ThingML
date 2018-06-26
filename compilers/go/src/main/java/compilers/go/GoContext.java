@@ -20,14 +20,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.builder.Section;
@@ -38,6 +37,7 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Region;
@@ -45,6 +45,7 @@ import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 
@@ -235,6 +236,11 @@ public class GoContext extends Context {
 		this.currentVariableAssignmentType = null;
 	}
 	
+	/* --- Check if variable is used in an action block --- */
+	public boolean checkIfLocalVariableIsUsed(LocalVariable variable) {
+		ThingMLModel model = ThingMLHelpers.findContainingModel(variable);
+		return !EcoreUtil.UsageCrossReferencer.find(variable, model).isEmpty();
+	}
 	
 	
 	/* --- Some logging helpers --- */

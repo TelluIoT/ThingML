@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.CharLiteral;
@@ -50,11 +49,9 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
-import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
-import org.thingml.xtext.validation.TypeChecker;
 
 public class GoThingActionCompiler extends CommonThingActionCompiler {
 	public void variable(Variable variable, StringBuilder builder, Context ctx) {	
@@ -143,6 +140,10 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
+		// If variable is not used, don't declare it (Go is very strict)
+		if (!gctx.checkIfLocalVariableIsUsed(action))
+			return;
+		
 		builder.append("var ");
 		builder.append(action.getName());
 		builder.append(" ");
@@ -379,6 +380,7 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(ForAction action, StringBuilder builder, Context ctx) {
     	// TODO: What about types
+    	// FIXME: Check that the index and value is actually being used
     	// Check if index is used
     	String indexName = "_";
     	if (action.getIndex() != null) indexName = action.getIndex().getName();

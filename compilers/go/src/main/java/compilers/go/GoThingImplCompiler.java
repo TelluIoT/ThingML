@@ -16,9 +16,7 @@
  */
 package compilers.go;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Element;
@@ -38,7 +36,6 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.Session;
