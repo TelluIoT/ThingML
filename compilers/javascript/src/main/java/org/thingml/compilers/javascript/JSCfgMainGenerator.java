@@ -98,7 +98,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         		if (p.getTypeRef().getCardinality() == null) {
         			StringBuilder tempbuilder = new StringBuilder();
     				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p)) + "(");
-    				jctx.generateFixedAtInitValue(cfg, i, ConfigurationHelper.initExpression(cfg, i, p), tempbuilder);
+    				Expression e = ConfigurationHelper.initExpression(cfg, i, p);
+    				if (e!=null)
+    					jctx.generateFixedAtInitValue(cfg, i, e, tempbuilder);
+    				else
+    					property.append(getDefaultValue(p.getTypeRef().getType()));
     				property.append(tempbuilder.toString());
     				property.append(");");
         		}
