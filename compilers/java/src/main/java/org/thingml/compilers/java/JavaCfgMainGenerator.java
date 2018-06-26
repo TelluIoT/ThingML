@@ -26,7 +26,6 @@ import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Enumeration;
@@ -35,6 +34,7 @@ import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 
@@ -114,13 +114,16 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 }
             }
         	
-        	for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-        		if (p.getKey().getTypeRef().getCardinality() == null && p.getValue() != null) {
-        			builder.append(ctx.getInstanceName(i) + ".init" + ctx.firstToUpper(ctx.getVariableName(p.getKey())) + "(");
-        			builder.append(generateInitialValue(cfg, i, p.getKey(), p.getValue(), ctx));
-        			builder.append(");\n");
-        		}
-        	}
+            for(Thing t : ThingMLHelpers.allThingFragments(i.getType())) {
+            	for(Property p : t.getProperties()) {
+            		if (p.getTypeRef().getCardinality() == null) {
+            			builder.append(ctx.getInstanceName(i) + ".init" + ctx.firstToUpper(ctx.getVariableName(p)) + "(");
+            			builder.append(generateInitialValue(cfg, i, p, ConfigurationHelper.initExpression(cfg, i, p), ctx));
+            			builder.append(");\n");
+            		}
+            	}
+            }
+            
         	for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
         		builder.append(ctx.getInstanceName(i) + ".init" +  ctx.firstToUpper(ctx.getVariableName(a)) + "(");
         		builder.append(i.getName() + "_" + a.getName() + "_array");

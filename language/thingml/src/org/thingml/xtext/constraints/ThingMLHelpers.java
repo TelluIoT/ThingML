@@ -420,10 +420,10 @@ public class ThingMLHelpers {
 		ArrayList<Thing> result = new ArrayList<Thing>();
 		result.add(thing);
 		for (Thing t : thing.getIncludes())
-			if (t != thing) {
+			//if (t != thing) {
 				for (Thing c : allThingFragments(t))
-					if (!result.contains(c)) result.add(c);
-			}
+					if (!result.contains(c)) result.add(result.indexOf(thing),c);
+			//}
 		return result;
 	}
 	

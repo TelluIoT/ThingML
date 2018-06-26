@@ -20,9 +20,11 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -270,7 +272,7 @@ public class ConfigurationHelper {
 
 	public static List<Expression> initExpressions(Configuration self, Instance i, Property p) {
 		List<Expression> result = new ArrayList<Expression>();
-		for(AbstractMap.SimpleImmutableEntry<Property, Expression> entry : initExpressionsForInstance(self, i)) {
+		for(Entry<Property, Expression> entry : initExpressionsForInstance(self, i).entrySet()) {
 			if (EcoreUtil.equals(entry.getKey(), p)) {
 				result.add(entry.getValue());
 			}
@@ -278,11 +280,25 @@ public class ConfigurationHelper {
 		return result;
 	}
 
+	public static Expression initExpression(Configuration self, Instance i, Property p) {
+		Set<ConfigPropertyAssign> confassigns = new HashSet<ConfigPropertyAssign>();
+		for(ConfigPropertyAssign a : allPropAssigns(self)) {
+			if (EcoreUtil.equals(a.getInstance(), i) && EcoreUtil.equals(a.getProperty(), p)) {
+				confassigns.add(a);
+			}
+		}
+		if (confassigns.size() > 0) {  // There is an assignment for this property
+			return ((ConfigPropertyAssign)confassigns.toArray()[0]).getInit();
+		}
+		else {
+			return ThingHelper.initExpression(i.getType(), p);
+		}
+	}
 
-	public static List<AbstractMap.SimpleImmutableEntry<Property, Expression>> initExpressionsForInstance(Configuration self, Instance i) {
-		List<AbstractMap.SimpleImmutableEntry<Property, Expression>> result = new ArrayList<AbstractMap.SimpleImmutableEntry<Property, Expression>>();
+
+	public static Map<Property, Expression> initExpressionsForInstance(Configuration self, Instance i) {
+		Map<Property, Expression> result = new LinkedHashMap<>();
 		for(Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
-
 			Set<ConfigPropertyAssign> confassigns = new HashSet<ConfigPropertyAssign>();
 			for(ConfigPropertyAssign a : allPropAssigns(self)) {
 				if (EcoreUtil.equals(a.getInstance(), i) && EcoreUtil.equals(a.getProperty(), p)) {
@@ -291,10 +307,10 @@ public class ConfigurationHelper {
 			}
 
 			if (confassigns.size() > 0) {  // There is an assignment for this property
-				result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((ConfigPropertyAssign)confassigns.toArray()[0]).getInit()));
+				result.put(p, ((ConfigPropertyAssign)confassigns.toArray()[0]).getInit());
 			}
 			else {
-				result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ThingHelper.initExpression(i.getType(), p)));
+				result.put(p, ThingHelper.initExpression(i.getType(), p));
 			}
 		}
 		return result;

@@ -628,7 +628,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
         builder.append(ctx.getInstanceVarName(inst) + ".alive = true;\n");
 
         // Init simple properties
-        for (Map.Entry<Property, Expression> init: ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
+        for (Map.Entry<Property, Expression> init: ConfigurationHelper.initExpressionsForInstance(cfg, inst).entrySet()) {
             if (init.getValue() != null && init.getKey().getTypeRef().getCardinality() == null) {
 
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableQName(init.getKey()) + " = ");

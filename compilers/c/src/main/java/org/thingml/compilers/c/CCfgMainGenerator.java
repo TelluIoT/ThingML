@@ -1454,7 +1454,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     public void generateInitializationSimpleProperties(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         // Init simple properties
-        for (Map.Entry<Property, Expression> init : ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
+        for (Map.Entry<Property, Expression> init : ConfigurationHelper.initExpressionsForInstance(cfg, inst).entrySet()) {
             if (init.getValue() != null && init.getKey().getTypeRef().getCardinality() == null) {
                 if (ctx.traceLevelIsAbove(cfg, 3)) {
                     builder.append(ctx.getTraceFunctionForString(cfg) + "\"" + inst.getName()

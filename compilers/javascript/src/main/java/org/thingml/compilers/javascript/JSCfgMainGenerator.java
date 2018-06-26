@@ -23,6 +23,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -33,6 +34,7 @@ import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 
 public class JSCfgMainGenerator extends CfgMainGenerator {
@@ -83,15 +85,17 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			property.append(");\n");
 		}
 		
-		for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-			if (p.getKey().getTypeRef().getCardinality() == null && p.getValue() != null) {
-				StringBuilder tempbuilder = new StringBuilder();
-				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p.getKey())) + "(");
-				jctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
-				property.append(tempbuilder.toString());
-				property.append(");");
-			}
-		}
+        for(Thing t : ThingMLHelpers.allThingFragments(i.getType())) {
+        	for(Property p : t.getProperties()) {
+        		if (p.getTypeRef().getCardinality() == null) {
+        			StringBuilder tempbuilder = new StringBuilder();
+    				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p)) + "(");
+    				jctx.generateFixedAtInitValue(cfg, i, ConfigurationHelper.initExpression(cfg, i, p), tempbuilder);
+    				property.append(tempbuilder.toString());
+    				property.append(");");
+        		}
+        	}
+        }
 	}
 
 	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {
