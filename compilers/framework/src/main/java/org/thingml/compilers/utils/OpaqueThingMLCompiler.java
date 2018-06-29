@@ -25,6 +25,7 @@ import org.eclipse.xtext.validation.Issue;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.NewThingActionCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
@@ -39,14 +40,23 @@ import org.thingml.xtext.thingML.ThingMLModel;
 public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
 	PrintStream m, e;
-
-	public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
-		super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
+	
+	private void initializeStream() {
 		final OutputStream stream = getMessageStream();
 		if (stream != null) {
 			m = new PrintStream(stream);
 			e = new PrintStream(stream);
 		}
+	}
+
+	public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+		super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
+		initializeStream();
+	}
+	
+	public OpaqueThingMLCompiler(NewThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+		super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
+		initializeStream();
 	}
 
 	public void println(String msg) {

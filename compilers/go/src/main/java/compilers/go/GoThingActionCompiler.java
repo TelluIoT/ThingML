@@ -19,9 +19,11 @@ package compilers.go;
 import java.util.List;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.common.CommonThingActionCompiler;
+import org.thingml.compilers.builder.Section;
+import org.thingml.compilers.thing.common.NewCommonThingActionCompiler;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.ArrayInit;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
@@ -53,230 +55,245 @@ import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
-public class GoThingActionCompiler extends CommonThingActionCompiler {
-	public void variable(Variable variable, StringBuilder builder, Context ctx) {	
+public class GoThingActionCompiler extends NewCommonThingActionCompiler {
+	
+	public void variable(Variable variable, Section section, Context ctx) {	
 		GoContext gctx = (GoContext)ctx;
 		if (variable instanceof LocalVariable)
-			builder.append(variable.getName());
+			section.append(variable.getName());
 		else if (variable instanceof Property) {
 			if (gctx.currentThingContext != null) gctx.currentThingContext.instanceUsedInInitialisation = true;
-			builder.append(gctx.getCurrentInstanceStateName()).append(".").append(variable.getName());
+			section.append(gctx.getCurrentInstanceStateName()).append(".").append(variable.getName());
 		}
 		else if (variable instanceof Parameter)
-			builder.append(variable.getName());
+			section.append(variable.getName());
 	}
 	
 	@Override
-	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
+	public void generate(PrintAction action, Section section, Context ctx) {
 		GoContext gctx = (GoContext) ctx;
 		gctx.currentThingContext.addImports("fmt");
 		for (Expression msg : action.getMsg()) {
-			builder.append("fmt.Print(");
-			generate(msg, builder, ctx);
-			builder.append(")\n");
+			Section print = section.section("print");
+			print.append("fmt.Print(");
+			generate(msg, print.section("expression"), ctx);
+			print.append(")");
 		}
 		if (action.isLine())
-			builder.append("fmt.Println()\n");
+			section.append("fmt.Println()");
 	}
 	
-	
 	@Override
-	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
+	public void generate(ErrorAction action, Section section, Context ctx) {
 		GoContext gctx = (GoContext) ctx;
 		gctx.currentThingContext.addImports("fmt");
 		gctx.currentThingContext.addImports("os");
 		for (Expression msg : action.getMsg()) {
-			builder.append("fmt.Fprint(os.Stderr, ");
-			generate(msg, builder, ctx);
-			builder.append(")\n");
+			Section print = section.section("printerror");
+			print.append("fmt.Fprint(os.Stderr, ");
+			generate(msg, print.section("expression"), ctx);
+			print.append(")");
 		}
 		if (action.isLine())
-			builder.append("fmt.Fprintln(os.Stderr)\n");
+			section.append("fmt.Fprintln(os.Stderr)");
 	}
 	
 	@Override
-	public void generate(SendAction action, StringBuilder builder, Context ctx) {
+	public void generate(SendAction action, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
-		builder.append("state.Send(");
-		builder.append(gctx.getPortName(action.getPort())).append(", ");
-		builder.append(gctx.getMessageName(action.getMessage())).append("{");
+		Section send = section.section("send").lines();
+		Section before = send.section("before");
+		before.append("state.Send(");
+		before.append(gctx.getPortName(action.getPort())).append(", ");
+		before.append(gctx.getMessageName(action.getMessage())).append("{");
 		List<Parameter> parameters = action.getMessage().getParameters();
 		List<Expression> values = action.getParameters();
-		if (parameters.size() > 0) builder.append("\n");
-		for (int i = 0; i < parameters.size(); i++) {
-			builder.append("\t");
-			builder.append(parameters.get(i).getName()).append(": ");
-			if (gctx.shouldAutocast) {
-				builder.append(gctx.getTypeRef(parameters.get(i).getTypeRef()));
-				builder.append("(");
+		if (parameters.size() > 0) {
+			Section parsec = send.section("parameters").lines().indent();
+			send.section("after").append("})");
+			for (int i = 0; i < parameters.size(); i++) {
+				Section psec = parsec.section("parameter");
+				psec.append(parameters.get(i).getName()).append(": ");
+				if (gctx.shouldAutocast) {
+					psec.append(gctx.getTypeRef(parameters.get(i).getTypeRef()));
+					psec.append("(");
+				}
+				generate(values.get(i), psec.section("expression"), ctx);
+				if (gctx.shouldAutocast) psec.append(")");
+				psec.append(",");
 			}
-			generate(values.get(i), builder, ctx);
-			if (gctx.shouldAutocast) builder.append(")");
-			builder.append(",\n");
+		} else {
+			before.append("})");
 		}
-		builder.append("})\n");
 	}
 	
 	@Override
-	public void generate(StartSession action, StringBuilder builder, Context ctx) {
+	public void generate(Increment action, Section section, Context ctx) {
+		Section line = section.section("increment");
+		variable(action.getVar(), line, ctx);
+		line.append("++");
+	}
+	
+	@Override
+	public void generate(Decrement action, Section section, Context ctx) {
+		Section line = section.section("decrement");
+		variable(action.getVar(), line, ctx);
+		line.append("--");
+	}
+	
+	@Override
+	public void generate(StartSession action, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
-		builder.append("state.fork");
-		builder.append(gctx.getStateContainerName(action.getSession()));
-		builder.append("()\n");
+		Section line = section.section("startsession");
+		line.append("state.fork");
+		line.append(gctx.getStateContainerName(action.getSession()));
+		line.append("()");
 	}
 	
 	@Override
-	public void generate(Increment action, StringBuilder builder, Context ctx) {
-		variable(action.getVar(), builder, ctx);
-		builder.append("++\n");
+	public void generate(FunctionCallStatement action, Section section, Context ctx) {
+		Section call = section.section("functioncall");
+		call.append("state.");
+		call.append(action.getFunction().getName());
+		Section parameters = call.section("parameters").surroundWith("(", ")").joinWith(", ");
+		for (Expression p : action.getParameters()) {
+			generate(p, parameters.section("expression"), ctx);
+		}
 	}
 	
 	@Override
-	public void generate(Decrement action, StringBuilder builder, Context ctx) {
-		variable(action.getVar(), builder, ctx);
-		builder.append("--\n");
-	}
-	
-	@Override
-	public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
+	public void generate(LocalVariable action, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
 		// If variable is not used, don't declare it (Go is very strict)
 		if (!gctx.checkIfLocalVariableIsUsed(action))
 			return;
 		
-		builder.append("var ");
-		builder.append(action.getName());
-		builder.append(" ");
-		builder.append(gctx.getTypeRef(action.getTypeRef()));
+		Section line = section.section("localvariable");
+		line.append("var ");
+		line.append(action.getName());
+		line.append(" ");
+		line.append(gctx.getTypeRef(action.getTypeRef()));
 		if (action.getInit() != null) {
-			builder.append(" = ");
+			line.append(" = ");
 			gctx.setCurrentVariableAssignmentType(action.getTypeRef());
-			generate(action.getInit(), builder, ctx);
+			generate(action.getInit(), line.section("initexpression"), ctx);
 			gctx.resetCurrentVariableAssignmentType();
 		} else if (action.getTypeRef().isIsArray()) {
-			builder.append(" = make(");
-			builder.append(gctx.getTypeRef(action.getTypeRef()));
-			builder.append(", ");
-			generate(action.getTypeRef().getCardinality(), builder, gctx);
-			builder.append(")");
+			line.append(" = make(");
+			line.append(gctx.getTypeRef(action.getTypeRef()));
+			line.append(", ");
+			generate(action.getTypeRef().getCardinality(), line.section("arraysizeexpression"), gctx);
+			line.append(")");
 		}
-		builder.append("\n");
 	}
 	
 	@Override
-	public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
-		builder.append("return");
+	public void generate(ReturnAction action, Section section, Context ctx) {
+		Section line = section.section("return");
+		line.append("return");
 		if (action.getExp() != null) {
-			builder.append(" ");
-			generate(action.getExp(), builder, ctx);
+			line.append(" ");
+			generate(action.getExp(), line.section("expression"), ctx);
 		}
-		builder.append("\n");
 	}
 	
 	@Override
-	public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
+	public void generate(VariableAssignment action, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
-		variable(action.getProperty(), builder, ctx);
+		Section line = section.section("variableassignment");
+		variable(action.getProperty(), line, ctx);
 		if(action.getIndex() != null) {
-			builder.append("[");
-			generate(action.getIndex(), builder, ctx);
-			builder.append("]");
+			line.append("[");
+			generate(action.getIndex(), line.section("indexexpression"), ctx);
+			line.append("]");
 		}
-		builder.append(" = ");
+		line.append(" = ");
 		gctx.setCurrentVariableAssignmentType(action.getProperty().getTypeRef());
-		generate(action.getExpression(), builder, ctx);
+		generate(action.getExpression(), line.section("expression"), ctx);
 		gctx.resetCurrentVariableAssignmentType();
-		builder.append("\n");
 	}
 	
 	@Override
-	public void generate(ConditionalAction action, StringBuilder builder, Context ctx) {
-		builder.append("if ");
-		generate(action.getCondition(), builder, ctx);
-		builder.append(" {\n");
-		generate(action.getAction(), builder, ctx);
-		builder.append("}");
+	public void generate(ConditionalAction action, Section section, Context ctx) {
+		Section conditional = section.section("conditional").lines();
+		Section ifsection = conditional.section("if");
+		ifsection.append("if ");
+		generate(action.getCondition(), ifsection.section("expression"), ctx);
+		ifsection.append(" {");
+		generate(action.getAction(), conditional.section("ifaction").lines().indent(), ctx);
 		if (action.getElseAction() != null) {
-            builder.append(" else {\n");
-            generate(action.getElseAction(), builder, ctx);
-            builder.append("}");
-        }
-		builder.append("\n");
-	}
-	
-	@Override
-	public void generate(LoopAction action, StringBuilder builder, Context ctx) {
-		builder.append("for ");
-		generate(action.getCondition(), builder, ctx);
-		builder.append(" {\n");
-		generate(action.getAction(), builder, ctx);
-		builder.append("}\n");
-	}
-	
-	@Override
-	public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-		builder.append("state.");
-		builder.append(action.getFunction().getName());
-		builder.append("(");
-		boolean first = true;
-		for (Expression p : action.getParameters()) {
-			if (!first) builder.append(", ");
-			first = false;
-			generate(p, builder, ctx);
+			Section elsesection = conditional.section("else");
+			elsesection.append("} else {");
+			generate(action.getElseAction(), conditional.section("elseaction").lines().indent(), ctx);
 		}
-		builder.append(")\n");
+		conditional.append("}");
 	}
 	
 	@Override
-	public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
+	public void generate(LoopAction action, Section section, Context ctx) {
+		Section loop = section.section("loop").lines();
+		Section condition = loop.section("condition");
+		condition.append("for ");
+		generate(action.getCondition(), condition.section("expression"), ctx);
+		condition.append(" {");
+		generate(action.getAction(), loop.section("loopaction").lines().indent(), ctx);
+		loop.append("}");
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public void generate(FunctionCallExpression expression, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
-		builder.append(gctx.getCurrentInstanceStateName());
-		builder.append(".");
-		builder.append(expression.getFunction().getName());
-		builder.append("(");
-		boolean first = true;
+		Section call = section.section("functioncall");
+		call.append(gctx.getCurrentInstanceStateName());
+		call.append(".");
+		call.append(expression.getFunction().getName());
+		Section parameters = call.section("parameters").surroundWith("(", ")").joinWith(", ");
 		for (Expression p : expression.getParameters()) {
-			if (!first) builder.append(", ");
-			first = false;
-			generate(p, builder, ctx);
+			generate(p, parameters.section("parameter"), ctx);
 		}
-		builder.append(")");
 	}
 	
 	@Override
-	public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+	public void generate(EventReference expression, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
 		if (gctx.currentThingContext != null) gctx.currentThingContext.messageUsedInTransition = true;
-		builder.append(expression.getReceiveMsg().getName());
-		builder.append(".");
-		builder.append(expression.getParameter().getName());
+		section.append(expression.getReceiveMsg().getName());
+		section.append(".");
+		section.append(expression.getParameter().getName());
 	}
 	
 	@Override
-	public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-		variable(expression.getProperty(), builder, ctx);
+	public void generate(PropertyReference expression, Section section, Context ctx) {
+		variable(expression.getProperty(), section, ctx);
 	}
 	
 	@Override
-	public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-		builder.append(expression.getEnum().getName());
-		builder.append(expression.getLiteral().getName());
+	public void generate(EnumLiteralRef expression, Section section, Context ctx) {
+		section.append(expression.getEnum().getName());
+		section.append(expression.getLiteral().getName());
 	}
 	
 	@Override
-	public void generate(ArrayIndex expression, StringBuilder builder, Context ctx) {
-		generate(expression.getArray(), builder, ctx);
-        builder.append("[");
-        generate(expression.getIndex(), builder, ctx);
-        builder.append("]");
+	public void generate(ArrayIndex expression, Section section, Context ctx) {
+		generate(expression.getArray(), section.section("array"), ctx);
+		section.append("[");
+		generate(expression.getIndex(), section.section("index"), ctx);
+		section.append("]");
 	}
 	
 	@Override
-	public void generate(CharLiteral expression, StringBuilder builder, Context ctx) {
+	public void generate(CharLiteral expression, Section section, Context ctx) {
 		if (expression.getCharValue() == 0)
-			builder.append("'\\x00'");
+			section.append("'\\x00'");
 		else
-			super.generate(expression, builder, ctx);
+			super.generate(expression, section, ctx);
 	}
 	
 	protected TypeRef tryGetExpressionType(Expression exp, GoContext gctx) {
@@ -294,7 +311,7 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 		return result;
 	}
 	
-	protected void castComparisonIfNeccessary(Expression lhs, Expression rhs, StringBuilder builder, String operator, Context ctx) {
+	protected void castComparisonIfNeccessary(Expression lhs, Expression rhs, Section section, String operator, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
 		TypeRef lht = tryGetExpressionType(lhs, gctx);
 		TypeRef rht = tryGetExpressionType(rhs, gctx);
@@ -312,84 +329,94 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 			}
 			// Cast the correct side
 			if (castLeft) {
-				builder.append(gctx.getTypeRef(rht));
-				builder.append("(");
-				generate(lhs, builder, gctx);
-				builder.append(")");
-				builder.append(operator);
-				generate(rhs, builder, gctx);
+				section.append(gctx.getTypeRef(rht));
+				section.append("(");
+				generate(lhs, section.section("lhs"), gctx);
+				section.append(")");
+				section.append(operator);
+				generate(rhs, section.section("rhs"), gctx);
 			} else {
-				generate(lhs, builder, gctx);
-				builder.append(operator);
-				builder.append(gctx.getTypeRef(lht));
-				builder.append("(");
-				generate(rhs, builder, gctx);
-				builder.append(")");
+				generate(lhs, section.section("lhs"), gctx);
+				section.append(operator);
+				section.append(gctx.getTypeRef(lht));
+				section.append("(");
+				generate(rhs, section.section("rhs"), gctx);
+				section.append(")");
 			}
 		} else {
-			generate(lhs, builder, ctx);
-			builder.append(operator);
-			generate(rhs, builder, ctx);
+			generate(lhs, section.section("lhs"), gctx);
+			section.append(operator);
+			generate(rhs, section.section("rhs"), gctx);
 		}
 	}
 	
 	@Override
-    public void generate(LowerExpression expression, StringBuilder builder, Context ctx) {
-		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " < ", ctx);
-    }
-
-    @Override
-    public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
-    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " > ", ctx);
-    }
-
-    @Override
-    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
-    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " <= ", ctx);
-    }
-
-    @Override
-    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
-    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " >= ", ctx);
-    }
-
-    @Override
-    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
-    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " == ", ctx);
-    }
-    
-    @Override
-    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
-    	castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), builder, " != ", ctx);
-    }
-    
-    @Override
-    public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
-    	GoContext gctx = (GoContext)ctx;
-    	builder.append(gctx.getTypeRef(gctx.getCurrentVariableAssignmentType()));
-    	builder.append("{");
-    	boolean first = true;
-    	for (Expression val : expression.getValues()) {
-    		if (first) first = false;
-    		else builder.append(", ");
-    		generate(val, builder, ctx);
-    	}
-    	builder.append("}");
-    }
-    
-    @Override
-    public void generate(ForAction action, StringBuilder builder, Context ctx) {
-    	// TODO: What about types
+	public void generate(LowerExpression expression, Section section, Context ctx) {
+		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), section, " < ", ctx);
+	}
+	
+	@Override
+	public void generate(GreaterExpression expression, Section section, Context ctx) {
+		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), section, " > ", ctx);
+	}
+	
+	@Override
+	public void generate(LowerOrEqualExpression expression, Section section, Context ctx) {
+		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), section, " <= ", ctx);
+	}
+	
+	@Override
+	public void generate(GreaterOrEqualExpression expression, Section section, Context ctx) {
+		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), section, " >= ", ctx);
+	}
+	
+	@Override
+	public void generate(EqualsExpression expression, Section section, Context ctx) {
+		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), section, " == ", ctx);
+	}
+	
+	@Override
+	public void generate(NotEqualsExpression expression, Section section, Context ctx) {
+		castComparisonIfNeccessary(expression.getLhs(), expression.getRhs(), section, " != ", ctx);
+	}
+	
+	@Override
+	public void generate(ArrayInit expression, Section section, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
+		section.append(gctx.getTypeRef(gctx.getCurrentVariableAssignmentType()));
+		section.append("{ ");
+		Section expressions = section.section("expressions").joinWith(", ");
+		for (Expression val : expression.getValues()) {
+			generate(val, expressions.section("expression"), ctx);
+		}
+		section.append(" }");
+	}
+	
+	@Override
+	public void generate(ForAction action, Section section, Context ctx) {
+		// TODO: What about types
     	// FIXME: Check that the index and value is actually being used
-    	// Check if index is used
+    	// Check if index and value is used
     	String indexName = "_";
     	if (action.getIndex() != null) indexName = action.getIndex().getName();
     	// Generate for range
-    	builder.append("for ").append(indexName).append(", ").append(action.getVariable().getName());
-    	builder.append(" := range ");
-    	variable(action.getArray().getProperty(), builder, ctx);
-    	builder.append(" {\n");
-    	generate(action.getAction(), builder, ctx);
-    	builder.append("}\n");
-    }
+    	Section forrange = section.section("forloop").lines();
+    	Section before = forrange.section("for");
+    	before.append("for ").append(indexName).append(", ").append(action.getVariable().getName());
+    	before.append(" := range ");
+    	variable(action.getArray().getProperty(), before.section("array"), ctx);
+    	before.append(" {");
+    	generate(action.getAction(), forrange.section("action").lines().indent(), ctx);
+    	forrange.append("}");
+	}
+	
+	@Override
+	public void generate(CastExpression expression, Section section, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
+		Section cst = section.section("cast");
+		if (expression.isIsArray())
+			cst.append("[]");
+		cst.append(gctx.getTypeName(expression.getType()));
+		generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
+	}
 }

@@ -45,6 +45,7 @@ import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.compilers.thing.NewThingActionCompiler;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
@@ -83,6 +84,7 @@ public abstract class ThingMLCompiler {
     Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
     Map<String, ExternalThingPlugin> externalThingPlugingPerExternalThing = new HashMap<>();
     private ThingActionCompiler thingActionCompiler;
+    private NewThingActionCompiler newThingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
     private CfgMainGenerator mainCompiler;
     private CfgBuildCompiler cfgBuildCompiler;
@@ -104,6 +106,7 @@ public abstract class ThingMLCompiler {
 
     public ThingMLCompiler() {
         this.thingActionCompiler = new ThingActionCompiler();
+        this.newThingActionCompiler = null;
         this.thingApiCompiler = new ThingApiCompiler();
         this.mainCompiler = new CfgMainGenerator();
         this.cfgBuildCompiler = new CfgBuildCompiler();
@@ -112,6 +115,16 @@ public abstract class ThingMLCompiler {
 
     public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
         this.thingActionCompiler = thingActionCompiler;
+        this.newThingActionCompiler = null;
+        this.thingApiCompiler = thingApiCompiler;
+        this.mainCompiler = mainCompiler;
+        this.cfgBuildCompiler = cfgBuildCompiler;
+        this.thingImplCompiler = thingImplCompiler;
+    }
+    
+    public ThingMLCompiler(NewThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+        this.thingActionCompiler = null;
+        this.newThingActionCompiler = thingActionCompiler;
         this.thingApiCompiler = thingApiCompiler;
         this.mainCompiler = mainCompiler;
         this.cfgBuildCompiler = cfgBuildCompiler;
@@ -427,6 +440,10 @@ public abstract class ThingMLCompiler {
 
     public ThingActionCompiler getThingActionCompiler() {
         return thingActionCompiler;
+    }
+    
+    public NewThingActionCompiler getNewThingActionCompiler() {
+    	return newThingActionCompiler;
     }
 
     public ThingApiCompiler getThingApiCompiler() {

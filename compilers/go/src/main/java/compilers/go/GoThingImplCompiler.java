@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
-import org.thingml.compilers.builder.StringBuilderSection;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Action;
@@ -109,8 +108,7 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		// Set the properties of the state
 		for (Property property : state.getProperties()) {
 			if (property.getInit() != null) {
-				StringBuilder initExpression = structInit.addField(property.getName()).stringbuilder("expression");
-				gctx.getCompiler().getThingActionCompiler().generate(property.getInit(), initExpression, gctx);
+				gctx.getCompiler().getNewThingActionCompiler().generate(property.getInit(), structInit.addField(property.getName()), gctx);
 			}
 		}
 		
@@ -381,16 +379,13 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 	
 	private void generateAction(Thing thing, Action action, Section parent, GoContext gctx) {
 		if (action != null) {
-			StringBuilder builder = parent.stringbuilder("action");
-			gctx.getCompiler().getThingActionCompiler().generate(action, builder, gctx);
+			gctx.getCompiler().getNewThingActionCompiler().generate(action, parent.section("action").lines(), gctx);
 		}
 	}
 	
 	private void generateExpression(Thing thing, Expression expression, Section parent, GoContext gctx) {
 		if (expression != null) {
-			StringBuilderSection section = parent.stringbuilderSection("expression");
-			section.lines(false);
-			gctx.getCompiler().getThingActionCompiler().generate(expression, section.stringbuilder(), gctx);
+			gctx.getCompiler().getNewThingActionCompiler().generate(expression, parent.section("expression"), gctx);
 		}
 	}
 
@@ -573,7 +568,7 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 				if (f.getTypeRef() != null)
 					abstractCall.prepend("return ");
 			} else {
-				gctx.getCompiler().getThingActionCompiler().generate(f.getBody(), func.body().stringbuilder("body"), gctx);
+				gctx.getCompiler().getNewThingActionCompiler().generate(f.getBody(), func.body(), gctx);
 			}
 		}
 		

@@ -62,14 +62,14 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 				Section propInit = sec.appendSection("property");
 				propInit.append(inst.getName()).append(".").append(prop.getName()).append(" = ");
 				gctx.setCurrentVariableAssignmentType(prop.getTypeRef());
-				gctx.getCompiler().getThingActionCompiler().generate(init, propInit.stringbuilder("expression"), gctx);
+				gctx.getCompiler().getNewThingActionCompiler().generate(init, propInit.section("expression"), gctx);
 				gctx.resetCurrentVariableAssignmentType();
 			} else if (prop.getTypeRef().isIsArray()) {
 				// If no init expression is specified, create an empty slice for arrays
 				Section arrInit = sec.appendSection("arrayproperty");
 				arrInit.append(inst.getName()).append(".").append(prop.getName()).append(" = ");
 				arrInit.append("make(").append(gctx.getTypeRef(prop.getTypeRef())).append(", ");
-				gctx.getCompiler().getThingActionCompiler().generate(prop.getTypeRef().getCardinality(), arrInit.stringbuilder("init"), gctx);
+				gctx.getCompiler().getNewThingActionCompiler().generate(prop.getTypeRef().getCardinality(), arrInit.section("init"), gctx);
 				arrInit.append(")");
 			}
 			
@@ -79,11 +79,11 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 						Section eleInit = sec.appendSection("arraypropertyelement");
 						eleInit.append(inst.getName()).append(".").append(prop.getName());
 						eleInit.append("[");
-						gctx.getCompiler().getThingActionCompiler().generate(arrayElementInit.getKey(), eleInit.stringbuilder("index"), gctx);
+						gctx.getCompiler().getNewThingActionCompiler().generate(arrayElementInit.getKey(), eleInit.section("index"), gctx);
 						eleInit.append("]");
 						eleInit.append(" = ");
 						gctx.setCurrentVariableAssignmentType(prop.getTypeRef());
-						gctx.getCompiler().getThingActionCompiler().generate(arrayElementInit.getValue(), eleInit.stringbuilder("expression"), gctx);
+						gctx.getCompiler().getNewThingActionCompiler().generate(arrayElementInit.getValue(), eleInit.section("expression"), gctx);
 						gctx.resetCurrentVariableAssignmentType();
 					}
 				}

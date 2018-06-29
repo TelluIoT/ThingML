@@ -79,18 +79,17 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 				  .append("const (");
 			Section constBody = constS.appendSection("body").lines().indent();
 			for (EnumerationLiteral literal : enumeration.getLiterals()) {
-				Element value = new Element("iota");
-				constBody.appendSection("literal")
-					     .append(enumeration.getName())
-						 .append(literal.getName())
-						 .append(" ")
-						 .append(gctx.getTypeName(enumeration))
-						 .append(" = ")
-						 .append(value);
+				Section litSec = constBody.appendSection("literal");
+				litSec.append(enumeration.getName())
+				 	  .append(literal.getName())
+				 	  .append(" ")
+				 	  .append(gctx.getTypeName(enumeration))
+				 	  .append(" = ");
+				Section value = litSec.section("value");
 				if (literal.getInit() != null) {
-					StringBuilder initBuilder = new StringBuilder();
-					gctx.getCompiler().getThingActionCompiler().generate(literal.getInit(), initBuilder, gctx);
-					value.set(initBuilder.toString());
+					gctx.getCompiler().getNewThingActionCompiler().generate(literal.getInit(), value, gctx);
+				} else {
+					value.append("iota");
 				}
 				
 				// FIXME: Remove this. Currently kept for backwards compatibility
