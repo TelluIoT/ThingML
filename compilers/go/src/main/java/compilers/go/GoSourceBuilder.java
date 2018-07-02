@@ -27,43 +27,64 @@ import compilers.go.GoSourceBuilder.GoSection.Struct;
 import compilers.go.GoSourceBuilder.GoSection.StructInitializer;
 
 public class GoSourceBuilder extends SourceBuilder {
+	public static Element STATE_E = new Element("state");
+	public static Element ONENTRY_E = new Element("OnEntry");
+	public static Element HANDLE_E = new Element("Handle");
+	public static Element ONEXIT_E = new Element("OnExit");
+	
+	public static Element PORT_E = new Element("port");
+	public static Element MESSAGE_E = new Element("message");
+	public static Element HANDLED_E = new Element("handled");
+	public static Element INTERNAL_E = new Element("internal");
+	public static Element NEXT_E = new Element("next");
+	public static Element ACTION_E = new Element("action");
+	
+	public static Element GOSMPORT_E = new Element("gosm.Port");
+	public static Element EMPTYINTERFACE_E = new Element("interface{}");
+	public static Element BOOL_E = new Element("bool");
+	public static Element GOSMSTATE_E = new Element("gosm.State");
+	public static Element EMPTYFUNC_E = new Element("func()");
+	
+	public static Element STAR_E = new Element("*");
+	
+	
 
-	public Struct struct(String name) {
+	public Struct struct(Element name) {
 		Struct newStruct = new Struct(this, name);
 		this.append(newStruct);
 		return newStruct;
 	}
 
-	public StructInitializer structInitializer(String name, String type) {
+	public StructInitializer structInitializer(Element name, Element type) {
 		return GoSection.structInitializer(this, name, type);
 	}
 
-	public GoMethod method(String name, String receiverName, String receiverType) {
+	public GoMethod method(Element name, Element receiverName, Element receiverType) {
 		GoMethod newMethod = new GoMethod(this, name, receiverName, receiverType);
 		this.append(newMethod);
 		return newMethod;
 	}
 
 	public GoMethod onEntry(State s, GoContext gctx) {
-		return this.method("OnEntry", "state", "*" + gctx.getStateName(s));
+		return this.method(ONENTRY_E, STATE_E, gctx.getNameFor("*", s));
 	}
 
 	public GoMethod handler(State s, GoContext gctx) {
-		GoMethod handler = this.method("Handle", "state", "*" + gctx.getStateName(s));
-		handler.addArgument("port", "gosm.Port");
-		handler.addArgument("message", "interface{}");
-		handler.addReturns("handled", "bool");
-		handler.addReturns("internal", "bool");
-		handler.addReturns("next", "gosm.State");
-		handler.addReturns("action", "func()");
+		GoMethod handler = this.method(HANDLE_E, STATE_E, gctx.getNameFor("*", s));
+		handler.addArgument(PORT_E, GOSMPORT_E);
+		handler.addArgument(MESSAGE_E, EMPTYINTERFACE_E);
+		handler.addReturns(HANDLED_E, BOOL_E);
+		handler.addReturns(INTERNAL_E, BOOL_E);
+		handler.addReturns(NEXT_E, GOSMSTATE_E);
+		handler.addReturns(ACTION_E, EMPTYFUNC_E);
 		return handler;
 	}
 
 	public GoMethod onExit(State s, GoContext gctx) {
-		return this.method("OnExit", "state", "*" + gctx.getStateName(s));
+		return this.method(ONEXIT_E, STATE_E, gctx.getNameFor("*", s));
 	}
 
-	public GoFunction function(String name) {
+	public GoFunction function(Element name) {
 		GoFunction newFunction = new GoFunction(this, name);
 		this.append(newFunction);
 		return newFunction;
@@ -85,10 +106,10 @@ public class GoSourceBuilder extends SourceBuilder {
 			protected Section fields;
 			protected Element name;
 
-			protected Struct(Section parent, String name) {
+			protected Struct(Section parent, Element name) {
 				super(parent, "struct");
 				this.lines();
-				this.name = new Element(name);
+				this.name = name;
 				this.before = this.appendSection("before");
 				this.before.append("type ").append(this.name).append(" struct {");
 				this.fields = this.appendSection("fields").lines().indent();
@@ -101,16 +122,16 @@ public class GoSourceBuilder extends SourceBuilder {
 				super.prepare(builder);
 			}
 			
-			public Section addField(String name) {
+			public Section addField(Element name) {
 				Section field = this.fields.appendSection("field").joinWith(" ");
-				field.appendSection("name").set(name);
+				field.appendSection("name").append(name);
 				return field.appendSection("type");
 			}
 
-			public Section addField(String name, String type) {
+			public Section addField(Element name, Element type) {
 				Section field = this.fields.appendSection("field").joinWith(" ");
-				field.appendSection("name").set(name);
-				field.appendSection("type").set(type);
+				field.appendSection("name").append(name);
+				field.appendSection("type").append(type);
 				return field;
 			}
 		}
@@ -118,7 +139,7 @@ public class GoSourceBuilder extends SourceBuilder {
 		public static class StructInitializer extends GoSection {
 			protected Section fields;
 
-			protected StructInitializer(Section parent, String name, String type) {
+			protected StructInitializer(Section parent, Element name, Element type) {
 				super(parent, "structinitialization");
 				this.lines();
 				Section before = this.appendSection("before");
@@ -135,7 +156,7 @@ public class GoSourceBuilder extends SourceBuilder {
 				super.prepare(builder);
 			}
 
-			public GoSection addField(String name) {
+			public GoSection addField(Element name) {
 				Section field = this.fields.appendSection("field");
 				field.appendSection("name").append(name);
 				field.append(": ");
@@ -144,14 +165,10 @@ public class GoSourceBuilder extends SourceBuilder {
 				return value;
 			}
 
-			public GoSection addField(String name, Element value) {
+			public GoSection addField(Element name, Element value) {
 				GoSection valueSection = addField(name);
 				valueSection.append(value);
 				return valueSection;
-			}
-
-			public GoSection addField(String name, String value) {
-				return addField(name, new Element(value));
 			}
 		}
 
@@ -165,16 +182,16 @@ public class GoSourceBuilder extends SourceBuilder {
 			protected Section returns;
 			protected GoSection body;
 
-			protected GoMethod(Section parent, String name, String receiverName, String receiverType) {
+			protected GoMethod(Section parent, Element name, Element receiverName, Element receiverType) {
 				super(parent, "method");
 				this.lines();
 				this.before = this.appendSection("before").joinWith(" ");
 				this.before.append("func");
 				this.receiver = this.before.appendSection("receiver").surroundWith("(", ")", 1).joinWith(" ");
-				this.receiverName = new Element(receiverName);
-				this.receiverType = new Element(receiverType);
+				this.receiverName = receiverName;
+				this.receiverType = receiverType;
 				this.receiver.append(this.receiverName).append(this.receiverType);
-				this.name = new Element(name);
+				this.name = name;
 				Section nameArguments = this.before.appendSection("namearguments");
 				nameArguments.appendSection("name").append(this.name);
 				this.arguments = nameArguments.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
@@ -191,17 +208,17 @@ public class GoSourceBuilder extends SourceBuilder {
 				super.prepare(builder);
 			}
 
-			public Section addArgument(String name, String type) {
+			public Section addArgument(Element name, Element type) {
 				Section argument = this.arguments.appendSection("argument").joinWith(" ");
-				argument.appendSection("name").set(name);
-				argument.appendSection("type").set(type);
+				argument.appendSection("name").append(name);
+				argument.appendSection("type").append(type);
 				return argument;
 			}
 
-			public Section addReturns(String name, String type) {
+			public Section addReturns(Element name, Element type) {
 				Section argument = this.returns.appendSection("return").joinWith(" ");
-				argument.appendSection("name").set(name);
-				argument.appendSection("type").set(type);
+				argument.appendSection("name").append(name);
+				argument.appendSection("type").append(type);
 				return argument;
 			}
 
@@ -211,7 +228,7 @@ public class GoSourceBuilder extends SourceBuilder {
 		}
 
 		public static class GoFunction extends GoMethod {
-			public GoFunction(Section parent, String name) {
+			public GoFunction(Section parent, Element name) {
 				super(parent, name, null, null);
 				this.receiver.clear();
 			}
@@ -224,6 +241,7 @@ public class GoSourceBuilder extends SourceBuilder {
 			protected Element actionBefore;
 			protected Section actionBody;
 			protected Element actionAfter;
+			protected Section ret;
 			
 			protected TransitionReturn(Section parent) {
 				super(parent, "transition");
@@ -233,7 +251,7 @@ public class GoSourceBuilder extends SourceBuilder {
 				this.next = new Element("state");
 				this.actionBefore = new Element("func() {");
 				this.actionAfter = new Element("}");
-				Section ret = this.appendSection("return");
+				this.ret = this.appendSection("return");
 				ret.append("return ").append(this.handled).append(", ").append(this.internal)
 				   .append(", ").append(this.next).append(", ").append(this.actionBefore);
 				this.actionBody = this.appendSection("transitionaction").lines().indent();
@@ -250,8 +268,9 @@ public class GoSourceBuilder extends SourceBuilder {
 				return this;
 			}
 			
-			public TransitionReturn next(String state) {
-				this.next.set(state);
+			public TransitionReturn next(Element state) {
+				this.ret.replace(this.next, state);
+				this.next = state;
 				return this;
 			}
 			
@@ -274,13 +293,13 @@ public class GoSourceBuilder extends SourceBuilder {
 		}
 
 		/* --- Constructors --- */
-		protected static StructInitializer structInitializer(Section parent, String name, String type) {
+		protected static StructInitializer structInitializer(Section parent, Element name, Element type) {
 			StructInitializer newStructInitializer = new StructInitializer(parent, name, type);
 			parent.append(newStructInitializer);
 			return newStructInitializer;
 		}
 		
-		public StructInitializer structInitializer(String name, String type) {
+		public StructInitializer structInitializer(Element name, Element type) {
 			return structInitializer(this, name, type);
 		}
 		

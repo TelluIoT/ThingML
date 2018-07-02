@@ -19,6 +19,7 @@ package compilers.go;
 import java.util.List;
 
 import org.thingml.compilers.Context;
+import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.thing.common.NewCommonThingActionCompiler;
 import org.thingml.xtext.thingML.ArrayIndex;
@@ -60,13 +61,13 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	public void variable(Variable variable, Section section, Context ctx) {	
 		GoContext gctx = (GoContext)ctx;
 		if (variable instanceof LocalVariable)
-			section.append(variable.getName());
+			section.append(gctx.getNameFor(variable));
 		else if (variable instanceof Property) {
 			if (gctx.currentThingContext != null) gctx.currentThingContext.instanceUsedInInitialisation = true;
-			section.append(gctx.getCurrentInstanceStateName()).append(".").append(variable.getName());
+			section.append(gctx.getCurrentInstanceStateName()).append(".").append(gctx.getNameFor(variable));
 		}
 		else if (variable instanceof Parameter)
-			section.append(variable.getName());
+			section.append(gctx.getNameFor(variable));
 	}
 	
 	@Override
@@ -104,8 +105,8 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		Section send = section.section("send").lines();
 		Section before = send.section("before");
 		before.append("state.Send(");
-		before.append(gctx.getPortName(action.getPort())).append(", ");
-		before.append(gctx.getMessageName(action.getMessage())).append("{");
+		before.append(gctx.getNameFor(action.getPort())).append(", ");
+		before.append(gctx.getNameFor(action.getMessage())).append("{");
 		List<Parameter> parameters = action.getMessage().getParameters();
 		List<Expression> values = action.getParameters();
 		if (parameters.size() > 0) {
@@ -113,9 +114,9 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 			send.section("after").append("})");
 			for (int i = 0; i < parameters.size(); i++) {
 				Section psec = parsec.section("parameter");
-				psec.append(parameters.get(i).getName()).append(": ");
+				psec.append(gctx.getNameFor(parameters.get(i))).append(": ");
 				if (gctx.shouldAutocast) {
-					psec.append(gctx.getTypeRef(parameters.get(i).getTypeRef()));
+					psec.append(gctx.getNameFor(parameters.get(i).getTypeRef()));
 					psec.append("(");
 				}
 				generate(values.get(i), psec.section("expression"), ctx);
@@ -146,15 +147,16 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		GoContext gctx = (GoContext)ctx;
 		Section line = section.section("startsession");
 		line.append("state.fork");
-		line.append(gctx.getStateContainerName(action.getSession()));
+		line.append(gctx.getNameFor(action.getSession()));
 		line.append("()");
 	}
 	
 	@Override
 	public void generate(FunctionCallStatement action, Section section, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
 		Section call = section.section("functioncall");
 		call.append("state.");
-		call.append(action.getFunction().getName());
+		call.append(gctx.getNameFor(action.getFunction()));
 		Section parameters = call.section("parameters").surroundWith("(", ")").joinWith(", ");
 		for (Expression p : action.getParameters()) {
 			generate(p, parameters.section("expression"), ctx);
@@ -170,9 +172,9 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		
 		Section line = section.section("localvariable");
 		line.append("var ");
-		line.append(action.getName());
+		line.append(gctx.getNameFor(action));
 		line.append(" ");
-		line.append(gctx.getTypeRef(action.getTypeRef()));
+		line.append(gctx.getNameFor(action.getTypeRef()));
 		if (action.getInit() != null) {
 			line.append(" = ");
 			gctx.setCurrentVariableAssignmentType(action.getTypeRef());
@@ -180,7 +182,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 			gctx.resetCurrentVariableAssignmentType();
 		} else if (action.getTypeRef().isIsArray()) {
 			line.append(" = make(");
-			line.append(gctx.getTypeRef(action.getTypeRef()));
+			line.append(gctx.getNameFor(action.getTypeRef()));
 			line.append(", ");
 			generate(action.getTypeRef().getCardinality(), line.section("arraysizeexpression"), gctx);
 			line.append(")");
@@ -253,7 +255,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		Section call = section.section("functioncall");
 		call.append(gctx.getCurrentInstanceStateName());
 		call.append(".");
-		call.append(expression.getFunction().getName());
+		call.append(gctx.getNameFor(expression.getFunction()));
 		Section parameters = call.section("parameters").surroundWith("(", ")").joinWith(", ");
 		for (Expression p : expression.getParameters()) {
 			generate(p, parameters.section("parameter"), ctx);
@@ -264,9 +266,9 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	public void generate(EventReference expression, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
 		if (gctx.currentThingContext != null) gctx.currentThingContext.messageUsedInTransition = true;
-		section.append(expression.getReceiveMsg().getName());
+		section.append(gctx.getNameFor(expression.getReceiveMsg()));
 		section.append(".");
-		section.append(expression.getParameter().getName());
+		section.append(gctx.getNameFor(expression.getParameter()));
 	}
 	
 	@Override
@@ -276,8 +278,8 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	
 	@Override
 	public void generate(EnumLiteralRef expression, Section section, Context ctx) {
-		section.append(expression.getEnum().getName());
-		section.append(expression.getLiteral().getName());
+		GoContext gctx = (GoContext)ctx;
+		section.append(gctx.getNameFor(expression.getLiteral()));
 	}
 	
 	@Override
@@ -329,7 +331,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 			}
 			// Cast the correct side
 			if (castLeft) {
-				section.append(gctx.getTypeRef(rht));
+				section.append(gctx.getNameFor(rht));
 				section.append("(");
 				generate(lhs, section.section("lhs"), gctx);
 				section.append(")");
@@ -338,7 +340,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 			} else {
 				generate(lhs, section.section("lhs"), gctx);
 				section.append(operator);
-				section.append(gctx.getTypeRef(lht));
+				section.append(gctx.getNameFor(lht));
 				section.append("(");
 				generate(rhs, section.section("rhs"), gctx);
 				section.append(")");
@@ -383,7 +385,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	@Override
 	public void generate(ArrayInit expression, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
-		section.append(gctx.getTypeRef(gctx.getCurrentVariableAssignmentType()));
+		section.append(gctx.getNameFor(gctx.getCurrentVariableAssignmentType()));
 		section.append("{ ");
 		Section expressions = section.section("expressions").joinWith(", ");
 		for (Expression val : expression.getValues()) {
@@ -394,15 +396,16 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	
 	@Override
 	public void generate(ForAction action, Section section, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
 		// TODO: What about types
     	// FIXME: Check that the index and value is actually being used
     	// Check if index and value is used
-    	String indexName = "_";
-    	if (action.getIndex() != null) indexName = action.getIndex().getName();
+		Element indexName = new Element("_");
+		if (action.getIndex() != null) indexName = gctx.getNameFor(action.getIndex());
     	// Generate for range
     	Section forrange = section.section("forloop").lines();
     	Section before = forrange.section("for");
-    	before.append("for ").append(indexName).append(", ").append(action.getVariable().getName());
+    	before.append("for ").append(indexName).append(", ").append(gctx.getNameFor(action.getVariable()));
     	before.append(" := range ");
     	variable(action.getArray().getProperty(), before.section("array"), ctx);
     	before.append(" {");
@@ -416,7 +419,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		Section cst = section.section("cast");
 		if (expression.isIsArray())
 			cst.append("[]");
-		cst.append(gctx.getTypeName(expression.getType()));
+		cst.append(gctx.getNameFor(expression.getType()));
 		generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
 	}
 }

@@ -18,7 +18,6 @@ package compilers.go;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
@@ -65,14 +64,14 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 	private void generateEnumerations(ThingMLModel model, GoSourceBuilder builder, GoContext gctx) {
 		for (Enumeration enumeration : ThingMLHelpers.allEnumerations(model)) {
 			Section enumS = builder.appendSection("enumeration").lines();
-			Element enumType = new Element("int");
-			enumS.appendSection("type")
-				 .append("type ")
-				 .append(gctx.getTypeName(enumeration))
-				 .append(" ")
-				 .append(enumType);
+			Section enumT = enumS.appendSection("type");
+			enumT.append("type ")
+				 .append(gctx.getNameFor(enumeration))
+				 .append(" ");
 			if (enumeration.getTypeRef() != null)
-				enumType.set(gctx.getTypeRef(enumeration.getTypeRef()));
+				enumT.append(gctx.getNameFor(enumeration.getTypeRef()));
+			else
+				enumT.append("int");
 				
 			Section constS = enumS.appendSection("consts").lines();
 			constS.appendSection("before")
@@ -80,10 +79,9 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 			Section constBody = constS.appendSection("body").lines().indent();
 			for (EnumerationLiteral literal : enumeration.getLiterals()) {
 				Section litSec = constBody.appendSection("literal");
-				litSec.append(enumeration.getName())
-				 	  .append(literal.getName())
+				litSec.append(gctx.getNameFor(literal))
 				 	  .append(" ")
-				 	  .append(gctx.getTypeName(enumeration))
+				 	  .append(gctx.getNameFor(enumeration))
 				 	  .append(" = ");
 				Section value = litSec.section("value");
 				if (literal.getInit() != null) {
@@ -128,6 +126,8 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 		getCfgBuildCompiler().generateDockerFile(cfg, ctx);
 		ctx.writeGeneratedCodeToFiles();
+		
+		ctx.getNamer().printAllUsedNames();
 
 		return true;
 	}

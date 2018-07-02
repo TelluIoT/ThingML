@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.thingml.compilers.Context;
+import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.thingML.AbstractConnector;
@@ -50,7 +51,7 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		for (Thing included : thing.getIncludes())
 			generatePropertyInits(gctx, sec, included, inst, initExpressions);
 		
-		gctx.setCurrentInstanceStatename(inst.getName());
+		gctx.setCurrentInstanceStatename(gctx.getNameFor(inst));
 		// Finally, initialize our own properties
 		for (Property prop : thing.getProperties()) {
 			Map<Expression, Expression> exprs = initExpressions.getOrDefault(prop, new HashMap<Expression, Expression>());
@@ -60,15 +61,15 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 			if (init != null) {
 				// Generate the init expression
 				Section propInit = sec.appendSection("property");
-				propInit.append(inst.getName()).append(".").append(prop.getName()).append(" = ");
+				propInit.append(gctx.getNameFor(inst)).append(".").append(gctx.getNameFor(prop)).append(" = ");
 				gctx.setCurrentVariableAssignmentType(prop.getTypeRef());
 				gctx.getCompiler().getNewThingActionCompiler().generate(init, propInit.section("expression"), gctx);
 				gctx.resetCurrentVariableAssignmentType();
 			} else if (prop.getTypeRef().isIsArray()) {
 				// If no init expression is specified, create an empty slice for arrays
 				Section arrInit = sec.appendSection("arrayproperty");
-				arrInit.append(inst.getName()).append(".").append(prop.getName()).append(" = ");
-				arrInit.append("make(").append(gctx.getTypeRef(prop.getTypeRef())).append(", ");
+				arrInit.append(gctx.getNameFor(inst)).append(".").append(gctx.getNameFor(prop)).append(" = ");
+				arrInit.append("make(").append(gctx.getNameFor(prop.getTypeRef())).append(", ");
 				gctx.getCompiler().getNewThingActionCompiler().generate(prop.getTypeRef().getCardinality(), arrInit.section("init"), gctx);
 				arrInit.append(")");
 			}
@@ -77,7 +78,7 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 				for(Entry<Expression, Expression> arrayElementInit : exprs.entrySet()) {
 					if (arrayElementInit.getKey() != null) {
 						Section eleInit = sec.appendSection("arraypropertyelement");
-						eleInit.append(inst.getName()).append(".").append(prop.getName());
+						eleInit.append(gctx.getNameFor(inst)).append(".").append(gctx.getNameFor(prop));
 						eleInit.append("[");
 						gctx.getCompiler().getNewThingActionCompiler().generate(arrayElementInit.getKey(), eleInit.section("index"), gctx);
 						eleInit.append("]");
@@ -110,16 +111,16 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		importStatement.append(")").append("");
 		
 		// Add the initializer function
-		GoSection mainBody = builder.function("main").body();
+		GoSection mainBody = builder.function(new Element("main")).body();
 		
 		// Construct all instances
 		mainBody.comment(" -- Construct instances -- ");
 		Section instancesConstructors = mainBody.appendSection("instanceconstructors").lines();
 		for (Instance inst : cfg.getInstances()) {
 			instancesConstructors.appendSection("instance")
-				.append(inst.getName())
+				.append(gctx.getNameFor(inst))
 				.append(" := ")
-				.append("NewThing"+inst.getType().getName())
+				.append("New").append(gctx.getNameFor(inst.getType()))
 				.append("()");
 		}
 		mainBody.append("");
@@ -132,10 +133,10 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 				Connector connector = (Connector)aConnector;
 				connectors.appendSection("connector")
 					.append("gosm.Connector(")
-					.append(connector.getCli().getName()).append(".Component, ")
-					.append(connector.getSrv().getName()).append(".Component, ")
-					.append(gctx.getPortName(connector.getRequired())).append(", ")
-					.append(gctx.getPortName(connector.getProvided()))
+					.append(gctx.getNameFor(connector.getCli())).append(".Component, ")
+					.append(gctx.getNameFor(connector.getSrv())).append(".Component, ")
+					.append(gctx.getNameFor(connector.getRequired())).append(", ")
+					.append(gctx.getNameFor(connector.getProvided()))
 					.append(")");
 			} else if (aConnector instanceof ExternalConnector) {
 				// TODO: Implement something here!
@@ -164,7 +165,7 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 				                       .append("gosm.RunComponents")
 				                       .appendSection("runinstances").surroundWith("(", ")").joinWith(", ");
 		for (Instance inst : cfg.getInstances()) {
-			runInstances.append(inst.getName()+".Component");
+			runInstances.append(gctx.getNameFor(inst, ".Component"));
 		}
 	}
 }

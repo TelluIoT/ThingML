@@ -27,6 +27,13 @@ public class Element {
 	public Element(String string) { this.set(string); }
 	public Element(Object...objects) { this.set(objects); }
 	
+	public static Element EMPTY = new Element() {
+		@Override
+		public void prepare(SourceBuilder builder) {
+			// The empty element is never printed
+			this.disable();
+		}
+	};
 	
 	public Element set() {
 		this.value = null;

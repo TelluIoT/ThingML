@@ -52,9 +52,9 @@ public class GoThingApiCompiler extends ThingApiCompiler {
 		// Add messages
 		builder.comment(" -- Messages -- ");
 		for (Message msg : thing.getMessages()) {
-			Struct msgStruct = builder.struct(gctx.getMessageName(msg));
+			Struct msgStruct = builder.struct(gctx.getNameFor(msg));
 			for (Parameter p : msg.getParameters())
-				msgStruct.addField(p.getName(), gctx.getTypeRef(p.getTypeRef()));
+				msgStruct.addField(gctx.getNameFor(p), gctx.getNameFor(p.getTypeRef()));
 		}
 		builder.append("");
 		
@@ -65,8 +65,9 @@ public class GoThingApiCompiler extends ThingApiCompiler {
 			portsConst.appendSection("before").append("const (");
 			Section ports = portsConst.appendSection("body").lines().indent();
 			portsConst.append(")");
-			for (Port p : thing.getPorts())
-				ports.append(gctx.getPortName(p)+" = "+gctx.getPortID(p));
+			for (Port p : thing.getPorts()) {
+				ports.section("port").append(gctx.getNameFor(p)).append(" = ").append(gctx.getPortID(p));
+			}
 		}
 		builder.append("");
 	}

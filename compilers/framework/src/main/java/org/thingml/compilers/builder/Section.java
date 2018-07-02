@@ -19,7 +19,6 @@ package org.thingml.compilers.builder;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Writer;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +40,10 @@ public class Section extends Element {
 	protected Section(Section parent, String name) {
 		this.parent = parent;
 		this.name = name;
+	}
+	
+	public static Section Orphan(String name) {
+		return new Section(null, name);
 	}
 	
 	public void cloneInto(Section other) {
@@ -92,9 +95,17 @@ public class Section extends Element {
 		if (index >= 0) {
 			this.children.set(index, with);
 			if (replace instanceof Section) ((Section)replace).parent = null;
-			if (with instanceof Section) ((Section)with).parent = this;
+			this.perhapsOwn(with);
 		}
 		return with;
+	}
+	
+	protected void perhapsOwn(Element child) {
+		if (child instanceof Section) {
+			Section section = (Section)child;
+			if (section.parent != null && section.parent != this) section.parent.children.remove(section);
+			section.parent = this;
+		}
 	}
 	
 	/* -- Methods to add elements -- */
@@ -106,11 +117,11 @@ public class Section extends Element {
 	public Section after(String after) { return this.after(new Element(after)); }
 	public Section after(Object...after) { return this.after(new Element(after)); }
 	
-	public Section prepend(Element prepend) { this.children.addFirst(prepend); return this; };
+	public Section prepend(Element prepend) { this.perhapsOwn(prepend); this.children.addFirst(prepend); return this; };
 	public Section prepend(String prepend) { return this.prepend(new Element(prepend)); }
 	public Section prepend(Object...prepend) { return this.prepend(new Element(prepend)); }
 	
-	public Section append(Element append) { this.children.addLast(append); return this; };
+	public Section append(Element append) { this.perhapsOwn(append); this.children.addLast(append); return this; };
 	public Section append(String append) { return this.append(new Element(append)); }
 	public Section append(Object...append) { return this.append(new Element(append)); }
 	
@@ -128,12 +139,18 @@ public class Section extends Element {
 	
 	public Section addBefore(Element add, Element before) {
 		int index = this.children.indexOf(before);
-		if (index >= 0) this.children.add(index, add);
+		if (index >= 0) {
+			this.children.add(index, add);
+			this.perhapsOwn(add);
+		}
 		return this;
 	}
 	public Section addAfter(Element add, Element after) {
 		int index = this.children.indexOf(after);
-		if (index >= 0) this.children.add(index+1, add);
+		if (index >= 0) {
+			this.children.add(index+1, add);
+			this.perhapsOwn(add);
+		}
 		return this;
 	}
 	

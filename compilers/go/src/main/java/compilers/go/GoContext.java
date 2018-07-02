@@ -26,9 +26,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
@@ -53,6 +55,7 @@ public class GoContext extends Context {
 	
 	private Map<String, GoSourceBuilder> generatedFiles = new HashMap<String, GoSourceBuilder>();
 	private Logger logger;
+	private GoNaming namer = new GoNaming();
 
 	public GoContext(ThingMLCompiler compiler, Logger log) {
 		super(compiler, "break","case","chan","const","continue",
@@ -96,6 +99,30 @@ public class GoContext extends Context {
 		return this.logger;
 	}
 	
+	/* --- NEW naming helpers --- */
+	public GoNaming getNamer() {
+		return namer;
+	}
+	
+	public Element getNameFor(EObject object) {
+		return namer.getNameFor(object);
+	}
+	public Element getNameFor(String prefix, EObject object) {
+		return Section.Orphan("prefixedname").append(prefix).append(getNameFor(object));
+		
+	}
+	public Element getNameFor(EObject object, String postfix) {
+		return Section.Orphan("postfixedname").append(getNameFor(object)).append(postfix);
+	}
+	public Element getNameFor(String prefix, EObject object, String postfix) {
+		return Section.Orphan("prepostfixedname").append(prefix).append(getNameFor(object)).append(postfix);
+	}
+	
+	public Element getPointerNameFor(EObject object) {
+		return Section.Orphan("pointer").append(GoSourceBuilder.STAR_E).append(getNameFor(object));
+	}
+	
+	
 	/* --- Auto-casting --- */
 	public boolean shouldAutocast = false;
 	
@@ -111,20 +138,23 @@ public class GoContext extends Context {
 	public String getConfigurationPath(Configuration cfg) {
 		return cfg.getName()+".go";
 	}
-	
-	public String getTypeName(Type t) {
+
+	/*
+	public Element getTypeName(Type t) {
 		if (t instanceof Enumeration)
-			return "Enum"+t.getName();
+			return getNameFor(t);
 		if (AnnotatedElementHelper.hasAnnotation(t, "go_type"))
-			return AnnotatedElementHelper.firstAnnotation(t, "go_type");
-		return "interface{}";
+			return new Element(AnnotatedElementHelper.firstAnnotation(t, "go_type"));
+		return new Element("interface{}");
 	}
 	
-	public String getTypeRef(TypeRef ref) {
-		if (ref.isIsArray()) return "[]"+getTypeName(ref.getType());
-		else return getTypeName(ref.getType());
+	public Element addTypeRef(TypeRef ref, Section parent) {
+		if (ref.isIsArray()) parent.append("[]");
+		parent.append(getTypeName(ref.getType()));
 	}
+	*/
 	
+	/*
 	public String getMessageName(Message msg) {
 		return "Thing"+ThingMLHelpers.findContainingThing(msg).getName()+"Msg"+msg.getName();
 	}
@@ -161,11 +191,12 @@ public class GoContext extends Context {
 		if (s instanceof StateContainer) return getStateContainerName((StateContainer)s);
 		else return getStateContainerName((StateContainer)s.eContainer())+"State"+s.getName();
 	}
+	*/
 	
-	public static String defaultInstanceStateName = "state";
-	private String currentInstanceStateName = defaultInstanceStateName;
-	public String getCurrentInstanceStateName() { return this.currentInstanceStateName; }
-	public void setCurrentInstanceStatename(String name) { this.currentInstanceStateName = name; }
+	public static Element defaultInstanceStateName = GoSourceBuilder.STATE_E;
+	private Element currentInstanceStateName = defaultInstanceStateName;
+	public Element getCurrentInstanceStateName() { return this.currentInstanceStateName; }
+	public void setCurrentInstanceStatename(Element name) { this.currentInstanceStateName = name; }
 	public void resetCurrentInstanceStateName() { this.currentInstanceStateName = defaultInstanceStateName; }
 	
 	/* --- Port IDs --- */
