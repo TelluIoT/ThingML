@@ -8,13 +8,13 @@ thing TestVariables includes Test
     
     statechart TestPropertyPing init state0 {
     	
-    	on entry Test!Out(p)
+    	on entry TestOut(p)
     	
     	state state0 {
     		
     		property p : Char = 'b'
     		
-    		on entry Test!Out(p)
+    		on entry TestOut(p)
     		
 			transition -> state1 
 			event e : Test?In
@@ -24,11 +24,11 @@ thing TestVariables includes Test
 				do
 					var p : Char = 'd'
 					for(p : Char in arr) do
-						Test!Out(p)
+						TestOut(p)
 					end
-					Test!Out(p)
+					TestOut(p)
 				end
-				Test!Out(p)
+				TestOut(p)
 			end
 		}
 
