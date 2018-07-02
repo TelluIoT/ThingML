@@ -48,6 +48,8 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 	private transient Description description;
 	protected transient ThingMLTestCase[] cases;
 	
+	protected boolean shouldFlatten = true;
+	
 	private transient RunNotifier notifier;
 	
 	public ThingMLTest(ThingMLModel model, String name, String className, String[] compilers) {
@@ -156,8 +158,10 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 			return false;
 		}
 		// Flatten the model so that it can be modified later without destroying anything
-		synchronized (flattenLock) {
-			this.model = ThingMLCompiler.flattenModel(this.model);
+		if (shouldFlatten) {
+			synchronized (flattenLock) {
+				this.model = ThingMLCompiler.flattenModel(this.model);
+			}
 		}
 		return true;
 	}

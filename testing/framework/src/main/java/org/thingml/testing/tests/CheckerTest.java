@@ -37,6 +37,8 @@ public class CheckerTest extends ThingMLFileTest {
 	
 	@Override
 	public boolean prepare(RunNotifier notifier) throws InterruptedException {
+		// The Checker tests doesn't modify the model, so we don't need to flatten it
+		this.shouldFlatten = false;
 		// Load model from file and run generic preparation
 		if (!super.prepare(notifier)) return false;
 		
