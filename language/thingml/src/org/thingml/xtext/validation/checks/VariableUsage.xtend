@@ -144,7 +144,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 	def checkProperty(Property v) {
 		val parent = v.eContainer.eGet(v.eContainingFeature)
 		if (v.init !== null)
-			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.localVariable_Init)
+			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.property_Init)
 		if (v.typeRef.cardinality !== null) {
 			if (v.init !== null) {
 				val msg = "Arrays can only be assigned from an array initializers {...} or from another array."
