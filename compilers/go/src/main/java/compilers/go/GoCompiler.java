@@ -125,10 +125,12 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		// Generate main function
 		getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 		getCfgBuildCompiler().generateDockerFile(cfg, ctx);
-		ctx.writeGeneratedCodeToFiles();
 		
-		ctx.getNamer().printAllUsedNames();
-
+		// Resolve naming conflicts
+		ctx.getNamer().resolveAllConflicts();
+		
+		// Write the code to files
+		ctx.writeGeneratedCodeToFiles();
 		return true;
 	}
 	

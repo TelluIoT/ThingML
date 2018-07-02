@@ -16,22 +16,24 @@
  */
 package compilers.go;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EObject;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
@@ -41,182 +43,406 @@ import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.util.ThingMLSwitch;
 
 public class GoNaming {
+	private static int MAX_RESOLVE_TRIES = 100;
 	
 	public Element getNameFor(EObject object) {
-		List<Element> nameElements = internalGetNameFor(object);
-		
-		// If the list consist of only a single element, use that
-		if (nameElements.size() == 1)
-			return nameElements.get(0);
-		
-		// If not, make a section that concatenates all of them (sections cannot be shared across the builder tree)
-		Section nameSection = Section.Orphan("name");
-		for (Element name : nameElements)
-			nameSection.append(name);
-		return nameSection;
+		Name name = internalGetNameFor(object);
+		return name.toElement();
 	}
 	
-	public void printAllUsedNames() {
-		for (Entry<EObject, List<Element>> entry : preparedNames.entrySet()) {
-			System.out.print(entry.getKey().eClass().getName());
-			
-			for (Method m : entry.getKey().getClass().getMethods()) {
-				if (m.getName().equals("getName") && m.getParameterCount() == 0) {
-					try {
-						Object name = m.invoke(entry.getKey());
-						if (name instanceof String) {
-							System.out.print(" ["+name+"]");
-						}
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
-					
-				}
-			}
-			
-			System.out.print(" -> ");
-			for (Element element : entry.getValue()) {
-				System.out.print(element.get());
-			}
-			System.out.println();
+	public void resolveAllConflicts() {
+		int counter = 0;
+		while (globalScope.resolveConflicts()) {
+			counter++;
+			if (counter > MAX_RESOLVE_TRIES)
+				throw new RuntimeException("It doesn't seem possible to resolve all naming conflicts");
 		}
 	}
 
+	/* --- Names --- */
+	private class Name {
+		List<Element> elements;
+		Element changeable;
+		
+		private Name(List<Element> elements, Element changeble) {
+			this.elements = elements;
+			this.changeable = changeble;
+		}
+		
+		public Element toElement() {
+			if (elements.size() == 1)
+				return elements.get(0);
+			
+			Section name = Section.Orphan("name");
+			for (Element part : elements)
+				name.append(part);
+			return name;
+		}
+		
+		@Override
+		public String toString() {
+			String name = "";
+			for (Element part : elements)
+				name += part.get();
+			return name;
+		}
+	}
 	
+	private Map<EObject, Name> preparedNames = new HashMap<EObject, Name>();
 	
-	
-	
-	private Map<EObject, List<Element>> preparedNames = new HashMap<EObject, List<Element>>();
-	
-	private List<Element> internalGetNameFor(EObject object) {
+	private Name internalGetNameFor(EObject object) {
 		// If we have already generated the list, return it
 		if (preparedNames.containsKey(object))
 			return preparedNames.get(object);
 		
 		// If not, generate the preferred one for this object, and store it for later use
-		List<Element> names = namingStrategy.doSwitch(object);
-		preparedNames.put(object, names);
-		return names;
+		Name name = namingStrategy.doSwitch(object);
+		preparedNames.put(object, name);
+		
+		// Also create the proper scopes for this name, and add this name to the list
+		NameScope scope = nameScopingStrategy.doSwitch(object);
+		scope.add(name);
+		
+		return name;
 		
 	}
 	
-	
-	private List<Element> singleList(String name) {
+	private Name singleName(String name) {
+		Element own = new Element(name);
 		List<Element> list = new LinkedList<Element>();
-		list.add(new Element(name));
-		return list;
+		list.add(own);
+		return new Name(list, own);
 	}
 	
-	private List<Element> appendToParentList(EObject parent, String name) {
+	private Name appendToParentName(EObject parent, String name) {
+		Element own = new Element(name);
 		List<Element> list = new LinkedList<Element>();
-		list.addAll(internalGetNameFor(parent));
-		list.add(new Element(name));
-		return list;
+		list.addAll(internalGetNameFor(parent).elements);
+		list.add(own);
+		return new Name(list, own);
 	}
 	
-	private List<Element> prependToParentList(EObject parent, String name) {
+	private Name prependToParentName(EObject parent, String name) {
+		Element own = new Element(name);
 		List<Element> list = new LinkedList<Element>();
-		list.add(new Element(name));
-		list.addAll(internalGetNameFor(parent));
-		return list;
+		list.add(own);
+		list.addAll(internalGetNameFor(parent).elements);
+		return new Name(list, own);
 	}
 	
-	private ThingMLSwitch<List<Element>> namingStrategy = new ThingMLSwitch<List<Element>>() {
+	
+	/* -- Naming strategy -- */
+	private ThingMLSwitch<Name> namingStrategy = new ThingMLSwitch<Name>() {
 		
-		public List<Element> caseEnumeration(Enumeration object) {
-			return singleList("Enum"+object.getName());
+		public Name caseEnumeration(Enumeration object) {
+			return singleName("Enum"+object.getName());
 		};
 		
-		public List<Element> caseEnumerationLiteral(EnumerationLiteral object) {
-			return appendToParentList(object.eContainer(), object.getName());
+		public Name caseEnumerationLiteral(EnumerationLiteral object) {
+			return appendToParentName(object.eContainer(), object.getName());
 		};
 		
-		public List<Element> caseThing(Thing object) {
+		public Name caseThing(Thing object) {
 			String prefix = object.isFragment() ? "Fragment" : "Thing";
-			return singleList(prefix+object.getName());
+			return singleName(prefix+object.getName());
 		};
 		
-		public List<Element> caseFunction(Function object) {
-			return singleList(object.getName());
+		public Name caseFunction(Function object) {
+			return singleName(object.getName());
 		};
 		
-		public List<Element> caseType(Type object) {
+		public Name caseType(Type object) {
 			if (AnnotatedElementHelper.hasAnnotation(object, "go_type"))
-				return singleList(AnnotatedElementHelper.firstAnnotation(object, "go_type"));
+				return singleName(AnnotatedElementHelper.firstAnnotation(object, "go_type"));
 			else
-				return singleList("interface{}");
+				return singleName("interface{}");
 		};
 		
-		public List<Element> caseTypeRef(TypeRef object) {
-			if (object.isIsArray()) return prependToParentList(object.getType(), "[]");
+		public Name caseTypeRef(TypeRef object) {
+			if (object.isIsArray()) return prependToParentName(object.getType(), "[]");
 			else return internalGetNameFor(object.getType());
 		};
 		
-		public List<Element> casePort(Port object) {
-			return appendToParentList(object.eContainer(), "Port"+object.getName());
+		public Name casePort(Port object) {
+			return appendToParentName(object.eContainer(), "Port"+object.getName());
 		};
 		
-		public List<Element> caseMessage(Message object) {
-			return appendToParentList(object.eContainer(), "Msg"+object.getName());
+		public Name caseMessage(Message object) {
+			return appendToParentName(object.eContainer(), "Msg"+object.getName());
 		};
 		
-		public List<Element> caseState(State object) {
-			return appendToParentList(object.eContainer(), "State"+object.getName());
+		public Name caseState(State object) {
+			return appendToParentName(object.eContainer(), "State"+object.getName());
 		};
 		
-		public List<Element> caseCompositeState(CompositeState object) {
+		public Name caseCompositeState(CompositeState object) {
 			String name;
 			if (object.eContainer() instanceof Thing) name = "StateChart";
 			else name = "Composite";
 			if (object.getName() != null) name += object.getName();
-			return appendToParentList(object.eContainer(), name);
+			return appendToParentName(object.eContainer(), name);
 		};
 		
-		public List<Element> caseRegion(Region object) {
+		public Name caseRegion(Region object) {
 			String name = object.getName();
 			if (name == null) name = ""+((CompositeState)object.eContainer()).getRegion().indexOf(object);
-			return appendToParentList(object.eContainer(), name);
+			return appendToParentName(object.eContainer(), name);
 		};
 		
-		public List<Element> caseSession(Session object) {
-			return appendToParentList(object.eContainer(), "Session"+object.getName());
+		public Name caseSession(Session object) {
+			return appendToParentName(object.eContainer(), "Session"+object.getName());
 		};
 		
 		
-		public List<Element> caseReceiveMessage(ReceiveMessage object) {
+		public Name caseReceiveMessage(ReceiveMessage object) {
 			// We have already checked that the name is not null
-			return singleList(object.getName());
+			return singleName(object.getName());
 		};
 		
 		
-		public java.util.List<Element> caseInstance(org.thingml.xtext.thingML.Instance object) {
-			return singleList(object.getName());
+		public Name caseInstance(Instance object) {
+			return singleName(object.getName());
 		};
 		
 		
 		
 		
-		public List<Element> caseProperty(Property object) {
-			return singleList(object.getName());
+		public Name caseProperty(Property object) {
+			return singleName(object.getName());
 		};
 		
-		public List<Element> caseLocalVariable(LocalVariable object) {
-			return singleList(object.getName());
+		public Name caseLocalVariable(LocalVariable object) {
+			return singleName(object.getName());
 		};
 		
-		public List<Element> caseParameter(Parameter object) {
-			return singleList(object.getName());
+		public Name caseParameter(Parameter object) {
+			return singleName(object.getName());
 		};
 		
 		
-		public List<Element> defaultCase(EObject object) {
+		public Name defaultCase(EObject object) {
 			throw new UnsupportedOperationException("No naming strategy implemented for "+object.eClass().getName());
 		};
 	};
 	
 	
+	
+	/* --- Name scope ---*/
+	private class NameScope {
+		NameScope parent;
+		List<NameScope> related = new LinkedList<NameScope>();
+		List<NameScope> children = new LinkedList<NameScope>();
+		List<Name> names = new LinkedList<Name>();
+		
+		private NameScope(NameScope parent) {
+			if (parent != null) {
+				this.parent = parent;
+				this.parent.children.add(this);
+			}
+		}
+		
+		NameScope add(Name name) {
+			this.names.add(name);
+			return this;
+		}
+		
+		NameScope relatesTo(NameScope other) {
+			this.related.add(other);
+			return this;
+		}
+		
+		NameScope relatesToAll(NameScope other) {
+			this.related.add(other);
+			this.related.addAll(other.related);
+			return this;
+		}
+		
+		boolean hasCollision(Name name) {
+			// Check against names in own scope
+			for (Name other : this.names) {
+				if (name == other)
+					continue;
+				if (other.toString().equals(name.toString()))
+					return true;
+			}
+			// Then check with the related scopes
+			for (NameScope others : this.related)
+				for (Name other : others.names)
+					if (other.toString().equals(name.toString()))
+						return true;
+			
+			return false;
+		}
+		
+		boolean resolveConflicts() {
+			boolean didchange = false;
+			// Resolve own name conflicts
+			for (Name name : this.names) {
+				String originalName = name.changeable.get();
+				int suffix = 1;
+				while (this.hasCollision(name)) {
+					name.changeable.set(originalName+"_"+suffix);
+					suffix++;
+					didchange = true;
+				}
+			}
+			// Resolve children name conflicts
+			for (NameScope child : this.children)
+				didchange |= child.resolveConflicts();
+			
+			return didchange;
+		}
+	}
+	
+	private NameScope globalScope = new NameScope(null);
+	private NameScope dummyScope = new NameScope(null);
+	
+	/* --- Scoping strategy --- */
+	private ThingMLSwitch<NameScope> nameScopingStrategy = new ThingMLSwitch<NameScope>() {
+		
+		public NameScope caseEnumeration(Enumeration object) {
+			return globalScope;
+		};
+		
+		public NameScope caseEnumerationLiteral(EnumerationLiteral object) {
+			return globalScope;
+		};
+		
+		public NameScope caseThing(Thing object) {
+			return globalScope;
+		};
+		
+		public NameScope caseMessage(Message object) {
+			return globalScope;
+		};
+		
+		public NameScope casePort(Port object) {
+			return globalScope;
+		};
+		
+		public NameScope caseProperty(Property object) {
+			return internalGetScopeFor(object.eContainer());
+		};
+		
+		public NameScope caseState(State object) {
+			return globalScope;
+		};
+		
+		public NameScope caseStateContainer(StateContainer object) {
+			return globalScope;
+		};
+		
+		public NameScope caseFunction(Function object) {
+			return internalGetScopeFor(object.eContainer());
+		};
+		
+		public NameScope caseParameter(Parameter object) {
+			return internalGetScopeFor(object.eContainer());
+		};
+		
+		public NameScope caseType(Type object) {
+			return dummyScope;
+		};
+		
+		public NameScope caseTypeRef(TypeRef object) {
+			return dummyScope;
+		};
+		
+		public NameScope caseLocalVariable(LocalVariable object) {
+			return internalGetScopeFor(getActionContainer(object));
+		};
+		
+		public NameScope caseInstance(Instance object) {
+			return internalGetScopeFor(object.eContainer());
+		};
+		
+		public NameScope caseReceiveMessage(ReceiveMessage object) {
+			return internalGetScopeFor(object.eContainer());
+		};
+		
+		
+		public NameScope defaultCase(EObject object) {
+			throw new UnsupportedOperationException("No name-scoping strategy implemented for "+object.eClass().getName());
+		};
+	};
+	
+	
+	private Map<EObject, NameScope> nestedScopes = new HashMap<EObject, NameScope>();
+	private ThingMLSwitch<NameScope> nestedScopingStrategy = new ThingMLSwitch<NameScope>() {
+		
+		public NameScope caseThing(Thing object) {
+			NameScope scope = new NameScope(globalScope);
+			for (Thing inc : object.getIncludes())
+				scope.relatesToAll(internalGetScopeFor(inc));
+			return scope;
+		};
+		
+		public NameScope caseFunction(Function object) {
+			NameScope thingScope = internalGetScopeFor(object.eContainer());
+			return new NameScope(thingScope).relatesTo(thingScope);
+			
+		};
+		
+		public NameScope caseMessage(Message object) {
+			NameScope thingScope = internalGetScopeFor(ThingMLHelpers.findContainingThing(object));
+			return new NameScope(thingScope);
+		};
+		
+		public NameScope caseState(State object) {
+			NameScope parentScope = internalGetScopeFor(object.eContainer());
+			return new NameScope(parentScope).relatesToAll(parentScope);
+		};
+		
+		public NameScope caseStateContainer(StateContainer object) {
+			NameScope parentScope = internalGetScopeFor(object.eContainer());
+			return new NameScope(parentScope).relatesToAll(parentScope);
+		};
+		
+		public NameScope caseConfiguration(Configuration object) {
+			return new NameScope(globalScope);
+		};
+		
+		public NameScope caseReceiveMessage(ReceiveMessage object) {
+			return internalGetScopeFor(object.eContainer());
+		};
+		
+		public NameScope caseAction(Action object) {
+			return internalGetScopeFor(getActionContainer(object));
+		};
+		
+		public NameScope caseHandler(Handler object) {
+			NameScope parentScope = internalGetScopeFor(object.eContainer());
+			return new NameScope(parentScope).relatesToAll(parentScope);
+		};
+		
+		
+		public NameScope defaultCase(EObject object) {
+			throw new UnsupportedOperationException("No nested scoping strategy implemented for "+object.eClass().getName());
+		};
+	};
+	
+	private NameScope internalGetScopeFor(EObject object) {
+		if (nestedScopes.containsKey(object))
+			return nestedScopes.get(object);
+		
+		NameScope created = nestedScopingStrategy.doSwitch(object);
+		nestedScopes.put(object, created);
+		return created;
+	}
+	
+	private EObject getActionContainer(EObject object) {
+		EObject outermostAction = null;
+		while (object != null) {
+			if (object instanceof Action) outermostAction = object;
+			object = object.eContainer();
+		}
+		return outermostAction.eContainer();
+	}
 }

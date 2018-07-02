@@ -610,29 +610,35 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 			constBody.comment(" Bind abstract functions ");
 			for (Thing i : ThingHelper.allIncludedThings(thing)) {
 				for (Function incf : i.getFunctions()) {
-					if (incf.isAbstract()) {						
-						// Create an anonymous function and call the actual one
-						Section abstractAssign = constBody.appendSection("abstractassign").lines();
-						Section before = abstractAssign.appendSection("before");
-						Section body = abstractAssign.appendSection("body").lines().indent();
-						Section after = abstractAssign.appendSection("after");
-						before.append("instance.").append(gctx.getNameFor(i))
-							  .append(".abstract").append(gctx.getNameFor(incf))
-							  .append(" = func");
-						Section abstractArgs = before.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-						for (Parameter p : incf.getParameters())
-							abstractArgs.section("argument").append(gctx.getNameFor(p)).append(" ").append(gctx.getNameFor(p.getTypeRef()));
-						if (incf.getTypeRef() != null)
-							before.append(gctx.getNameFor(" ", incf.getTypeRef()));
-						before.append(" {");
-						Section call = body.appendSection("call");
-						call.append(gctx.getNameFor("instance.", incf));
-						Section callArgs = call.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-						for (Parameter p : incf.getParameters())
-							callArgs.append(gctx.getNameFor(p));
-						if (incf.getTypeRef() != null)
-							call.prepend("return ");
-						after.append("}");
+					if (incf.isAbstract()) {
+						try {
+							// Get the actual function to call (to get the proper name)
+							Function actf = ThingHelper.getConcreteFunction(thing, incf);
+							// Create an anonymous function and call the actual one
+							Section abstractAssign = constBody.appendSection("abstractassign").lines();
+							Section before = abstractAssign.appendSection("before");
+							Section body = abstractAssign.appendSection("body").lines().indent();
+							Section after = abstractAssign.appendSection("after");
+							before.append("instance.").append(gctx.getNameFor(i))
+								  .append(".abstract").append(gctx.getNameFor(incf))
+								  .append(" = func");
+							Section abstractArgs = before.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
+							for (Parameter p : actf.getParameters())
+								abstractArgs.section("argument").append(gctx.getNameFor(p)).append(" ").append(gctx.getNameFor(p.getTypeRef()));
+							if (actf.getTypeRef() != null)
+								before.append(gctx.getNameFor(" ", actf.getTypeRef()));
+							before.append(" {");
+							Section call = body.appendSection("call");
+							call.append(gctx.getNameFor("instance.", actf));
+							Section callArgs = call.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
+							for (Parameter p : actf.getParameters())
+								callArgs.append(gctx.getNameFor(p));
+							if (actf.getTypeRef() != null)
+								call.prepend("return ");
+							after.append("}");
+						} catch (Exception e) {
+							throw new RuntimeException(e);
+						}
 					}
 				}
 			}
