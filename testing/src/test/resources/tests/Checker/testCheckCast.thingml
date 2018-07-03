@@ -1,5 +1,3 @@
-import "datatypes.thingml" from stl
-
 datatype Boolean<1>
 @type_checker "Boolean";
 
