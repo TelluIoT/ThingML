@@ -54,7 +54,7 @@ public class CheckerTest extends ThingMLFileTest {
 			EachTestNotifier not = new EachTestNotifier(notifier, getDescription());
 			
 			if (shouldSucceed == checker.hasErrors())
-				not.addFailure(new ThingMLCheckerError(shouldSucceed, compilerChecker));
+				not.addFailure(new ThingMLCheckerError(shouldSucceed, compilerChecker, checker.getErrors()));
 			
 			for (ThingMLTestCase cse : this.cases)
 				notifier.fireTestIgnored(cse.getDescription());
@@ -69,7 +69,7 @@ public class CheckerTest extends ThingMLFileTest {
 				checker.validateModel(this.model);
 				
 				if (shouldSucceed == checker.hasErrors())
-					not.addFailure(new ThingMLCheckerError(shouldSucceed, compilerChecker));
+					not.addFailure(new ThingMLCheckerError(shouldSucceed, compilerChecker, checker.getErrors()));
 				
 				not.fireTestFinished();
 			}

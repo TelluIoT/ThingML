@@ -16,11 +16,15 @@
  */
 package org.thingml.testing.errors;
 
+import java.util.List;
+
+import org.eclipse.xtext.validation.Issue;
+
 public class ThingMLCheckerError extends AssertionError {
 	private static final long serialVersionUID = 1L;
 	
-	public ThingMLCheckerError(boolean shouldSucceed, boolean compilerChecker) {
-		super(checkerType(compilerChecker)+failType(shouldSucceed));
+	public ThingMLCheckerError(boolean shouldSucceed, boolean compilerChecker, List<Issue> errors) {
+		super(checkerType(compilerChecker)+failType(shouldSucceed)+errorList(errors));
 	}
 	
 	private static String checkerType(boolean compilerChecker) {
@@ -35,5 +39,15 @@ public class ThingMLCheckerError extends AssertionError {
 			return "should succeed but contains errors";
 		else
 			return "should fail but contains no errors";
+	}
+	
+	private static String errorList(List<Issue> errors) {
+		String result = "";
+		if (errors.size() > 0) {
+			result += ". Errors:";
+			for (Issue error : errors)
+				result += "\n"+error.getMessage();
+		}
+		return result;
 	}
 }
