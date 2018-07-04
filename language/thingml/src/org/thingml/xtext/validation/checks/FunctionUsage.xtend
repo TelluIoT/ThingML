@@ -146,7 +146,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		while (parent !== null && !(parent instanceof Function)) {
 			parent = parent.eContainer as EObject
 		}
-		if (parent === null || (parent as Function).typeRef === null) {
+		if (parent === null || ((parent as Function).typeRef === null && r.exp !== null )) {
 			val c = r.eContainer.eGet(r.eContainingFeature)
 			val msg = "Return action is only allowed in functions with a return type."
 			if (c instanceof EList)

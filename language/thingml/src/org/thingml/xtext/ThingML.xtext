@@ -251,7 +251,7 @@ ConditionalAction returns ConditionalAction:
 	'if' '(' condition=Expression ')' action=Action (=>'else' elseAction=Action)?;
 
 ReturnAction returns ReturnAction:
-	'return' exp=Expression;
+	{ReturnAction} 'return' ( => exp=Expression )?;
 
 PrintAction returns PrintAction:
 	('print' | line ?= 'println') msg+=Expression (',' msg+=Expression)*;
