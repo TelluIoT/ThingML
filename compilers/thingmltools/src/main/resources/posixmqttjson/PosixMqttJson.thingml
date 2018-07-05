@@ -31,7 +31,7 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		jsmntok_t tokens[32];` // 32 should be adjusted for the largest message to be parsed
 		var parse_result : Int16
 		
-		`printf("Topic:%s, Payload:%s\n", `&topic&`, `&payload&`);`
+		// `printf("Topic:%s, Payload:%s\n", `&topic&`, `&payload&`);`
 		
 		parse_result = `jsmn_parse(&parser, `&payload&`, `&len&`, tokens, 32);`
 	
