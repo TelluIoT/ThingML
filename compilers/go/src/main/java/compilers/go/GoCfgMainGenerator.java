@@ -17,13 +17,16 @@
 package compilers.go;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.AbstractConnector;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Configuration;
@@ -107,8 +110,10 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		importStatement.append("import (");
 		Section imports = importStatement.appendSection("imports").lines().indent();
 		imports.append("\"github.com/jakhog/gosm\"");
-		// TODO: add imports from annotations (especially "fmt" if we do any printing)
+		for (String imp : new HashSet<String>(AnnotatedElementHelper.annotation(cfg, "go_import")))
+			imports.append("\""+imp+"\"");
 		importStatement.append(")").append("");
+		
 		
 		// Add the initializer function
 		GoSection mainBody = builder.function(new Element("main")).body();
