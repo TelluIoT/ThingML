@@ -137,24 +137,24 @@
 	</extension>
 	<extension
 		point="org.eclipse.ui.commands">
-	<command
-			description="Trigger expensive validation"
-			id="org.thingml.xtext.ThingML.validate"
-			name="Validate">
-	</command>
-	<!-- copy qualified name -->
-	<command
-			id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
-			categoryId="org.eclipse.ui.category.edit"
-			description="Copy the qualified name for the selected element"
-			name="Copy Qualified Name">
-	</command>
-	<command
-			id="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
-			categoryId="org.eclipse.ui.category.edit"
-			description="Copy the qualified name for the selected element"
-			name="Copy Qualified Name">
-	</command>
+		<command
+				description="Trigger expensive validation"
+				id="org.thingml.xtext.ThingML.validate"
+				name="Validate">
+		</command>
+		<!-- copy qualified name -->
+		<command
+				id="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
+				categoryId="org.eclipse.ui.category.edit"
+				description="Copy the qualified name for the selected element"
+				name="Copy Qualified Name">
+		</command>
+		<command
+				id="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName"
+				categoryId="org.eclipse.ui.category.edit"
+				description="Copy the qualified name for the selected element"
+				name="Copy Qualified Name">
+		</command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
@@ -163,12 +163,12 @@
 				 commandId="org.thingml.xtext.ThingML.validate"
 				 style="push"
 				 tooltip="Trigger expensive validation">
-			<visibleWhen checkEnabled="false">
-				<reference
-					definitionId="org.thingml.xtext.ThingML.Editor.opened">
-				</reference>
-			</visibleWhen>
-		</command>
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.thingml.xtext.ThingML.Editor.opened">
+					</reference>
+				</visibleWhen>
+			</command>
 		</menuContribution>
 		<!-- copy qualified name -->
 		<menuContribution locationURI="popup:#TextEditorContext?after=copy">
@@ -500,10 +500,78 @@
         type="thingml.run">
     </launchConfigurationTabGroup>
 </extension>
-
-
-
- 
- 
-	
+	<!-- The ThingML Toolbar -->
+	<extension point="org.eclipse.ui.bindings">
+	   <key
+	         commandId="thingml.ui.toolbar.commands.build"
+	         contextId="org.eclipse.ui.contexts.window"
+	         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+	         sequence="M1+6">
+	   </key>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+	     <handler
+	        class="org.thingml.eclipse.ui.toolbar.ThingmlBuildHandler"
+	        commandId="thingml.ui.toolbar.commands.build">
+	  </handler>
+      <handler
+            class="org.thingml.eclipse.ui.toolbar.ThingmlRunHandler"
+            commandId="thingml.ui.toolbar.commands.run">
+      </handler>
+	</extension>
+ 	<extension point="org.eclipse.ui.commands">
+ 		<category
+        	id="thingml.ui.commands.category"
+        	name="ThingML">
+  		</category>
+		<command
+        	categoryId="thingml.ui.commands.category"
+        	id="thingml.ui.toolbar.commands.build"
+        	name="Build">
+  		</command>
+  <command
+        categoryId="thingml.ui.commands.category"
+        id="thingml.ui.toolbar.commands.run"
+        name="Run">
+  </command>
+	</extension>
+ 	<extension point="org.eclipse.ui.menus">
+ 		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?before=window">
+	     	<menu
+	        	id="thingml.ui.menus.thingml"
+	           	label="ThingML"
+	           	mnemonic="M">
+		        <command
+                commandId="thingml.ui.toolbar.commands.build"
+                id="thingml.ui.menus.build"
+                label="Build"
+                mnemonic="S">
+		        </command>
+          <command
+                commandId="thingml.ui.toolbar.commands.run"
+                id="thingml.ui.menus.run"
+                label="Run"
+                mnemonic="R">
+          </command>
+	     	</menu>
+ 		</menuContribution>
+	  	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+	  		<toolbar
+           id="thingml.ui.toolbar.toolbar"
+           label="ThingML">
+				<command
+	              	commandId="thingml.ui.toolbar.commands.build"
+	              	icon="icons/thingml_build.png"
+	              	id="thingml.ui.toolbar.toolbar.build"
+	              	tooltip="Generate platform code">
+				</command>
+    <command
+          commandId="thingml.ui.toolbar.commands.run"
+          icon="icons/thingml_run.png"
+          id="thingml.ui.toolbar.toolbar.run"
+          tooltip="Generate and run platform code.">
+    </command>
+	     	</toolbar>
+  		</menuContribution>
+	</extension>
 </plugin>

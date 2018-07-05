@@ -69,13 +69,14 @@ public class ThingMLConsole {
 		return null;
 	}	
 	
+	private IOConsole console;
 	private IOConsoleOutputStream dbg;
 	private IOConsoleOutputStream msg;
 	private IOConsoleOutputStream err;
 	private IOConsoleOutputStream warn;
 	
 	private ThingMLConsole() {
-		IOConsole console = new IOConsole("[ThingML]", null);
+		console = new IOConsole("[ThingML]", null);
 		dbg = console.newOutputStream();
 		msg = console.newOutputStream();
 		err = console.newOutputStream();
@@ -87,7 +88,6 @@ public class ThingMLConsole {
 		
 		console.activate();
 		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IOConsole[]{console});
-		
 	}
 	
 	
@@ -138,6 +138,10 @@ public class ThingMLConsole {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void activate() {
+		console.activate();
 	}
 	
 	//FIXME: move that into a FileHelper class
