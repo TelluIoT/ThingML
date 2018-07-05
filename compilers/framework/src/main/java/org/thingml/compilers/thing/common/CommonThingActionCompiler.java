@@ -150,14 +150,17 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
-        builder.append("return ");
-        Function parent = ThingMLHelpers.findContainingFunction(action);
-        boolean isArray = false;
-        if (action.getExp() instanceof PropertyReference) {
-            PropertyReference pr = (PropertyReference) action.getExp();
-            isArray = pr.getProperty().getTypeRef().isIsArray() || pr.getProperty().getTypeRef().getCardinality() != null;
+        builder.append("return");
+        if (action.getExp() != null) {
+        	builder.append(" ");
+	        Function parent = ThingMLHelpers.findContainingFunction(action);
+	        boolean isArray = false;
+	        if (action.getExp() instanceof PropertyReference) {
+	            PropertyReference pr = (PropertyReference) action.getExp();
+	            isArray = pr.getProperty().getTypeRef().isIsArray() || pr.getProperty().getTypeRef().getCardinality() != null;
+	        }
+	        cast(parent.getTypeRef().getType(), isArray, action.getExp(), builder, ctx);
         }
-        cast(parent.getTypeRef().getType(), isArray, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
 
