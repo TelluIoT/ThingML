@@ -139,7 +139,7 @@ datatype Double<8>
 	@java_type "double"
 	@js_type "double"
 	@java_primitive "true"
-	@go_type "float32";
+	@go_type "float64";
 
 
 object String
