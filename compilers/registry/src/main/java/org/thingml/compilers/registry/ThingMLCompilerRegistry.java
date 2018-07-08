@@ -110,6 +110,20 @@ public class ThingMLCompilerRegistry {
     public Set<String> getCompilerIds() {
         return compilers.keySet();
     }
+    
+    public String getCompilerNameById(String id) {
+    	if (compilers.containsKey(id))
+    		return compilers.get(id).getName();
+    	else
+    		return null;
+    }
+    
+    public String getCompilerDescriptionById(String id) {
+    	if (compilers.containsKey(id))
+    		return compilers.get(id).getDescription();
+    	else
+    		return null;
+    }
 
     public Collection<ThingMLCompiler> getCompilerPrototypes() {
     	final List<ThingMLCompiler> c = new ArrayList<ThingMLCompiler>(compilers.values());

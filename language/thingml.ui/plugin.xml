@@ -480,42 +480,38 @@
       </command>
    </extension>
  
+	<!-- ThingML Perspective -->
+	<extension point="org.eclipse.ui.perspectives">
+		<perspective
+			class="org.thingml.eclipse.ui.ThingMLPerspectiveFactory"
+			icon="icons/thingml.png"
+			id="org.thingml.eclipse.ui.perspective"
+			name="ThingML">
+		</perspective>
+	</extension>
 
-<extension point="org.eclipse.debug.core.launchConfigurationTypes">
-    <launchConfigurationType
-        name="ThingML launch"
-        delegate="org.thingml.eclipse.ui.commands.ThingMLLaunchConfiguration"
-        modes="run"
-        id="thingml.run">
-    </launchConfigurationType>
-</extension>
-
-
-
-<extension
-    point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-    <launchConfigurationTabGroup
-        class="org.thingml.eclipse.ui.commands.ThingMLRunTabGroup"
-        id="thingml.launchConfigurationTabGroup"
-        type="thingml.run">
-    </launchConfigurationTabGroup>
-</extension>
-	<!-- The ThingML Toolbar -->
+	<!-- ThingML Toolbar -->
 	<extension point="org.eclipse.ui.bindings">
 	   <key
 	         commandId="thingml.ui.toolbar.commands.build"
 	         contextId="org.eclipse.ui.contexts.window"
 	         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-	         sequence="M1+6">
+	         sequence="M1+8">
+	   </key>
+	   <key
+	         commandId="thingml.ui.toolbar.commands.run"
+	         contextId="org.eclipse.ui.contexts.window"
+	         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+	         sequence="M1+9">
 	   </key>
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 	     <handler
-	        class="org.thingml.eclipse.ui.toolbar.ThingmlBuildHandler"
+	        class="org.thingml.eclipse.ui.toolbar.GenerateHandler"
 	        commandId="thingml.ui.toolbar.commands.build">
 	  </handler>
       <handler
-            class="org.thingml.eclipse.ui.toolbar.ThingmlRunHandler"
+            class="org.thingml.eclipse.ui.toolbar.RunHandler"
             commandId="thingml.ui.toolbar.commands.run">
       </handler>
 	</extension>
@@ -527,13 +523,33 @@
 		<command
         	categoryId="thingml.ui.commands.category"
         	id="thingml.ui.toolbar.commands.build"
-        	name="Build">
+        	name="Generate platform code">
+		     <commandParameter
+		           id="thingml.ui.toolbar.commands.build.popup"
+		           name="popup"
+		           optional="true">
+		     </commandParameter>
+		     <commandParameter
+		           id="thingml.ui.toolbar.commands.build.compiler"
+		           name="compiler"
+		           optional="true">
+		     </commandParameter>
   		</command>
-  <command
-        categoryId="thingml.ui.commands.category"
-        id="thingml.ui.toolbar.commands.run"
-        name="Run">
-  </command>
+		<command
+			categoryId="thingml.ui.commands.category"
+			id="thingml.ui.toolbar.commands.run"
+			name="Generate and run platform code">
+			<commandParameter
+		           id="thingml.ui.toolbar.commands.run.popup"
+		           name="popup"
+		           optional="true">
+		     </commandParameter>
+		     <commandParameter
+		           id="thingml.ui.toolbar.commands.run.compiler"
+		           name="compiler"
+		           optional="true">
+		     </commandParameter>
+		</command>
 	</extension>
  	<extension point="org.eclipse.ui.menus">
  		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?before=window">
@@ -542,36 +558,176 @@
 	           	label="ThingML"
 	           	mnemonic="M">
 		        <command
-                commandId="thingml.ui.toolbar.commands.build"
-                id="thingml.ui.menus.build"
-                label="Build"
-                mnemonic="S">
+	                commandId="thingml.ui.toolbar.commands.build"
+	                id="thingml.ui.menus.build"
+	                label="Build"
+	                mnemonic="S">
 		        </command>
-          <command
-                commandId="thingml.ui.toolbar.commands.run"
-                id="thingml.ui.menus.run"
-                label="Run"
-                mnemonic="R">
-          </command>
+		        <!--
+		          <command
+		                commandId="thingml.ui.toolbar.commands.run"
+		                id="thingml.ui.menus.run"
+		                label="Run"
+		                mnemonic="R">
+		          </command>
+		          -->
+          <visibleWhen
+                checkEnabled="false">
+             <with
+                   variable="activeWorkbenchWindow.activePerspective">
+                <equals
+                      value="org.thingml.eclipse.ui.perspective">
+                </equals>
+             </with>
+          </visibleWhen>
 	     	</menu>
  		</menuContribution>
 	  	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
 	  		<toolbar
-           id="thingml.ui.toolbar.toolbar"
-           label="ThingML">
+            	id="thingml.ui.toolbar.toolbar"
+           		label="ThingML">
 				<command
 	              	commandId="thingml.ui.toolbar.commands.build"
+	              	id="thingml.ui.toolbar.build"
+	              	style="pulldown"
 	              	icon="icons/thingml_build.png"
-	              	id="thingml.ui.toolbar.toolbar.build"
 	              	tooltip="Generate platform code">
+	              	<visibleWhen checkEnabled="false">
+				       <with variable="activeWorkbenchWindow.activePerspective">
+				       	  <equals value="org.thingml.eclipse.ui.perspective">
+				          </equals>
+				       </with>
+				    </visibleWhen>
 				</command>
-    <command
-          commandId="thingml.ui.toolbar.commands.run"
-          icon="icons/thingml_run.png"
-          id="thingml.ui.toolbar.toolbar.run"
-          tooltip="Generate and run platform code.">
-    </command>
+                <command
+			          commandId="thingml.ui.toolbar.commands.run"
+			          id="thingml.ui.toolbar.run"
+			          style="pulldown"
+	              	  icon="icons/thingml_run.png"
+			          tooltip="Generate and run platform code">
+			          <visibleWhen checkEnabled="false">
+				      	<with variable="activeWorkbenchWindow.activePerspective">
+				        	<equals value="org.thingml.eclipse.ui.perspective">
+				          	</equals>
+				       	</with>
+				      </visibleWhen>
+			    </command>
 	     	</toolbar>
   		</menuContribution>
+  		<menuContribution locationURI="menu:thingml.ui.toolbar.build">
+  			<dynamic
+           		id="thingml.ui.toolbar.build.menu"
+           		class="org.thingml.eclipse.ui.menu.GenerateHistoryMenu"
+           		>
+  			</dynamic>
+  		</menuContribution>
+  		<menuContribution locationURI="menu:thingml.ui.toolbar.run">
+  			<dynamic
+           		id="thingml.ui.toolbar.run.menu"
+           		class="org.thingml.eclipse.ui.menu.RunHistoryMenu"
+           		>
+  			</dynamic>
+  		</menuContribution>
+	</extension>
+	<!-- ThingML Launch Configurations -->
+	<extension point="org.eclipse.core.variables.dynamicVariables">
+	    <variable
+	    	name="thingml.compiler"
+			supportsArgument="false"
+			description="The ThingML compiler used for code-generation"
+			resolver="org.thingml.eclipse.ui.launch.VariableResolver">
+	    </variable>
+	    <variable
+	    	name="thingml.model"
+			supportsArgument="false"
+			description="The ThingML model to generate code for"
+			resolver="org.thingml.eclipse.ui.launch.VariableResolver">
+	    </variable>
+	</extension>
+	
+	<extension point="org.eclipse.debug.ui.launchGroups">
+		<launchGroup
+			bannerImage="icons/thingml_build.png"
+			category="org.thingml.eclipse.ui.launchgroup.category"
+			id="org.thingml.eclipse.ui.launchgroup.build"
+			image="icons/thingml_build.png"
+			label="ThingML"
+			mode="run">
+		</launchGroup>
+		<launchGroup
+			bannerImage="icons/thingml_build.png"
+			category="org.thingml.eclipse.ui.launchgroup.category"
+			id="org.thingml.eclipse.ui.launchgroup.run"
+			image="icons/thingml_run.png"
+			label="ThingML"
+			mode="debug">
+		</launchGroup>
+	</extension>
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+	        category="org.thingml.eclipse.ui.launchgroup.category"
+	        delegate="org.thingml.eclipse.ui.launch.ThingMLLauncher"
+	        id="org.thingml.eclipse.ui.launchconfiguration"
+	        modes="run,debug"
+	        name="ThingML">
+		</launchConfigurationType>
+	</extension>
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class="org.thingml.eclipse.ui.launch.TabGroup"
+			id="org.thingml.eclipse.ui.launchconfiguration.tabgroup"
+			type="org.thingml.eclipse.ui.launchconfiguration">
+		</launchConfigurationTabGroup>
+	</extension>
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			configTypeID="org.thingml.eclipse.ui.launchconfiguration"
+			icon="icons/thingml.png"
+			id="org.thingml.eclipse.ui.launchconfiguration.icon">
+		</launchConfigurationTypeImage>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+			<menu
+		         commandId="thingml.ui.toolbar.commands.build"
+		         icon="icons/thingml_build.png"
+		         label="Generate platform code">
+				<visibleWhen checkEnabled="true">
+					<with variable="activeMenuSelection">
+						<iterate>
+							<adapt type="org.eclipse.core.resources.IFile">
+								<test property="org.eclipse.core.resources.name" value="*.thingml">
+								</test>
+							</adapt>
+						</iterate>
+					</with>
+				</visibleWhen>
+			    <dynamic
+			          class="org.thingml.eclipse.ui.menu.GenerateCompilerListMenu"
+			          id="org.thingml.eclipse.ui.menu.compilers.generate">
+			    </dynamic>
+			</menu>
+		</menuContribution>
+		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+			<menu
+		         commandId="thingml.ui.toolbar.commands.run"
+		         icon="icons/thingml_run.png"
+		         label="Generate and run platform code">
+				<visibleWhen checkEnabled="true">
+					<with variable="activeMenuSelection">
+						<iterate>
+							<adapt type="org.eclipse.core.resources.IFile">
+								<test property="org.eclipse.core.resources.name" value="*.thingml">
+								</test>
+							</adapt>
+						</iterate>
+					</with>
+				</visibleWhen>
+			    <dynamic
+			          class="org.thingml.eclipse.ui.menu.RunCompilerListMenu"
+			          id="org.thingml.eclipse.ui.menu.compilers.run">
+			    </dynamic>
+			</menu>
+		</menuContribution>
 	</extension>
 </plugin>

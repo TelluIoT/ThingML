@@ -35,7 +35,6 @@
 		  <version>${thingml.version}</version>
 		</dependency>
 		
-		
 	</dependencies>
 	
 	<build>

@@ -317,6 +317,18 @@
 	</pluginRepositories>
 
 	<dependencies>
+		<dependency>
+		  <groupId>org.eclipse.platform</groupId>
+		  <artifactId>org.eclipse.core.variables</artifactId>
+		  <version>3.4.0</version>
+		</dependency>
+		<!--
+		<dependency>
+		  <groupId>org.eclipse.platform</groupId>
+		  <artifactId>org.eclipse.e4.ui.workbench.renderers.swt</artifactId>
+		  <version>0.14.102</version>
+		</dependency>
+		-->
 	</dependencies>
 	
 </project>

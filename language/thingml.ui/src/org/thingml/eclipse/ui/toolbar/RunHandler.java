@@ -14,18 +14,10 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.eclipse.ui.commands;
+package org.thingml.eclipse.ui.toolbar;
 
-import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
-import org.eclipse.debug.ui.CommonTab;
-import org.eclipse.debug.ui.ILaunchConfigurationDialog;
-import org.eclipse.debug.ui.ILaunchConfigurationTab;
-
-public class ThingMLRunTabGroup extends AbstractLaunchConfigurationTabGroup {
-
-    @Override
-    public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-            setTabs(new ILaunchConfigurationTab[] { new ThingMLRunTab(), new CommonTab() });
-    }
-
+public class RunHandler extends LaunchHandler {
+	public RunHandler() {
+		super("debug", "run", "thingml.ui.toolbar.commands.run");
+	}
 }

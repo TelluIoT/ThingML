@@ -115,6 +115,9 @@ public class ThingMLConsole {
 			e.printStackTrace();
 		}
 	}
+	public void printErrorln(String txt) {
+		printError(txt+"\n");
+	}
 	
 	public void printWarn(String txt) {
 		try {
@@ -122,6 +125,9 @@ public class ThingMLConsole {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public void printWarnln(String txt) {
+		printWarn(txt+"\n");
 	}
 	
 	public void printMessage(String txt) {
@@ -131,6 +137,9 @@ public class ThingMLConsole {
 			e.printStackTrace();
 		}
 	}
+	public void printMessageln(String txt) {
+		printMessage(txt+"\n");
+	}
 	
 	public void printDebug(String txt) {
 		try {
@@ -139,9 +148,16 @@ public class ThingMLConsole {
 			e.printStackTrace();
 		}
 	}
+	public void printDebugln(String txt) {
+		printDebug(txt+"\n");
+	}
 	
 	public void activate() {
 		console.activate();
+	}
+	
+	public void clear() {
+		console.clearConsole();
 	}
 	
 	//FIXME: move that into a FileHelper class
