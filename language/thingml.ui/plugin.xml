@@ -556,21 +556,19 @@
 	     	<menu
 	        	id="thingml.ui.menus.thingml"
 	           	label="ThingML"
-	           	mnemonic="M">
+	           	mnemonic="T">
 		        <command
 	                commandId="thingml.ui.toolbar.commands.build"
 	                id="thingml.ui.menus.build"
-	                label="Build"
-	                mnemonic="S">
+	                label="Generate platform code"
+	                mnemonic="G">
 		        </command>
-		        <!--
-		          <command
-		                commandId="thingml.ui.toolbar.commands.run"
-		                id="thingml.ui.menus.run"
-		                label="Run"
-		                mnemonic="R">
-		          </command>
-		          -->
+		        <command
+		            commandId="thingml.ui.toolbar.commands.run"
+		            id="thingml.ui.menus.run"
+		            label="Generate and run platform code"
+		            mnemonic="r">
+		        </command>
           <visibleWhen
                 checkEnabled="false">
              <with
@@ -692,15 +690,25 @@
 		         commandId="thingml.ui.toolbar.commands.build"
 		         icon="icons/thingml_build.png"
 		         label="Generate platform code">
-				<visibleWhen checkEnabled="true">
-					<with variable="activeMenuSelection">
-						<iterate>
-							<adapt type="org.eclipse.core.resources.IFile">
-								<test property="org.eclipse.core.resources.name" value="*.thingml">
-								</test>
-							</adapt>
-						</iterate>
-					</with>
+				<visibleWhen checkEnabled="false">
+					<and>
+						<with variable="activeWorkbenchWindow.activePerspective">
+							<equals value="org.thingml.eclipse.ui.perspective">
+							</equals>
+						</with>
+						<with variable="activeMenuSelection">
+							<and>
+								<count value="1">
+								</count>
+								<iterate>
+									<adapt type="org.eclipse.core.resources.IFile">
+										<test property="org.eclipse.core.resources.name" value="*.thingml">
+										</test>
+									</adapt>
+								</iterate>
+							</and>
+						</with>
+					</and>
 				</visibleWhen>
 			    <dynamic
 			          class="org.thingml.eclipse.ui.menu.GenerateCompilerListMenu"
@@ -713,15 +721,25 @@
 		         commandId="thingml.ui.toolbar.commands.run"
 		         icon="icons/thingml_run.png"
 		         label="Generate and run platform code">
-				<visibleWhen checkEnabled="true">
-					<with variable="activeMenuSelection">
-						<iterate>
-							<adapt type="org.eclipse.core.resources.IFile">
-								<test property="org.eclipse.core.resources.name" value="*.thingml">
-								</test>
-							</adapt>
-						</iterate>
-					</with>
+				<visibleWhen checkEnabled="false">
+					<and>
+						<with variable="activeWorkbenchWindow.activePerspective">
+							<equals value="org.thingml.eclipse.ui.perspective">
+							</equals>
+						</with>
+						<with variable="activeMenuSelection">
+							<and>
+								<count value="1">
+								</count>
+								<iterate>
+									<adapt type="org.eclipse.core.resources.IFile">
+										<test property="org.eclipse.core.resources.name" value="*.thingml">
+										</test>
+									</adapt>
+								</iterate>
+							</and>
+						</with>
+					</and>
 				</visibleWhen>
 			    <dynamic
 			          class="org.thingml.eclipse.ui.menu.RunCompilerListMenu"
