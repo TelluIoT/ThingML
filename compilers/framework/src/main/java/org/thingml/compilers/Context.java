@@ -612,9 +612,9 @@ public class Context {
         if (AnnotatedElementHelper.hasAnnotation(p, "serializer")) {
             final String serID = AnnotatedElementHelper.annotation(p, "serializer").get(0);
             final SerializationPlugin sp = this.getCompiler().getSerializationPlugin(serID);
-            sp.setProtocol(p);
 
             if (sp != null) {
+                sp.setProtocol(p);
                 return sp;
             } else {
                 throw new UnsupportedEncodingException("Serialization plugin " + serID + " is not loaded. Please make sure it appears in resources/META-INF.services");
