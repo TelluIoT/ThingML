@@ -69,6 +69,9 @@ If you have docker, you can use the build container with Eclipse and ThingML at 
 
 * Arduino <-> Java communication (Serial): [https://github.com/ffleurey/ThingML-PressureLogger](https://github.com/ffleurey/ThingML-PressureLogger). This program shows has to create 2 ThingML programs communicating over a serial port. One program is runnning on an Arduino and collects sensor measurement. The other is a running as a Java program collecting the measurement from the Arduino over the USB/Serial connection and displaying curves. This example is quite minimalistic but should be easy to customize for your own sensor/needs. It shows various features of ThingML like the Serial communication plugin and the possibility of adding Maven dependencies to your ThingML programs.
 
+* Controlling the Raspberry Pi GPIOs: [https://github.com/ffleurey/ThingML-RPI-Blink](https://github.com/ffleurey/ThingML-RPI-Blink)
+A couple of very simple example showing phow to blink and LED on the Raspberry pi using C and NodeJS.
+
 **Example having known incompatibilities:**
 
 > **Note:** Some old samples may be easy to fix but other may use features which have been removed from ThingML.
