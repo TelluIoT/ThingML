@@ -59,7 +59,7 @@ If you have docker, you can use the build container with Eclipse and ThingML at 
 
 *The goal of this section is to give a list of example which should work out of the box*
 
-> **Note:** over the years and version we have collected a lot of different samples and projects made with ThingML. However most of them are not maintained and updated to work with the latest version of ThingML. This can b confusing if you are getting started.
+> **Note:** over the years and versions, we have collected a lot of different samples and projects made with ThingML. However most of them are not maintained and updated to work with the latest version of ThingML. This might be confusing if you are getting started.
 
 **Examples which should be working out of the box:**
 
