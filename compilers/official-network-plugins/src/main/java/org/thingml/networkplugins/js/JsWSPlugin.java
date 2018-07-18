@@ -222,7 +222,7 @@ public class JsWSPlugin extends NetworkPlugin {
                         builder.append(ctx.protectKeyword(pa.getName()));
                         i++;
                     }
-                    builder.append("), function ack(error) {if(error) console.log(\"error: \" + error);});\n");
+                    builder.append("), function ack(error) {if(error) console.error(\"error: \" + error);});\n");
                     builder.append("};\n\n");
                 }
             }
@@ -254,8 +254,19 @@ public class JsWSPlugin extends NetworkPlugin {
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
-                    builder.append("(msg) => ws.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
+                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', (");
+                    for (Parameter p : req.getParameters()) {
+                    	if (req.getParameters().indexOf(p)>0)
+                    		builder.append(", ");
+                    	builder.append(p.getName());
+                    }                    
+                    builder.append(") => ws.receive" + req.getName() + "On" + conn.getPort().getName() + "(");
+                    for (Parameter p : req.getParameters()) {
+                    	if (req.getParameters().indexOf(p)>0)
+                    		builder.append(", ");
+                    	builder.append(p.getName());
+                    }
+                    builder.append(")");
                     builder.append(");\n");
 
                     /*builder.append(conn.getInst().getInstance().getName() + "." + req.getName() + "On" + conn.getPort().getName() + "Listeners.push(");

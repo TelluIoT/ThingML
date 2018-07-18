@@ -268,8 +268,19 @@ public class JSSerialPlugin extends NetworkPlugin {
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
-                    builder.append("(msg) => serial.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
+                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', (");
+                    for (Parameter p : req.getParameters()) {
+                    	if (req.getParameters().indexOf(p)>0)
+                    		builder.append(", ");
+                    	builder.append(p.getName());
+                    }                    
+                    builder.append(") => serial.receive" + req.getName() + "On" + conn.getPort().getName() + "(");
+                    for (Parameter p : req.getParameters()) {
+                    	if (req.getParameters().indexOf(p)>0)
+                    		builder.append(", ");
+                    	builder.append(p.getName());
+                    }
+                    builder.append(")");
                     builder.append(");\n");
 
                     /*builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
