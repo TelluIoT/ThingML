@@ -29,9 +29,16 @@ bool /*PORT_NAME*/_is_open;
 
 
 
-static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context * this,
+static int /*PORT_NAME*/_callback_ThingML_protocol(
+#ifndef LWS_LIBRARY_VERSION_NUMBER
+                                   struct libwebsocket_context * this,
+#endif
                                    struct libwebsocket *wsi,
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+                                   enum lws_callback_reasons reason,
+#else
                                    enum libwebsocket_callback_reasons reason,
+#endif
                                    void *user, void *in, size_t len)
 {
    
@@ -67,7 +74,11 @@ static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context *
     return 0;
 }
 
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+static struct lws_protocols /*PORT_NAME*/_protocols[] = {
+#else
 static struct libwebsocket_protocols /*PORT_NAME*/_protocols[] = {
+#endif
     {
         "/*WS_PROTOCOL*/", // protocol name - very important!
         /*PORT_NAME*/_callback_ThingML_protocol,   // callback
@@ -92,13 +103,19 @@ void /*PORT_NAME*/_setup() {
     
 	/*PORT_NAME*/_info.port = CONTEXT_PORT_NO_LISTEN;
 	/*PORT_NAME*/_info.protocols = /*PORT_NAME*/_protocols;
+#ifndef LWS_LIBRARY_VERSION_NUMBER
 	/*PORT_NAME*/_info.extensions = libwebsocket_get_internal_extensions();
+#endif
 	/*PORT_NAME*/_info.gid = -1;
 	/*PORT_NAME*/_info.uid = -1;
 
 
 	// create libwebsocket /*PORT_NAME*/_context representing this server
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+    /*PORT_NAME*/_context = lws_create_context(&/*PORT_NAME*/_info);
+#else
     /*PORT_NAME*/_context = libwebsocket_create_context(&/*PORT_NAME*/_info);
+#endif
    
     if (/*PORT_NAME*/_context == NULL) {
         /*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] libwebsocket init failed\n");
@@ -118,7 +135,11 @@ void /*PORT_NAME*/_start_receiver_process() {
 	int use_ssl = 0;
 	int ietf_version = -1; /* latest */
 
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+	/*PORT_NAME*/_socket = lws_client_connect(/*PORT_NAME*/_context, "/*ADDRESS*/", port, use_ssl,
+#else
 	/*PORT_NAME*/_socket = libwebsocket_client_connect(/*PORT_NAME*/_context, "/*ADDRESS*/", port, use_ssl,
+#endif
 			"/", "/*ADDRESS*/", "/*ADDRESS*/",
 			 /*PORT_NAME*/_protocols[0].name, ietf_version);
 
@@ -131,7 +152,11 @@ void /*PORT_NAME*/_start_receiver_process() {
 	
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+        lws_service(/*PORT_NAME*/_context, 50);
+#else
         libwebsocket_service(/*PORT_NAME*/_context, 50);
+#endif
     }
 	
     libwebsocket_context_destroy(/*PORT_NAME*/_context);
@@ -154,7 +179,11 @@ void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
 
 		/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Trying to send:\n%s \n", p);
 
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+		m = lws_write(/*PORT_NAME*/_socket, p, length, LWS_WRITE_TEXT);
+#else
 		m = libwebsocket_write(/*PORT_NAME*/_socket, p, length, LWS_WRITE_TEXT);
+#endif
 	} else {
 		/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Error: Attempting to write on a closed socket\n");
 	}

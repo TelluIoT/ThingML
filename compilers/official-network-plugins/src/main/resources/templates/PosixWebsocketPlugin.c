@@ -68,17 +68,32 @@ uint16_t remove_client(struct libwebsocket *wsi) {
 }
 
 
-static int /*PORT_NAME*/_callback_http(struct libwebsocket_context * this,
+static int /*PORT_NAME*/_callback_http(
+#ifndef LWS_LIBRARY_VERSION_NUMBER
+                         struct libwebsocket_context * this,
+#endif
                          struct libwebsocket *wsi,
-                         enum libwebsocket_callback_reasons reason, void *user,
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+                         enum lws_callback_reasons reason,
+#else
+                         enum libwebsocket_callback_reasons reason,
+#endif
+                         void *user,
                          void *in, size_t len)
 {
     return 0;
 }
 
-static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context * this,
+static int /*PORT_NAME*/_callback_ThingML_protocol(
+#ifndef LWS_LIBRARY_VERSION_NUMBER
+                                   struct libwebsocket_context * this,
+#endif
                                    struct libwebsocket *wsi,
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+                                   enum lws_callback_reasons reason,
+#else
                                    enum libwebsocket_callback_reasons reason,
+#endif
                                    void *user, void *in, size_t len)
 {
    
@@ -114,7 +129,11 @@ static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context *
     return 0;
 }
 
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+static struct lws_protocols protocols[] = {
+#else
 static struct libwebsocket_protocols protocols[] = {
+#endif
     /* first protocol must always be HTTP handler */
     {
         "http-only",   // name
@@ -151,7 +170,9 @@ void /*PORT_NAME*/_setup() {
     /*PORT_NAME*/_info.port = port;
     /*PORT_NAME*/_info.iface = interface;
     /*PORT_NAME*/_info.protocols = protocols;
+#ifndef LWS_LIBRARY_VERSION_NUMBER
     /*PORT_NAME*/_info.extensions = libwebsocket_get_internal_extensions();
+#endif
     /*PORT_NAME*/_info.ssl_cert_filepath = NULL;
     /*PORT_NAME*/_info.ssl_private_key_filepath = NULL;
 
@@ -165,7 +186,11 @@ void /*PORT_NAME*/_start_receiver_process() {
 
     /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Start running WS Server\n");
     // create libwebsocket /*PORT_NAME*/_context representing this server
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+    /*PORT_NAME*/_context = lws_create_context(&/*PORT_NAME*/_info);
+#else
     /*PORT_NAME*/_context = libwebsocket_create_context(&/*PORT_NAME*/_info);
+#endif
    
     if (/*PORT_NAME*/_context == NULL) {
         /*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] libwebsocket init failed\n");
@@ -178,7 +203,11 @@ void /*PORT_NAME*/_start_receiver_process() {
 	
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
+#ifdef LWS_LIBRARY_VERSION_NUMBER
+        lws_service(/*PORT_NAME*/_context, 50);
+#else
         libwebsocket_service(/*PORT_NAME*/_context, 50);
+#endif
     }
 	
     libwebsocket_context_destroy(/*PORT_NAME*/_context);
