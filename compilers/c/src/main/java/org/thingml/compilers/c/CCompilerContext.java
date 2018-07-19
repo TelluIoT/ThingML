@@ -215,22 +215,6 @@ public abstract class CCompilerContext extends Context {
         }
     }
     
-    public String getNetworkLibWebsocketTemplate() {
-        return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForward.c");
-    }
-
-    public String getNetworkLibWebsocketClientTemplate() {
-        return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForwardClient.c");
-    }
-
-    public String getNetworkLibWebsocketHeaderTemplate() {
-        return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForward.h");
-    }
-
-    public String getNetworkLibWebsocketClientHeaderTemplate() {
-        return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForwardClient.h");
-    }
-
     public String getNetworkLibNopollWebsocketClientTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixNopollWebsocketClient.c");
     }
