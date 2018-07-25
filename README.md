@@ -313,6 +313,8 @@ In *CBSE’16: 19th International ACM Sigsoft Symposium on Component-Based Softw
 
 ### &#x1F539; How to embed ThingML in my toolchain?
 
+> This currently does not work. Pending a solution to Issue #241
+
 Embed the command-line inteface JAR [described previously in this readme](#-compile-thingml-from-the-sources) in your classpath.
 
 You can also include ThingML as a Maven dependency in your project:
