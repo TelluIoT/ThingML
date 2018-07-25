@@ -60,7 +60,7 @@
         <developer>
             <name>Franck Fleurey</name>
             <id>ffleurey</id>
-            <email>first.last@sintef.no</email>
+            <email>first.last@tellu.no</email>
             <roles>
                 <role>admin</role>
                 <role>developer</role>
@@ -207,16 +207,13 @@
     <modules>
         <module>utilities</module>
       
-	<module>language/thingml.target</module>
+		<module>language/thingml.target</module>
         <module>language/thingml</module>
- 	<module>language/thingml.ide</module>
 	
         <module>compilers</module>
         
         <module>testing/framework</module>
         <module>testing/reportbuilder</module>
-        <!-- The standalone app can only be built on the server which has the keystore to sign the jar
-        <module>../org.thingml.editor.standaloneApp</module>-->
         <module>Documentrospection</module>
     </modules>
 

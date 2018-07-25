@@ -11,6 +11,7 @@ src-gen/
 xtend-gen/
 */xtend-gen/
 **/xtend-gen/
+language/thingml.web/WebRoot/xtext-resources/generated/mode-thingml.js
 language/thingml/model/
 tmp/
 */tmp/

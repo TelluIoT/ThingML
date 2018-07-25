@@ -44,11 +44,11 @@
             <version>${thingml.version}</version>
         </dependency>
         
-        <dependency>
+        <!--<dependency>
             <groupId>org.thingml</groupId>
             <artifactId>thingml.ide</artifactId>
             <version>${thingml.version}</version>
-        </dependency>
+        </dependency>-->
         
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>

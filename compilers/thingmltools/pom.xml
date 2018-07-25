@@ -41,12 +41,6 @@
             <artifactId>thingml</artifactId>
             <version>${thingml.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>thingml.ide</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
         
         <dependency>
             <groupId>commons-io</groupId>
