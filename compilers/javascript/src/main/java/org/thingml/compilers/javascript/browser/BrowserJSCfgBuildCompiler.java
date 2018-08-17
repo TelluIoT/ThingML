@@ -16,6 +16,8 @@
  */
 package org.thingml.compilers.javascript.browser;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.builder.SourceBuilder;
@@ -100,7 +103,22 @@ public class BrowserJSCfgBuildCompiler extends JSCfgBuildCompiler {
         // External dependencies
         for (Entry<String,String> dep : getExternalDependencies(cfg).entrySet()) {
         	Section externalDep = head.section("dependency");
-        	externalDep.append("<script type=\"application/javascript\" src=\"").append(dep.getKey()).append("\"");
+        	String src = dep.getKey();
+        	try {
+        		// Check if the dependency is a local file
+        		File included = new File(ctx.getInputDirectory(), src);
+        		if (included.isFile() && included.exists()) {
+        			// Get relative path in source folder
+        			Path relative = ctx.getInputDirectory().toPath().relativize(included.toPath());
+        			// Put it in lib/ in the output folder
+        			File destination = new File(new File(ctx.getOutputDirectory(), "lib"), relative.toString());
+        			FileUtils.copyFile(included, destination);
+        			// Set its source
+        			src = "lib/"+ctx.getInputDirectory().toURI().relativize(included.toURI());
+        		}
+        	} catch (Exception e) { }
+        	
+        	externalDep.append("<script type=\"application/javascript\" src=\"").append(src).append("\"");
         	if (dep.getValue() != null) externalDep.append(" target=\"").append(dep.getValue()).append("\"");
         	externalDep.append("></script>");
         }
