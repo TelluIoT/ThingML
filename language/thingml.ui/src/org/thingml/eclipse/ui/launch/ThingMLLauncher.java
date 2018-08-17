@@ -259,6 +259,7 @@ public class ThingMLLauncher extends LaunchConfigurationDelegate {
 				
 				// Run actual compilation
 				ThingMLCompiler compiler = selectedCompiler.clone();
+				compiler.setInputDirectory(inputFile.getParentFile()); // FIXME: This is probably not a very good way to do this...
 				compiler.setOutputDirectory(configDir);
 				compiler.compile(config);
 				
