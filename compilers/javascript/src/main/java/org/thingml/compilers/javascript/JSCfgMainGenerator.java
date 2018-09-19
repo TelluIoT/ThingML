@@ -49,9 +49,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		else if (AnnotatedElementHelper.isDefined(type, "js_type", "long"))
 			return "0";
 		else if (AnnotatedElementHelper.isDefined(type, "js_type", "float"))
-			return "0.0f";
+			return "0.0";
 		else if (AnnotatedElementHelper.isDefined(type, "js_type", "double"))
-			return "0.0d";
+			return "0.0";
 		else if (AnnotatedElementHelper.isDefined(type, "js_type", "byte"))
 			return "0";
 		else if (AnnotatedElementHelper.isDefined(type, "js_type", "short"))
