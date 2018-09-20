@@ -43,6 +43,7 @@ import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.uml.PlantUMLCompiler;
+import org.thingml.compilers.utils.AutoThingMLCompiler;
 
 import compilers.go.GoCompiler;
 
@@ -66,6 +67,7 @@ public class ThingMLCompilerRegistry {
 
         if (instance == null) {
             instance = new ThingMLCompilerRegistry();
+            instance.addCompiler(new AutoThingMLCompiler(instance::createCompilerInstanceByName));
             instance.addCompiler(new ArduinoCompiler());
             instance.addCompiler(new ArduinomfCompiler());
             instance.addCompiler(new PosixCompiler());
@@ -124,10 +126,20 @@ public class ThingMLCompilerRegistry {
     	else
     		return null;
     }
+    
+    private static int sortByIdButAutoFirst(ThingMLCompiler o1, ThingMLCompiler o2) {
+    	boolean o1Auto = o1.getID().equals(AutoThingMLCompiler.ID);
+    	boolean o2Auto = o2.getID().equals(AutoThingMLCompiler.ID);
+    	if (o1Auto && o2Auto) return 0;
+    	if (o1Auto) return -1;
+    	if (o2Auto) return 1;
+    	return o1.getID().compareTo(o2.getID());
+    }
 
     public Collection<ThingMLCompiler> getCompilerPrototypes() {
     	final List<ThingMLCompiler> c = new ArrayList<ThingMLCompiler>(compilers.values());
-    	c.sort(Comparator.comparing(ThingMLCompiler::getID));
+    	//c.sort(Comparator.comparing(ThingMLCompiler::getID));
+    	c.sort(ThingMLCompilerRegistry::sortByIdButAutoFirst);
         return c;
     }
 
