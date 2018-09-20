@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.eclipse.ui.launch.ThingMLLauncher;
 import org.thingml.eclipse.ui.launch.ThingMLLauncher.CompilerInfo;
 
@@ -49,22 +51,30 @@ public abstract class CompilerListMenu extends CompoundContributionItem implemen
 	public void initialize(IServiceLocator serviceLocator) {
 		this.serviceLocator = serviceLocator;
 	}
+	
+	private CommandContributionItem createCompilerCommandContributionItem(String compilerId, String label) {
+		Map<String, String> commandParams = new HashMap<String, String>();
+		commandParams.put(command+".popup", "true");
+		commandParams.put(command+".compiler", compilerId);
+		
+		CommandContributionItemParameter parameters = new CommandContributionItemParameter(serviceLocator, null, command, CommandContributionItem.STYLE_PUSH);
+		parameters.label = label;
+		parameters.parameters = commandParams;
+		
+		return new CommandContributionItem(parameters);
+	}
 
 	@Override
 	protected IContributionItem[] getContributionItems() {
 		List<IContributionItem> items = new LinkedList<IContributionItem>();
-		
+		// Add the auto-compiler
+		if (ThingMLLauncher.compiler_auto != null) {
+			items.add(createCompilerCommandContributionItem(ThingMLLauncher.compiler_auto.getID(), ThingMLLauncher.compiler_auto.getName()));
+			items.add(new Separator());
+		}
+		// Add actual compilers
 		for (CompilerInfo compiler : ThingMLLauncher.compilers) {
-			Map<String, String> commandParams = new HashMap<String, String>();
-			commandParams.put(command+".popup", "true");
-			commandParams.put(command+".compiler", compiler.getId());
-			
-			CommandContributionItemParameter parameters = new CommandContributionItemParameter(serviceLocator, null, command, CommandContributionItem.STYLE_PUSH);
-			parameters.label = compiler.getName();
-			parameters.parameters = commandParams;
-			
-			CommandContributionItem item = new CommandContributionItem(parameters);
-			items.add(item);
+			items.add(createCompilerCommandContributionItem(compiler.getId(), compiler.getName()));
 		}
 		
 		return items.toArray(new IContributionItem[0]);

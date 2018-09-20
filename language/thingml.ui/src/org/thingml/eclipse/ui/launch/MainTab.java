@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.thingml.compilers.utils.AutoThingMLCompiler;
 import org.thingml.eclipse.ui.launch.ThingMLLauncher.CompilerInfo;
 
 @SuppressWarnings("restriction")
@@ -60,6 +61,7 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 	protected String[] compilerIds;
 	protected String[] compilerDescriptions;
 	protected Text fModelText;
+	protected Button fAutoCompilerButton;
 	protected Combo fCompilerCombo;
 	protected Label fCompilerDescription;
 	protected Button fDefaultOutputButton;
@@ -98,6 +100,16 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 	
 	protected void createCompilerSelectComponent(Composite parent) {
 		Group group = SWTFactory.createGroup(parent, "Compiler to use", 1, 1, GridData.FILL_BOTH);
+		
+		if (ThingMLLauncher.compiler_auto != null) {
+			fAutoCompilerButton = SWTFactory.createCheckButton(group, "Automatically select compiler", null, false, 1);
+			fAutoCompilerButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					updateFormView();
+				}
+			});			
+		}
 		
 		fCompilerCombo = new Combo(group, SWT.READ_ONLY);
 		fCompilerCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -271,7 +283,13 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 			fModelText.setText(selectedFile.getFullPath().toOSString());
 		}
 		// Set the compiler desciption
-		fCompilerDescription.setText(compilerDescriptions[fCompilerCombo.getSelectionIndex()]);
+		if (fAutoCompilerButton != null && fAutoCompilerButton.getSelection()) {
+			fCompilerCombo.setEnabled(false);
+			fCompilerDescription.setText(ThingMLLauncher.compiler_auto.getDescription());
+		} else {
+			fCompilerCombo.setEnabled(true);
+			fCompilerDescription.setText(compilerDescriptions[fCompilerCombo.getSelectionIndex()]);
+		}
 		// Set the output directory path
 		if (fDefaultOutputButton.getSelection()) {
 			fOutputDirectoryText.setText(defaultOutputDirectory);
@@ -300,9 +318,11 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 		setConfigurationDefaults(configuration);
 	}
 	
+	private static final String defaultCompilerID = ThingMLLauncher.compiler_auto != null ? AutoThingMLCompiler.ID : "";
+	
 	public static void setConfigurationDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setMappedResources(null);
-		configuration.setAttribute("org.thingml.launchconfig.compiler", "");
+		configuration.setAttribute("org.thingml.launchconfig.compiler", defaultCompilerID);
 		configuration.setAttribute("org.thingml.launchconfig.outdir", defaultOutputDirectory);
 	}
 	
@@ -326,13 +346,22 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 		} catch (CoreException e) {}
 		fModelText.setData(modelData);
 		// Set selected compiler
+		String compilerID = defaultCompilerID;
 		try {
-			String id = configuration.getAttribute("org.thingml.launchconfig.compiler", "");
-			int i = getSelectedCompilerIndex(id);
-			fCompilerCombo.select(i);
+			compilerID = configuration.getAttribute("org.thingml.launchconfig.compiler", defaultCompilerID);
 		} catch (CoreException e) {
+			fAutoCompilerButton.setSelection(true);
 			fCompilerCombo.select(0);
 		}
+		if (compilerID.equals(AutoThingMLCompiler.ID)) {
+			fAutoCompilerButton.setSelection(true);
+			fCompilerCombo.select(0);
+		} else {
+			fAutoCompilerButton.setSelection(false);
+			int i = getSelectedCompilerIndex(compilerID);
+			fCompilerCombo.select(i);
+		}
+		
 		// Set output directory
 		try {
 			fOutputDirectoryText.setText(configuration.getAttribute("org.thingml.launchconfig.outdir", defaultOutputDirectory));
@@ -355,7 +384,12 @@ public class MainTab extends AbstractLaunchConfigurationTab {
 			configuration.setMappedResources(new IResource[] { (IFile)fModelText.getData() });
 		else
 			configuration.setMappedResources(null);
-		configuration.setAttribute("org.thingml.launchconfig.compiler", compilerIds[fCompilerCombo.getSelectionIndex()]);
+		
+		if (fAutoCompilerButton != null && fAutoCompilerButton.getSelection())
+			configuration.setAttribute("org.thingml.launchconfig.compiler", AutoThingMLCompiler.ID);
+		else
+			configuration.setAttribute("org.thingml.launchconfig.compiler", compilerIds[fCompilerCombo.getSelectionIndex()]);
+		
 		configuration.setAttribute("org.thingml.launchconfig.outdir", fOutputDirectoryText.getText());
 	}
 	

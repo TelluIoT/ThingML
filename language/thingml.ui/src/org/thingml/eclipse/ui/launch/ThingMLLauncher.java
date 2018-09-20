@@ -42,6 +42,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.xtext.validation.Issue;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
+import org.thingml.compilers.utils.AutoThingMLCompiler;
 import org.thingml.eclipse.ui.ThingMLConsole;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -49,7 +50,7 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.validation.Checker;
 
-public class ThingMLLauncher extends LaunchConfigurationDelegate {	
+public class ThingMLLauncher extends LaunchConfigurationDelegate {
 	
 	protected File getValidInputFile(ILaunchConfiguration configuration, ThingMLConsole console) throws CoreException {
 		
@@ -77,12 +78,13 @@ public class ThingMLLauncher extends LaunchConfigurationDelegate {
 	
 	protected ThingMLCompiler getValidCompiler(ILaunchConfiguration configuration, ThingMLConsole console) throws CoreException {
 		String selectedCompiler = configuration.getAttribute("org.thingml.launchconfig.compiler", "");
+		if (selectedCompiler.equals(AutoThingMLCompiler.ID))
+			return compiler_auto;
 		if (selectedCompiler.isEmpty()) {
 			console.printErrorln("Compiler not selected!");
 			return null;
-		} else {
-			return registry.createCompilerInstanceByName(selectedCompiler);
 		}
+		return registry.createCompilerInstanceByName(selectedCompiler);
 	}
 	
 	protected File getValidOutdir(ILaunchConfiguration configuration, ThingMLConsole console) throws CoreException {
@@ -312,16 +314,23 @@ public class ThingMLLauncher extends LaunchConfigurationDelegate {
 	}
 	
 	public static final List<CompilerInfo> compilers;
+	public static ThingMLCompiler compiler_auto = null;
 	static {
 		List<CompilerInfo> infos = new LinkedList<CompilerInfo>();
-		// Add all compilers with a name
-		for (String compiler : compilerIDs)
-			if (registry.getCompilerNameById(compiler) != null)
-				infos.add(new CompilerInfo(
+		// Add all compilers with a name, except for auto compiler
+		for (String compiler : compilerIDs) {
+			if (registry.getCompilerNameById(compiler) != null) {
+				if (compiler.equals(AutoThingMLCompiler.ID)) {
+					compiler_auto = registry.createCompilerInstanceByName(compiler);
+				} else {
+					infos.add(new CompilerInfo(
 							compiler, 
 							registry.getCompilerNameById(compiler), 
 							registry.getCompilerDescriptionById(compiler)
-						));
+							));
+				}
+			}
+		}
 		// Sort the list
 		infos.sort(CompilerInfo.compareByName());
 		// Create an unmodifiable copy
