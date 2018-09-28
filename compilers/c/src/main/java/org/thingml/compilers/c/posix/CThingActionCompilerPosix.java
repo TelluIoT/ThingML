@@ -30,9 +30,10 @@ import org.thingml.xtext.validation.TypeChecker;
 public class CThingActionCompilerPosix extends CThingActionCompiler {
 	@Override
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-		final StringBuilder b = new StringBuilder();
+		
 		for (Expression msg : action.getMsg()) {
 		Type actual = TypeChecker.computeTypeOf(msg);
+		final StringBuilder b = new StringBuilder();
 		generate(msg, b, ctx);
 		if (actual != null) {
 			if (actual.getName().equals("Integer")) {
@@ -48,6 +49,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 			} else {
 				builder.append("//Type " + actual.getName() + " is not handled in print action\n");
 			}
+			if (action.isLine()) builder.append("fprintf(stderr, \"\\n\");\n");
 		} else {
 			builder.append("//Error in type detection\n");
 		}
@@ -56,9 +58,9 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 
 	@Override
 	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-		final StringBuilder b = new StringBuilder();
 		for (Expression msg : action.getMsg()) {
 			Type actual = TypeChecker.computeTypeOf(msg);
+			final StringBuilder b = new StringBuilder();
 			generate(msg, b, ctx);
 			if (actual != null) {
 				if (actual.getName().equals("Integer")) {
@@ -74,6 +76,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 				} else {
 					builder.append("//Type " + actual.getName() + " is not handled in print action\n");
 				}
+				if (action.isLine()) builder.append("fprintf(stdout, \"\\n\");\n");
 			} else {
 				builder.append("//Error in type detection\n");
 			}
