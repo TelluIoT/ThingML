@@ -46,6 +46,7 @@ import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.Message;
@@ -1775,13 +1776,30 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }
         }
+        
+        
+        
 
         if(ctx.getCompiler().getID().compareTo("arduino") != 0 || ctx.getCompiler().getID().compareTo("arduinomf") != 0) {
             builder.append("}\n");
         }
         
+        
+        
         for(NetworkLibraryGenerator nlg : ctx.getNetworkLibraryGenerators()) {
             nlg.generatePollCode(builder);
+        }
+        
+        // Check for any functions are annotated with @scheduler_polling "true"
+        for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
+        	for (Function f : ThingMLHelpers.allFunctions(inst.getType())) {
+        		if (AnnotatedElementHelper.isDefined(f, "scheduler_polling", "true")) {
+        			builder.append(ctx.getCName(f, inst.getType()));
+        			builder.append("(&");
+        			builder.append(ctx.getInstanceVarName(inst));
+        			builder.append(");\n");
+        		}
+        	}
         }
 
     }
