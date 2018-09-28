@@ -31,6 +31,7 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
@@ -83,7 +84,17 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
 	@Override
 	public boolean compile(Configuration cfg, Logger log, String... options) {
-		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + " [" + new Date() + "]");				
+		
+		// Abort if the configuration contains annotation @compiler for other compilers (i.e. it is not compatible with this compiler)
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "compiler")) {
+			if (!AnnotatedElementHelper.isDefined(cfg, "compiler", this.getID())) {
+				log.info("Skipping " + getName() + " compiler on configuration " + cfg.getName() + " because of @compiler annotation present and does not include " +this.getID()+ " [" + new Date() + "]");
+				return false;
+			}
+		}
+		
+		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + " [" + new Date() + "]");		
+		
 		//Saving the complete model, e.g. to get all required inputs if there is a problem in the compiler
 		ThingMLModel flatModel = flattenModel(ThingMLHelpers.findContainingModel(cfg));
 		try {
