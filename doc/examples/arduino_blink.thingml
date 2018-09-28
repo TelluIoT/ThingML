@@ -1,0 +1,43 @@
+import "datatypes.thingml" from stl
+import "lib/timer.thingml"
+
+thing Blink includes TimerClientPort {
+	
+	readonly property TimerID : UInt8 = 0
+	
+	function led_init() `pinMode(LED_BUILTIN, OUTPUT);`
+	function led_on() 	`digitalWrite(LED_BUILTIN, HIGH);`
+	function led_off() 	`digitalWrite(LED_BUILTIN, LOW);`
+
+	statechart init ON {
+		
+		on entry led_init()
+		
+		state ON {
+			on entry do	
+				timer!timer_start(TimerID, 500)
+				led_on()
+			end
+			
+			transition -> OFF event e : timer?timer_timeout guard e.id == TimerID
+		}
+		
+		state OFF {
+			on entry do 
+				timer!timer_start(TimerID, 500)
+				led_off()
+			end
+			
+			transition -> ON event e : timer?timer_timeout guard e.id == TimerID
+		}
+	}
+}
+
+configuration BlinkArduino
+@compiler "arduino"
+@arduino_stdout "Serial"
+{
+	instance countdown: Blink
+	instance timer : TimerArduino
+	connector countdown.timer => timer.timer
+}

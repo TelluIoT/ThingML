@@ -1,0 +1,56 @@
+import "datatypes.thingml" from stl
+import "lib/timer.thingml"
+
+thing Countdown includes TimerClientPort {
+	
+	readonly property TimerID : UInt8 = 1
+	readonly property StartTime : UInt8 = 10
+
+	statechart init Counting {
+		
+		property current : UInt8 = StartTime
+		
+		state Counting {
+			
+			on entry do
+				println current
+				timer!timer_start(TimerID, 1000)
+			end
+			
+			transition -> Counting event e : timer?timer_timeout 
+			action current = current - 1
+			
+			transition -> Stopped guard current == 0 
+			action timer!timer_cancel(TimerID)
+		}
+		
+		final state Stopped {
+			on entry println "Stopped."
+		}
+	}
+}
+
+configuration CountdownArduino
+@compiler "arduino"
+@arduino_stdout "Serial"
+{
+	instance countdown: Countdown
+	instance timer : TimerArduino
+	connector countdown.timer => timer.timer
+}
+
+configuration CountdownPosix 
+@compiler "posix"
+{
+	instance countdown: Countdown
+	instance timer : TimerPosix
+	connector countdown.timer => timer.timer
+}
+
+configuration CountdownJava 
+@compiler "java"
+{
+	instance countdown: Countdown
+	instance timer : TimerJava
+	connector countdown.timer => timer.timer
+}

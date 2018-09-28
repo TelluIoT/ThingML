@@ -1,1 +1,0 @@
-When a protocol is annotated by escape_null, the character `\0` (NUL) will be replace by `replacement_char` `0` (48), and `replacement_char` will be replace by `replacement_char``replacement_char`. By default `replacement_char` is `}` (125).

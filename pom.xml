@@ -214,7 +214,7 @@
         
         <module>testing/framework</module>
         <module>testing/reportbuilder</module>
-        <module>Documentrospection</module>
+
     </modules>
 
     <distributionManagement>

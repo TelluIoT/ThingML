@@ -1,0 +1,65 @@
+import "datatypes.thingml" from stl
+
+thing fragment PingMsgs {
+	message ping(seq : UInt8);
+	message pong(seq : UInt8);
+}
+
+thing PingServer includes PingMsgs {
+
+	provided port ping_service {
+		sends pong
+		receives ping
+	}
+
+	statechart init Active {
+
+		state Active {
+			transition -> Active event m : ping_service?ping action ping_service!pong(m.seq)
+		}
+	}
+}
+
+thing PingClient includes PingMsgs {
+
+	required port ping_service {
+		receives pong
+		sends ping
+	}
+	
+	statechart PingClientMachine init Ping {
+	
+	property counter : UInt8 = 0
+	
+		state Ping {
+			
+			on entry do
+				print "Send Ping ", counter, " ... "
+				ping_service!ping(counter)
+			end
+			
+			on exit counter = counter + 1
+			
+			transition -> OK event e : ping_service?pong 
+			guard e.seq == counter action println "[OK]"
+			
+			transition -> Stop event e : ping_service?pong 
+			guard e.seq != counter action println "[Error]"
+		}
+		
+		state OK {
+			transition -> Stop guard counter > 5
+			transition -> Ping guard counter <= 5
+		}
+		
+		final state Stop {
+			on entry println "Bye."
+		}	
+	}
+}
+
+configuration Ping {
+	instance client: PingClient
+	instance server: PingServer
+	connector client.ping_service => server.ping_service
+}
