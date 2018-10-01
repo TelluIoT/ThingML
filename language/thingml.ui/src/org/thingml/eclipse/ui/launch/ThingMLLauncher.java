@@ -260,7 +260,8 @@ public class ThingMLLauncher extends LaunchConfigurationDelegate {
 				console.printDebug("Compiling configuration "+config.getName()+"...");
 				
 				// Run actual compilation
-				ThingMLCompiler compiler = selectedCompiler.clone();
+				//ThingMLCompiler compiler = selectedCompiler.clone(); // This doesn't currently work as it should
+				ThingMLCompiler compiler = registry.createCompilerInstanceByName(selectedCompiler.getID());
 				compiler.setInputDirectory(inputFile.getParentFile()); // FIXME: This is probably not a very good way to do this...
 				compiler.setOutputDirectory(configDir);
 				compiler.compile(config);
