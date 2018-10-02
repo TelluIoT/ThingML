@@ -78,6 +78,11 @@ public class AutoThingMLCompiler extends ThingMLCompiler {
 			log.error("Automatic compiler selection: no compiler with id \""+compilerId+"\" was found.");
 			return false;
 		}
+		
+		// TODO: A better way to do this
+		actualCompiler.setInputDirectory(getInputDirectory());
+		actualCompiler.setOutputDirectory(getOutputDirectory());
+		
 		return actualCompiler.compile(cfg, log, options);
 	}
 
