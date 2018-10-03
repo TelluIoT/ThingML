@@ -1190,7 +1190,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             for (Port p : ThingMLHelpers.allPorts(t)) {
                 if (AnnotatedElementHelper.isDefined(p, "sync_send", "true")) continue;
-                for (Message m : p.getSends()) {
+                //for (Message m : p.getSends()) {
+                for (Message m : ConfigurationHelper.allMessageDispatch(cfg, t, p).keySet()) {
                     for (Thing t2 : ConfigurationHelper.allThings(cfg)) {
                         for (Port p2 : ThingMLHelpers.allPorts(t2)) {
                             //if (AnnotatedElementHelper.isDefined(p2, "sync_send", "true")) continue; 
@@ -1322,12 +1323,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             for (Port port : ThingMLHelpers.allPorts(t)) {
 
-                for (Message msg : port.getSends()) {
+                //for (Message msg : port.getSends()) {
+            	
+            	for (Message msg : ConfigurationHelper.allMessageDispatch(cfg, t, port).keySet()) {
                     ctx.setConcreteThing(t);
 
                     // check if there is an connector for this message
                     boolean found = false;
                     //boolean remote = false;
+                    
+                    
                     for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
 
                         if ((c.getRequired() == port && c.getProvided().getReceives().contains(msg)) ||
