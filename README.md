@@ -147,9 +147,7 @@ Install PlantUML plugins in Eclipse using this update site: `http://hallvard.git
 
 - `Window -> Show View -> Other... -> PlantUML`
 
-> Make sure you have Graphviz installed. It is required by the Eclipse plugin.
-
-If you have issues getting PlantUML to work, wollow the instructions from http://plantuml.com/eclipse
+> Make sure you have Graphviz installed. It is required by the Eclipse plugin. If you have issues getting PlantUML to work, follow the instructions from http://plantuml.com/eclipse
 
 ###  Posix C
 ---
