@@ -1,0 +1,143 @@
+import "InfluxUDPMsgs.thingml"
+
+
+thing InfluxUDP includes InfluxUDPPort 
+@c_header `
+#include <stdlib.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#define BUFLEN 512
+`
+
+@c_global `
+void diep(char *s) {
+  perror(s);
+  exit(1);
+}`
+{
+	property influx_host : String = "localhost"
+	property influx_port : UInt16 = 8089
+	property influx_prefix : String = "default_prefix"
+	property influx_tags : String = `NULL`
+	
+	
+	function addTag(name : String, value : String) do
+	
+		//`printf("BEGIN Updated influx_tags: %s=%s \n", `&name&`, `&value&`);`
+	
+		`char* previous_tags = `&influx_tags&`;`
+		
+		`int nlen = 1;` // one comma
+		`if (previous_tags != NULL) nlen += strlen(previous_tags);` // keep previous tags
+		`nlen += strlen(`&name&`);`
+		`nlen += strlen(`&value&`);`
+		
+		``&influx_tags&` = (char *)malloc(sizeof(char) * (nlen + 1));
+		if (`&influx_tags&` == NULL) {`
+			error "[PANIC] Malloc failed to allocate memory to copy a String. Exiting...\n"
+			`exit(-1);`	
+		`} else {
+			strcpy(`&influx_tags&`, "");
+			if (previous_tags != NULL) strcat(`&influx_tags&`, previous_tags);
+			strcat(`&influx_tags&`, ",");
+			strcat(`&influx_tags&`, `&name&`);
+			strcat(`&influx_tags&`, "=");
+			strcat(`&influx_tags&`, `&value&`);
+			//printf("DDD Updated influx_tags = %s \n", `&influx_tags&`);
+		}`
+		
+		`if ( previous_tags != NULL) free( previous_tags);`
+	end	
+	
+	function sendMeasurement(table : String, metric : String, value : Int32) do
+		`char buf[BUFLEN];
+	
+	    struct sockaddr_in si_other;
+	    int s, i, slen=sizeof(si_other);
+	
+	    if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1) diep("socket");
+	    memset((char *) &si_other, 0, sizeof(si_other));
+		si_other.sin_family = AF_INET;
+		si_other.sin_port = htons(`&influx_port&`);
+	
+	    if (inet_aton(`&influx_host&`, &si_other.sin_addr)==0) {
+		  fprintf(stderr, "inet_aton() failed\n");
+		  exit(1);
+		}
+	
+	     sprintf(buf, "%s_%s%s %s=%d", `&influx_prefix&`,`&table&`, `&influx_tags&`, `&metric&` ,`&value&` );
+	       
+	    if (sendto(s, buf, strlen(buf), 0, (struct sockaddr *)&si_other, slen)==-1) {
+		    diep("sendto()");
+		}
+	
+	    close(s);
+	
+	    //printf("DDD Influx UDP Send: %s\n", buf);`
+	end
+	
+	function sendMeasurementWithTag(table : String, metric : String, value : Int32, tagname : String, tagvalue : String) do
+		`char buf[BUFLEN];
+	
+	    struct sockaddr_in si_other;
+	    int s, i, slen=sizeof(si_other);
+	
+	    if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1) diep("socket");
+	    memset((char *) &si_other, 0, sizeof(si_other));
+		si_other.sin_family = AF_INET;
+		si_other.sin_port = htons(`&influx_port&`);
+	
+	    if (inet_aton(`&influx_host&`, &si_other.sin_addr)==0) {
+		  fprintf(stderr, "inet_aton() failed\n");
+		  exit(1);
+		}
+		sprintf(buf, "%s_%s%s,%s=%s %s=%d", `&influx_prefix&`,`&table&`, `&influx_tags&`, `&tagname&`, `&tagvalue&`, `&metric&` ,`&value&` );
+	   
+	       
+	    if (sendto(s, buf, strlen(buf), 0, (struct sockaddr *)&si_other, slen)==-1) {
+		    diep("sendto()");
+		}
+	
+	    close(s);
+	
+	    //printf("DDD Influx UDP Send: %s\n", buf);`
+	end
+	
+	
+	
+	statechart InfluxUDPSC init Ready {
+		
+		internal event e : datasource?set_influx_host action do
+			influx_host = e.host
+			influx_port = e.portno
+		end
+		
+		internal event e : datasource?set_influx_prefix action do
+			influx_prefix = e.prefix
+		end
+		
+		internal event e : datasource?add_influx_tag action do
+			addTag(e.name, e.value)
+		end
+		
+		
+		state Ready {
+			internal event e : datasource?measurement action do
+				sendMeasurement(e.table, e.metric, e.value)
+			end
+			
+			internal event e : datasource?measurement_with_tag action do
+				sendMeasurementWithTag(e.table, e.metric, e.value, e.tagname, e.tagvalue)
+			end
+		}
+		
+	}
+	
+	
+}

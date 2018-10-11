@@ -1,0 +1,28 @@
+import "../_Datatypes.thingml"
+
+thing fragment InfluxUDPMsgs {
+	message set_influx_host(host : String, portno : UInt16)
+	message set_influx_prefix(prefix : String)
+	message add_influx_tag(name : String, value : String)
+	message measurement(table : String, metric : String, value : Int32)
+	message measurement_with_tag(table : String, metric : String, value : Int32, tagname : String, tagvalue : String)
+}
+
+
+thing fragment InfluxUDPPort includes InfluxUDPMsgs{
+	
+	provided port datasource {
+		receives measurement, set_influx_host, set_influx_prefix, add_influx_tag, measurement_with_tag
+	}
+	
+}
+
+thing fragment InfluxUDPClientPort includes InfluxUDPMsgs {
+	
+	required port influx 
+	@sync_send "true"
+	{
+		sends measurement, set_influx_host, set_influx_prefix, add_influx_tag, measurement_with_tag
+	}
+	
+}
