@@ -98,15 +98,18 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                 classes.append("class " + thing.getName() + " <<(T,#5BBF09)PIM>> {\n");
             }
 
-            if (thing.getProperties().size() > 0)
-                classes.append("..Properties..\n");
-            for (Property p : thing.getProperties()) {
-                classes.append("-" + p.getName() + " : " + p.getTypeRef().getType().getName());
-                if (p.getInit() != null) {
-                    classes.append(" = ");
-                    ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), classes, ctx);
-                }
-                classes.append("\n");
+            
+            if (!compact) { // Do not include properties in the compact version
+	            if (thing.getProperties().size() > 0)
+	                classes.append("..Properties..\n");
+	            for (Property p : thing.getProperties()) {
+	                classes.append("-" + p.getName() + " : " + p.getTypeRef().getType().getName());
+	                if (p.getInit() != null) {
+	                    classes.append(" = ");
+	                    ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), classes, ctx);
+	                }
+	                classes.append("\n");
+	            }
             }
 
             if (thing.getMessages().size() > 0)
@@ -139,31 +142,42 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                 }
             }
 
-            if (thing.getFunctions().size() > 0)
-                classes.append("..Functions..\n");
-            for (Function f : thing.getFunctions()) {
-                classes.append("-" + f.getName() + "(");
-                if (compact) {
-                    if (f.getParameters().size() > 0)
-                        classes.append("...");
-                } else {
-                    int i = 0;
-                    for (Parameter p : f.getParameters()) {
-                        if (i > 0)
-                            classes.append(", ");
-                        classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
-                    }
-                }
-                classes.append(") : ");
-                if (f.getTypeRef() != null && f.getTypeRef().getType() != null) {
-                    classes.append(f.getTypeRef().getType().getName());
-                } else {
-                    classes.append("void");
-                }
-                classes.append("\n");
+            
+            if (!compact) { // Do not include functions in the compact version
+	            if (thing.getFunctions().size() > 0)
+	                classes.append("..Functions..\n");
+	            for (Function f : thing.getFunctions()) {
+	                classes.append("-" + f.getName() + "(");
+	                if (compact) {
+	                    if (f.getParameters().size() > 0)
+	                        classes.append("...");
+	                } else {
+	                    int i = 0;
+	                    for (Parameter p : f.getParameters()) {
+	                        if (i > 0)
+	                            classes.append(", ");
+	                        classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
+	                    }
+	                }
+	                classes.append(") : ");
+	                if (f.getTypeRef() != null && f.getTypeRef().getType() != null) {
+	                    classes.append(f.getTypeRef().getType().getName());
+	                } else {
+	                    classes.append("void");
+	                }
+	                classes.append("\n");
+	            }
             }
+            
+            
             classes.append("}\n");
 
+            
+            /* Remove annotation from the diagrams. We should have a way to configure the generator
+             *  either using more annotations, e.g. @uml_show "annoatations" or some global settings for the generator
+             */
+            
+            /*
             if (thing.getAnnotations().size() > 0)
                 classes.append("note left of " + thing.getName() + " : ");
             for(PlatformAnnotation a : thing.getAnnotations()) {
@@ -175,6 +189,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             }
             if (thing.getAnnotations().size() > 0)
                 classes.append("\n");
+			*/
 
             for (Thing include : thing.getIncludes()) {
                 generateClass(include, classes, ctx, compact);
