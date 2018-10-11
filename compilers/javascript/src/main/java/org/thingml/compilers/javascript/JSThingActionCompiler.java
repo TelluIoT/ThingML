@@ -60,7 +60,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
 	/**
 	 * JS does not really have integers, and hence no proper integer division
-	 * 
+	 *
 	 * @param expression
 	 * @param builder
 	 * @param ctx
@@ -339,7 +339,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		}
 		super.generate(action, builder, ctx);
 	}
-	
+
 	@Override
 	public void generate(ArrayInit expression, StringBuilder builder, Context ctx) {
 		builder.append("[");
@@ -349,21 +349,19 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 			generate(e, builder, ctx);
 		}
 		builder.append("]");
-	}	
-	
+	}
+
 	@Override
 	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
-		if (fa.getIndex() != null) {			
-			builder.append("var " + ctx.getVariableName(fa.getIndex()) + " = 0;\n");
-		}
 		if (fa.getArray().getProperty() instanceof Property) {
 			builder.append(ctx.getContextAnnotation("thisRef"));
 		}
-		builder.append(ctx.getVariableName(fa.getArray().getProperty()) + ".forEach((" + ctx.getVariableName(fa.getVariable()) + ") => {\n");
-		generate(fa.getAction(), builder, ctx);
+		builder.append(ctx.getVariableName(fa.getArray().getProperty()) + ".forEach((" + ctx.getVariableName(fa.getVariable()));
 		if (fa.getIndex() != null) {
-			builder.append(ctx.getVariableName(fa.getIndex()) + "++;\n");
+			builder.append(", " + ctx.getVariableName(fa.getIndex()));
 		}
-		builder.append("});\n");		
+		builder.append(") => {\n");
+		generate(fa.getAction(), builder, ctx);
+		builder.append("});\n");
 	}
 }
