@@ -1,0 +1,9 @@
+import "../app0.thingml"
+import "driver.thingml"
+
+configuration test {
+	instance app : APP
+	instance mock : LED_BROWSER
+	
+	connector app.leds => mock.leds
+}

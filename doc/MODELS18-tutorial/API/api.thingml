@@ -1,0 +1,41 @@
+import "datatypes.thingml" from stl
+
+thing fragment API {
+	message set_color(id : Byte, r : Byte, g : Byte, b : Byte) //sets the color of LED id, using a classic RGB schema
+	message turn_on(id : Byte)								   //turn on LED id
+	message turn_off(id : Byte)							       //turn off LED id
+}
+
+thing fragment CLIENT includes API {
+	
+	required port leds {		
+		sends set_color, turn_off, turn_on
+	}
+	
+}
+
+thing fragment DRIVER includes API {
+	
+	abstract function initialize()
+	
+	abstract function turn_on(id : Byte)
+	
+	abstract function turn_off(id : Byte)
+	
+	provided port leds {		
+		receives set_color, turn_off, turn_on
+	}
+	
+	statechart Behavior init Init {
+		state Init {
+			on entry initialize()
+			
+			internal event e : leds?turn_on
+			action turn_on(e.id)
+			
+			internal event e : leds?turn_off
+			action turn_off(e.id)
+		}
+	}
+	
+}

@@ -1,0 +1,32 @@
+import "../API/api.thingml"
+
+thing LED_BROWSER includes DRIVER 
+{
+	
+	
+	function initialize() do
+		`
+		document.body.innerHTML = "<svg id=\"logo\" width=\"235\" height=\"25\" viewBox=\"0 0 235 25\">"
+  		+ "<rect id=\"led0\" x=\"0\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+  		+ "<rect id=\"led1\" x=\"30\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+  		+ "<rect id=\"led2\" x=\"60\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+  		+ "<rect id=\"led3\" x=\"90\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+  		+ "<rect id=\"led4\" x=\"120\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+  		+ "<rect id=\"led5\" x=\"150\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+  		+ "<rect id=\"led6\" x=\"180\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+  		+ "<rect id=\"led7\" x=\"210\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
+		+ "</svg>"
+		`
+	end
+	
+	
+	function turn_on(id : Byte) do
+		println "Turn on ", id
+		`document.getElementById("led"+` & id & `).setAttribute("fill", "#F00");`
+	end
+	
+	function turn_off(id : Byte) do
+		println "Turn off ", id
+		`document.getElementById("led"+` & id & `).setAttribute("fill", "#000");`		
+	end
+}

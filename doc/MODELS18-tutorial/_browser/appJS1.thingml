@@ -1,0 +1,11 @@
+import "../app1.thingml"
+import "driver.thingml"
+
+configuration test {
+	instance app : APP
+	instance mock : LED_BROWSER
+	instance timer : TimerJS
+	
+	connector app.leds => mock.leds
+	connector app.timer => timer.timer
+}
