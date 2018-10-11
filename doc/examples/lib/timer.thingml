@@ -14,18 +14,21 @@ thing fragment TimerClientPort includes TimerMsgs {
 	}
 }
 
-thing TimerJava includes TimerMsgs
+thing fragment Timer includes TimerMsgs {
+	
+	provided port timer {
+		receives timer_start, timer_cancel
+		sends timer_timeout
+	}
+}
+
+thing TimerJava includes Timer
 @java_import "import java.util.*;"
 @java_features "
 	Hashtable<Integer, TimerTask> tasks = new Hashtable<Integer, TimerTask>();
 	Timer timer = new java.util.Timer();"
 {
 	
-	provided port timer {
-		receives timer_start, timer_cancel
-		sends timer_timeout
-	}
-
     function startTimer(id: UInt8, delay : UInt16) do
     	cancel(id)
         `final int t_id = `&id&`;`
@@ -58,15 +61,10 @@ thing TimerJava includes TimerMsgs
 
 object JSArray;
 
-thing TimerJS includes TimerMsgs
+thing TimerJS includes Timer
 {
 
   property Timeouts : JSArray = `{}` as JSArray
-	
-	provided port timer {
-		receives timer_start, timer_cancel
-		sends timer_timeout
-	}
 
   function startTimer(id: UInt8, delay : UInt16) do
     `
@@ -105,7 +103,7 @@ thing TimerJS includes TimerMsgs
 }
 
 
-thing TimerPosix includes TimerMsgs 
+thing TimerPosix includes Timer
 
 @c_header `
 #include <time.h>
@@ -124,10 +122,6 @@ pthread_mutex_t Timer_mut;`
 	readonly property NB_SOFT_TIMERS : UInt16 = `NB_SOFT_TIMERS` as UInt16
 	readonly property SOFT_TIMER_PERIOD : UInt16 = 4
 	
-	provided port timer {
-		receives timer_start, timer_cancel
-		sends timer_timeout
-	}
 	
 	function time_ms() : UInt32 do
 		`struct timespec current;
@@ -238,7 +232,7 @@ pthread_mutex_t Timer_mut;`
     }
 }
 
-thing TimerArduino includes TimerMsgs 
+thing TimerArduino includes Timer
 
 @c_header `
 #define NB_SOFT_TIMERS 16
@@ -251,11 +245,7 @@ uint32_t Timer_prev;`
 {
 	readonly property NB_SOFT_TIMERS : UInt16 = `NB_SOFT_TIMERS` as UInt16
 	
-	provided port timer {
-		receives timer_start, timer_cancel
-		sends timer_timeout
-	}
-	
+
 	function time_ms() : UInt32 do
 		return `millis()` as UInt32
 	end

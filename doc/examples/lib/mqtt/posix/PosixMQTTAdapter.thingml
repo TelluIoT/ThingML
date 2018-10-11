@@ -1,0 +1,306 @@
+import "../MQTTAdapterMsgs.thingml"
+
+object Mosquitto
+	@c_type "struct mosquitto *"
+	@c_byte_size "*"
+	
+
+thing PosixMQTTAdapter includes MQTTAdapterMsgs
+@c_header "
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <stdint.h>
+#include <math.h>
+#include <time.h>
+#include <mosquitto.h>"
+
+@c_global ""
+{
+	provided port mqtt 
+	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
+	{
+		receives mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix, mqtt_set_tls_certificates
+		sends mqtt_connected, mqtt_disconnected, mqtt_message
+	}
+	
+	property client : Mosquitto = `NULL`
+	
+	property broker_host : String = `NULL`
+	property broker_port : UInt16 = 1883
+	
+	property client_id : String = `NULL`
+	
+	property tls : Boolean = false
+	property username : String = `NULL`
+	property password : String = `NULL`
+	
+	property cafile : String = `NULL`
+	property capath : String = `NULL`
+	property certfile : String = `NULL`
+	property keyfile : String = `NULL`
+	
+	
+	property topic_prefix : String = `NULL`
+	
+	//readonly property will_topic : String = `NULL`
+	//readonly property will_string : String = `NULL`
+
+	function setTopicPrefix(src : String) do
+		`if (`&topic_prefix&` != NULL) free(`&topic_prefix&`);
+		`&topic_prefix&` = (char *)malloc(sizeof(char) * (strlen(src) + 1));
+		if (`&topic_prefix&` == NULL) {`
+			error "[PANIC] Malloc failed to allocate memory to copy a String. Exiting...\n"
+			`exit(-1);`	
+		`} else {
+			strcpy(`&topic_prefix&`, `&src&`);
+			printf("src:%s topic_prefix:%s\n", `&src&`, `&topic_prefix&`);
+		}`
+	end
+
+
+	function mosquitto_connect_callback() 
+		@c_prototype "void mosquitto_connect_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int result)"
+	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
+	do
+		/*
+		0 - success
+		1 - connection refused (unacceptable protocol version)
+		2 - connection refused (identifier rejected)
+		3 - connection refused (broker unavailable)
+		4-255 - reserved for future use */
+		
+		 print "mosquitto_connect_callback\n"
+		 if (`result` == 0) mqtt!mqtt_connected()
+		
+	end
+	
+	function mosquitto_disconnect_callback() 
+		@c_prototype "void mosquitto_disconnect_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int result)"
+	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
+	do
+		/*integer value indicating the reason for the disconnect.  A value of 0 means the client has called mosquitto_disconnect.  Any other value indicates that the disconnect is unexpected.
+		 */
+		 
+		 print "mosquitto_disconnect_callback\n"
+		 mqtt!mqtt_disconnected()
+		 
+		 
+	end
+
+	function mosquitto_publish_callback() 
+		@c_prototype "void mosquitto_publish_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int msgid)"
+	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
+	do
+	
+		//print "mosquitto_publish_callback\n"
+		
+	end
+
+	function mosquitto_message_callback() 
+		@c_prototype "void mosquitto_message_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, const struct mosquitto_message * msg)"
+	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
+	do
+		//print "mosquitto_message_callback\n"
+		
+		`char* top = msg->topic;
+		 if (`&topic_prefix&` != NULL) {
+		 	int prefix_len = strlen(`&topic_prefix&`);
+		 	
+		 	if (strlen(top) > prefix_len && strncmp(top, `&topic_prefix&`, prefix_len) == 0) {`
+		 		mqtt!mqtt_message(`top + prefix_len + 1`,`msg->payload`,`msg->payloadlen`)
+		 	`}
+		 	else {`
+		 		error "[MQTT] Receive message on topic with incorrect prefix.\n"
+		 		`printf("   Topic:%s, Prefix:%s, prefix_len:%d\n", msg->topic, `&topic_prefix&`, prefix_len);`
+		 	`}
+		 }
+		 else {`
+		 	mqtt!mqtt_message(`msg->topic`,`msg->payload`,`msg->payloadlen`)
+		 `}`
+		
+	end
+	
+	function mosquitto_subscribe_callback() 
+		@c_prototype "void mosquitto_subscribe_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int msgid, int qos_count, const int * granted_qos)"
+	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
+	do
+		//print "mosquitto_subscribe_callback\n"
+	end
+	
+	function mosquitto_unsubscribe_callback() 
+		@c_prototype "void mosquitto_unsubscribe_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int msgid)"
+	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
+	do
+		//print "mosquitto_unsubscribe_callback\n"
+	end
+	
+	function mosquitto_log_callback() 
+		@c_prototype "void mosquitto_log_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int level, const char * msg)"
+	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
+	do
+		// Uncomment to print MQTT log
+		// `printf("[MQTT %s:%d] %s\n", `&client_id&`, level, msg);`
+	end
+
+
+	function mqtt_connect() : Boolean do
+	    
+	    var status : Integer
+	    
+	    // Initialize Mosquitto
+	    `mosquitto_lib_init();`
+	    
+	    // Create the client with the specified client ID (with a clean session and the thing instance as user data)
+	    client = `mosquitto_new(`&client_id&`, true, _instance);`
+	    
+	    // Check for errors
+	    if ( client == `NULL`) do
+	    	error "[MQTT] Error creating MQTT client (mosquitto_new errno= " error `errno` as Integer error ")\n"
+	        `perror("[MQTT] mosquitto_new failed ");`
+	        return false
+    	end
+    	
+    	// Set the callbacks
+    	`mosquitto_connect_callback_set(`&client&`, mosquitto_connect_callback);`
+    	`mosquitto_disconnect_callback_set(`&client&`, mosquitto_disconnect_callback);`
+    	`mosquitto_publish_callback_set(`&client&`, mosquitto_publish_callback);`
+    	`mosquitto_message_callback_set(`&client&`, mosquitto_message_callback);`
+    	`mosquitto_subscribe_callback_set(`&client&`, mosquitto_subscribe_callback);`
+    	`mosquitto_unsubscribe_callback_set(`&client&`, mosquitto_unsubscribe_callback);`
+    	`mosquitto_log_callback_set(`&client&`, mosquitto_log_callback);`
+    	
+    	// Set username and password
+    	status = `mosquitto_username_pw_set(`& client &`, `&username&`, `&password&`);`
+    	
+    	if (status != `MOSQ_ERR_SUCCESS`) do
+    		error "[MQTT] Error setting up username / password (mosquitto_username_pw_set returned " error status error ")\n"
+    		return false
+    	end
+    	
+    	if (tls) do
+    	
+	    	// Set SSL/TLS connection
+	    	
+	    	if (cafile == `NULL` and capath == `NULL`) do
+	    		// Put a random capath to enable tls without providing any certificates
+		    	status = `mosquitto_tls_set(`& client &`, NULL, "~/certs", NULL, NULL, NULL);`
+		    	if (status != `MOSQ_ERR_SUCCESS`) do
+		    		error "[MQTT] Error setting up MQTT Client (mosquitto_tls_set returned " error status error ")\n"
+		    		return false
+		    	end
+	    	end
+			else do
+				// Put in the actual certificates which have been provided
+	    		status = `mosquitto_tls_set(`& client &`, `& cafile &`, `& capath &`, `& certfile &`, `& keyfile &`, NULL);`
+		    	if (status != `MOSQ_ERR_SUCCESS`) do
+		    		error "[MQTT] Error setting up MQTT Client (mosquitto_tls_set returned " error status error ")\n"
+		    		`printf("cafile = %s\n", `& cafile &`);`
+		    		`printf("capath = %s\n", `& capath &`);`
+		    		`printf("certfile = %s\n", `& certfile &`);`
+		    		`printf("keyfile = %s\n", `& keyfile &`);`
+		    		return false
+		    	end
+	    	end
+	    	
+	    	/*
+	    	// Allow for insecure SSL connection
+	    	status = `mosquitto_tls_insecure_set(`& client &`, `& true &`);`
+			if (status != `MOSQ_ERR_SUCCESS`) do
+	    		error "[MQTT] Error setting up MQTT Client (mosquitto_tls_insecure_set returned " error status error ")\n"
+	    		return false
+	    	end
+	    	 */
+	    	 
+	    	// Set SSL options
+	    	status = `mosquitto_tls_opts_set(`& client &`, 0, "tlsv1.2", NULL);`
+	    	if (status != `MOSQ_ERR_SUCCESS`) do
+	    		error "[MQTT] Error setting up MQTT Client (`mosquitto_tls_opts_set returned " error status error ")\n"
+	    		return false
+	    	end
+		
+		end
+		 
+    	// Start the network thread
+    	status = `mosquitto_loop_start(`&client&`)`
+    	if (status != `MOSQ_ERR_SUCCESS`) do
+    		error "[MQTT] Error starting mosquitto loop thread (mosquitto_loop_start returned " error status error ")\n"
+    		return false
+    	end
+    	
+    	// Connect to the broker
+    	status = `mosquitto_connect_async(`&client&`, `&broker_host&`, `&broker_port&`, 10)`
+    	if (status != `MOSQ_ERR_SUCCESS`) do
+    		error "[MQTT] Error connecting to broker (mosquitto_connect_async returned " error status error ")\n"
+    		`perror("[MQTT] mosquitto_connect_async failed ");`
+    		return false
+    	end
+    	
+		return true
+	end
+
+	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) do
+		`char top[256];`
+		if (topic_prefix != `NULL`) `snprintf(top, 256, "%s/%s", `&topic_prefix&`, `&topic&`);`
+		else `snprintf(top, 256, "%s", `&topic&`);`
+
+		var status : Integer = `mosquitto_publish(`&client&`, NULL, top, `&size&`, `&payload&`, 1, 0)`
+		if (status != `MOSQ_ERR_SUCCESS`) do
+    		error "[MQTT] Error publishing message (mosquitto_publish returned " error status error ")\n"
+    	end
+	end
+
+
+	function mqtt_subscribe(topic : String) do
+		`char top[256];`
+		
+		if (topic_prefix != `NULL`) `snprintf(top, 256, "%s/%s", `&topic_prefix&`, `&topic&`);`
+		else `snprintf(top, 256, "%s", `&topic&`);`
+	
+		var status : Integer = `mosquitto_subscribe(`&client&`, NULL, top, 1)`
+		if (status != `MOSQ_ERR_SUCCESS`) do
+    		error "[MQTT] Error subscribing to topic (mosquitto_subscribe returned " error status error ")\n"
+    	end
+	end
+	
+	statechart MQTTAdapterThing init Start {
+		
+		internal event m: mqtt?mqtt_set_credentials action do
+			username = m.usr
+			password = m.pwd
+		end
+		
+		internal event m: mqtt?mqtt_set_tls_certificates action do
+			cafile = m.cafile
+			capath = m.capath
+			certfile = m.certfile
+			keyfile = m.keyfile
+		end
+		
+		internal event m: mqtt?mqtt_set_prefix action do
+			setTopicPrefix(m.prefix)
+		end
+		
+		internal event m : mqtt?mqtt_connect action do
+			client_id = m.client_id
+			broker_host = m.host
+			broker_port = m.portno
+			tls = m.tls
+			mqtt_connect()
+		end
+		
+		internal event m : mqtt?mqtt_publish action do
+			mqtt_publish(m.topic, m.payload, m.size)
+		end
+		
+		internal event m : mqtt?mqtt_subscribe action do
+			mqtt_subscribe(m.topic)
+		end
+		
+		state Start {
+			
+		}
+	}
+}

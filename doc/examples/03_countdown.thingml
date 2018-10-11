@@ -54,3 +54,14 @@ configuration CountdownJava
 	instance timer : TimerJava
 	connector countdown.timer => timer.timer
 }
+
+configuration CountdownUML
+@compiler "uml"
+{
+	instance countdown: Countdown
+	instance timer1 : TimerJava
+	instance timer2 : TimerArduino
+	instance timer3 : TimerPosix
+	instance timer4 : TimerJS
+
+}
