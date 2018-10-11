@@ -23,6 +23,10 @@ import org.thingml.xtext.CharValueConverter;
 import org.thingml.xtext.thingML.*;
 
 /**
+* FIXME: Use XTEXT directly to pretty-print statement as they look in ThingML...
+*/
+
+/**
  * Created by bmori on 01.12.2014.
  */
 public class ThingMLPrettyPrinter extends ThingActionCompiler {
@@ -57,7 +61,13 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
-        builder.append(action.getProperty().getName() + " = ");
+        builder.append(action.getProperty().getName());
+        if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {
+          builder.append("[");
+          generate(action.getIndex(), builder, ctx);
+          builder.append("]");
+        }
+        builder.append(" = ");
         generate(action.getExpression(), builder, ctx);
         builder.append(NEW_LINE);
     }
@@ -147,15 +157,25 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     }
 
     @Override
+  	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
+      builder.append("for(" + fa.getVariable().getName());
+      if (fa.getIndex() != null) {
+  			builder.append(", " + fa.getIndex().getName());
+  		}
+      builder.append(" in " + fa.getArray().getProperty().getName() + ")");
+  		generate(fa.getAction(), builder, ctx);
+  	}
+
+    @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         if (action.isLine()) builder.append("println ");
         else builder.append("print ");
-        
+
         boolean first = true;
         for (Expression exp : action.getMsg()) {
         	if (first) first = false;
         	else builder.append(", ");
-        	
+
         	generate(exp, builder, ctx);
         }
         builder.append(NEW_LINE);
@@ -165,12 +185,12 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
     	if (action.isLine()) builder.append("errorln ");
         else builder.append("error ");
-    	
+
     	boolean first = true;
         for (Expression exp : action.getMsg()) {
         	if (first) first = false;
         	else builder.append(", ");
-        	
+
         	generate(exp, builder, ctx);
         }
         builder.append(NEW_LINE);
@@ -328,12 +348,12 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getProperty().getName());
     }
-    
+
     @Override
     public void generate(ByteLiteral expression, StringBuilder builder, Context ctx) {
     	builder.append(ByteValueConverter.ToString(expression.getByteValue()));
     }
-    
+
     @Override
     public void generate(CharLiteral expression, StringBuilder builder, Context ctx) {
     	builder.append(CharValueConverter.ToString(expression.getCharValue()));
@@ -398,15 +418,15 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     	builder.append(action.getVar().getName());
         builder.append("--" + NEW_LINE);
     }
-    
+
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
     	if (expression.getReceiveMsg().getName() != null)
     		builder.append(expression.getReceiveMsg().getName() + "." + expression.getParameter().getName());
     	else
     		builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
-    }    
-    
+    }
+
     @Override
     public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
         builder.append("(");
