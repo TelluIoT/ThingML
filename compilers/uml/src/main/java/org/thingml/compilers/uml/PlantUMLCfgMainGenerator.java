@@ -204,7 +204,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         builder.append("@startuml\n");
         builder.append("caption Instances and Connectors in configuration " + cfg.getName() + "\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            builder.append("component " + i.getName() + (isGUI(i.getType())?"<<GUI>>":isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
+            builder.append("component \"" + i.getName() + " :" + i.getType().getName() + "\"" + (isGUI(i.getType())?"<<GUI>>":isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
         }
         for(Protocol p : ConfigurationHelper.getUsedProtocols(cfg)) {
             builder.append("boundary " + p.getName() + "\n");
