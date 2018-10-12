@@ -204,7 +204,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         builder.append("@startuml\n");
         builder.append("caption Instances and Connectors in configuration " + cfg.getName() + "\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            builder.append("component \"" + i.getName() + " :" + i.getType().getName() + "\"" + (isGUI(i.getType())?"<<GUI>>":isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
+            builder.append("component [" + i.getName() + " : " + i.getType().getName() + "]" + (isGUI(i.getType())?"<<GUI>>":isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
         }
         for(Protocol p : ConfigurationHelper.getUsedProtocols(cfg)) {
             builder.append("boundary " + p.getName() + "\n");
@@ -214,7 +214,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                     c.getRequired().getName() + " => " + c.getProvided().getName() + "\n");
         }
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
-            builder.append(c.getInst().getName() + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
+            builder.append("[" + c.getInst().getName() + " : " + c.getInst().getType().getName() + "]" + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
         }
         builder.append("@enduml");
 

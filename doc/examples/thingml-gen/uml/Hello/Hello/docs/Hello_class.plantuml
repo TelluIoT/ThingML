@@ -1,0 +1,5 @@
+@startuml
+caption Things used in configuration Hello
+class Hello <<(T,#5BBF09)PIM>> {
+}
+@enduml

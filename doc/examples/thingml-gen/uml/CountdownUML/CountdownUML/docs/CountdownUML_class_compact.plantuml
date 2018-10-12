@@ -1,0 +1,38 @@
+@startuml
+caption Things used in configuration CountdownUML
+class TimerJS <<(T,#F94918)PSM>> {
+}
+class Timer <<(F,#BC74ED)Fragment>> {
+..Port timer..
+>>timer_start
+>>timer_cancel
+<<timer_timeout
+}
+class TimerMsgs <<(F,#BC74ED)Fragment>> {
+..Messages..
+-timer_start(...)
+-timer_cancel(...)
+-timer_timeout(...)
+}
+class TimerPosix <<(T,#F94918)PSM>> {
+}
+class TimerJava <<(T,#F94918)PSM>> {
+}
+class Countdown <<(T,#5BBF09)PIM>> {
+}
+class TimerClientPort <<(F,#BC74ED)Fragment>> {
+..Port timer..
+>>timer_timeout
+<<timer_start
+<<timer_cancel
+}
+class TimerArduino <<(T,#F94918)PSM>> {
+}
+Timer <|-- TimerJS
+TimerMsgs <|-- Timer
+Timer <|-- TimerPosix
+Timer <|-- TimerJava
+TimerClientPort <|-- Countdown
+TimerMsgs <|-- TimerClientPort
+Timer <|-- TimerArduino
+@enduml

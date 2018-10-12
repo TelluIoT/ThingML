@@ -1,0 +1,12 @@
+@startuml
+skinparam defaultTextAlignment left
+caption Behavior of thing TimerJS
+[*] --> SoftTimer
+state SoftTimer{
+state default{
+	default : m:timer?timer_start / [m.time > 0]\naction startTimer(...)\n
+	default : m:timer?timer_cancel / \naction cancel(m.id)\n
+}
+[*] --> default
+}
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+caption Things used in configuration Ping
+class PingServer <<(T,#5BBF09)PIM>> {
+..Port ping_service..
+>>ping
+<<pong
+}
+class PingMsgs <<(F,#BC74ED)Fragment>> {
+..Messages..
+-ping(seq : UInt8)
+-pong(seq : UInt8)
+}
+class PingClient <<(T,#5BBF09)PIM>> {
+..Port ping_service..
+>>pong
+<<ping
+}
+PingMsgs <|-- PingServer
+PingMsgs <|-- PingClient
+@enduml
