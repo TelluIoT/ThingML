@@ -20,6 +20,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSThingActionCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.SendAction;
 
 /**
@@ -29,14 +30,33 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
+    	
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
+    		for(Expression pa : action.getParameters()) {
+        		if (pa instanceof PropertyReference) {
+        			PropertyReference pr = (PropertyReference)pa;
+        			builder.append("const " + pr.getProperty().getName() + "_const = ");
+        			generate(pa, builder, ctx);
+        			builder.append(";\n");
+        		}
+        	}
     		builder.append("setTimeout(() => ");
     	}
     	builder.append(ctx.getContextAnnotation("thisRef"));
         builder.append("bus.emit('" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
         for (Expression pa : action.getParameters()) {
             builder.append(", ");
-            generate(pa, builder, ctx);
+            if (pa instanceof PropertyReference) {
+    			PropertyReference pr = (PropertyReference)pa;
+            	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
+            		builder.append(pr.getProperty().getName() + "_const");
+            	}else {
+            		generate(pa, builder, ctx);
+            	} 
+            }
+            else {
+        		generate(pa, builder, ctx);
+        	}
         }
         builder.append(")");
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
