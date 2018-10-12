@@ -3,10 +3,14 @@ import "datatypes.thingml" from stl
 thing fragment API {
 	readonly property N : UInt8 = 8 //Size of the LED strip
 	
-	message set_color(id : UInt8, h : UInt8, s : UInt8, l : UInt8) //sets the color of LED id, using a fancy HSL schema
+	message set_color(id : UInt8, h : UInt16, s : UInt8, l : UInt8) //sets the color of LED id, using a fancy HSL schema
 	message turn_on(id : UInt8)                                    //turn on LED id
 	message turn_off(id : UInt8)                                   //turn off LED id
 	message ready()
+	
+	message a()
+	message b()
+	message c()
 }
 
 thing fragment CLIENT includes API {
@@ -14,6 +18,10 @@ thing fragment CLIENT includes API {
 	required port leds {
 		receives ready		
 		sends set_color, turn_off, turn_on
+	}
+	
+	required port buttons {
+		receives a, b, c
 	}
 	
 }
@@ -31,11 +39,15 @@ thing fragment DRIVER includes API {
 	
 	abstract function turn_off(id : UInt8)
 	
-	abstract function set_color(id : UInt8, r : UInt8, g : UInt8, b : UInt8)
+	abstract function set_color(id : UInt8, h : UInt16, s : UInt8, l : UInt8)
 	
 	provided port leds {
 		sends ready		
 		receives set_color, turn_off, turn_on
+	}
+	
+	provided port buttons {
+		sends a, b, c
 	}
 	
 	statechart Behavior init Init {

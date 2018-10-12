@@ -1,0 +1,103 @@
+import "../API/api.thingml"
+
+object MQTT
+@js_dep "mqtt:2.18.8";
+
+thing MQTTJS includes API
+@js_include "https://unpkg.com/mqtt/dist/mqtt.min.js"
+{
+	property mqtt : MQTT
+	
+	message connected()
+	message disconnected()
+	internal port mqtt {
+		sends connected, disconnected
+		receives connected, disconnected
+	}
+	
+	provided port leds_to_mqtt {
+		receives turn_on, turn_off, set_color
+	}
+	
+	provided port leds_from_mqtt {
+		sends turn_on, turn_off, set_color
+	}
+	
+	//should register listeners so as to send mqtt!connected() when connected and mqtt!disconnected when disconnected
+	function connect() do
+		println "connect to MQTT broker..."
+		mqtt = `mqtt.connect('wss://mqtt.tutorials.tellucloud.com/mqtt:443', {username:'models18', password:'thingml'})` as MQTT
+	
+		`` & mqtt &`.on("connect", () => {`
+			mqtt!connected()
+			subscribe("models18/#")
+		`});`
+		
+		
+		`` & mqtt &`.on("close", () => {`
+			mqtt!disconnected()
+		`});`
+		
+		`` & mqtt & `.on("message", (topic, message) => {`
+			println "received ", `message`, " on ", `topic`
+			`var json = JSON.parse(message);`
+			if(`topic` == "models18/turn_on") 
+				leds_from_mqtt!turn_on(`json.id` as UInt8)
+			else if(`topic` == "models18/turn_off") 
+				leds_from_mqtt!turn_off(`json.id` as UInt8)
+			else if(`topic` == "models18/set_color") 
+				leds_from_mqtt!set_color(`json.id` as UInt8, `json.h` as UInt16, `json.s` as UInt8, `json.l` as UInt8)
+			else
+				println "discarding message ", `message`, " on topic ", `topic`
+			
+		`});`
+	end
+	 
+	function publish(payload : String, topic : String) do
+		print "publish on MQTT topic " + topic + ": " + payload + "\n"
+		`` & mqtt &`.publish('models18/' + ` & topic & `, ` & payload & `, {qos:2}, (err)=>{
+			if (err) 
+				console.log("ERROR!: " + err); 
+			else 
+				console.log("OK!");
+		});`
+	end
+	
+	function subscribe(topic : String) do
+		`` & mqtt &`.subscribe(` & topic & `);`
+	end
+	
+	function close() do
+		`` & mqtt & `.end();`
+	end
+	
+		statechart behavior init Init {
+		
+		state Init {
+			
+			on entry connect()
+			
+			transition -> Ready
+			event mqtt?connected
+		}
+				
+		state Ready {
+			internal event e : leds_to_mqtt?turn_on
+			action publish("{\"id\":" + e.id + "}", "turn_on")
+			
+			internal event e : leds_to_mqtt?turn_off
+			action publish("{\"id\":" + e.id + "}", "turn_off")
+			
+			internal event e : leds_to_mqtt?set_color
+			action publish("{\"id\":" + e.id + ", \"h\":" + e.h + "\"s\":" + e.s + "\"l\":" + e.l + "}", "set_color")
+			
+			transition -> Wait
+			event mqtt?disconnected
+		}
+		
+		state Wait {
+			transition -> Init //TODO add timer to wait before retrying to connect
+		}
+		
+	}
+}

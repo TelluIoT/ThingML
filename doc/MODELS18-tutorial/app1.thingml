@@ -55,6 +55,7 @@ thing fragment APP includes CLIENT, TimerClientPort, rnd  {
 			on entry do
 				for(status : Boolean, i : UInt8 in leds) do
 					leds[i] = not status
+					leds!set_color(i, rndMax(360), 75+rndMax(25), 65)
 				end
 			end
 			
