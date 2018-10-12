@@ -1,0 +1,25 @@
+import "../API/api.thingml"
+import "../../examples/lib/mqtt/posix/PosixMQTTAdapter.thingml"
+
+
+/*
+ * Message formats over MQTT:
+ * 
+ * models18/ready 					{}
+ * models18/turn_on 				{"id":6}
+ * models18/turn_off 				{"id":4}
+ * models18/set_color 				{"id":4, "h":56, "s":95, "l":80}
+ * 
+ */
+
+
+thing fragment PosixMQTTAPI includes API {
+	
+	provided port leds 
+	@external "posixmqttjson" // Annotation telling the code generator to make an MQTT adapter for this port.
+	{
+		receives ready		
+		sends set_color, turn_off, turn_on
+	}
+	
+}

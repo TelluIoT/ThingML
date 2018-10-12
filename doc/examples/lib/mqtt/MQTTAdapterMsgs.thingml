@@ -29,7 +29,7 @@ thing MQTTAdapterCtrlPort includes  MQTTAdapterMsgs {
 	required port mqtt 
 	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
 	{
-		sends mqtt_connect, mqtt_disconnect
+		sends mqtt_connect, mqtt_disconnect, mqtt_set_prefix
 		receives mqtt_connected, mqtt_disconnected
 	}
 }

@@ -1,0 +1,67 @@
+import "posixmqttapi.thingml"
+import "PosixMQTTAPIPosixMqttJson.thingml"
+
+
+thing PosixLEDServer includes API, MQTTAdapterCtrlPort {
+	
+	readonly property client_id : String = "PosixServer"
+	property broker_host : String = "mqtt.tutorials.tellucloud.com"
+	property broker_port : UInt16 = 1883
+	
+	required port leds 
+	{
+		sends ready		
+		receives set_color, turn_off, turn_on
+	}
+	
+	statechart init Disconnected {
+		
+		on entry do
+			mqtt!mqtt_set_prefix("models18")
+		end	
+		
+		state Disconnected {
+			on entry mqtt!mqtt_connect(client_id, broker_host, broker_port, false)
+			
+			transition -> Connected event mqtt?mqtt_connected action println "Connected to MQTT Broker"
+		}
+		
+		state Connected {
+			on entry do 
+				leds!ready()
+			end
+			
+			internal event e : leds?turn_on action do
+				print "Turn ON led #", e.id, "\n"
+			end
+			
+			internal event e : leds?turn_off action do
+				print "Turn OFF led #", e.id, "\n"
+			end
+			
+			internal event e : leds?set_color action do
+				print "Change color of led #", e.id, " to h=", e.h, " s=", e.s, " l=", e.l, "\n"
+			end
+			
+			transition -> Disconnected event mqtt?mqtt_disconnected action println "Connected to MQTT Broker"
+			
+		}
+	}
+}
+
+
+configuration PosixLEDServerApp 
+	@add_c_libraries "mosquitto"
+	@add_c_modules "jsmn"
+{
+	
+	instance server:PosixLEDServer
+	instance serializer : PosixMQTTAPI_PosixMqttJson_Impl
+	instance mqttadapter : PosixMQTTAdapter
+		set mqttadapter.username = "models18"
+		set mqttadapter.password = "thingml"
+	
+	connector server.mqtt => mqttadapter.mqtt
+	connector server.leds => serializer.leds
+	connector serializer.posixmqtt =>  mqttadapter.mqtt
+}
