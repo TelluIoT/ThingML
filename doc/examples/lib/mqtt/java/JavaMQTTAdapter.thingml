@@ -112,25 +112,25 @@ thing JavaMQTTAdapter includes MQTTAdapterMsgs
         return true
 	end
 	
-	function messageArrived(topic : String, m : MQTTMessage) @override "true"
+	function messageArrived(topic : String, m : MQTTMessage) @override "true" @java_visibility "public"
 	do
 		print "Message arrived on topic "
 		print topic
 		print "\n"
 	end
 	
-	function connectionLost(t : Throwable) @override "true"
+	function connectionLost(t : Throwable) @override "true" @java_visibility "public"
 	do
 		print "connectionLost \n"
 		mqtt!mqtt_disconnected()
 	end
 	
-	function deliveryComplete(imdt : IMqttDeliveryToken) @override "true"
+	function deliveryComplete(imdt : IMqttDeliveryToken) @override "true" @java_visibility "public"
 	do
 		print "deliveryComplete \n"	
 	end
 	
-	function connectComplete(reconnect : Boolean, serverURI : String) @override "true"
+	function connectComplete(reconnect : Boolean, serverURI : String) @override "true" @java_visibility "public"
 	do
 		print "connectComplete \n"
 		mqtt!mqtt_connected()

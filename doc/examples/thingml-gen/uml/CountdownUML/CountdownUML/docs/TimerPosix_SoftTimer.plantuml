@@ -1,0 +1,13 @@
+@startuml
+skinparam defaultTextAlignment left
+caption Behavior of thing TimerPosix
+[*] --> SoftTimer
+state SoftTimer{
+state default_2{
+	default_2 : m:timer?timer_start / [m.time > 0]\naction startTimer(...)\n
+	default_2 : m:timer?timer_cancel / \naction cancel(m.id)\n
+}
+[*] --> default_2
+	SoftTimer : entry / start_soft_timer_process()\n
+}
+@enduml

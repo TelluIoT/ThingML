@@ -1,0 +1,12 @@
+@startuml
+skinparam defaultTextAlignment left
+caption Behavior of thing Hello
+[*] --> default
+state default{
+state HelloState{
+	HelloState : entry / println "Hello World!"\n
+}
+HelloState --> [*]
+[*] --> HelloState
+}
+@enduml

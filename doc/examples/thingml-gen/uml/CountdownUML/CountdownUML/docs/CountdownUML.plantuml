@@ -1,0 +1,8 @@
+@startuml
+caption Instances and Connectors in configuration CountdownUML
+component timer4<<PSM>>
+component timer3<<PSM>>
+component timer1<<PSM>>
+component countdown<<PIM>>
+component timer2<<PSM>>
+@enduml

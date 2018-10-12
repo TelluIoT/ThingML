@@ -1,0 +1,66 @@
+@startuml
+caption Things used in configuration CountdownUML
+class TimerJS <<(T,#F94918)PSM>> {
+..Properties..
+-Timeouts : JSArray = '{}'
+..Functions..
+-startTimer(id : UInt8delay : UInt16) : void
+-cancel(id : UInt8) : void
+}
+class Timer <<(F,#BC74ED)Fragment>> {
+..Port timer..
+>>timer_start
+>>timer_cancel
+<<timer_timeout
+}
+class TimerMsgs <<(F,#BC74ED)Fragment>> {
+..Messages..
+-timer_start(id : UInt8time : UInt16)
+-timer_cancel(id : UInt8)
+-timer_timeout(id : UInt8)
+}
+class TimerPosix <<(T,#F94918)PSM>> {
+..Properties..
+-NB_SOFT_TIMERS : UInt16 = 'NB_SOFT_TIMERS'
+-SOFT_TIMER_PERIOD : UInt16 = 4
+..Functions..
+-time_ms() : UInt32
+-sleep_ms(timeout_ms : UInt16) : void
+-start_soft_timer_process() : void
+-startTimer(id : UInt8delay : UInt16) : void
+-cancel(id : UInt8) : void
+}
+class TimerJava <<(T,#F94918)PSM>> {
+..Functions..
+-startTimer(id : UInt8delay : UInt16) : void
+-cancel(id : UInt8) : void
+}
+class Countdown <<(T,#5BBF09)PIM>> {
+..Properties..
+-TimerID : UInt8 = 1
+-StartTime : UInt8 = 10
+}
+class TimerClientPort <<(F,#BC74ED)Fragment>> {
+..Port timer..
+>>timer_timeout
+<<timer_start
+<<timer_cancel
+}
+class TimerArduino <<(T,#F94918)PSM>> {
+..Properties..
+-NB_SOFT_TIMERS : UInt16 = 'NB_SOFT_TIMERS'
+..Functions..
+-time_ms() : UInt32
+-init_arrays() : void
+-poll_soft_timers() : void
+-startTimer(id : UInt8delay : UInt16) : void
+-cancel(id : UInt8) : void
+}
+Timer <|-- TimerJS
+TimerMsgs <|-- Timer
+Timer <|-- TimerPosix
+Timer <|-- TimerJava
+TimerClientPort <|-- Countdown
+TimerMsgs <|-- TimerClientPort
+Timer <|-- TimerArduino
+@enduml

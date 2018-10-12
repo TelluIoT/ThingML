@@ -1,0 +1,91 @@
+import "datatypes.thingml" from stl
+
+thing RobotMsgs {
+	message distance(d : UInt16)
+	message bump(direction : UInt8)
+	message turn(angle : Int16)
+	message forward(speed : UInt8)
+	message backward(speed : UInt8)
+	message stop()
+	message odometry(left : Int16, right : Int16)
+	message wheel_position()
+}
+
+thing RobotControl includes RobotMsgs {
+	
+	required port rangefinder {
+		receives distance
+	} 
+	
+	required port bumper {
+		receives bump
+	} 
+	
+	required port platform {
+		sends forward, backward, stop, turn
+		receives odometry
+	}
+}
+
+
+thing DistanceSensor includes RobotMsgs {
+	
+	provided port data {
+		sends distance
+	} 
+}
+
+thing CollisionSensor includes RobotMsgs {
+	
+	provided port data {
+		sends bump
+	} 
+}
+
+thing MotionControl includes RobotMsgs {
+	
+	provided port ctrl {
+		sends odometry
+		receives forward, backward, stop, turn
+	}
+	
+	required port left {
+		sends forward, backward, stop
+		receives wheel_position
+	} 
+	
+	required port right {
+		sends forward, backward, stop
+		receives wheel_position
+	} 
+}
+
+thing WheelControl includes RobotMsgs {
+	
+	provided port ctrl {
+		sends wheel_position
+		receives forward, backward, stop
+	} 
+}
+
+configuration Robot
+{
+	instance robot : RobotControl
+	
+	instance sdist : DistanceSensor
+	instance scoll : CollisionSensor
+	
+	connector robot.rangefinder => sdist.data
+	connector robot.bumper => scoll.data
+	
+	instance motion : MotionControl
+	
+	connector robot.platform => motion.ctrl
+	
+	instance left_wheel : WheelControl
+	instance right_wheel : WheelControl
+	
+	connector motion.left => left_wheel.ctrl
+	connector motion.right => right_wheel.ctrl
+}
+

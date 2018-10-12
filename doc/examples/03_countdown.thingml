@@ -1,5 +1,5 @@
 import "datatypes.thingml" from stl
-import "lib/timer.thingml"
+import "timer.thingml" from stl
 
 thing Countdown includes TimerClientPort {
 	

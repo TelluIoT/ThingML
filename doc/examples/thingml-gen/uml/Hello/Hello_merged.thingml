@@ -1,0 +1,10 @@
+thing Hello {
+	statechart init HelloState {
+		final state HelloState {
+			on entry println "Hello World!"
+		}
+	}
+}
+configuration Hello {
+	instance h : Hello
+}

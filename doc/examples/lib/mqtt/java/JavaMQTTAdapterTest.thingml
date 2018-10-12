@@ -20,7 +20,7 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 	required port mqtt 
 	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
 	{
-		sends mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials
+		sends mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix
 		receives mqtt_connected, mqtt_disconnected, mqtt_message
 	}
 	
@@ -43,7 +43,8 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 		state CONNECTED {
 			
 			on entry do
-				mqtt!mqtt_subscribe("models18/#")
+				mqtt!mqtt_set_prefix("models18/")
+				mqtt!mqtt_subscribe("#")
 				publish_hello()
 				clock!timer_start(timer_id, 5000)
 			end
@@ -76,7 +77,7 @@ configuration MQTTAdapterTest
 		set test1.broker_port = 1883
 		set test1.broker_user = "models18"
 		set test1.broker_pass = "thingml"
-		set test1.broker_tls = true
+		set test1.broker_tls = false
 		connector test1.mqtt => adapter1.mqtt
 		set test1.timer_id = 1
 		connector test1.clock => timer.timer
