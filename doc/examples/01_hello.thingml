@@ -1,7 +1,7 @@
 
-thing Hello {
+thing HelloThing {
 	
-	statechart init HelloState {
+	statechart HelloStateChart init HelloState {
 		
 		final state HelloState {
 			on entry println "Hello World!"
@@ -10,5 +10,5 @@ thing Hello {
 }
 
 configuration Hello {
-	instance h : Hello
+	instance hello : HelloThing
 }

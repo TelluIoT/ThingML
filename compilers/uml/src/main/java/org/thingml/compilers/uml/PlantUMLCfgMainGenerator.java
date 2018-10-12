@@ -196,6 +196,10 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             }
         }
     }
+    
+    String getLabel(Instance i) {
+    	return "[" + i.getName() + " : " + i.getType().getName() + "]";
+    }
 
     @Override
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
@@ -204,17 +208,17 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         builder.append("@startuml\n");
         builder.append("caption Instances and Connectors in configuration " + cfg.getName() + "\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            builder.append("component [" + i.getName() + " : " + i.getType().getName() + "]" + (isGUI(i.getType())?"<<GUI>>":isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
+            builder.append("component " + getLabel(i) + (isGUI(i.getType())?"<<GUI>>":isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
         }
         for(Protocol p : ConfigurationHelper.getUsedProtocols(cfg)) {
             builder.append("boundary " + p.getName() + "\n");
         }
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            builder.append(c.getCli().getName() + " -(0- " + c.getSrv().getName() + " : " +
+            builder.append(getLabel(c.getCli()) + " -(0- " + getLabel(c.getSrv()) + " : " +
                     c.getRequired().getName() + " => " + c.getProvided().getName() + "\n");
         }
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
-            builder.append("[" + c.getInst().getName() + " : " + c.getInst().getType().getName() + "]" + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
+            builder.append(getLabel(c.getInst()) + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
         }
         builder.append("@enduml");
 
