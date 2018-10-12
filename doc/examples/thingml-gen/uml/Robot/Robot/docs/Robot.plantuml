@@ -1,14 +1,14 @@
 @startuml
 caption Instances and Connectors in configuration Robot
+component [scoll : CollisionSensor]<<PIM>>
 component [robot : RobotControl]<<PIM>>
-component "sdist :DistanceSensor"<<PIM>>
-component "scoll :CollisionSensor"<<PIM>>
-component "left_wheel :WheelControl"<<PIM>>
-component "right_wheel :WheelControl"<<PIM>>
-component "motion :MotionControl"<<PIM>>
-[robot : RobotControl] -(0- sdist : rangefinder => data
+component [motion : MotionControl]<<PIM>>
+component [right_wheel : WheelControl]<<PIM>>
+component [sdist : DistanceSensor]<<PIM>>
+component [left_wheel : WheelControl]<<PIM>>
 motion -(0- right_wheel : right => ctrl
 motion -(0- left_wheel : left => ctrl
 robot -(0- scoll : bumper => data
+robot -(0- sdist : rangefinder => data
 robot -(0- motion : platform => ctrl
 @enduml

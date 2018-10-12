@@ -1,4 +1,4 @@
 @startuml
 caption Instances and Connectors in configuration Hello
-component "h :Hello"<<PIM>>
+component "hello :HelloThing"<<PIM>>
 @enduml
