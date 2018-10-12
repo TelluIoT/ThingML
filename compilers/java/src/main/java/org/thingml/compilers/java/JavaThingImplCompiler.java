@@ -164,6 +164,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
 		final String returnType = JavaHelper.getJavaType(((f.getTypeRef() != null) ? f.getTypeRef().getType() : null),
 				((f.getTypeRef() != null) ? f.getTypeRef().isIsArray() : false), ctx);
+		builder.append(AnnotatedElementHelper.annotationOrElse(f, "java_visibility", "") + " ");
 		builder.append(returnType + " " + f.getName() + "(");
 		JavaHelper.generateParameter(f, builder, ctx);
 		builder.append(") {\n");
@@ -282,7 +283,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 							builder.append(", ");
 						builder.append(ctx.protectKeyword(ctx.getVariableName(pa)));
 					}
-					builder.append(");\n");					
+					builder.append(");\n");
 					builder.append("_msg.setPort(" + p.getName() + "_port);\n");
 					builder.append("receive(_msg);\n");
 					builder.append("}\n\n");
@@ -321,18 +322,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append("//Attributes\n");
 		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
 			builder.append("private ");
-			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));						
+			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));
 			builder.append(";\n");
 		}
 		for (Property p : ThingHelper.allSessionsProperties(thing)) {
 			builder.append("private ");
-			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));						
+			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));
 			Expression e = ThingHelper.initExpression(thing, p);
 			if (e != null) {
 				builder.append(" = ");
 				ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
 			}
-			builder.append(";\n");	
+			builder.append(";\n");
 			builder.append("private " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx)
 			+ " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p)
 			+ ";\n}\n\n");
@@ -347,8 +348,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 					+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
 					+ ctx.getVariableName(p) + ";\nreturn this;\n}\n\n");
 		}
-		
-		
+
+
 		if (debugProfile.isActive()) {
 			for (Property p : ThingHelper.allPropertiesInDepth(
 					thing)/* debugProfile.getDebugProperties() */) {// FIXME: we
@@ -515,7 +516,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 			for (Region r : ((CompositeState) c).getRegion()) {
 				builder.append(state_name + ".add(build" + ThingMLElementHelper.qname(r, "_") + "());\n");
 			}
-			
+
 			if (((CompositeState) c).getEntry() != null || debugProfile.isDebugBehavior()) {
 				builder.append(state_name + ".onEntry(()->{\n");
 				if (debugProfile.isDebugBehavior()) {
@@ -542,7 +543,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 					ctx.getCompiler().getThingActionCompiler().generate(((CompositeState) c).getExit(), builder, ctx);
 				builder.append("});\n\n");
 			}
-			
+
 		}
 
 		if (c.eContainer() instanceof Thing) {
@@ -550,7 +551,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 				buildTransitionsHelper(builder, ctx, ((CompositeState) c), i);
 			}
 		}
-		
+
 		for (State s : c.getSubstate()) {
 			builder.append(state_name + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
 		}
@@ -558,7 +559,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append(state_name + ".keepHistory(true);\n");
 		}
 		builder.append(state_name + ".initial(state_" + ThingMLElementHelper.qname(c.getInitial(), "_") + ");\n");
-		
+
 	}
 
 	protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
@@ -682,8 +683,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append(";\n");
 			builder.append("});\n\n");
 		}
-		
-		
+
+
 		if (msg != null) {
 			builder.append(handler_name + ".port(" + msg.getPort().getName() + "_port);\n");
 		}
