@@ -1,29 +1,48 @@
 import "./API/api.thingml"
 
 import "timer.thingml" from stl
+import "rnd.thingml" from stl
 
-thing APP includes CLIENT, TimerClientPort  {
+thing fragment APP includes CLIENT, TimerClientPort, rnd  {
 	
 	readonly property ID : UInt8 = 0 
 	
 	property leds : Boolean[8]
-		set leds[0] = true
-		set leds[1] = false
-		set leds[2] = true
-		set leds[3] = false
-		set leds[4] = true
-		set leds[5] = false
-		set leds[6] = true
-		set leds[7] = false
 			
-	statechart Behavior init Init {
+	statechart Behavior init Wait {
+		
+		state Wait {
+			transition -> Init
+			event leds?ready
+		}
+		
 		state Init {
+			
 			on entry do
-				for(status : Boolean, i : Byte in leds) do
+				var i : UInt8 = 0
+				while (i < N) do										
+					if (i%2 == 0) do
+						leds[i] = true
+						leds!set_color(i, rndMax(360), 75+rndMax(25), 65)
+					end
+					else do
+						leds[i] = false
+						leds!set_color(i, rndMax(360), 75+rndMax(25), 65)
+					end
+					i++
+				end
+			end
+			
+			transition -> Show
+		}
+		
+		state Show {
+			
+			on entry do
+				for(status : Boolean, i : UInt8 in leds) do
 					if (status) leds!turn_on(i)
 					else leds!turn_off(i)
-				end
-				
+				end				
 				timer!timer_start(ID, 1000)
 			end
 			
@@ -34,12 +53,12 @@ thing APP includes CLIENT, TimerClientPort  {
 		
 		state Switch {
 			on entry do
-				for(status : Boolean, i : Byte in leds) do
+				for(status : Boolean, i : UInt8 in leds) do
 					leds[i] = not status
 				end
 			end
 			
-			transition -> Init
+			transition -> Show
 		}
 	}
 }

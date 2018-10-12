@@ -1,32 +1,80 @@
 import "../API/api.thingml"
 
 thing LED_BROWSER includes DRIVER 
-{
+{	
 	
+	property H : UInt16[N] //0..360 degrees
+	property S : UInt8[N]
+	property L : UInt8[N]
 	
-	function initialize() do
-		`
-		document.body.innerHTML = "<svg id=\"logo\" width=\"235\" height=\"25\" viewBox=\"0 0 235 25\">"
-  		+ "<rect id=\"led0\" x=\"0\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-  		+ "<rect id=\"led1\" x=\"30\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-  		+ "<rect id=\"led2\" x=\"60\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-  		+ "<rect id=\"led3\" x=\"90\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-  		+ "<rect id=\"led4\" x=\"120\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-  		+ "<rect id=\"led5\" x=\"150\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-  		+ "<rect id=\"led6\" x=\"180\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-  		+ "<rect id=\"led7\" x=\"210\" y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />"
-		+ "</svg>"
-		`
+	function ini() do
+		`var svg = '';
+		let max = ` & 30*N & `;
+		svg += "<svg id=\"logo\" width=" + max + " height=\"25\" viewBox=\"0 0 " + max + " 25\">";`
+		var i : UInt8 = 0
+		while (i < N) do
+			H[i] = 0
+			S[i] = 0
+			L[i] = 0
+			`let id = 'led' + ` & i & `;
+			let size = ''+(30*` & i & `);  
+			svg += "<rect id=" + id + " x=" + size + " y=\"0\" width=\"25\" height=\"25\" fill=\"#000\" />";`
+			i++
+		end		
+		`svg += "</svg>"
+		document.body.innerHTML += svg;`
 	end
 	
 	
-	function turn_on(id : Byte) do
-		println "Turn on ", id
-		`document.getElementById("led"+` & id & `).setAttribute("fill", "#F00");`
+	function turn_on(id : UInt8) do
+		println "Turn on LED", id, " with color ", H[id], ", ", S[id], ", ", L[id]				
+		`
+		let color = ` & HSL2Hex(H[id], S[id], L[id]) & `; 
+		console.log('color: ', color);
+		document.getElementById("led"+` & id & `).setAttribute("fill", color);
+		`
 	end
 	
-	function turn_off(id : Byte) do
-		println "Turn off ", id
+	function turn_off(id : UInt8) do
+		println "Turn off LED", id
 		`document.getElementById("led"+` & id & `).setAttribute("fill", "#000");`		
+	end
+	
+	function set_color(id : UInt8, h : UInt8, s : UInt8, l : UInt8) do
+		println "Set color of LED", id, " to ", h, ", ", s, "%, ", l, "%"
+		H[id] = h
+		S[id] = s
+		L[id] = l
+		println "LED", id, " has color ", H[id], ", ", S[id], ", ", L[id]		
+	end
+	
+	function HSL2Hex(h : UInt16, s : UInt8, l : UInt8) : String do
+	`	var h = ` & (h*1.0)/360.0 & `
+		var s = ` & (s*1.0)/100.0 & `
+		var l = ` & (l*1.0)/100.0 & `
+		console.log("HSL: ", h, s, l);
+	    var r, g, b;
+
+        if(s == 0){
+            r = g = b = l; // achromatic
+        }else{
+            var hue2rgb = function(p, q, t){
+                if(t < 0) t += 1;
+                if(t > 1) t -= 1;
+                if(t < 1/6) return p + (q - p) * 6 * t;
+                if(t < 1/2) return q;
+                if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            }
+
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+            console.log("RGB: ", r, g, b);
+        }
+	`
+        return `'#' + Math.round(r * 255).toString(16) + '' + Math.round(g * 255).toString(16) + '' + Math.round(b * 255).toString(16)`
 	end
 }

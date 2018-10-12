@@ -1,8 +1,10 @@
 import "../app1.thingml"
 import "driver.thingml"
 
+thing APPJS includes APP, rndJS {}
+
 configuration test {
-	instance app : APP
+	instance app : APPJS
 	instance mock : LED_BROWSER
 	instance timer : TimerJS
 	

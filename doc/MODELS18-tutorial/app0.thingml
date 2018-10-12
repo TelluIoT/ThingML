@@ -2,24 +2,46 @@ import "./API/api.thingml"
 
 thing APP includes CLIENT {
 	
-	property leds : Boolean[8]
-		set leds[0] = true
-		set leds[1] = false
-		set leds[2] = true
-		set leds[3] = false
-		set leds[4] = true
-		set leds[5] = false
-		set leds[6] = true
-		set leds[7] = false
+	property leds : Boolean[N]
 			
-	statechart Behavior init Init {
+	statechart Behavior init Wait {
+
+		state Wait {
+			transition -> Init
+			event leds?ready
+		}
+		
 		state Init {
+			
 			on entry do
-				for(status : Boolean, i : Byte in leds) do
+				var i : UInt8 = 0
+				while (i < N) do
+					print "debug ", i										
+					if (i%2 == 0) do
+						leds[i] = true
+						leds!set_color(i, 255, 50, 100)
+					end
+					else do
+						leds[i] = false
+						leds!set_color(i, 128, 50, 100)
+					end
+					i++
+				end
+			end
+			
+			transition -> Show
+			
+		}
+		
+		state Show {
+			
+			on entry do
+				for(status : Boolean, i : UInt8 in leds) do
 					if (status) leds!turn_on(i)
 					else leds!turn_off(i)
 				end
 			end
+			
 		}
 	}
 }
