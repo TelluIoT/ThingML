@@ -55,7 +55,7 @@ thing MQTTJS includes API
 	 
 	function publish(payload : String, topic : String) do
 		print "publish on MQTT topic " + topic + ": " + payload + "\n"
-		`` & mqtt &`.publish('models18/' + ` & topic & `, ` & payload & `, {qos:2}, (err)=>{
+		`` & mqtt &`.publish('models18/' + ` & topic & `, ` & payload & `, {qos:0}, (err)=>{
 			if (err) 
 				console.log("ERROR!: " + err); 
 			else 
