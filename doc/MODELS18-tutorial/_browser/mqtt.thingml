@@ -7,6 +7,7 @@ thing MQTTJS includes API
 @js_include "https://unpkg.com/mqtt/dist/mqtt.min.js"
 {
 	property mqtt : MQTT
+	property subscribe : Boolean = false
 	
 	message connected()
 	message disconnected()
@@ -30,7 +31,7 @@ thing MQTTJS includes API
 	
 		`` & mqtt &`.on("connect", () => {`
 			mqtt!connected()
-			subscribe("models18/#")
+			if (subscribe) subscribe("models18/#")
 		`});`
 		
 		
@@ -38,6 +39,7 @@ thing MQTTJS includes API
 			mqtt!disconnected()
 		`});`
 		
+		if (subscribe) do
 		`` & mqtt & `.on("message", (topic, message) => {`
 			println "received ", `message`, " on ", `topic`
 			`var json = JSON.parse(message);`
@@ -51,6 +53,7 @@ thing MQTTJS includes API
 				println "discarding message ", `message`, " on topic ", `topic`
 			
 		`});`
+		end
 	end
 	 
 	function publish(payload : String, topic : String) do

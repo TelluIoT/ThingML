@@ -6,6 +6,7 @@ configuration master_config {
 	instance master : MASTER
 	instance mock : LED_BROWSER
 	instance mqtt : MQTTJS
+		set mqtt.subscribe = true
 	
 	connector master.to_driver => mock.leds
 	connector master.from_mqtt => mqtt.leds_from_mqtt
