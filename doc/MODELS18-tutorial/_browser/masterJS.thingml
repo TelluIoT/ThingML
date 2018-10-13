@@ -7,7 +7,9 @@ configuration master_config {
 	instance mock : LED_BROWSER
 	instance mqtt : MQTTJS
 		set mqtt.subscribe = true
+	instance timer : TimerJS
 	
 	connector master.to_driver => mock.leds
 	connector master.from_mqtt => mqtt.leds_from_mqtt
+	connector mqtt.timer => timer.timer
 }

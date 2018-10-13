@@ -1,13 +1,17 @@
 import "../API/api.thingml"
+import "timer.thingml" from stl
+import "rnd.thingml" from stl
 
 object MQTT
 @js_dep "mqtt:2.18.8";
 
-thing MQTTJS includes API
+thing MQTTJS includes API, TimerClientPort, rndJS
 @js_include "https://unpkg.com/mqtt/dist/mqtt.min.js"
 {
 	property mqtt : MQTT
 	property subscribe : Boolean = false
+	
+	property wait : Long = 5000
 	
 	message connected()
 	message disconnected()
@@ -37,6 +41,7 @@ thing MQTTJS includes API
 		
 		`` & mqtt &`.on("close", () => {`
 			mqtt!disconnected()
+			close()
 		`});`
 		
 		if (subscribe) do
@@ -99,7 +104,12 @@ thing MQTTJS includes API
 		}
 		
 		state Wait {
-			transition -> Init //TODO add timer to wait before retrying to connect
+			
+			on entry timer!timer_start(0, wait + rndMax(1000))
+			
+			transition -> Init
+			event e:timer?timer_timeout
+			guard e.id == 0
 		}
 		
 	}

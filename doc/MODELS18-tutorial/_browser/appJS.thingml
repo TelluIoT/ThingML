@@ -6,40 +6,47 @@ thing APPJS includes APP, rndJS {}
 
 configuration app_config {
 	instance app : APPJS
+	instance timer : TimerJS
 	instance mock : LED_BROWSER
 	instance mqtt : MQTTJS
-	instance timer : TimerJS
+	instance timer2 : TimerJS
+	
 	
 	connector app.leds => mock.leds
 	connector app.leds => mqtt.leds_to_mqtt
 	connector app.buttons => mock.buttons
 	connector app.timer => timer.timer
+	connector mqtt.timer => timer2.timer
 }
 
 configuration app_config2 {
 	instance app : APPJS
 		set app.ID = 1
+	instance timer : TimerJS
 	instance mock : LED_BROWSER
 		set mock.ID = 1
 	instance mqtt : MQTTJS
-	instance timer : TimerJS
+	instance timer2 : TimerJS
 	
 	connector app.leds => mock.leds
 	connector app.leds => mqtt.leds_to_mqtt
 	connector app.buttons => mock.buttons
 	connector app.timer => timer.timer
+	connector mqtt.timer => timer2.timer
 }
 
 configuration app_config3 {
 	instance app : APPJS
 		set app.ID = 2
+	instance timer : TimerJS
 	instance mock : LED_BROWSER
 		set mock.ID = 2
 	instance mqtt : MQTTJS
-	instance timer : TimerJS
+	instance timer2 : TimerJS
 	
 	connector app.leds => mock.leds
 	connector app.leds => mqtt.leds_to_mqtt
 	connector app.buttons => mock.buttons
 	connector app.timer => timer.timer
+	connector mqtt.timer => timer2.timer
 }
