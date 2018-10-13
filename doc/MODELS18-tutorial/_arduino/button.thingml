@@ -1,0 +1,114 @@
+import "_Timer.thingml"
+
+thing fragment ButtonMsgs 
+{
+	message press ();
+	message release ();
+}
+
+thing Button includes ButtonMsgs, TimerMsgs
+{		
+	
+	required port clock {
+		receives ms50_clock
+	}
+	
+	provided port evt 
+	{
+		sends press, release
+	}
+	
+	property PIN: UInt8 = 8
+	
+	function is_pressed() : Boolean do
+		return `digitalRead(`&PIN&`) == 0`
+	end
+	
+	statechart Button init RELEASED {
+		
+		on entry do
+			`pinMode(`&PIN&`, INPUT_PULLUP);`
+		end
+	
+		state RELEASED {
+			transition -> PRESSED event clock?ms50_clock
+			guard is_pressed()
+			action evt!press()
+		}
+		
+		state PRESSED {
+			transition -> RELEASED event clock?ms50_clock
+			guard not is_pressed()
+			action evt!release()
+		}
+	}
+}
+
+
+thing fragment SoftButtonMsgs 
+{
+	message click ();
+	message double_click ();
+	message long_press ();
+}
+
+thing SoftButton includes ButtonMsgs, SoftButtonMsgs, TimerMsgs
+{	
+	
+	readonly property timer_id : UInt8 = 2
+
+	readonly property long_delay : UInt16 = 1000
+	readonly property double_delay : UInt16 = 250
+
+	required port Button 
+    {
+		receives press, release
+	}
+	
+	required port Timer 
+    {
+		sends timer_start, timer_cancel
+		receives timer_timeout
+	}
+
+	provided port SoftButton 
+    {
+		sends click, double_click, long_press
+	}
+
+	statechart SoftButtonImpl init Idle 
+    {
+        state Idle 
+        { 
+            transition pressed -> Pressed
+            event m: Button?press
+        }
+        
+        state Pressed 
+        {
+			on entry Timer!timer_start (timer_id, long_delay)
+			
+			transition long -> Idle
+			event e : Timer?timer_timeout guard e.id == timer_id
+			action SoftButton!long_press()
+			
+			transition click -> Released
+			event Button?release
+			action Timer!timer_cancel(timer_id)
+        }
+        
+        state Released 
+        {
+        	on entry Timer!timer_start (timer_id, double_delay)
+        	on exit Timer!timer_cancel(timer_id)
+        
+        	transition click -> Idle
+			event e : Timer?timer_timeout guard e.id == timer_id
+			action SoftButton!click()
+			
+			transition double -> Idle
+            event Button?press
+            action SoftButton!double_click () 
+        }
+    }
+}

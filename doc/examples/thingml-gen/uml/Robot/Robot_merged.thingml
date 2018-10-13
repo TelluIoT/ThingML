@@ -1,4 +1,4 @@
-thing RobotMsgs {
+thing fragment RobotMsgs {
 	message distance(d : UInt16)
 	message bump(direction : UInt8)
 	message turn(angle : Int16)
@@ -43,6 +43,37 @@ thing MotionControl includes RobotMsgs {
 thing WheelControl includes RobotMsgs {
 	provided port ctrl {
 		sends wheel_position receives forward receives backward receives stop
+	}
+	property motor_position : Int16
+	function init_motor() do
+	end
+	function set_motor_speed(speed : Int16) do
+	end
+	statechart init Stopped {
+		on entry init_motor()
+		state Stopped {
+			on entry set_motor_speed(0)
+			transition -> Forward
+			event e : ctrl?forward
+			action set_motor_speed(e.speed)
+			transition -> Backward
+			event e : ctrl?backward
+			action set_motor_speed(-e.speed)
+		}
+		state Forward {
+			transition -> Forward
+			event e : ctrl?forward
+			action set_motor_speed(e.speed)
+			transition -> Stopped
+			event e : ctrl?stop
+		}
+		state Backward {
+			transition -> Backward
+			event e : ctrl?backward
+			action set_motor_speed(-e.speed)
+			transition -> Stopped
+			event e : ctrl?stop
+		}
 	}
 }
 datatype Byte<1>

@@ -1,0 +1,28 @@
+@startuml
+skinparam defaultTextAlignment left
+caption Behavior of thing WheelControl
+[*] --> default
+state default{
+state Stopped_1{
+	Stopped_1 : entry / set_motor_speed(0)\n
+
+Stopped_1 --> Forward_1 : e:ctrl?forward\naction set_motor_speed(e.speed)\n
+
+Stopped_1 --> Backward_1 : e:ctrl?backward\naction set_motor_speed( -e.speed)\n
+}
+state Forward_1{
+
+Forward_1 --> Forward_1 : e:ctrl?forward\naction set_motor_speed(e.speed)\n
+
+Forward_1 --> Stopped_1 : e:ctrl?stop
+}
+state Backward_1{
+
+Backward_1 --> Backward_1 : e:ctrl?backward\naction set_motor_speed( -e.speed)\n
+
+Backward_1 --> Stopped_1 : e:ctrl?stop
+}
+[*] --> Stopped_1
+	default : entry / init_motor()\n
+}
+@enduml

@@ -1,6 +1,6 @@
 import "datatypes.thingml" from stl
 
-thing RobotMsgs {
+thing fragment RobotMsgs {
 	message distance(d : UInt16)
 	message bump(direction : UInt8)
 	message turn(angle : Int16)
@@ -66,25 +66,111 @@ thing WheelControl includes RobotMsgs {
 		sends wheel_position
 		receives forward, backward, stop
 	} 
+	
+	property motor_position : Int16
+	
+	function init_motor() do
+		// Do initialise the motor controller
+	end
+	
+	function set_motor_speed(speed : Int16) do
+		// Do set motor speed
+	end
+	
+	statechart init Stopped {
+		
+		on entry init_motor()
+		
+		state Stopped {
+			on entry set_motor_speed(0)
+			transition -> Forward event e : ctrl?forward action set_motor_speed(e.speed)
+			transition -> Backward event e : ctrl?backward action set_motor_speed(-e.speed)
+		}
+		
+		state Forward {
+			transition -> Forward event e : ctrl?forward action set_motor_speed(e.speed)
+			transition -> Stopped event e : ctrl?stop
+		}
+		
+		state Backward {
+			transition -> Backward event e : ctrl?backward action set_motor_speed(-e.speed)
+			transition -> Stopped event e : ctrl?stop
+		}
+	}
+}
+
+
+thing WheelControlArduino includes RobotMsgs 
+@c_global `
+#define enA 9
+#define in1 6
+#define in2 7`
+{
+	
+	provided port ctrl {
+		sends wheel_position
+		receives forward, backward, stop
+	} 
+	
+	property motor_position : Int16
+	
+	function init_motor() do
+		`pinMode(enA, OUTPUT);
+		 pinMode(in1, OUTPUT);
+		 pinMode(in2, OUTPUT);
+		 digitalWrite(in1, LOW);
+  		 digitalWrite(in2, HIGH);
+  		 analogWrite(enA, 0);`
+	end
+	
+	function set_motor_speed(speed : Int16) do
+		if (speed == 0) `analogWrite(enA, 0);`
+		else if (speed > 0) do
+			 `digitalWrite(in1, LOW);
+	 		 digitalWrite(in2, HIGH);
+	 		 analogWrite(enA, `& speed &`);`
+		end 
+		else do
+			`digitalWrite(in1, HIGH);
+	 		 digitalWrite(in2, LOW);
+	 		 analogWrite(enA, `& -speed &`);`
+		end
+	end
+	
+	statechart init Stopped {
+		
+		on entry init_motor()
+		
+		state Stopped {
+			on entry set_motor_speed(0)
+			transition -> Forward event e : ctrl?forward action set_motor_speed(e.speed)
+			transition -> Backward event e : ctrl?backward action set_motor_speed(-e.speed)
+		}
+		
+		state Forward {
+			transition -> Forward event e : ctrl?forward action set_motor_speed(e.speed)
+			transition -> Stopped event e : ctrl?stop
+		}
+		
+		state Backward {
+			transition -> Backward event e : ctrl?backward action set_motor_speed(-e.speed)
+			transition -> Stopped event e : ctrl?stop
+		}
+	}
 }
 
 configuration Robot
 {
 	instance robot : RobotControl
-	
 	instance sdist : DistanceSensor
 	instance scoll : CollisionSensor
-	
-	connector robot.rangefinder => sdist.data
-	connector robot.bumper => scoll.data
-	
 	instance motion : MotionControl
-	
-	connector robot.platform => motion.ctrl
-	
 	instance left_wheel : WheelControl
 	instance right_wheel : WheelControl
 	
+	connector robot.rangefinder => sdist.data
+	connector robot.bumper => scoll.data
+	connector robot.platform => motion.ctrl
 	connector motion.left => left_wheel.ctrl
 	connector motion.right => right_wheel.ctrl
 }

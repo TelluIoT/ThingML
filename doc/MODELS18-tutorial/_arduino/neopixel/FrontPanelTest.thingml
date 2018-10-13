@@ -1,0 +1,237 @@
+import "../button.thingml"
+import "NeoPixelIndicatorPanel.thingml"
+
+thing FrontPanelTest includes NeoPixelIndicatorPanelMsgs, SoftButtonMsgs, TimerMsgs {
+	
+	readonly property timer_id : UInt8 = 1
+	
+	required port clock {
+		receives timer_timeout
+		sends timer_start
+	}
+	
+	required port lights {
+		sends setColor, setMode
+	}
+	
+	required port button {
+		receives double_click, click, long_press
+	}
+	
+	function allIndicatorsOff() do
+		var i : UInt8 = 0
+		while (i < 8) do
+			lights!setMode(i, IndicatorMode:OFF)
+			lights!setColor(i, 225,30,0,0)
+			i++
+		end
+	end
+	
+	function allIndicatorsOn() do
+		var i : UInt8 = 0
+		while (i < 8) do
+			if (i != 3 and i!=7) lights!setMode(i, IndicatorMode:SOLID)
+			lights!setColor(i, 225,30,0,0)
+			i++
+		end
+	end
+	
+	function power_led_off() do
+		lights!setMode(0, IndicatorMode:OFF)
+	end
+	
+	function power_led_standby() do
+		lights!setColor(0, 5,5,5,0)
+		lights!setMode(0, IndicatorMode:SOLID)
+	end
+	
+	function power_led_booting() do
+		lights!setColor(0, 225,30,0,0)
+		lights!setMode(0, IndicatorMode:BLINK_FAST)
+	end
+	
+	function power_led_on() do
+		lights!setColor(0, 0,225,30,0)
+		lights!setMode(0, IndicatorMode:SOLID)
+	end
+	
+	function network_led_off() do
+		lights!setMode(1, IndicatorMode:OFF)
+	end
+	
+	function network_led_searching() do
+		lights!setColor(1, 128,128,0,0)
+		lights!setMode(1, IndicatorMode:BLINK_SLOW)
+	end
+	
+	function network_led_connected() do
+		lights!setColor(1, 0,225,30,0)
+		lights!setMode(1, IndicatorMode:SOLID)
+	end
+	
+	function network_led_error() do
+		lights!setColor(1, 225,30,0,0)
+		lights!setMode(1, IndicatorMode:SOLID)
+	end
+	
+	function shepherd_led_off() do
+		lights!setMode(2, IndicatorMode:OFF)
+	end
+	
+	function shepherd_led_searching() do
+		lights!setColor(2, 128,128,0,0)
+		lights!setMode(2, IndicatorMode:BLINK_SLOW)
+	end
+	
+	function shepherd_led_sendingdata() do
+		lights!setColor(2, 0,225,30,0)
+		lights!setMode(2, IndicatorMode:BLINK_SLOW)
+	end
+	
+	function shepherd_led_connected() do
+		lights!setColor(2, 0,225,30,0)
+		lights!setMode(2, IndicatorMode:SOLID)
+	end
+	
+	function shepherd_led_error() do
+		lights!setColor(2, 225,30,0,0)
+		lights!setMode(2, IndicatorMode:SOLID)
+	end
+	
+	function bluetooth_led_off() do
+		lights!setMode(4, IndicatorMode:OFF)
+	end
+	
+	function bluetooth_led_pairing() do
+		lights!setColor(4, 0,40,255,0)
+		lights!setMode(4, IndicatorMode:BLINK_SLOW)
+	end
+	
+	function bluetooth_led_ready() do
+		lights!setColor(4, 0,40,255,0)
+		lights!setMode(4, IndicatorMode:SOLID)
+	end
+	
+	function device_led_off(devid : UInt8) do
+		lights!setMode(devid, IndicatorMode:OFF)
+	end
+	
+	function device_led_connected(devid : UInt8) do
+		lights!setColor(devid, 0,40,255,0)
+		lights!setMode(devid, IndicatorMode:SOLID)
+	end
+	
+	function device_led_sendingdata(devid : UInt8) do
+		lights!setColor(devid, 0,40,255,0)
+		lights!setMode(devid, IndicatorMode:BLINK_SLOW)
+	end
+	
+	function device_led_success(devid : UInt8) do
+		lights!setColor(devid, 0,225,30,0)
+		lights!setMode(devid, IndicatorMode:SOLID)
+	end
+	
+	function device_led_error(devid : UInt8) do
+		lights!setColor(devid, 225,30,0,0)
+		lights!setMode(devid, IndicatorMode:SOLID)
+	end
+	
+	statechart TestSC init OFF {
+		
+		state OFF {
+			on entry do
+				allIndicatorsOff()
+				power_led_standby()
+			end
+			transition -> ON event button?long_press
+		}
+		
+		composite state ON init IndicatorTest {
+			
+			transition -> OFF event button?long_press
+			
+			state IndicatorTest {
+				on entry do allIndicatorsOn() clock!timer_start(timer_id, 500) end
+				on exit allIndicatorsOff() 
+				transition -> Booting event e : clock?timer_timeout guard e.id == timer_id
+			}
+			
+			state Booting {
+				on entry do power_led_booting() clock!timer_start(timer_id, 2000) end
+				transition -> InitNetwork event e : clock?timer_timeout guard e.id == timer_id
+			}
+			
+			state InitNetwork {
+				on entry do power_led_on() network_led_searching() shepherd_led_searching() clock!timer_start(timer_id, 2500) end
+				transition -> NetworkConnected event e : clock?timer_timeout guard e.id == timer_id
+			}
+			
+			state NetworkConnected {
+				on entry do network_led_connected() clock!timer_start(timer_id, 500) end
+				transition -> BluetoothReady event e : clock?timer_timeout guard e.id == timer_id
+			}
+			
+			state BluetoothReady {
+				on entry do bluetooth_led_ready() clock!timer_start(timer_id, 1500) end
+				transition -> Ready event e : clock?timer_timeout guard e.id == timer_id
+			}
+			
+			state Ready {
+				on entry do shepherd_led_connected() end
+				transition -> SimulateDevice event button?click action dev = 5
+				transition -> SimulateDevice event button?double_click action dev = 6
+			}
+			
+			property dev : UInt8
+			
+			composite state SimulateDevice init Connect {
+				
+				on exit device_led_off(dev)
+				transition -> Ready event e : clock?timer_timeout guard e.id == timer_id
+				
+				state Connect {
+					on entry do device_led_connected(dev) clock!timer_start(timer_id, 3000) end
+					transition -> SendData event e : clock?timer_timeout guard e.id == timer_id
+				}
+				
+				state SendData {
+					on entry do device_led_sendingdata(dev) shepherd_led_sendingdata() clock!timer_start(timer_id, 5000) end
+					on exit shepherd_led_connected()
+					transition -> Success event e : clock?timer_timeout guard e.id == timer_id
+					transition -> Error event button?click
+				}
+				
+				state Success {
+					on entry do device_led_success(dev) clock!timer_start(timer_id, 5000) end
+				}
+				
+				state Error {
+					on entry do device_led_error(dev) clock!timer_start(timer_id, 5000) end
+				}
+			}
+		}
+	}
+}
+
+
+configuration PanelTest {
+	instance panel : NeoPixelIndicatorPanel
+	instance test : FrontPanelTest
+	
+	instance button : Button
+		set button.PIN = 8
+	connector button.clock over Timer	//@hardware_timer "0"
+	
+	instance sbut : SoftButton
+	connector sbut.Timer over Timer //@hardware_timer "0"
+	connector sbut.Button => button.evt
+	
+	connector test.button => sbut.SoftButton 
+	
+	connector test.lights => panel.lights
+	
+	connector panel.clock over Timer //@hardware_timer "0"
+	connector test.clock over Timer  //@hardware_timer "0"
+}
+
+

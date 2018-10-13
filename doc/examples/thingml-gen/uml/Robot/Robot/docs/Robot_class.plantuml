@@ -1,5 +1,44 @@
 @startuml
 caption Things used in configuration Robot
+class WheelControl <<(T,#5BBF09)PIM>> {
+..Properties..
+-motor_position : Int16
+..Port ctrl..
+>>forward
+>>backward
+>>stop
+<<wheel_position
+..Functions..
+-init_motor() : void
+-set_motor_speed(speed : Int16) : void
+}
+class RobotMsgs <<(F,#BC74ED)Fragment>> {
+..Messages..
+-distance(d : UInt16)
+-bump(direction : UInt8)
+-turn(angle : Int16)
+-forward(speed : UInt8)
+-backward(speed : UInt8)
+-stop()
+-odometry(left : Int16right : Int16)
+-wheel_position()
+}
+class DistanceSensor <<(T,#5BBF09)PIM>> {
+..Port data..
+<<distance
+}
+class RobotControl <<(T,#5BBF09)PIM>> {
+..Port rangefinder..
+>>distance
+..Port bumper..
+>>bump
+..Port platform..
+>>odometry
+<<forward
+<<backward
+<<stop
+<<turn
+}
 class MotionControl <<(T,#5BBF09)PIM>> {
 ..Port ctrl..
 >>forward
@@ -18,47 +57,13 @@ class MotionControl <<(T,#5BBF09)PIM>> {
 <<backward
 <<stop
 }
-class RobotMsgs <<(T,#5BBF09)PIM>> {
-..Messages..
--distance(d : UInt16)
--bump(direction : UInt8)
--turn(angle : Int16)
--forward(speed : UInt8)
--backward(speed : UInt8)
--stop()
--odometry(left : Int16right : Int16)
--wheel_position()
-}
-class RobotControl <<(T,#5BBF09)PIM>> {
-..Port rangefinder..
->>distance
-..Port bumper..
->>bump
-..Port platform..
->>odometry
-<<forward
-<<backward
-<<stop
-<<turn
-}
-class WheelControl <<(T,#5BBF09)PIM>> {
-..Port ctrl..
->>forward
->>backward
->>stop
-<<wheel_position
-}
 class CollisionSensor <<(T,#5BBF09)PIM>> {
 ..Port data..
 <<bump
 }
-class DistanceSensor <<(T,#5BBF09)PIM>> {
-..Port data..
-<<distance
-}
-RobotMsgs <|-- MotionControl
-RobotMsgs <|-- RobotControl
 RobotMsgs <|-- WheelControl
-RobotMsgs <|-- CollisionSensor
 RobotMsgs <|-- DistanceSensor
+RobotMsgs <|-- RobotControl
+RobotMsgs <|-- MotionControl
+RobotMsgs <|-- CollisionSensor
 @enduml
