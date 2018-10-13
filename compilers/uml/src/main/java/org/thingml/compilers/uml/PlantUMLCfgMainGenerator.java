@@ -270,10 +270,12 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                 datatypes.append("note bottom of " + t.getName() + " : ");
             for(PlatformAnnotation a : t.getAnnotations()) {
                 datatypes.append("<b>@" + a.getName() + "</b>");
-                if (a.getValue().length() > 16 || a.getValue().contains("\n"))
-                	datatypes.append(" <color:royalBlue>\"...\"</color>\\n");
-                else
-                	datatypes.append(" <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
+                if (a.getValue() != null) {
+                	if (a.getValue().length() > 16 || a.getValue().contains("\n"))
+                		datatypes.append(" <color:royalBlue>\"...\"</color>\\n");
+                	else
+                		datatypes.append(" <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
+                }
             }
             if (t.getAnnotations().size() > 0)
                 datatypes.append("\n");
