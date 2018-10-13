@@ -20,6 +20,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSThingActionCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.SendAction;
 
@@ -32,10 +33,15 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
     	
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-    		for(Expression pa : action.getParameters()) {
+    		for(Expression pa : action.getParameters()) {//FIXME: we might as well systematically store all expressions into const...
         		if (pa instanceof PropertyReference) {
         			PropertyReference pr = (PropertyReference)pa;
         			builder.append("const " + pr.getProperty().getName() + "_const = ");
+        			generate(pa, builder, ctx);
+        			builder.append(";\n");
+        		} else if (pa instanceof FunctionCallExpression) {
+        			FunctionCallExpression fc = (FunctionCallExpression)pa;
+        			builder.append("const " + fc.getFunction().getName() + "_" + Math.abs(fc.getParameters().hashCode()) + "_const = ");
         			generate(pa, builder, ctx);
         			builder.append(";\n");
         		}
@@ -46,11 +52,14 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
         builder.append("bus.emit('" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
         for (Expression pa : action.getParameters()) {
             builder.append(", ");
-            if (pa instanceof PropertyReference) {
-    			PropertyReference pr = (PropertyReference)pa;
-            	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
+            if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
+            	if (pa instanceof PropertyReference) {
+            		PropertyReference pr = (PropertyReference)pa;
             		builder.append(pr.getProperty().getName() + "_const");
-            	}else {
+            	} else if (pa instanceof FunctionCallExpression) {
+            		FunctionCallExpression fc = (FunctionCallExpression)pa;
+            		builder.append(fc.getFunction().getName() + "_" + Math.abs(fc.getParameters().hashCode()) + "_const");
+            	} else {
             		generate(pa, builder, ctx);
             	} 
             }
