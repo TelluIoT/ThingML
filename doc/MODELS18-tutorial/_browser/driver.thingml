@@ -49,23 +49,23 @@ thing LED_BROWSER includes DRIVER
 	function sendC() buttons!c()
 	
 	function turn_on(id : UInt8) do
-		println "Turn on LED", id, " with color ", H[id], ", ", S[id], ", ", L[id]				
+		println "Turn on LED", sid(ID, id), " with color ", H[sid(ID,id)], ", ", S[sid(ID,id)], ", ", L[sid(ID,id)]				
 		`
-		let color = ` & HSL2Hex(H[id], S[id], L[id]) & `; 
-		document.getElementById("led"+` & id & `).setAttribute("fill", color);
+		let color = ` & HSL2Hex(H[sid(ID,id)], S[sid(ID,id)], L[sid(ID,id)]) & `; 
+		document.getElementById("led"+` & sid(ID, id) & `).setAttribute("fill", color);
 		`
 	end
 	
 	function turn_off(id : UInt8) do
-		println "Turn off LED", id
-		`document.getElementById("led"+` & id & `).setAttribute("fill", "#000");`		
+		println "Turn off LED", sid(ID, id)
+		`document.getElementById("led"+` & sid(ID, id) & `).setAttribute("fill", "#000");`		
 	end
 	
 	function set_color(id : UInt8, h : UInt8, s : UInt8, l : UInt8) do
-		println "Set color of LED", id, " to ", h, ", ", s, "%, ", l, "%"
-		H[id] = h
-		S[id] = s
-		L[id] = l	
+		println "Set color of LED", sid(ID, id), " to ", h, ", ", s, "%, ", l, "%"
+		H[sid(ID,id)] = h
+		S[sid(ID,id)] = s
+		L[sid(ID,id)] = l	
 	end
 	
 	function HSL2Hex(h : UInt16, s : UInt8, l : UInt8) : String do

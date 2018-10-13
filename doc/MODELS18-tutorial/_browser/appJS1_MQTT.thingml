@@ -4,7 +4,7 @@ import "mqtt.thingml"
 
 thing APPJS includes APP, rndJS {}
 
-configuration test_mqtt {
+configuration config1_mqtt {
 	instance app : APPJS
 	instance mock : LED_BROWSER
 	instance mqtt : MQTTJS

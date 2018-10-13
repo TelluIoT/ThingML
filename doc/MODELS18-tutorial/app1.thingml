@@ -4,9 +4,7 @@ import "timer.thingml" from stl
 import "rnd.thingml" from stl
 
 thing fragment APP includes CLIENT, TimerClientPort, rnd  {
-	
-	readonly property ID : UInt8 = 0 
-	
+		
 	property leds : Boolean[8]
 			
 	statechart Behavior init Wait {
@@ -23,11 +21,11 @@ thing fragment APP includes CLIENT, TimerClientPort, rnd  {
 				while (i < N) do										
 					if (i%2 == 0) do
 						leds[i] = true
-						leds!set_color(i, rndMax(360), 75+rndMax(25), 65)
+						leds!set_color(id(ID, i), rndMax(360), 75+rndMax(25), 65)
 					end
 					else do
 						leds[i] = false
-						leds!set_color(i, rndMax(360), 75+rndMax(25), 65)
+						leds!set_color(id(ID, i), rndMax(360), 75+rndMax(25), 65)
 					end
 					i++
 				end
@@ -40,8 +38,8 @@ thing fragment APP includes CLIENT, TimerClientPort, rnd  {
 			
 			on entry do
 				for(status : Boolean, i : UInt8 in leds) do
-					if (status) leds!turn_on(i)
-					else leds!turn_off(i)
+					if (status) leds!turn_on(id(ID, i))
+					else leds!turn_off(id(ID, i))
 				end				
 				timer!timer_start(ID, 1000)
 			end
@@ -55,7 +53,7 @@ thing fragment APP includes CLIENT, TimerClientPort, rnd  {
 			on entry do
 				for(status : Boolean, i : UInt8 in leds) do
 					leds[i] = not status
-					leds!set_color(i, rndMax(360), 75+rndMax(25), 65)
+					leds!set_color(id(ID, i), rndMax(360), 75+rndMax(25), 65)
 				end
 			end
 			

@@ -1,0 +1,84 @@
+import "./API/api.thingml"
+
+import "timer.thingml" from stl
+import "rnd.thingml" from stl
+
+thing fragment APP2 includes CLIENT, TimerClientPort, rnd  {
+		
+	property leds : Boolean[8]
+			
+	statechart Behavior init Wait {
+		
+		state Wait {
+			transition -> STOP
+			event leds?ready
+		}
+		
+		state STOP {
+			
+			on entry do
+				var i : UInt8 = 0
+				while (i < N) do										
+					if (i%2 == 0) do
+						leds[i] = true
+						leds!set_color(id(ID, i), rndMax(360), 75+rndMax(25), 65)
+					end
+					else do
+						leds[i] = false
+						leds!set_color(id(ID, i), rndMax(360), 75+rndMax(25), 65)
+					end
+					leds!turn_off(id(ID, i))
+					i++
+				end
+			end
+			
+			transition -> PLAY
+			event buttons?a
+		}
+		
+		composite state PLAY init Show {
+		
+			state Show {
+			
+				on entry do
+					for(status : Boolean, i : UInt8 in leds) do
+						if (status) leds!turn_on(id(ID, i))
+						else leds!turn_off(id(ID, i))
+					end				
+					timer!timer_start(ID, 1000)
+				end
+			
+				transition -> Switch
+				event e : timer?timer_timeout
+				guard e.id == ID
+			}
+		
+			state Switch {
+				on entry do
+					for(status : Boolean, i : UInt8 in leds) do
+						leds[i] = not status
+						leds!set_color(id(ID, i), rndMax(360), 75+rndMax(25), 65)
+					end
+				end
+			
+				transition -> Show
+			}
+			
+			transition -> STOP
+			event buttons?c
+			
+			transition -> PAUSE
+			event buttons?b
+		
+		}
+		
+		state PAUSE {
+			transition -> STOP
+			event buttons?c
+			
+			transition -> PLAY
+			event buttons?a
+		}
+		
+	}
+}

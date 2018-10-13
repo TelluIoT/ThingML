@@ -1,7 +1,18 @@
 import "datatypes.thingml" from stl
 
 thing fragment API {
+	
+	readonly property ID : UInt8 = 0 
 	readonly property N : UInt8 = 8 //Size of the LED strip
+	
+	function id(userID : UInt8, ledID : UInt8) : UInt8 do
+		print "id(userID : ", userID, ", ledID : ", ledID, ") = ", (N*userID + ledID)
+		return N*userID + ledID //takes a userID and a ledID (0..N) to produce a unique ID for the led
+	end
+	function sid(userID : UInt8, ledID : UInt8) : UInt8 do
+		print "sid(userID : ", userID, ", ledID : ", ledID, ") = ", (ledID - N*userID)
+		return ledID - N*userID //takes a userID and a unique ledID to produce a simple ledID in (0..N)
+	end
 	
 	message set_color(id : UInt8, h : UInt16, s : UInt8, l : UInt8) //sets the color of LED id, using a fancy HSL schema
 	message turn_on(id : UInt8)                                    //turn on LED id
