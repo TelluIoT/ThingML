@@ -1,0 +1,12 @@
+import "../master.thingml"
+import "driver_master.thingml"
+import "mqtt.thingml"
+
+configuration master_config {
+	instance master : MASTER
+	instance mock : LED_BROWSER
+	instance mqtt : MQTTJS
+	
+	connector master.to_driver => mock.leds
+	connector master.from_mqtt => mqtt.leds_from_mqtt
+}

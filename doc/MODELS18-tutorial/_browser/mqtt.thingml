@@ -89,7 +89,7 @@ thing MQTTJS includes API
 			action publish("{\"id\":" + e.id + "}", "turn_off")
 			
 			internal event e : leds_to_mqtt?set_color
-			action publish("{\"id\":" + e.id + ", \"h\":" + e.h + "\"s\":" + e.s + "\"l\":" + e.l + "}", "set_color")
+			action publish("{\"id\":" + e.id + ", \"h\":" + e.h + ", \"s\":" + e.s + ", \"l\":" + e.l + "}", "set_color")
 			
 			transition -> Wait
 			event mqtt?disconnected

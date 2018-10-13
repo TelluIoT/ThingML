@@ -1,0 +1,27 @@
+import "./API/api.thingml"
+
+thing MASTER includes API {
+	
+	required port from_mqtt {
+		receives turn_on, turn_off, set_color
+	}
+	
+	required port to_driver {
+		sends turn_on, turn_off, set_color
+	}
+		
+	statechart Behavior init INIT {
+		
+		state INIT {
+			internal event e : from_mqtt?turn_on
+			action to_driver!turn_on(e.id)
+			
+			internal event e : from_mqtt?turn_off
+			action to_driver!turn_off(e.id)
+			
+			internal event e : from_mqtt?set_color
+			action to_driver!set_color(e.id, e.h, e.s, e.l)
+		}	
+		
+	}
+}

@@ -3,7 +3,7 @@ import "./API/api.thingml"
 import "timer.thingml" from stl
 import "rnd.thingml" from stl
 
-thing fragment APP2 includes CLIENT, TimerClientPort, rnd  {
+thing fragment APP includes CLIENT, TimerClientPort, rnd  {
 		
 	property leds : Boolean[8]
 			
