@@ -13,6 +13,7 @@ enumeration IndicatorMode
 thing fragment NeoPixelIndicatorPanelMsgs {
 	message setBrightness(b : UInt8);
 	message setColor(id : UInt8, red : UInt8, green : UInt8, blue : UInt8, white : UInt8);
+	message setHSLColor(id : UInt8, h : UInt16, s : UInt8, l : UInt8);
 	message setMode(id : UInt8, mode : IndicatorMode);
 }
 
@@ -43,8 +44,10 @@ uint8_t slow_blink[] =  {0, 0, 40, 80, 160, 255, 255, 255, 255, 255, 255, 255, 1
 		receives ms50_clock
 	}
 	
-	provided port lights {
-		receives setColor, setMode, setBrightness
+	provided port lights 
+	@sync_send "true"
+	{
+		receives setColor, setMode, setBrightness, setHSLColor
 	}
 	
 	property slow_blink_count : UInt8 = 0
@@ -70,6 +73,92 @@ uint8_t slow_blink[] =  {0, 0, 40, 80, 160, 255, 255, 255, 255, 255, 255, 255, 1
 	
 	function getColor(red : UInt8, green : UInt8, blue : UInt8, white : UInt8) : UInt32 do
 		return `strip.Color(`&red&`, `&green&`, `&blue&`, `&white&`)`
+	end
+	
+	function hsv2rgb(ph : UInt16, ps : UInt8, pv : UInt8) : UInt32 do
+		` uint8_t r, g, b;
+		
+			uint16_t h; 
+			uint8_t s; 
+			uint8_t v;
+			
+			h = `&ph&`;
+			s = `&ps&`;
+			v = `&pv&`;
+		
+		   if(!s) {
+		    // Monochromatic, all components are V
+		    r = g = b = v;
+		  } else {
+		    uint8_t sextant = h >> 8;
+		    if(sextant > 5)
+		      sextant = 5;  // Limit hue sextants to defined space
+		     g = v;    // Top level
+		     // Perform actual calculations
+		     /*
+		     * Bottom level:
+		     * --> (v * (255 - s) + error_corr + 1) / 256
+		     */
+		    uint16_t ww;        // Intermediate result
+		    ww = v * (uint8_t)(~s);
+		    ww += 1;            // Error correction
+		    ww += ww >> 8;      // Error correction
+		    b = ww >> 8;
+		     uint8_t h_fraction = h & 0xff;  // Position within sextant
+		    uint32_t d;      // Intermediate result
+		     if(!(sextant & 1)) {
+		      // r = ...slope_up...
+		      // --> r = (v * ((255 << 8) - s * (256 - h)) + error_corr1 + error_corr2) / 65536
+		      d = v * (uint32_t)(0xff00 - (uint16_t)(s * (256 - h_fraction)));
+		      d += d >> 8;  // Error correction
+		      d += v;       // Error correction
+		      r = d >> 16;
+		    } else {
+		      // r = ...slope_down...
+		      // --> r = (v * ((255 << 8) - s * h) + error_corr1 + error_corr2) / 65536
+		      d = v * (uint32_t)(0xff00 - (uint16_t)(s * h_fraction));
+		      d += d >> 8;  // Error correction
+		      d += v;       // Error correction
+		      r = d >> 16;
+		    }
+		     // Swap RGB values according to sextant. This is done in reverse order with
+		    // respect to the original because the swaps are done after the
+		    // assignments.
+		    if(!(sextant & 6)) {
+		      if(!(sextant & 1)) {
+		        uint8_t tmp = r;
+		        r = g;
+		        g = tmp;
+		      }
+		    } else {
+		      if(sextant & 1) {
+		        uint8_t tmp = r;
+		        r = g;
+		        g = tmp;
+		      }
+		    }
+		    if(sextant & 4) {
+		      uint8_t tmp = g;
+		      g = b;
+		      b = tmp;
+		    }
+		    if(sextant & 2) {
+		      uint8_t tmp = r;
+		      r = b;
+		      b = tmp;
+		    }
+		  }
+		   // At this point, RGB values are assigned.
+		   
+		   uint32_t result = r;
+		   result = result << 8;
+		   result = result + g;
+		   result = result << 8;
+		   result = result + b;
+		   
+		   `
+		   return `result` as UInt32
+		   
 	end
 	
 	function updateNeopixels() do
@@ -98,6 +187,16 @@ uint8_t slow_blink[] =  {0, 0, 40, 80, 160, 255, 255, 255, 255, 255, 255, 255, 1
 				color_g[m.id] = m.green
 				color_b[m.id] = m.blue
 				color_w[m.id] = m.white
+			end
+		end
+		
+		internal event m : lights?setHSLColor action do
+			if (m.id < neopixel_count) do // Make sure we are within range
+				var rgbc : UInt32 = hsv2rgb(m.h, 255, 128)
+				color_r[m.id] =  `(`&rgbc&` >> 16) & 0x000000FF`
+				color_g[m.id] = `(`&rgbc&` >> 8) & 0x000000FF`
+				color_b[m.id] = `(`&rgbc&`) & 0x000000FF`
+				color_w[m.id] = 0
 			end
 		end
 		

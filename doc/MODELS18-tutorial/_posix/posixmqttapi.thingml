@@ -1,5 +1,5 @@
 import "../API/api.thingml"
-import "../../examples/lib/mqtt/posix/PosixMQTTAdapter.thingml"
+import "lib/mqtt/posix/PosixMQTTAdapter.thingml"
 
 
 /*

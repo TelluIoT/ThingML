@@ -1,0 +1,92 @@
+import "button.thingml"
+import "neopixel/NeoPixelIndicatorPanel.thingml"
+import "FirmwareMsgs.thingml" 
+
+thing ArduinoFirmware includes NeoPixelIndicatorPanelMsgs, SoftButtonMsgs, TimerMsgs, FirmwareArduinoPort {
+	
+	readonly property timer_id : UInt8 = 1
+	
+	required port clock {
+		receives timer_timeout
+		sends timer_start
+	}
+	
+	required port lights {
+		sends setHSLColor, setMode, setColor
+	}
+	
+	required port button {
+		receives double_click, click, long_press
+	}
+	
+	function allIndicatorsOff() do
+		var i : UInt8 = 0
+		while (i < 8) do
+			lights!setMode(i, IndicatorMode:OFF)
+			lights!setColor(i, 225,30,0,0)
+			i++
+		end
+	end
+	
+	function allIndicatorsOn() do
+		var i : UInt8 = 0
+		while (i < 8) do
+			if (i != 3 and i!=7) lights!setMode(i, IndicatorMode:SOLID)
+			lights!setColor(i, 225,30,0,0)
+			i++
+		end
+	end
+	
+	function getIndicatorMode(mode : UInt8) : IndicatorMode do
+		if (mode == 0) return  IndicatorMode:OFF
+		else return IndicatorMode:SOLID
+	end
+	
+	statechart FirmwareSC init Running {
+		
+		on entry do
+			allIndicatorsOff()
+		end
+		
+		state Running {
+			
+			internal event e:host?neopixel_mode action do 
+				if (e.id < 8) lights!setMode(e.id, getIndicatorMode(e.mode))
+			end
+			
+			internal event e:host?neopixel_color action do 
+				if (e.id < 8) lights!setHSLColor(e.id, e.h*4, e.s, e.l)
+			end
+		}
+	}
+}
+
+protocol Serial 
+	@serial_baudrate "57600" //"57600" Using a low rate to avoid loosing bytes when interrupts are disabled by the neopixel lib.
+	@serializer "Binary"
+	@reverse_endianness "true" // Reverse the endianness for messages sent on the serial line.
+;
+
+configuration Firmware {
+	instance panel : NeoPixelIndicatorPanel
+	instance test : ArduinoFirmware
+	
+	instance button : Button
+		set button.PIN = 8
+	connector button.clock over Timer
+	
+	instance sbut : SoftButton
+	connector sbut.Timer over Timer
+	connector sbut.Button => button.evt
+	
+	connector test.button => sbut.SoftButton 
+	
+	connector test.lights => panel.lights
+	
+	connector panel.clock over Timer
+	connector test.clock over Timer 
+	
+	connector test.host over Serial
+}
+
+

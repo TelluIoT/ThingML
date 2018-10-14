@@ -1,0 +1,335 @@
+import "datatypes.thingml" from stl
+
+thing fragment TimerMsgs {
+	message timer_start(id : UInt8, time : UInt16);
+	message timer_cancel(id : UInt8);
+	message timer_timeout(id : UInt8);
+}
+
+thing fragment TimerClientPort includes TimerMsgs {
+	
+	required port timer {
+		sends timer_start, timer_cancel
+		receives timer_timeout
+	}
+}
+
+thing fragment Timer includes TimerMsgs {
+	
+	provided port timer {
+		receives timer_start, timer_cancel
+		sends timer_timeout
+	}
+}
+
+thing TimerJava includes Timer
+@java_import "import java.util.*;"
+@java_features "
+	Hashtable<Integer, TimerTask> tasks = new Hashtable<Integer, TimerTask>();
+	Timer timer = new java.util.Timer();"
+{
+	
+    function startTimer(id: UInt8, delay : UInt16) do
+    	cancel(id)
+        `final int t_id = `&id&`;`
+        `TimerTask t =  new TimerTask() { public void run(){` 
+        	timer!timer_timeout(`t_id` as UInt8) `
+        } };
+        tasks.put(t_id, t);
+        timer.schedule(t, ` & delay & `);`
+    end
+
+    function cancel(id: UInt8) do
+    	`TimerTask t = tasks.get(`&id&`);`
+        `if (t != null) t.cancel();`
+        `timer.purge();`
+    end
+
+    statechart SoftTimer init default {
+        state default {
+
+          internal event m : timer?timer_start
+            guard m.time > 0
+            action startTimer(m.id, m.time)
+
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel(m.id)
+        }
+    }
+}
+
+object JSArray;
+
+thing TimerJS includes Timer
+{
+
+  property Timeouts : JSArray = `{}` as JSArray
+
+  function startTimer(id: UInt8, delay : UInt16) do
+    `
+      if (`&Timeouts&`[`&id&`] != undefined) {
+        ` cancel(id) `
+      }
+      
+      `&Timeouts&`[`&id&`] = setTimeout(() => {
+        ` timer!timer_timeout(id) `
+        `&Timeouts&`[`&id&`] = undefined;
+      }, `&delay&`);
+    `
+    end
+
+    function cancel(id: UInt8) do
+      `
+        if (`&Timeouts&`[`&id&`] != undefined) {
+          clearTimeout(`&Timeouts&`[`&id&`]);
+          `&Timeouts&`[`&id&`] = undefined;
+        }
+      `
+    end
+
+    statechart SoftTimer init default {
+        state default {
+
+          internal event m : timer?timer_start
+            guard m.time > 0
+            action startTimer(m.id, m.time)
+
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel(m.id)
+        }
+    }
+}
+
+
+thing TimerPosix includes Timer
+
+@c_header `
+#include <time.h>
+#include <unistd.h>
+#include <pthread.h>
+
+#define NB_SOFT_TIMERS 16
+`
+
+@c_global `uint32_t Timer_timeouts[NB_SOFT_TIMERS];
+uint8_t  Timer_wraps[NB_SOFT_TIMERS];
+uint32_t Timer_prev;
+pthread_mutex_t Timer_mut;`
+
+{
+	readonly property NB_SOFT_TIMERS : UInt16 = `NB_SOFT_TIMERS` as UInt16
+	readonly property SOFT_TIMER_PERIOD : UInt16 = 4
+	
+	
+	function time_ms() : UInt32 do
+		`struct timespec current;
+		int res;
+		uint32_t millis = 0;
+		
+		res = clock_gettime(CLOCK_MONOTONIC, &current);
+		if (res != 0) {
+			  perror("[ERROR]: Could not get current time : ");
+		 } else {
+			  millis  =  current.tv_sec * 1000;
+			  millis += current.tv_nsec / 1000000;
+		}`
+		return `millis` as UInt32
+	end
+	
+	function sleep_ms(timeout_ms : UInt16)	do
+		`struct timeval tv;
+        tv.tv_sec = `& timeout_ms &`/1000;
+        tv.tv_usec = (`& timeout_ms &`%1000) * 1000;
+        select(0, NULL, NULL, NULL, &tv);`
+	end
+	
+	function start_soft_timer_process()
+	@fork_linux_thread "true"
+	do
+		`pthread_mutex_init(&Timer_mut, NULL);
+	    uint8_t i;
+	    for (i = 0; i < `&NB_SOFT_TIMERS&`; i++) {
+	        Timer_timeouts[i] = 0;
+	        Timer_wraps[i] = 0;
+	    }
+	    Timer_prev = `&time_ms()&`;`
+		while (true) do
+			sleep_ms(SOFT_TIMER_PERIOD)
+            `pthread_mutex_lock(&Timer_mut);
+	        uint32_t current = `&time_ms()&`;
+	        uint8_t i;
+	        for (i = 0; i < `&NB_SOFT_TIMERS&`; i++) {
+	            if (Timer_timeouts[i] > 0) {
+	                if (current >= Timer_prev) {
+	                    // Normal time progression
+	                    if (current > Timer_timeouts[i] && Timer_wraps[i] == 0) {`
+	                        timer!timer_timeout(`i` as UInt8)
+	                        `Timer_timeouts[i] = 0;
+	                        Timer_wraps[i] = 0;
+	                    }
+	                } else {
+	                    // A wraparound has occurred
+	                    if (Timer_wraps[i] == 0) {`
+	                        timer!timer_timeout(`i` as UInt8)
+	                        `Timer_timeouts[i] = 0;
+	                    } else {
+	                        Timer_wraps[i] = 0;
+	                        if (current > Timer_timeouts[i]) {`
+	                        timer!timer_timeout(`i` as UInt8)
+	                        `Timer_timeouts[i] = 0;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	        Timer_prev = current;
+	        pthread_mutex_unlock(&Timer_mut);`
+		end
+	end
+	
+	function startTimer(id: UInt8, delay : UInt16) do
+    `
+    	if (`&id&` < NB_SOFT_TIMERS) {
+	        uint32_t current = `&time_ms()&`;
+	        uint32_t timeout = current + `&delay&`;
+	        if (timeout == 0) timeout = 1;
+	
+	        pthread_mutex_lock(&Timer_mut);
+	        Timer_timeouts[`&id&`] = timeout;
+	        Timer_wraps[`&id&`] = (timeout > current) ? 0 : 1;
+	        pthread_mutex_unlock(&Timer_mut);
+	    }
+    `
+    end
+
+    function cancel(id: UInt8) do
+      `
+        if (`&id&` < NB_SOFT_TIMERS) {
+	        pthread_mutex_lock(&Timer_mut);
+	        Timer_timeouts[`&id&`] = 0;
+	        Timer_wraps[`&id&`] = 0;
+	        pthread_mutex_unlock(&Timer_mut);
+	    }
+      `
+    end
+	
+	statechart SoftTimer init default {
+		
+		on entry start_soft_timer_process()
+		
+        state default {
+
+          internal event m : timer?timer_start
+            guard m.time > 0
+            action startTimer(m.id, m.time)
+
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel(m.id)
+        }
+    }
+}
+
+thing TimerArduino includes Timer
+
+@c_header `
+#define NB_SOFT_TIMERS 16
+`
+
+@c_global `uint32_t Timer_timeouts[NB_SOFT_TIMERS];
+uint8_t  Timer_wraps[NB_SOFT_TIMERS];
+uint32_t Timer_prev;`
+
+{
+	readonly property NB_SOFT_TIMERS : UInt16 = `NB_SOFT_TIMERS` as UInt16
+	
+
+	function time_ms() : UInt32 do
+		return `millis()` as UInt32
+	end
+
+	function init_arrays() do
+		`uint8_t i;
+	    for (i = 0; i < `&NB_SOFT_TIMERS&`; i++) {
+	        Timer_timeouts[i] = 0;
+	        Timer_wraps[i] = 0;
+	    }
+	    Timer_prev = `&time_ms()&`;`
+	end
+	
+	function poll_soft_timers()
+	@scheduler_polling "true"
+	do
+		`uint32_t current = `&time_ms()&`;
+		uint8_t i;
+		for (i = 0; i < `&NB_SOFT_TIMERS&`; i++) {
+		    if (Timer_timeouts[i] > 0) {
+		        if (current >= Timer_prev) {
+		            // Normal time progression
+		            if (current > Timer_timeouts[i] && Timer_wraps[i] == 0) {`
+		                timer!timer_timeout(`i` as UInt8)
+		                `Timer_timeouts[i] = 0;
+		                Timer_wraps[i] = 0;
+		            }
+		        } else {
+		            // A wraparound has occurred
+		            if (Timer_wraps[i] == 0) {`
+		                timer!timer_timeout(`i` as UInt8)
+		                `Timer_timeouts[i] = 0;
+		            } else {
+		                Timer_wraps[i] = 0;
+		                if (current > Timer_timeouts[i]) {`
+		                timer!timer_timeout(`i` as UInt8)
+		                `Timer_timeouts[i] = 0;
+		                }
+		            }
+		        }
+		    }
+		}`
+	end
+	
+	function startTimer(id: UInt8, delay : UInt16) do
+    `
+    	if (`&id&` < NB_SOFT_TIMERS) {
+	        uint32_t current = `&time_ms()&`;
+	        uint32_t timeout = current + `&delay&`;
+	        if (timeout == 0) timeout = 1;
+	
+	        Timer_timeouts[`&id&`] = timeout;
+	        Timer_wraps[`&id&`] = (timeout > current) ? 0 : 1;
+	    }
+    `
+    end
+
+    function cancel(id: UInt8) do
+      `
+        if (`&id&` < NB_SOFT_TIMERS) {
+	        Timer_timeouts[`&id&`] = 0;
+	        Timer_wraps[`&id&`] = 0;
+	    }
+      `
+    end
+	
+	statechart SoftTimer init default {
+		
+		on entry init_arrays()
+		
+        state default {
+
+          internal event m : timer?timer_start
+            guard m.time > 0
+            action startTimer(m.id, m.time)
+
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel(m.id)
+        }
+    }
+}
+
+
+
+
+

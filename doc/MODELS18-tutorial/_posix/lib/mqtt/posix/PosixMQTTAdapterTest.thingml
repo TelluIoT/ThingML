@@ -1,0 +1,97 @@
+import "PosixMQTTAdapter.thingml"
+
+thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
+	
+	readonly property client_id : String = "Client1"
+	property broker_host : String = "localhost"
+	property broker_port : UInt16 = 1883
+	
+	readonly property timer_id 	: UInt8 = 0
+	
+	required port clock {
+		receives timer_timeout
+		sends timer_start, timer_cancel
+	}
+	
+	required port mqtt 
+	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
+	{
+		sends mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe
+		receives mqtt_connected, mqtt_disconnected, mqtt_message
+	}
+	
+	function publish_hello() do
+		`char topic[48];
+		 strcpy(topic, "Hello/");
+		 strcat(topic, `&client_id&`);`
+		 
+		 `char payload[24];
+		 strcpy(payload, "Connected!");`
+	
+		mqtt!mqtt_publish(`topic`, `payload`, `strlen(payload)`)
+	end
+	
+	statechart MQTTAdapterTestSC init DISCONNECTED {
+		
+		on entry mqtt!mqtt_connect(client_id, broker_host, broker_port, false)
+		
+		
+		state DISCONNECTED {
+			transition -> CONNECTED event mqtt?mqtt_connected action print "Client got mqtt_connected\n"
+		}
+		
+		state CONNECTED {
+			
+			on entry do
+				mqtt!mqtt_subscribe("#")
+				publish_hello()
+				clock!timer_start(timer_id, 5000)
+			end
+			
+			internal event e : clock?timer_timeout guard e.id == timer_id action do
+				publish_hello()
+				clock!timer_start(timer_id, 5000)
+			end
+			
+			internal event m:mqtt?mqtt_message action do
+				`printf("RCV topic:%s payload:%s\n", `&m.topic&`, `&m.payload&`);`
+			end
+			
+			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"
+		}
+	}
+}
+
+
+thing fragment TimerMsgs {
+	message timer_start(id : UInt8, time : UInt32) @timer_start "true";
+	message timer_cancel(id : UInt8) @timer_cancel "true";
+	message timer_timeout(id : UInt8) @timeout "true";
+	message clock_1s() @xms_tic "1000";
+}
+
+protocol Timer; 
+
+configuration MQTTAdapterTest 
+@add_c_libraries "mosquitto"
+{
+	instance adapter1 : PosixMQTTAdapter
+	//instance adapter2 : MQTTAdapter
+	
+	instance test1 : MQTTAdapterTest
+		set test1.client_id = "Test1"
+		set test1.broker_host = "127.0.0.1"
+		set test1.broker_port = 1883
+		connector test1.mqtt => adapter1.mqtt
+		set test1.timer_id = 1
+		connector test1.clock over Timer
+		/*
+	instance test2 : MQTTAdapterTest
+		set test2.client_id = "Test2"
+		set test2.broker_host = "10.3.1.154"
+		set test2.broker_port = 1883
+		connector test2.mqtt => adapter2.mqtt
+		set test2.timer_id = 2
+		connector test2.clock over Timer
+	 */
+}

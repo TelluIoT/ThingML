@@ -1,0 +1,29 @@
+import "button.thingml"
+
+thing fragment FirmwareMsgs {
+	
+	message neopixel_color(id : UInt8, h : UInt16, s : UInt8, l : UInt8)	@code "10"
+	message neopixel_mode(id : UInt8, mode : UInt16)						@code "11"
+	
+	message button_click(id : UInt8)										@code "80"
+	message button_double_click(id : UInt8)									@code "81"
+	message button_long_press(id : UInt8)									@code "82"
+	
+}
+
+thing fragment FirmwareArduinoPort includes FirmwareMsgs {
+	
+	provided port host {
+		sends button_click, button_double_click, button_long_press
+		receives neopixel_color, neopixel_mode
+	}
+}
+
+
+thing fragment FirmwareDriverPort includes FirmwareMsgs {
+	
+	provided port arduino {
+		sends neopixel_color, neopixel_mode
+		receives button_click, button_double_click, button_long_press
+	}	
+}

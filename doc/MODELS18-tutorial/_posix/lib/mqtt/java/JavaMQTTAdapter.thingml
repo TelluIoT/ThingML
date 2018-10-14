@@ -1,0 +1,171 @@
+import "../MQTTAdapterMsgs.thingml"
+
+object MQTTMessage 
+	@java_type "org.eclipse.paho.client.mqttv3.MqttMessage"
+
+object Throwable 
+	@java_type "Throwable"
+	
+object IMqttDeliveryToken
+	@java_type "IMqttDeliveryToken"
+
+thing JavaMQTTAdapter includes MQTTAdapterMsgs
+@maven_dep "		
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>org.json</artifactId>
+			<version>chargebee-1.0</version>
+		</dependency>"
+
+@java_interface "org.eclipse.paho.client.mqttv3.MqttCallbackExtended"
+@java_import "import java.util.logging.Logger;"
+@java_import "import java.util.logging.Level;"
+@java_import "import org.eclipse.paho.client.mqttv3.*;"
+@java_import "import org.eclipse.paho.client.mqttv3.persist.*;"
+@java_features "org.eclipse.paho.client.mqttv3.MqttClient clientPub, clientSub;"
+{
+	provided port mqtt 
+	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
+	{
+		receives mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix 
+		sends mqtt_connected, mqtt_disconnected, mqtt_message
+	}
+	
+	property broker_uri : String = "tcp://localhost:1883"
+
+	
+	property client_id : String = `null`
+	
+	property username : String = `null`
+	property password : String = `null`
+	
+	property topic_prefix : String = `null`
+	
+	function setTopicPrefix(src : String) do
+		topic_prefix = src
+	end
+
+	function mqtt_connect() : Boolean do
+	    `try {`
+		    `MemoryPersistence persistence = new MemoryPersistence();`
+		    `Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Connect to: " + `&broker_uri&`);`
+		    `MqttConnectOptions connOpts = new MqttConnectOptions();`
+	        `connOpts.setCleanSession(true);`
+	        `connOpts.setAutomaticReconnect(true);`
+	        
+	        if (username != `null` and password != `null`) do
+	        	`connOpts.setUserName(`&username&`);`
+	        	`connOpts.setPassword(`&password&`.toCharArray());`        	
+	        end
+	        
+	        if (client_id == `null`) do
+	        	client_id = `MqttClient.generateClientId()`
+	        end
+		    
+		    `clientSub = new MqttClient(`&broker_uri&`, `&client_id&` + "_Sub", persistence);`
+	        `clientPub = new MqttClient(`&broker_uri&`, `&client_id&` + "_Pub", persistence);`
+		    
+		    // For now we are only monitoring the connection on the subscriber client
+		    `clientSub.	setCallback(this);`
+		    
+		    `clientSub.connect(connOpts);`
+	        `clientPub.connect(connOpts);`
+	        
+	    `} catch (org.eclipse.paho.client.mqttv3.MqttException ex) {`
+            `Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
+            return false
+        `}`
+	    return true
+	end
+
+	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) : Boolean do
+		if (`clientPub == null`) return false
+        `try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Publish: " + `&topic&` + " -> " + new String(`&payload&`));
+            MqttMessage message = new MqttMessage(`&payload&`);
+            if (`&topic_prefix&` != null) clientPub.publish(`&topic_prefix&` + `&topic&`, message);
+            else clientPub.publish(`&topic&`, message);
+        } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
+            return false
+        `}`
+        return true
+	end
+
+
+	function mqtt_subscribe(topic : String) : Boolean do
+		if (`clientSub == null`) return false
+        `try {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Subscribe: " + `&topic&`);
+            if (`&topic_prefix&` != null) clientSub.subscribe(`&topic_prefix&` + `&topic&`);
+            else clientSub.subscribe(`&topic&`);
+        } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
+            return false
+        `}`
+        return true
+	end
+	
+	function messageArrived(topic : String, m : MQTTMessage) @override "true" @java_visibility "public"
+	do
+		print "Message arrived on topic "
+		print topic
+		print "\n"
+	end
+	
+	function connectionLost(t : Throwable) @override "true" @java_visibility "public"
+	do
+		print "connectionLost \n"
+		mqtt!mqtt_disconnected()
+	end
+	
+	function deliveryComplete(imdt : IMqttDeliveryToken) @override "true" @java_visibility "public"
+	do
+		print "deliveryComplete \n"	
+	end
+	
+	function connectComplete(reconnect : Boolean, serverURI : String) @override "true" @java_visibility "public"
+	do
+		print "connectComplete \n"
+		mqtt!mqtt_connected()
+	end
+	
+	
+	statechart MQTTAdapterThing init Start {
+		
+		internal event m: mqtt?mqtt_set_credentials action do
+			username = m.usr
+			password = m.pwd
+		end
+		
+		internal event m: mqtt?mqtt_set_prefix action do
+			setTopicPrefix(m.prefix)
+		end
+		
+		internal event m : mqtt?mqtt_connect action do
+			client_id = m.client_id
+			`String uri;`
+			if (m.tls) `uri = "ssl://";`
+			else `uri = "tcp://";`
+			`uri += `&m.host&` + ":" + `&m.portno&`;` 
+			broker_uri = `uri`
+			mqtt_connect()
+		end
+		
+		internal event m : mqtt?mqtt_publish action do
+			mqtt_publish(m.topic, m.payload, m.size)
+		end
+		
+		internal event m : mqtt?mqtt_subscribe action do
+			mqtt_subscribe(m.topic)
+		end
+		
+		state Start {}
+	}
+}

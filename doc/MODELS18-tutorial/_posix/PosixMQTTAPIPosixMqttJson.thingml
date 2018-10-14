@@ -43,7 +43,7 @@ thing PosixMQTTAPI_PosixMqttJson_Impl includes PosixMQTTAPI, MQTTAdapterMsgs
 
 			var id : UInt8
 			var _found_id : Boolean = false
-			var h : UInt8
+			var h : UInt16
 			var _found_h : Boolean = false
 			var s : UInt8
 			var _found_s : Boolean = false
