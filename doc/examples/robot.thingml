@@ -160,6 +160,7 @@ thing WheelControlArduino includes RobotMsgs
 }
 
 configuration Robot
+@compiler "uml"
 {
 	instance robot : RobotControl
 	instance sdist : DistanceSensor
