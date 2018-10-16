@@ -1,0 +1,11 @@
+import "datatypes.thingml" from stl
+
+thing fragment TimerMsgs {
+	message timer_start(id : UInt8, time : UInt32) @timer_start "true";
+	message timer_cancel(id : UInt8) @timer_cancel "true";
+	message timer_timeout(id : UInt8) @timeout "true";
+	//message clock_1s() @xms_tic "1000";
+	message ms50_clock() @xms_tic "50";
+}
+
+protocol Timer; 

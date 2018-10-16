@@ -1,0 +1,116 @@
+import "NeoPixelIndicatorPanel.thingml"
+
+thing NeoPixelIndicatorPanelTest includes NeoPixelIndicatorPanelMsgs, TimerMsgs
+{ 
+	required port clock {
+		receives timer_timeout 
+		sends timer_start
+	}
+	
+	required port lights {
+		sends setColor, setMode
+	}
+	
+	readonly property timer_id : UInt8 = 1
+	
+	
+	statechart TestSC init State1 {
+		
+		state State1 {
+			on entry do
+			    lights!setMode(7-6, IndicatorMode:OFF)
+			    lights!setMode(7-5, IndicatorMode:OFF)
+			    lights!setMode(7-3, IndicatorMode:OFF)
+			    lights!setMode(7-2, IndicatorMode:OFF)
+			    lights!setMode(7-1, IndicatorMode:OFF)
+				clock!timer_start(timer_id, 3000)
+				lights!setColor(7-7, 225, 30, 0, 0)
+				lights!setMode(7-7, IndicatorMode:BLINK_FAST)
+			end
+			
+			transition -> State2 event e : clock?timer_timeout guard e.id == timer_id
+		}
+		
+		state State2 {
+			on entry do
+				clock!timer_start(timer_id, 4000)
+				lights!setColor(7-7, 0, 225, 30, 0)
+				lights!setMode(7-7, IndicatorMode:SOLID)
+				lights!setColor(7-6, 127, 127, 0, 0)
+				lights!setMode(7-6, IndicatorMode:BLINK_SLOW)
+				lights!setColor(7-5, 127, 127, 0, 0)
+				lights!setMode(7-5, IndicatorMode:BLINK_SLOW)
+			end
+			
+			transition -> State3 event e : clock?timer_timeout guard e.id == timer_id
+		}
+		
+		state State3 {
+			on entry do
+				clock!timer_start(timer_id, 3000)
+				lights!setColor(7-6, 0, 225, 30, 0)
+				lights!setMode(7-6, IndicatorMode:SOLID)
+				lights!setColor(7-3, 0, 50, 205, 0)
+				lights!setMode(7-3, IndicatorMode:SOLID)
+			
+			end
+			
+			transition -> State4 event e : clock?timer_timeout guard e.id == timer_id
+		}
+		
+		state State4 {
+			on entry do
+				clock!timer_start(timer_id, 2000)
+				lights!setColor(7-5, 0, 225, 30, 0)
+				lights!setMode(7-5, IndicatorMode:SOLID)
+				
+			end
+			
+			transition -> State5 event e : clock?timer_timeout guard e.id == timer_id
+		}
+		
+		state State5 {
+			on entry do
+				clock!timer_start(timer_id, 3000)
+				lights!setColor(7-1, 0, 50, 255, 0)
+				lights!setMode(7-1, IndicatorMode:BLINK_SLOW)
+			end
+			
+			transition -> State6 event e : clock?timer_timeout guard e.id == timer_id
+		}		
+		
+		state State6 {
+			on entry do
+				clock!timer_start(timer_id, 3000)
+				lights!setColor(7-3, 0, 50, 255, 0)
+				lights!setMode(7-3, IndicatorMode:SOLID)
+				lights!setColor(7-1, 0, 225, 30, 0)
+				lights!setMode(7-1, IndicatorMode:SOLID)
+			end
+			
+			transition -> State7 event e : clock?timer_timeout guard e.id == timer_id
+		}
+		
+		state State7 {
+			on entry do
+				clock!timer_start(timer_id, 5000)
+				lights!setMode(7-1, IndicatorMode:OFF)
+			end
+			
+			transition -> State1 event e : clock?timer_timeout guard e.id == timer_id
+		}				
+	}
+} 
+
+
+configuration PanelTest {
+	
+	instance panel : NeoPixelIndicatorPanel
+	instance test : NeoPixelIndicatorPanelTest
+	
+	connector test.lights => panel.lights
+	
+	connector panel.clock over Timer
+	connector test.clock over Timer
+	
+}

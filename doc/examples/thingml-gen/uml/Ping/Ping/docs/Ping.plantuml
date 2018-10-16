@@ -1,6 +1,0 @@
-@startuml
-caption Instances and Connectors in configuration Ping
-component server<<PIM>>
-component client<<PIM>>
-client -(0- server : ping_service => ping_service
-@enduml

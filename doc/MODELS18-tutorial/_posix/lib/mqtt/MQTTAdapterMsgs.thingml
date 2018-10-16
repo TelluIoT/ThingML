@@ -1,0 +1,35 @@
+import "datatypes.thingml" from stl
+
+object Buffer
+	@java_type " byte[]"
+	@java_primitive "true"
+	@c_type "uint8_t *"
+	@c_byte_size "*"
+
+thing MQTTAdapterMsgs {
+	
+	message mqtt_set_credentials(usr : String, pwd : String)
+	
+	message mqtt_set_tls_certificates(cafile : String, capath : String, certfile : String, keyfile : String)
+	
+	message mqtt_connect(client_id : String, host : String, portno : UInt16, tls : Boolean)
+	message mqtt_disconnect()
+	
+	message mqtt_connected()
+	message mqtt_disconnected()
+	
+	message mqtt_publish(topic : String, payload: Buffer, size : UInt32)
+	message mqtt_subscribe(topic : String)
+	message mqtt_set_prefix(prefix : String)
+	
+	message mqtt_message(topic : String, payload: Buffer, size : UInt32)
+}
+ 
+thing MQTTAdapterCtrlPort includes  MQTTAdapterMsgs {
+	required port mqtt 
+	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
+	{
+		sends mqtt_connect, mqtt_disconnect, mqtt_set_prefix
+		receives mqtt_connected, mqtt_disconnected
+	}
+}

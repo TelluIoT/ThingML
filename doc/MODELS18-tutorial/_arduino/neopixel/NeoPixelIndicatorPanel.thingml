@@ -1,0 +1,231 @@
+import "../_Timer.thingml"
+
+enumeration IndicatorMode
+  @c_type "uint8_t"
+  @c_byte_size "1"
+{
+  OFF @enum_val "0x00"
+  SOLID @enum_val "0x01"
+  BLINK_SLOW @enum_val "0x02"
+  BLINK_FAST @enum_val "0x03"
+}
+
+thing fragment NeoPixelIndicatorPanelMsgs {
+	message setBrightness(b : UInt8);
+	message setColor(id : UInt8, red : UInt8, green : UInt8, blue : UInt8, white : UInt8);
+	message setHSLColor(id : UInt8, h : UInt16, s : UInt8, l : UInt8);
+	message setMode(id : UInt8, mode : IndicatorMode);
+}
+
+thing NeoPixelIndicatorPanel includes NeoPixelIndicatorPanelMsgs, TimerMsgs
+@c_global "
+#include <Adafruit_NeoPixel.h>
+Adafruit_NeoPixel strip;
+
+#define FBLINK_LEN 10
+uint8_t fast_blink[] =  {0, 0, 40, 80, 160, 255, 160, 80, 40, 0};
+
+#define SBLINK_LEN 20
+uint8_t slow_blink[] =  {0, 0, 40, 80, 160, 255, 255, 255, 255, 255, 255, 255, 160, 80, 40, 0, 0, 0, 0, 0};
+
+"
+{ 
+	readonly property neopixel_pin : UInt8 = 7
+	readonly property neopixel_count : UInt8 = 8
+	
+	property color_r : UInt8[neopixel_count]
+	property color_g : UInt8[neopixel_count]
+	property color_b : UInt8[neopixel_count]
+	property color_w : UInt8[neopixel_count]
+	
+	property mode : IndicatorMode[neopixel_count]
+	
+	required port clock {
+		receives ms50_clock
+	}
+	
+	provided port lights 
+	@sync_send "true"
+	{
+		receives setColor, setMode, setBrightness, setHSLColor
+	}
+	
+	property slow_blink_count : UInt8 = 0
+	property fast_blink_count : UInt8 = 0
+	
+	function getFastBlinkColor(i : UInt8): UInt32 do
+		return getColor((color_r[i]*`fast_blink[`&fast_blink_count&`]`)/ 256, 
+						(color_g[i]*`fast_blink[`&fast_blink_count&`]`)/ 256, 
+						(color_b[i]*`fast_blink[`&fast_blink_count&`]`)/ 256, 
+						(color_w[i]*`fast_blink[`&fast_blink_count&`]`)/ 256)
+	end
+	
+	function getSlowBlinkColor(i : UInt8): UInt32 do
+		return getColor((color_r[i]*`slow_blink[`&slow_blink_count&`]`)/ 256, 
+						(color_g[i]*`slow_blink[`&slow_blink_count&`]`)/ 256, 
+						(color_b[i]*`slow_blink[`&slow_blink_count&`]`)/ 256, 
+						(color_w[i]*`slow_blink[`&slow_blink_count&`]`)/ 256)
+	end
+	
+	function setPixelColor(pixel : UInt8, color: UInt32) do
+		`strip.setPixelColor(`&pixel&`, `&color&`);`
+	end 
+	
+	function getColor(red : UInt8, green : UInt8, blue : UInt8, white : UInt8) : UInt32 do
+		return `strip.Color(`&red&`, `&green&`, `&blue&`, `&white&`)`
+	end
+	
+	function hsv2rgb(ph : UInt16, ps : UInt8, pv : UInt8) : UInt32 do
+		` uint8_t r, g, b;
+		
+			uint16_t h; 
+			uint8_t s; 
+			uint8_t v;
+			
+			h = `&ph&`;
+			s = `&ps&`;
+			v = `&pv&`;
+		
+		   if(!s) {
+		    // Monochromatic, all components are V
+		    r = g = b = v;
+		  } else {
+		    uint8_t sextant = h >> 8;
+		    if(sextant > 5)
+		      sextant = 5;  // Limit hue sextants to defined space
+		     g = v;    // Top level
+		     // Perform actual calculations
+		     /*
+		     * Bottom level:
+		     * --> (v * (255 - s) + error_corr + 1) / 256
+		     */
+		    uint16_t ww;        // Intermediate result
+		    ww = v * (uint8_t)(~s);
+		    ww += 1;            // Error correction
+		    ww += ww >> 8;      // Error correction
+		    b = ww >> 8;
+		     uint8_t h_fraction = h & 0xff;  // Position within sextant
+		    uint32_t d;      // Intermediate result
+		     if(!(sextant & 1)) {
+		      // r = ...slope_up...
+		      // --> r = (v * ((255 << 8) - s * (256 - h)) + error_corr1 + error_corr2) / 65536
+		      d = v * (uint32_t)(0xff00 - (uint16_t)(s * (256 - h_fraction)));
+		      d += d >> 8;  // Error correction
+		      d += v;       // Error correction
+		      r = d >> 16;
+		    } else {
+		      // r = ...slope_down...
+		      // --> r = (v * ((255 << 8) - s * h) + error_corr1 + error_corr2) / 65536
+		      d = v * (uint32_t)(0xff00 - (uint16_t)(s * h_fraction));
+		      d += d >> 8;  // Error correction
+		      d += v;       // Error correction
+		      r = d >> 16;
+		    }
+		     // Swap RGB values according to sextant. This is done in reverse order with
+		    // respect to the original because the swaps are done after the
+		    // assignments.
+		    if(!(sextant & 6)) {
+		      if(!(sextant & 1)) {
+		        uint8_t tmp = r;
+		        r = g;
+		        g = tmp;
+		      }
+		    } else {
+		      if(sextant & 1) {
+		        uint8_t tmp = r;
+		        r = g;
+		        g = tmp;
+		      }
+		    }
+		    if(sextant & 4) {
+		      uint8_t tmp = g;
+		      g = b;
+		      b = tmp;
+		    }
+		    if(sextant & 2) {
+		      uint8_t tmp = r;
+		      r = b;
+		      b = tmp;
+		    }
+		  }
+		   // At this point, RGB values are assigned.
+		   
+		   uint32_t result = r;
+		   result = result << 8;
+		   result = result + g;
+		   result = result << 8;
+		   result = result + b;
+		   
+		   `
+		   return `result` as UInt32
+		   
+	end
+	
+	function updateNeopixels() do
+		`strip.show();`
+	end
+	
+	function initializeNeopixels() do
+		`strip = Adafruit_NeoPixel(`&neopixel_count&`, `&neopixel_pin&`, NEO_GRBW   /*NEO_GRB */ + NEO_KHZ800);
+		 strip.begin();
+		 strip.setBrightness(255);
+		 strip.show();`
+		 var i : UInt8 = 0
+		 while (i<neopixel_count) do
+		 	mode[i] = IndicatorMode:OFF
+		 	i = i + 1
+		 end
+	end
+	
+	statechart StripChart init Start {
+		
+		on entry initializeNeopixels()
+		
+		internal event m : lights?setColor action do
+			if (m.id < neopixel_count) do // Make sure we are within range
+				color_r[m.id] = m.red
+				color_g[m.id] = m.green
+				color_b[m.id] = m.blue
+				color_w[m.id] = m.white
+			end
+		end
+		
+		internal event m : lights?setHSLColor action do
+			if (m.id < neopixel_count) do // Make sure we are within range
+				var rgbc : UInt32 = hsv2rgb(m.h, 255, 128)
+				color_r[m.id] =  `(`&rgbc&` >> 16) & 0x000000FF`
+				color_g[m.id] = `(`&rgbc&` >> 8) & 0x000000FF`
+				color_b[m.id] = `(`&rgbc&`) & 0x000000FF`
+				color_w[m.id] = 0
+			end
+		end
+		
+		internal event m : lights?setBrightness action do
+			`strip.setBrightness(`&m.b&`);`
+		end
+		
+		internal event m : lights?setMode action do
+			if (m.id < neopixel_count) do // Make sure we are within range
+				mode[m.id] = m.mode
+			end
+		end
+		
+		state Start {
+						
+			internal event clock?ms50_clock action do
+				var i : UInt8 = 0
+				slow_blink_count = (slow_blink_count + 1) % `SBLINK_LEN`
+				fast_blink_count = (fast_blink_count + 1) % `FBLINK_LEN`
+				i = 0
+		 		while (i<neopixel_count) do
+					if (mode[i] == IndicatorMode:OFF) setPixelColor(i, getColor(0,0,0,0))
+					else if (mode[i] == IndicatorMode:SOLID) setPixelColor(i, getColor(color_r[i], color_g[i], color_b[i], color_w[i]))
+					else if (mode[i] == IndicatorMode:BLINK_FAST) setPixelColor(i, getFastBlinkColor(i) )
+					else if (mode[i] == IndicatorMode:BLINK_SLOW) setPixelColor(i,getSlowBlinkColor(i))
+					i = i + 1 
+				end
+				updateNeopixels()
+			end
+		}
+	}
+}

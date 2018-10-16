@@ -1,6 +1,0 @@
-@startuml
-caption Datatypes used in configuration Ping
-class UInt8 <<(D,#D2E524)1>> {
-}
-note bottom of UInt8 : <b>@type_checker</b> <color:royalBlue>"Integer"</color>\n<b>@c_type</b> <color:royalBlue>"uint8_t"</color>\n<b>@c_byte_size</b> <color:royalBlue>"1"</color>\n<b>@java_type</b> <color:royalBlue>"short"</color>\n<b>@js_type</b> <color:royalBlue>"short"</color>\n<b>@java_primitive</b> <color:royalBlue>"true"</color>\n<b>@go_type</b> <color:royalBlue>"uint8"</color>\n
-@enduml

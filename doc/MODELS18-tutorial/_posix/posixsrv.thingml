@@ -1,8 +1,9 @@
 import "posixmqttapi.thingml"
 import "PosixMQTTAPIPosixMqttJson.thingml"
+import "../_arduino/FirmwareMsgs.thingml"
 
 
-thing PosixLEDServer includes API, MQTTAdapterCtrlPort {
+thing PosixLEDServer includes API, MQTTAdapterCtrlPort, FirmwareDriverPort {
 	
 	readonly property client_id : String = "PosixServer"
 	property broker_host : String = "mqtt.tutorials.tellucloud.com"
@@ -33,14 +34,17 @@ thing PosixLEDServer includes API, MQTTAdapterCtrlPort {
 			
 			internal event e : leds?turn_on action do
 				print "Turn ON led #", e.id, "\n"
+				arduino!neopixel_mode(e.id, 1)
 			end
 			
 			internal event e : leds?turn_off action do
 				print "Turn OFF led #", e.id, "\n"
+				arduino!neopixel_mode(e.id, 0)
 			end
 			
 			internal event e : leds?set_color action do
 				print "Change color of led #", e.id, " to h=", e.h, " s=", e.s, " l=", e.l, "\n"
+				arduino!neopixel_color(e.id, e.h, e.s, e.l)
 			end
 			
 			transition -> Disconnected event mqtt?mqtt_disconnected action println "Connected to MQTT Broker"
@@ -49,6 +53,10 @@ thing PosixLEDServer includes API, MQTTAdapterCtrlPort {
 	}
 }
 
+protocol Serial @serializer "Binary"
+				@serial_baudrate "57600" // "57600" Using a low rate to avoid loosing bytes when interrupts are disabled by the neopixel lib on the arduino
+				@reverse_endianness "true" // Reverse the endianness for messages sent on the serial line.
+				@serial_path_to_device "/dev/ttyS4";
 
 configuration PosixLEDServerApp 
 	@add_c_libraries "mosquitto"
@@ -64,4 +72,6 @@ configuration PosixLEDServerApp
 	connector server.mqtt => mqttadapter.mqtt
 	connector server.leds => serializer.leds
 	connector serializer.posixmqtt =>  mqttadapter.mqtt
+	
+	connector server.arduino over Serial
 }
