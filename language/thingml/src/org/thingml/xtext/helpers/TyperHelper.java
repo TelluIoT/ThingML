@@ -63,6 +63,10 @@ public class TyperHelper {
             return Types.OBJECT_TYPE;
         }
     	if (self instanceof Enumeration) {
+    		final Enumeration e = (Enumeration)self;
+    		if (e.getTypeRef() != null && e.getTypeRef().getType() != null) {
+    			return getBroadType(e.getTypeRef().getType());
+    		}
     		return self;
     	}
         if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
