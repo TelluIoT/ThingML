@@ -43,6 +43,7 @@ import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
@@ -133,12 +134,13 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
 
             for (Port p : thing.getPorts()) {
-                classes.append("..Port " + p.getName() + "..\n");
+            	final String type = (p instanceof ProvidedPort) ? ""+((char)0x25B2) : ""+((char)0x25BC);
+                classes.append(".." + type + " Port " + p.getName() + " " + type +"..\n");
                 for (Message m : p.getReceives()) {
-                    classes.append(">>" + m.getName() + "\n");
+                    classes.append(((char)0x25B8) + m.getName() + "\n");
                 }
                 for (Message m : p.getSends()) {
-                    classes.append("<<" + m.getName() + "\n");
+                    classes.append(((char)0x25C2) + m.getName() + "\n");
                 }
             }
 
