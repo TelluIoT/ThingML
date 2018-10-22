@@ -330,6 +330,42 @@ uint32_t Timer_prev;`
 }
 
 
+object TimerMap @go_type `map[uint8]*time.Timer`
 
+// Manage a set of software timers.
+thing TimerGo includes TimerMsgs
+@go_import `time`
+{
+	provided port timer {
+		receives timer_start, timer_cancel
+		sends timer_timeout
+	}
+	
+	property Timers : TimerMap = `make(map[uint8]*time.Timer)`
 
+    function startTimer(id: UInt8, delay : UInt32) do
+    	cancel(id) `
+    	`&Timers&`[`&id&`] = time.AfterFunc(time.Millisecond*time.Duration(`&delay&`), func() {
+    		`timer!timer_timeout(id)`
+    	})
+    ` end
 
+    function cancel(id: UInt8) do `
+    	if t, ok := `&Timers&`[`&id&`]; ok {
+    		t.Stop()
+    		delete(`&Timers&`, `&id&`)
+    	}
+    ` end
+
+    statechart SoftTimer init default {
+        state default {
+          internal event m : timer?timer_start
+            guard m.time > 0
+            action startTimer(m.id, m.time)
+
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel(m.id)
+        }
+    }
+}
