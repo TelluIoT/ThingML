@@ -34,3 +34,13 @@ thing rndArduino includes rnd {
     return `random(` & max & `)`
   end
 }
+
+thing rndGo includes rnd {
+  function rnd() : Long do
+    return `rand.Int31()`
+  end
+
+  function rndMax(max : Long) : Long do
+    return `rand.Int31n(` & max & `)`
+  end
+}
