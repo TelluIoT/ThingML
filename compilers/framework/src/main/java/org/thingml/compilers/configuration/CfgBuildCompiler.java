@@ -44,7 +44,7 @@ public class CfgBuildCompiler {
     }
     
     public void generateDockerFile(Configuration cfg, Context ctx) {
-        if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
+        if(AnnotatedElementHelper.hasFlag(cfg, "docker") || AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
             StringBuilder Dockerfile = ctx.getBuilder("Dockerfile");
             String dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile");
             
