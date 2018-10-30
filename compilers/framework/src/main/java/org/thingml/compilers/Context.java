@@ -199,9 +199,9 @@ public class Context {
     /**
      * Dumps the whole code generated in the generatedCode
      */
-    public void writeGeneratedCodeToFiles(String charset) {
+    public void writeGeneratedCodeToFiles() {
         for (Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {
-            writeTextFile(e.getKey(), e.getValue().toString(), charset);
+            writeTextFile(e.getKey(), e.getValue().toString());
         }
     	try {
 			for (Entry<String, SourceBuilder> generatedFile : generatedFiles.entrySet()) {
@@ -217,11 +217,7 @@ public class Context {
             e.printStackTrace();
 		}
         
-    }
-    public void writeGeneratedCodeToFiles() {
-    	writeGeneratedCodeToFiles("UTF-8");
-    }
-    
+    }    
   
     /**
      * @param path (relative to outputDir) where the file should be copied
@@ -289,13 +285,9 @@ public class Context {
      * @param content
      */
     public void writeTextFile(String path, String content) {
-    	writeTextFile(path, content, "UTF-8");
-    }
-    
-    public void writeTextFile(String path, String content, String charset) {
         try {
             File file = openOutputFile(path);
-            PrintWriter w = new PrintWriter(file, Charset.forName(charset));
+            PrintWriter w = new PrintWriter(file);
             w.print(content);
             w.close();
         } catch (Exception ex) {
