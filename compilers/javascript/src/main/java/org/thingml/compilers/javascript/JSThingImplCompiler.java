@@ -330,6 +330,10 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		section.append("_initial_" + ThingMLElementHelper.qname(r, "_") + "_reg.to(" + ThingMLElementHelper.qname(r.getInitial(), "_") + ");");
 	}
 	
+	protected void stop(StringBuilder builder) {
+		builder.append("setImmediate(()=>this._stop());\n");
+	}
+	
 	protected void generateActionsForState(State s, StateJSState state, Context ctx) {
 		if (s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
 			StringBuilder builder = state.onEntry();
@@ -339,7 +343,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 			if (s.getEntry() != null)
 				ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
 			if (s instanceof FinalState) {
-				builder.append("setImmediate(()=>this._stop());\n");
+				stop(builder);
 			}
 		}
 		if (s.getExit() != null || debugProfile.isDebugBehavior()) {

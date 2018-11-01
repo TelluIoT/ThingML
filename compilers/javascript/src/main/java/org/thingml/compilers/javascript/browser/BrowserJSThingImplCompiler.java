@@ -47,4 +47,8 @@ public class BrowserJSThingImplCompiler extends JSThingImplCompiler {
 		return JSSourceBuilder.es5Class(parent, jctx.firstToUpper(thing.getName()));
 	}
 
+	@Override
+	protected void stop(StringBuilder builder) {
+		builder.append("setTimeout(()=>this._stop(),0);\n");
+	}
 }
