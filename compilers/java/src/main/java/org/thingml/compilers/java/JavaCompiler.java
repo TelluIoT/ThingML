@@ -86,33 +86,33 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
             ctx.getCompiler().getThingImplCompiler().generateImplementation(th, ctx);
         }
         ctx.getCompiler().getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
-        
+
         //GENERATE A DOCKERFILE IF ASKED
         ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
         ctx.generateNetworkLibs(cfg);
-        
+
         return true;
     }
-    
+
     @Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
     	return "maven:alpine";
     }
-    
+
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
-        return "java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar"; 
+        return "java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar";
     }
-    
+
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "RUN mkdir -p /java/src/" + cfg.getName() + "\n" +
-        		"WORKDIR /java/src/" + cfg.getName() + "\n" +
+        return "RUN cd /root && wget https://github.com/TelluIoT/ThingML/releases/download/1.0.0/mvn_repo_generated.tar.gz\n" +
+        		"RUN cd /root && tar -xzf mvn_repo_generated.tar.gz\n" +
         		"COPY . .\n" +
-        		"RUN mvn clean install\n" +
+        		"RUN mvn install\n" +
         		"FROM openjdk:jre-alpine\n" +
-        		"COPY --from=0 /java/src/" + cfg.getName() + "/target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar .\n";
+        		"COPY --from=0 /target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar .\n";
     }
 }

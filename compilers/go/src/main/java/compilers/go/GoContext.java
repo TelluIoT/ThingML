@@ -52,7 +52,7 @@ import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 
 public class GoContext extends Context {
-	
+
 	private Map<String, GoSourceBuilder> generatedFiles = new HashMap<String, GoSourceBuilder>();
 	private Logger logger;
 	private GoNaming namer = new GoNaming();
@@ -65,7 +65,7 @@ public class GoContext extends Context {
                         "select","struct","switch","type","var");
 		this.logger = log;
 	}
-	
+
 
 	public GoSourceBuilder getSourceBuilder(String path) {
 		if (generatedFiles.containsKey(path))
@@ -76,7 +76,7 @@ public class GoContext extends Context {
 			return builder;
 		}
 	}
-	
+
 	@Override
 	public void writeGeneratedCodeToFiles() {
 		super.writeGeneratedCodeToFiles();
@@ -94,22 +94,22 @@ public class GoContext extends Context {
             e.printStackTrace();
 		}
 	}
-	
+
 	public Logger Logger() {
 		return this.logger;
 	}
-	
+
 	/* --- NEW naming helpers --- */
 	public GoNaming getNamer() {
 		return namer;
 	}
-	
+
 	public Element getNameFor(EObject object) {
 		return namer.getNameFor(object);
 	}
 	public Element getNameFor(String prefix, EObject object) {
 		return Section.Orphan("prefixedname").append(prefix).append(getNameFor(object));
-		
+
 	}
 	public Element getNameFor(EObject object, String postfix) {
 		return Section.Orphan("postfixedname").append(getNameFor(object)).append(postfix);
@@ -117,24 +117,24 @@ public class GoContext extends Context {
 	public Element getNameFor(String prefix, EObject object, String postfix) {
 		return Section.Orphan("prepostfixedname").append(prefix).append(getNameFor(object)).append(postfix);
 	}
-	
+
 	public Element getPointerNameFor(EObject object) {
 		return Section.Orphan("pointer").append(GoSourceBuilder.STAR_E).append(getNameFor(object));
 	}
-	
-	
+
+
 	/* --- Auto-casting --- */
 	public boolean shouldAutocast = false;
-	
+
 	/* --- Naming helpers --- */
 	public String getTypesPath() {
 		return "Types.go";
 	}
-	
+
 	public String getThingPath(Thing t) {
 		return "Thing"+t.getName()+".go";
 	}
-	
+
 	public String getConfigurationPath(Configuration cfg) {
 		return cfg.getName()+".go";
 	}
@@ -147,22 +147,22 @@ public class GoContext extends Context {
 			return new Element(AnnotatedElementHelper.firstAnnotation(t, "go_type"));
 		return new Element("interface{}");
 	}
-	
+
 	public Element addTypeRef(TypeRef ref, Section parent) {
 		if (ref.isIsArray()) parent.append("[]");
 		parent.append(getTypeName(ref.getType()));
 	}
 	*/
-	
+
 	/*
 	public String getMessageName(Message msg) {
 		return "Thing"+ThingMLHelpers.findContainingThing(msg).getName()+"Msg"+msg.getName();
 	}
-	
+
 	public String getPortName(Port prt) {
 		return "Thing"+ThingMLHelpers.findContainingThing(prt).getName()+"Port"+prt.getName();
 	}
-	
+
 	public String getStateContainerName(StateContainer sc) {
 		String name = "";
 		// Check the containing element
@@ -192,13 +192,13 @@ public class GoContext extends Context {
 		else return getStateContainerName((StateContainer)s.eContainer())+"State"+s.getName();
 	}
 	*/
-	
+
 	public static Element defaultInstanceStateName = GoSourceBuilder.STATE_E;
 	private Element currentInstanceStateName = defaultInstanceStateName;
 	public Element getCurrentInstanceStateName() { return this.currentInstanceStateName; }
 	public void setCurrentInstanceStatename(Element name) { this.currentInstanceStateName = name; }
 	public void resetCurrentInstanceStateName() { this.currentInstanceStateName = defaultInstanceStateName; }
-	
+
 	/* --- Port IDs --- */
 	private Map<Port,Integer> portIDs = new HashMap<Port, Integer>();
 	public Integer getPortID(Port prt) {
@@ -207,7 +207,7 @@ public class GoContext extends Context {
 		portIDs.put(prt, newID);
 		return newID;
 	}
-	
+
 	/* --- Thing contexts --- */
 	public ThingContext currentThingContext = null;
 
@@ -215,7 +215,7 @@ public class GoContext extends Context {
 	public ThingContext setCurrentThingContext(Thing thing) {
 		if (!this.thingContexts.containsKey(thing))
 			this.thingContexts.put(thing, new ThingContext(thing));
-		
+
 		this.currentThingContext = this.thingContexts.get(thing);
 		return this.currentThingContext;
 	}
@@ -225,36 +225,36 @@ public class GoContext extends Context {
 		this.currentThingContext = null;
 		return current;
 	}
-	
+
 	public static class ThingContext {
 		private Thing thing;
 		private Set<String> addedImports = new HashSet<String>();
 		private Section imports = null;
-		
+
 		public boolean messageUsedInTransition = false;
 		public boolean instanceUsedInInitialisation = false;
-		
+
 		private ThingContext(Thing thing) {
 			this.thing = thing;
 		}
-		
+
 		public void setImportsSection(Section imports) {
 			if (this.imports == null) this.imports = imports;
 		}
-		
+
 		public void addImports(String...imports) {
 			for (String i : imports)
 				if (this.addedImports.add(i))
 					this.imports.append("\""+i+"\"");
 		}
 	}
-	
+
 	public void currentThingImport(String...imports) {
 		if (this.currentThingContext != null)
 			this.currentThingContext.addImports(imports);
 	}
-	public void currentThingImportGosm() { this.currentThingImport("github.com/jakhog/gosm"); }
-	
+	public void currentThingImportGosm() { this.currentThingImport("github.com/SINTEF-9012/gosm"); }
+
 	/* --- Variable assignment type (for arrays mostly) --- */
 	private TypeRef currentVariableAssignmentType = null;
 	public TypeRef getCurrentVariableAssignmentType() {
@@ -266,14 +266,14 @@ public class GoContext extends Context {
 	public void resetCurrentVariableAssignmentType() {
 		this.currentVariableAssignmentType = null;
 	}
-	
+
 	/* --- Check if variable is used in an action block --- */
 	public boolean checkIfLocalVariableIsUsed(LocalVariable variable) {
 		ThingMLModel model = ThingMLHelpers.findContainingModel(variable);
 		return !EcoreUtil.UsageCrossReferencer.find(variable, model).isEmpty();
 	}
-	
-	
+
+
 	/* --- Some logging helpers --- */
 	public void println(String line) {
 		if (getCompiler() instanceof OpaqueThingMLCompiler) {

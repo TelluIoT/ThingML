@@ -49,17 +49,17 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 			exprs.putIfAbsent(propAssign.getIndex(), propAssign.getInit());
 			initExpressions.put(propAssign.getProperty(), exprs);
 		}
-		
+
 		// Initialize properties for included things
 		for (Thing included : thing.getIncludes())
 			generatePropertyInits(gctx, sec, included, inst, initExpressions);
-		
+
 		gctx.setCurrentInstanceStatename(gctx.getNameFor(inst));
 		// Finally, initialize our own properties
 		for (Property prop : thing.getProperties()) {
 			Map<Expression, Expression> exprs = initExpressions.getOrDefault(prop, new HashMap<Expression, Expression>());
 			exprs.putIfAbsent(null, prop.getInit());
-			
+
 			Expression init = exprs.get(null);
 			if (init != null) {
 				// Generate the init expression
@@ -76,7 +76,7 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 				gctx.getCompiler().getNewThingActionCompiler().generate(prop.getTypeRef().getCardinality(), arrInit.section("init"), gctx);
 				arrInit.append(")");
 			}
-			
+
 			if (prop.getTypeRef().isIsArray()) {
 				for(Entry<Expression, Expression> arrayElementInit : exprs.entrySet()) {
 					if (arrayElementInit.getKey() != null) {
@@ -95,29 +95,29 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		}
 		gctx.resetCurrentInstanceStateName();
 	}
-	
+
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
-		
+
 		GoSourceBuilder builder = gctx.getSourceBuilder(gctx.getConfigurationPath(cfg));
-		
+
 		// Add package
 		builder.append("package main").append("");
-		
+
 		// Add imports
 		Section importStatement = builder.appendSection("import").lines();
 		importStatement.append("import (");
 		Section imports = importStatement.appendSection("imports").lines().indent();
-		imports.append("\"github.com/jakhog/gosm\"");
+		imports.append("\"github.com/SINTEF-9012/gosm\"");
 		for (String imp : new HashSet<String>(AnnotatedElementHelper.annotation(cfg, "go_import")))
 			imports.append("\""+imp+"\"");
 		importStatement.append(")").append("");
-		
-		
+
+
 		// Add the initializer function
 		GoSection mainBody = builder.function(new Element("main")).body();
-		
+
 		// Construct all instances
 		mainBody.comment(" -- Construct instances -- ");
 		Section instancesConstructors = mainBody.appendSection("instanceconstructors").lines();
@@ -129,7 +129,7 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 				.append("()");
 		}
 		mainBody.append("");
-		
+
 		// Add connectors (if messages are sent during initialization)
 		mainBody.comment(" -- Create connectors -- ");
 		Section connectors = mainBody.appendSection("connectors").lines();
@@ -148,7 +148,7 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 		mainBody.append("");
-		
+
 		mainBody.comment(" -- Set instance properties -- ");
 		// Keep track of all final expressions to give properties for each instance
 		Map<Instance, Map<Property, Map<Expression, Expression>>> initExpressions = new HashMap<Instance, Map<Property, Map<Expression, Expression>>>();

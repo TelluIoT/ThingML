@@ -59,15 +59,18 @@ public class NodeJSCompiler extends JSCompiler {
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
         return "node:alpine";
     }
-    
+
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
         return "node\", \"main.js"; //Param main.js
     }
-    
+
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "COPY package.json package.json\n" +
+        return "RUN npm install state.js@5.11.0\n" +
+						"FROM node:alpine\n" +
+						"COPY --from=0 /node_modules .\n" +
+						"COPY package.json package.json\n" +
         		"RUN npm install --production\n" +
         		"COPY . .\n";
     }

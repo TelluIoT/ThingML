@@ -32,7 +32,7 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public class GoCompiler extends OpaqueThingMLCompiler {
-	
+
 	public GoCompiler() {
 		super(new GoThingActionCompiler(),
 			  new GoThingApiCompiler(),
@@ -60,7 +60,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 	public String getDescription() {
 		return "Generates Go code";
 	}
-	
+
 	private void generateEnumerations(ThingMLModel model, GoSourceBuilder builder, GoContext gctx) {
 		for (Enumeration enumeration : ThingMLHelpers.allEnumerations(model)) {
 			Section enumS = builder.appendSection("enumeration").lines();
@@ -72,7 +72,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 				enumT.append(gctx.getNameFor(enumeration.getTypeRef()));
 			else
 				enumT.append("int");
-				
+
 			Section constS = enumS.appendSection("consts").lines();
 			constS.appendSection("before")
 				  .append("const (");
@@ -89,11 +89,11 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 				} else {
 					value.append("iota");
 				}
-				
+
 				// FIXME: Remove this. Currently kept for backwards compatibility
 				if (AnnotatedElementHelper.hasAnnotation(literal, "enum_val"))
 					value.set(AnnotatedElementHelper.firstAnnotation(literal, "enum_val"));
-				
+
 			}
 			constS.appendSection("after")
 				  .append(")");
@@ -101,19 +101,19 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 	}
 
 	@Override
-	public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {		
+	public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
 		GoContext ctx = new GoContext(this, log);
-		
+
 		// Check if we should do auto-casting
 		if (AnnotatedElementHelper.isDefined(cfg, "go_autocast", "true")) {
 			ctx.shouldAutocast = true;
 		}
-		
+
 		// Generate types
 		GoSourceBuilder typesBuilder = ctx.getSourceBuilder(ctx.getTypesPath());
 		typesBuilder.append("package main").append("");
 		generateEnumerations(ThingMLHelpers.findContainingModel(cfg), typesBuilder, ctx);
-		
+
 		// Generate thing code
 		for (Thing t : ConfigurationHelper.allUsedThings(cfg)) {
 			ctx.setCurrentThingContext(t);
@@ -121,35 +121,35 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 			getThingImplCompiler().generateImplementation(t, ctx);
 			ctx.unsetCurrentThingContext(t);
 		}
-		
+
 		// Generate main function
 		getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 		getCfgBuildCompiler().generateDockerFile(cfg, ctx);
-		
+
 		// Resolve naming conflicts
 		ctx.getNamer().resolveAllConflicts();
-		
+
 		// Write the code to files
 		ctx.writeGeneratedCodeToFiles();
 		return true;
 	}
-	
+
 	@Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
         return "golang:alpine";
     }
-    
+
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
         return "/" + cfg.getName();
     }
-    
+
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
         return "RUN mkdir -p /go/src/" + cfg.getName() + "\n" +
         		"WORKDIR /go/src/" + cfg.getName() + "\n" +
         		"RUN apk add --no-cache build-base git\n" +
-        		"RUN go get github.com/jakhog/gosm\n" +
+        		"RUN go get github.com/SINTEF-9012/gosm\n" +
         		"COPY . .\n" +
         		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go\n" +
         		"FROM scratch\n" +
