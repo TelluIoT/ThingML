@@ -36,7 +36,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 		final StringBuilder b = new StringBuilder();
 		generate(msg, b, ctx);
 		if (actual != null) {
-			if (actual.getName().equals("Integer")) {
+			if (actual.getName().equals("Integer") || actual.getName().equals("Byte")) {
 				builder.append("fprintf(stderr, \"%i\"," + b.toString() + ");\n");
 			} else if (actual.getName().equals("Character")) {
 				builder.append("fprintf(stderr, \"%c\"," + b.toString() + ");\n");
@@ -63,7 +63,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 			final StringBuilder b = new StringBuilder();
 			generate(msg, b, ctx);
 			if (actual != null) {
-				if (actual.getName().equals("Integer")) {
+				if (actual.getName().equals("Integer") || actual.getName().equals("Byte")) {
 					builder.append("fprintf(stdout, \"%i\"," + b.toString() + ");\n");
 				} else if (actual.getName().equals("Character")) {
 					builder.append("fprintf(stdout, \"%c\"," + b.toString() + ");\n");
