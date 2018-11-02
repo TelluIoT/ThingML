@@ -30,7 +30,7 @@ import org.thingml.xtext.validation.TypeChecker;
 public class CThingActionCompilerPosix extends CThingActionCompiler {
 	@Override
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-		
+
 		for (Expression msg : action.getMsg()) {
 		Type actual = TypeChecker.computeTypeOf(msg);
 		final StringBuilder b = new StringBuilder();
@@ -49,11 +49,11 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 			} else {
 				builder.append("//Type " + actual.getName() + " is not handled in print action\n");
 			}
-			if (action.isLine()) builder.append("fprintf(stderr, \"\\n\");\n");
 		} else {
 			builder.append("//Error in type detection\n");
 		}
 		}
+		if (action.isLine()) builder.append("fprintf(stderr, \"\\n\");\n");
 	}
 
 	@Override
@@ -76,12 +76,11 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 				} else {
 					builder.append("//Type " + actual.getName() + " is not handled in print action\n");
 				}
-				if (action.isLine()) builder.append("fprintf(stdout, \"\\n\");\n");
 			} else {
 				builder.append("//Error in type detection\n");
 			}
 		}
-
+		if (action.isLine()) builder.append("fprintf(stdout, \"\\n\");\n");
 	}
 
 }
