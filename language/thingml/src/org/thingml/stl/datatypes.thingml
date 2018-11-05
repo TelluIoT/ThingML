@@ -1,3 +1,5 @@
+//FIXME: Java type are wrong... but it now works with the breakout game...
+
 /* ThingML Framework */
 
 /*****************************************************************************
@@ -12,7 +14,7 @@ datatype Byte<1>
 	@js_type "byte"
 	@java_primitive "true"
 	@go_type "byte";
-	
+
 datatype Char<1>
 	@type_checker "Byte"
 	@c_type "char"
@@ -29,18 +31,10 @@ datatype Boolean<1>
 	@java_primitive "true"
 	@go_type "bool";
 
-datatype Integer<2>
-	@type_checker "Integer"
-	@c_type "int"
-	@java_type "short"
-	@js_type "short"
-	@java_primitive "true"
-	@go_type "int16";
-
 datatype UInt8<1>
 	@type_checker "Integer"
 	@c_type "uint8_t"
-	@java_type "short"
+	@java_type "int"
 	@js_type "short"
 	@java_primitive "true"
 	@go_type "uint8";
@@ -48,8 +42,8 @@ datatype UInt8<1>
 datatype Int8<1>
 	@type_checker "Integer"
 	@c_type "int8_t"
-	@java_type "byte"
-	@js_type "byte"
+	@java_type "int"
+	@js_type "short"
 	@java_primitive "true"
 	@go_type "int8";
 
@@ -64,7 +58,7 @@ datatype UInt16<2>
 datatype Int16<2>
 	@type_checker "Integer"
 	@c_type "int16_t"
-	@java_type "short"
+	@java_type "int"
 	@js_type "short"
 	@java_primitive "true"
 	@go_type "int16";
@@ -72,7 +66,7 @@ datatype Int16<2>
 datatype Int32<4>
 	@type_checker "Integer"
 	@c_type "int32_t"
-	@java_type "int"
+	@java_type "long"
 	@js_type "int"
 	@java_primitive "true"
 	@go_type "int32";
