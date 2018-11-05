@@ -69,7 +69,6 @@ datatype Int16<2>
 	@java_primitive "true"
 	@go_type "int16";
 
-
 datatype Int32<4>
 	@type_checker "Integer"
 	@c_type "int32_t"
@@ -86,23 +85,7 @@ datatype UInt32<4>
 	@java_primitive "true"
 	@go_type "uint32";
 
-datatype Long<4>
-	@type_checker "Integer"
-	@c_type "long"
-	@java_type "int"
-	@js_type "int"
-	@java_primitive "true"
-	@go_type "int32";
-
-datatype ULong<4>
-	@type_checker "Integer"
-	@c_type "unsigned long"
-	@java_type "long"
-	@js_type "long"
-	@java_primitive "true"
-	@go_type "uint32";
-	
-datatype LongLong<8>
+datatype Int64<8>
 	@type_checker "Integer"
     @c_type "long long"
     @java_type "long"
@@ -125,7 +108,6 @@ datatype Double<8>
 	@js_type "double"
 	@java_primitive "true"
 	@go_type "float64";
-
 
 object String
 	@serializable
