@@ -281,7 +281,7 @@ A ThingML file can however be compiled (or transformed) to Java/JavaScript/C/Ard
 
 ### &#x1F539; How to express *this* or *that* in ThingML?
 
-A set of tutorials is available [here](https://github.com/HEADS-project/training/tree/master/1.ThingML_Basics). The tutorials describe the most common features of ThingML. In addition, [an extensive set of tests](testJar/src/main/resources/tests) describes pretty much all the concepts available. Have a look there is you wonder how to express something. Should this information be insufficient, have a look below.
+A set of tutorials is available [here](https://github.com/HEADS-project/training/tree/master/1.ThingML_Basics). The tutorials describe the most common features of ThingML. In addition, [an extensive set of tests](testing/src/test/resources/tests/General) describes pretty much all the concepts available. Have a look there is you wonder how to express something. Should this information be insufficient, have a look below.
 
 ### &#x1F539; How is ThingML formalized?
 
