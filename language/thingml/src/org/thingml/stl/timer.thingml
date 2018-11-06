@@ -110,7 +110,7 @@ thing TimerNodeJS includes Timer
 @js_dep "driftless:2.0.3" 
 {
   property Timeouts : JSArray = `{}` as JSArray
-  readonly property driftless : DriftLess = `require('driftless')`
+  readonly property driftless : DriftLess = `require('driftless')` as DriftLess
 
   function startTimer(id: UInt8, delay : UInt16) do
     `
@@ -386,9 +386,13 @@ thing TimerGo includes TimerMsgs
 		sends timer_timeout
 	}
 	
-	property Timers : TimerMap = `make(map[uint8]*time.Timer)`
+	property Timers : TimerMap
 
-    function startTimer(id: UInt8, delay : UInt32) do
+	function initialize() do
+		Timers = `make(map[uint8]*time.Timer)` as TimerMap
+	end
+
+    function startTimer(id: UInt8, delay : UInt16) do
     	cancel(id) `
     	`&Timers&`[`&id&`] = time.AfterFunc(time.Millisecond*time.Duration(`&delay&`), func() {
     		`timer!timer_timeout(id)`
@@ -403,6 +407,8 @@ thing TimerGo includes TimerMsgs
     ` end
 
     statechart SoftTimer init default {
+    	on entry initialize()
+    	
         state default {
           internal event m : timer?timer_start
             guard m.time > 0
