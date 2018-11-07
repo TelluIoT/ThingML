@@ -27,25 +27,4 @@ import org.thingml.xtext.thingML.PrintAction;
  */
 public class NodeJSThingActionCompiler extends JSThingActionCompiler {
 
-    @Override
-    public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-    	for (Expression msg : action.getMsg()) {
-		    builder.append("process.stderr.write(''+");
-		    generate(msg, builder, ctx);
-		    builder.append(");\n");
-    	}
-    	if (action.isLine())
-    		builder.append("process.stderr.write('\\n');\n");
-    }
-
-    @Override
-    public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-    	for (Expression msg : action.getMsg()) {
-	        builder.append("process.stdout.write(''+");
-	        generate(msg, builder, ctx);
-	        builder.append(");\n");
-    	}
-    	if (action.isLine())
-    		builder.append("process.stdout.write('\\n');\n");
-    }
 }
