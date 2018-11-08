@@ -33,8 +33,9 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	@Override
 	public void generateBuildScript(Configuration cfg, Context ctx) {
 		String json = "";
+		String nameKebabCase = cfg.getName().replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase();
 		for (String line : readResource("lib/package.json"))
-			json += line.replace("<NAME>", cfg.getName());
+			json += line.replace("<NAME>", nameKebabCase);
 		
 		JsonObject pkg = Json.parse(json).asObject();
 		JsonValue deps = pkg.get("dependencies");
