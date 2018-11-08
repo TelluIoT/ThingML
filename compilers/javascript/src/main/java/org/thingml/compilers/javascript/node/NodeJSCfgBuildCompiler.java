@@ -32,11 +32,24 @@ import com.eclipsesource.json.WriterConfig;
 public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	@Override
 	public void generateBuildScript(Configuration cfg, Context ctx) {
-		String json = "";
-		for (String line : readResource("lib/package.json"))
-			json += line.replace("<NAME>", cfg.getName());
 		
+		String json = String.join("", readResource("lib/package.json"));
 		JsonObject pkg = Json.parse(json).asObject();
+		
+		String nameKebabCase = cfg.getName().replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase();
+		pkg.set("name", nameKebabCase);
+		
+		pkg.set("description", AnnotatedElementHelper.annotationOrElse(
+				cfg, "nodejs_package_description", nameKebabCase +" configuration generated from ThingML"));
+		
+		pkg.set("version", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_version", "1.0.0"));
+		pkg.set("license", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_license", "Apache-2.0"));
+		pkg.set("repository", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_repository", ""));
+		
+		JsonObject author = pkg.get("author").asObject();
+		author.set("name", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_author_name", ""));
+		author.set("email", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_author_email", ""));
+		
 		JsonValue deps = pkg.get("dependencies");
 		
 		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
