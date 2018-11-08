@@ -1,11 +1,13 @@
 import "datatypes.thingml" from stl
 
-thing fragment rnd {
+thing fragment rnd 
+@stl {
   abstract function rnd() : Long
   abstract function rndMax(max : Long) : Long
 }
 
-thing rndJS includes rnd {
+thing rndJS includes rnd 
+@stl {
   function rnd() : Long do
     return `Math.random()`
   end
@@ -15,7 +17,8 @@ thing rndJS includes rnd {
   end
 }
 
-thing rndJava includes rnd {
+thing rndJava includes rnd 
+@stl {
   function rnd() : Long do
     return `Math.random()`
   end
@@ -25,7 +28,8 @@ thing rndJava includes rnd {
   end
 }
 
-thing rndArduino includes rnd {
+thing rndArduino includes rnd 
+@stl {
   function rnd() : Long do
     return `random(2147483647)`
   end
@@ -35,7 +39,8 @@ thing rndArduino includes rnd {
   end
 }
 
-thing rndGo includes rnd {
+thing rndGo includes rnd 
+@stl {
   function rnd() : Long do
     return `rand.Int31()`
   end
