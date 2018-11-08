@@ -77,22 +77,33 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
 			builder.append("");
 		}
 		
-		JSContext jctx = (JSContext)ctx;
-		Section instances = builder.section("instances").lines();
-		generateInstances(cfg, instances, jctx);
-		builder.append("/*$PLUGINS$*/");
+		boolean nodejsPackage = AnnotatedElementHelper.hasFlag(cfg, "nodejs_package");
+		Section main;
+		if (nodejsPackage) {
+			builder.append("module.exports = function(args) {");
+			main = builder.section("main").lines().indent();
+		} else {
+			main = builder;
+		}
 		
-		Section connectors = builder.section("connectors").lines();
+		JSContext jctx = (JSContext)ctx;
+		Section instances = main.section("instances").lines();
+		generateInstances(cfg, instances, jctx);
+		main.append("/*$PLUGINS$*/");
+		
+		Section connectors = main.section("connectors").lines();
         generateConnectors(cfg, connectors, jctx);
-        builder.append("/*$PLUGINS_CONNECTORS$*/");
+        main.append("/*$PLUGINS_CONNECTORS$*/");
+        
+        
         
         if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
         	// FIXME: What is going on here?
-			builder.append("nconf.save(function (err) {");
-        	builder.append("fs.readFile('config.json', function (err, data) {");
-        	builder.append("console.dir(JSON.parse(data.toString()))");
-        	builder.append("});");
-        	builder.append("});");
+			main.append("nconf.save(function (err) {");
+        	main.append("fs.readFile('config.json', function (err, data) {");
+        	main.append("console.dir(JSON.parse(data.toString()))");
+        	main.append("});");
+        	main.append("});");
 		}
         
         List<Instance> orderedInstances = ConfigurationHelper.orderInstanceInit(cfg);
@@ -100,28 +111,60 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
         while (!orderedInstances.isEmpty()) {
             inst = orderedInstances.get(orderedInstances.size() - 1);
             orderedInstances.remove(inst);
-            builder.append(inst.getName() + "._init();");
+            main.append(inst.getName() + "._init();");
         }
-        builder.append("/*$PLUGINS_END$*/");
-        builder.append("");
+        main.append("/*$PLUGINS_END$*/");
+        main.append("");
         
-        // Add hook that shuts down upon SIGIN
-        Section sigInt = builder.section("sigint-hook").lines();
-        sigInt.comment("terminate all things on SIGINT (e.g. CTRL+C)");
-        sigInt.append("process.on('SIGINT', function() {");
-        Section sigIntBody = sigInt.section("body").lines().indent();
+        
+        main.append("function terminate() {");
+        Section terminate = main.section("terminate").lines().indent();
+
         orderedInstances = ConfigurationHelper.orderInstanceInit(cfg);
         while (!orderedInstances.isEmpty()) {
             inst = orderedInstances.get(0);
             orderedInstances.remove(inst);
-            sigIntBody.append(inst.getName() + "._stop();");
-            sigIntBody.append(inst.getName() + "._delete();");            
+            terminate.append(inst.getName() + "._stop();");
+            terminate.append(inst.getName() + "._delete();");            
         }
-        sigIntBody.append("/*$STOP_PLUGINS$*/");
-        sigIntBody.append("setTimeout(() => {");
-        sigIntBody.section("timeout-body").lines().indent()
-                  .append("process.exit();");
-        sigIntBody.append("}, 1000);");
-        sigInt.append("});");
+        main.append("};");
+        
+
+        
+        if (nodejsPackage) {
+        	Section packageReturn = main.section("package-return").lines();
+        	packageReturn.append("return {");
+        	Section returnBlock = packageReturn.section("return-block").lines().indent();
+        	returnBlock.append("terminate,");
+        	returnBlock.append("instances: {");
+        	Section instancesBlock = returnBlock.section("instances").lines().indent();
+        	
+        	orderedInstances = ConfigurationHelper.orderInstanceInit(cfg);
+            while (!orderedInstances.isEmpty()) {
+                inst = orderedInstances.get(0);
+                orderedInstances.remove(inst);
+                instancesBlock.append(inst.getName() + ",");         
+            }
+            returnBlock.append("}");
+            packageReturn.append("};");
+			builder.append("};");
+		} else {
+	        // Add hook that shuts down upon SIGIN
+	        Section sigInt = main.section("sigint-hook").lines();
+	        sigInt.comment("terminate all things on SIGINT (e.g. CTRL+C)");
+	        sigInt.append("if (process && process.on) {");
+	        Section sigIntBody = sigInt.section("body").lines().indent();
+		    sigIntBody.append("process.on('SIGINT', function() {");
+		    Section sigIntCallback = sigIntBody.section("callback").lines().indent();
+	        orderedInstances = ConfigurationHelper.orderInstanceInit(cfg);
+	        sigIntCallback.append("terminate();");
+	        sigIntCallback.append("/*$STOP_PLUGINS$*/");
+	        sigIntCallback.append("setTimeout(() => {");
+	        sigIntCallback.section("timeout-body").lines().indent()
+	                  .append("process.exit();");
+	        sigIntCallback.append("}, 1000);");
+	        sigIntBody.append("});");
+	        sigInt.append("}");
+		}
 	}
 }
