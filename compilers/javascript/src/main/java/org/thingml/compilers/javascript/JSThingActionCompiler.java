@@ -133,7 +133,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(SendAction action, StringBuilder builder, Context ctx) {
 		if (!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-			builder.append("setImmediate(() => ");
+			builder.append("setImmediate(() => {");
 		}
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("bus.emit(");
@@ -144,7 +144,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		}
 		builder.append(")");
 		if (!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-			builder.append(")");
+			builder.append("})");
 		}
 		builder.append(";\n");
 	}
