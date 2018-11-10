@@ -28,8 +28,13 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
+
+import compilers.go.GoSourceBuilder.GoSection.Struct;
 
 public class GoCompiler extends OpaqueThingMLCompiler {
 
@@ -113,9 +118,21 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		GoSourceBuilder typesBuilder = ctx.getSourceBuilder(ctx.getTypesPath());
 		typesBuilder.append("package main").append("");
 		generateEnumerations(ThingMLHelpers.findContainingModel(cfg), typesBuilder, ctx);
+		
+		// Add messages
+		GoSourceBuilder msgBuilder = ctx.getSourceBuilder("messages.go");
+		msgBuilder.append("package main").append("");
+		msgBuilder.comment(" -- Messages -- ");
+		for (Message msg : ConfigurationHelper.allMessages(cfg)) {
+			Struct msgStruct = msgBuilder.struct(ctx.getNameFor(msg));
+			for (Parameter p : msg.getParameters())
+				msgStruct.addField(ctx.getNameFor(p), ctx.getNameFor(p.getTypeRef()));
+		}
+		msgBuilder.append("");
 
 		// Generate thing code
-		for (Thing t : ConfigurationHelper.allUsedThings(cfg)) {
+		for (Instance i : cfg.getInstances()) {
+			final Thing t = i.getType();
 			ctx.setCurrentThingContext(t);
 			getThingApiCompiler().generatePublicAPI(t, ctx);
 			getThingImplCompiler().generateImplementation(t, ctx);

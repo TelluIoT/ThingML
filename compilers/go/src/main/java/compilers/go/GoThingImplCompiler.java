@@ -22,6 +22,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
@@ -125,14 +126,14 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		}
 	}
 	
-	private void generateStateLinks(State state, GoSection initBody, GoSourceBuilder builder, GoContext gctx) {
+	private void generateStateLinks(Thing thing, State state, GoSection initBody, GoSourceBuilder builder, GoContext gctx) {
 		// Generate link to parent
 		if (state.eContainer() instanceof Thing)
 			initBody.appendSection("statelink")
 				.append("state")
 				.append(gctx.getNameFor(state))
 				.append(".")
-				.append(gctx.getNameFor(state.eContainer()))
+				.append(gctx.getNameFor(thing))
 				.append(" = instance");
 		else if (state.eContainer() instanceof State)
 			initBody.appendSection("statelink")
@@ -176,12 +177,12 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 			
 			// Build the state links for the children states
 			for (State child : cs.getSubstate())
-				generateStateLinks(child, initBody, builder, gctx);
+				generateStateLinks(thing, child, initBody, builder, gctx);
 			
 			// Initialize the structs for states in regions
 			for (Region reg : cs.getRegion())
 				for (State child : reg.getSubstate())
-					generateStateLinks(child, initBody, builder, gctx);
+					generateStateLinks(thing, child, initBody, builder, gctx);
 		}
 	}
 
@@ -480,14 +481,12 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 					.append(gctx.getNameFor(thing))
 					.append(" = instance");
 			for (State state : ses.getSubstate())
-				generateStateLinks(state, forkBody, builder, gctx);
+				generateStateLinks(thing, state, forkBody, builder, gctx);
 			
 			// Call the library to initialize ports and other necessities
 			forkBody.comment(" Fork component ");
 			forkBody.append(gctx.getNameFor("component := original.ForkComponent(session", ses, ")"));
 			forkBody.append("instance.Component = component");
-			for (Thing t : thing.getIncludes())
-				generateSessionIncludesComponenent(t, forkBody, gctx);
 			forkBody.append("original.LaunchSession(component)");
 			forkBody.append("return instance");
 		}
@@ -505,24 +504,14 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 				if (child instanceof CompositeState)
 					generateSessionForks(thing, (CompositeState)child, builder, gctx);
 	}
-	private void generateSessionIncludesComponenent(Thing thing, GoSection forkBody, GoContext gctx) {
-		Section included = forkBody.section("includedthingcomponent");
-		included.append("instance.").append(gctx.getNameFor(thing)).append(".Component")
-			    .append(" = component");
-		for (Thing t : thing.getIncludes())
-			generateSessionIncludesComponenent(t, forkBody, gctx);
-	}
 	
 	private void generateInternalPorts(Thing thing, GoSection body, GoContext gctx) {
-		for (Port port : thing.getPorts())
+		for (Port port : ThingMLHelpers.allPorts(thing))
 			if (port instanceof InternalPort)
 				body.appendSection("internalportconnector")
 					.append("gosm.InternalPort(instance.Component, ")
 					.append(gctx.getNameFor(port))
 					.append(")");
-		
-		for (Thing included : thing.getIncludes())
-			generateInternalPorts(included, body, gctx);
 	}
 	
 	
@@ -538,51 +527,31 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		gctx.currentThingImportGosm();
 		thingStruct.addField(Element.EMPTY, new Element("*gosm.Component"));
 		
-		for (Thing i : thing.getIncludes())
-			thingStruct.addField(Element.EMPTY, gctx.getPointerNameFor(i));
-		for (Property p : thing.getProperties())
+		for (Property p : ThingMLHelpers.allProperties(thing))
 			thingStruct.addField(gctx.getNameFor(p), gctx.getNameFor(p.getTypeRef()));
 		builder.append("");
 		
 		// Add functions
-		for (Function f : thing.getFunctions()) {
-			GoMethod func = builder.method(gctx.getNameFor(f), GoSourceBuilder.STATE_E , gctx.getPointerNameFor(thing));
+		for (Function f : ThingHelper.allConcreteFunctions(thing)) {
+			GoMethod func = builder.method(new Element(f.getName())/*gctx.getNameFor(f)*/, GoSourceBuilder.STATE_E , gctx.getPointerNameFor(thing));
 			for (Parameter p : f.getParameters())
 				func.addArgument(gctx.getNameFor(p), gctx.getNameFor(p.getTypeRef()));
 			if (f.getTypeRef() != null)
 				func.addReturns(Element.EMPTY, gctx.getNameFor(f.getTypeRef()));
 			
-			if (f.isAbstract()) {
-				Section abstractFunc = thingStruct.addField(gctx.getNameFor("abstract", f));
-				abstractFunc.append("func");
-				Section abstractArgs = abstractFunc.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-				for (Parameter p : f.getParameters())
-					abstractArgs.append(gctx.getNameFor(p.getTypeRef()));
-				if (f.getTypeRef() != null)
-					abstractFunc.append(" ").append(gctx.getNameFor(f.getTypeRef()));
-				
-				Section abstractCall = func.body().appendSection("abstractcall");
-				abstractCall.append("state.").append("abstract").append(gctx.getNameFor(f));
-				Section callArgs = abstractCall.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-				for (Parameter p : f.getParameters())
-					callArgs.append(gctx.getNameFor(p));
-				
-				if (f.getTypeRef() != null)
-					abstractCall.prepend("return ");
-			} else {
-				gctx.getCompiler().getNewThingActionCompiler().generate(f.getBody(), func.body(), gctx);
-			}
+			gctx.getCompiler().getNewThingActionCompiler().generate(f.getBody(), func.body(), gctx);
 		}
 		
 		// Add the behavioural parts
-		if (thing.getBehaviour() != null) {
+		if (ThingMLHelpers.allStateMachines(thing).get(0) != null) {
+			final CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
 			// Add the state structs
 			builder.comment(" -- States -- ");
-			generateStateStructs(thing, thing.getBehaviour(), builder, gctx);
+			generateStateStructs(thing, sm, builder, gctx);
 			
 			// Add the state handlers
 			builder.comment(" -- Handlers -- ");
-			generateStateHandlers(thing, thing.getBehaviour(), builder, gctx);
+			generateStateHandlers(thing, sm, builder, gctx);
 		}
 		
 		// Add the constructor function
@@ -593,104 +562,37 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		constBody.comment(" Create instance struct ");
 		constBody.section("instance").append("instance := &").append(gctx.getNameFor(thing)).append("{}");
 		
-		// Construct included things
-		constBody.comment(" Construct included ");
-		for (Thing i : thing.getIncludes()) {
-			Element includedStatechart = gctx.getNameFor(", statechart", i);
-			constBody.appendSection("included")
-				.append("instance").append(gctx.getNameFor(i))
-				.append(includedStatechart)
-				.append(" := new").append(gctx.getNameFor(i)).append("()");
-			constBody.section("").append("instance.").append(gctx.getNameFor(i)).append(" = instance").append(gctx.getNameFor(i));
-			if (i.getBehaviour() == null) includedStatechart.disable();
-		}
-		
-		// Bind abstract functions
-		if (!thing.isFragment()) {
-			constBody.comment(" Bind abstract functions ");
-			for (Thing i : ThingHelper.allIncludedThings(thing)) {
-				for (Function incf : i.getFunctions()) {
-					if (incf.isAbstract()) {
-						try {
-							// Get the actual function to call (to get the proper name)
-							Function actf = ThingHelper.getConcreteFunction(thing, incf);
-							// Create an anonymous function and call the actual one
-							Section abstractAssign = constBody.appendSection("abstractassign").lines();
-							Section before = abstractAssign.appendSection("before");
-							Section body = abstractAssign.appendSection("body").lines().indent();
-							Section after = abstractAssign.appendSection("after");
-							before.append("instance.").append(gctx.getNameFor(i))
-								  .append(".abstract").append(gctx.getNameFor(incf))
-								  .append(" = func");
-							Section abstractArgs = before.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-							for (Parameter p : actf.getParameters())
-								abstractArgs.section("argument").append(gctx.getNameFor(p)).append(" ").append(gctx.getNameFor(p.getTypeRef()));
-							if (actf.getTypeRef() != null)
-								before.append(gctx.getNameFor(" ", actf.getTypeRef()));
-							before.append(" {");
-							Section call = body.appendSection("call");
-							call.append(gctx.getNameFor("instance.", actf));
-							Section callArgs = call.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-							for (Parameter p : actf.getParameters())
-								callArgs.append(gctx.getNameFor(p));
-							if (actf.getTypeRef() != null)
-								call.prepend("return ");
-							after.append("}");
-						} catch (Exception e) {
-							throw new RuntimeException(e);
-						}
-					}
-				}
-			}
-		}
-		
 		// Construct behaviour
-		if (thing.getBehaviour() != null) {
+		if (ThingMLHelpers.allStateMachines(thing).get(0) != null) {
+			final CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
 			constBody.comment(" Initialize state structs ");
-			generateStateStructInitializers(thing.getBehaviour(), constBody, builder, gctx); // TODO: Check this
+			generateStateStructInitializers(sm, constBody, builder, gctx); // TODO: Check this
 			
 			constBody.comment(" Initialize regions ");
-			generateRegionInitializers(thing.getBehaviour(), constBody, builder, gctx); // TODO: Check this
+			generateRegionInitializers(sm, constBody, builder, gctx); // TODO: Check this
 			
 			constBody.comment(" Set state links ");
-			generateStateLinks(thing.getBehaviour(), constBody, builder, gctx); // TODO: Check this
+			generateStateLinks(thing, sm, constBody, builder, gctx); // TODO: Check this
 		}
 		
-		// Finally
-		if (thing.isFragment()) {
-			// Return the component struct, and the fragment statechart
-			//constructor.name.set("newFragment"+thing.getName());
-			if (thing.getBehaviour() != null) {
-				constructor.addReturns(Element.EMPTY, gctx.getPointerNameFor(thing.getBehaviour()));
-				constBody.append(gctx.getNameFor("return instance, state", thing.getBehaviour()));
-			} else {
-				constBody.append("return instance");
-			}
-		} else {
-			gctx.currentThingImportGosm();
+		gctx.currentThingImportGosm();
 			// Call the library to initialize ports and other necessities
-			constBody.comment(" Make component ");
-			Section arguments = constBody.appendSection("makecomponent").append("component := gosm.MakeComponent")
+		constBody.comment(" Make component ");
+		Section arguments = constBody.appendSection("makecomponent").append("component := gosm.MakeComponent")
 									.appendSection("arguments").surroundWith("(", ")").joinWith(", ");
-			// Size of the message channel buffer
-			arguments.append("100"); // TODO: Calculate this from port annotations as well
-			// All the statecharts
-			constBody.append("instance.Component = component");
-			if (thing.getBehaviour() != null)
-				arguments.append(gctx.getNameFor("state", thing.getBehaviour()));
-			
-			for (Thing i : thing.getIncludes()) {
-				constBody.section("").append("instance").append(gctx.getNameFor(i)).append(".Component = component");
-				if (i.getBehaviour() != null)
-					arguments.append(gctx.getNameFor("statechart", i));
-			}
-			
-			// Create internal port connectors
-			constBody.comment(" Internal ports ");
-			generateInternalPorts(thing, constBody, gctx); // TODO: Check this
+		// Size of the message channel buffer
+		arguments.append("100"); // TODO: Calculate this from port annotations as well
+		// All the statecharts
+		constBody.append("instance.Component = component");
+		if (ThingMLHelpers.allStateMachines(thing).get(0) != null)
+			arguments.append(gctx.getNameFor("state", ThingMLHelpers.allStateMachines(thing).get(0)));
 				
-			constBody.append("return instance");
-		}
+		// Create internal port connectors
+		constBody.comment(" Internal ports ");
+		generateInternalPorts(thing, constBody, gctx); // TODO: Check this
+				
+		constBody.append("return instance");
+		
 		builder.append("");
 		
 		// TODO: Only print this if the clone is actually used somewhere!
@@ -699,13 +601,9 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		cloner.addArgument(new Element("original"), gctx.getPointerNameFor(thing));
 		cloner.addReturns(Element.EMPTY, gctx.getPointerNameFor(thing));
 		StructInitializer cloneInit = cloner.body().structInitializer(new Element("clone"), gctx.getNameFor("&", thing));
-		// Clone included things
-		for (Thing included : thing.getIncludes()) {
-			Element includedName = gctx.getNameFor(included);
-			cloneInit.addField(includedName, Section.Orphan("").append("clone").append(includedName).append("(original.").append(includedName).append(")"));			
-		}
+
 		// Clone properties
-		for (Property property : thing.getProperties()) {
+		for (Property property : ThingMLHelpers.allProperties(thing)) {
 			Element propertyName = gctx.getNameFor(property);
 			if (property.getTypeRef().isIsArray()) {
 				// Arrays needs to be copied
@@ -718,9 +616,9 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 		cloner.body().append("return clone");
 		
 		// Add fork initializers for sessions
-		if (thing.getBehaviour() != null) {
+		if (ThingMLHelpers.allStateMachines(thing).get(0) != null) {
 			builder.comment(" -- Session forks -- ");
-			generateSessionForks(thing, thing.getBehaviour(), builder, gctx);
+			generateSessionForks(thing, ThingMLHelpers.allStateMachines(thing).get(0), builder, gctx);
 		}
 	}
 }
