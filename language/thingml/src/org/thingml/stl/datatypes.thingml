@@ -87,6 +87,14 @@ datatype Int64<8>
     @java_primitive "true"
     @go_type "int64";
 
+datatype Integer<2>
+	@type_checker "Integer"
+	@c_type "int16_t"
+	@java_type "int"
+	@js_type "short"
+	@java_primitive "true"
+	@go_type "int16";
+
 datatype Float<4>
 	@type_checker "Real"
 	@c_type "float"
