@@ -16,6 +16,9 @@
  */
 package compilers.go;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.builder.Section;
@@ -131,12 +134,16 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		msgBuilder.append("");
 
 		// Generate thing code
+		Set<String> generated = new HashSet<>(); 
 		for (Instance i : cfg.getInstances()) {
 			final Thing t = i.getType();
-			ctx.setCurrentThingContext(t);
-			getThingApiCompiler().generatePublicAPI(t, ctx);
-			getThingImplCompiler().generateImplementation(t, ctx);
-			ctx.unsetCurrentThingContext(t);
+			if (!generated.contains(t.getName())) {
+				generated.add(t.getName());
+				ctx.setCurrentThingContext(t);
+				getThingApiCompiler().generatePublicAPI(t, ctx);
+				getThingImplCompiler().generateImplementation(t, ctx);
+				ctx.unsetCurrentThingContext(t);
+			}
 		}
 
 		// Generate main function

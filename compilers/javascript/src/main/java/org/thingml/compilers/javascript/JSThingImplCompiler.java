@@ -172,7 +172,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	/* ----- Statemachine building methods ----- */
 	@Override
 	protected void generateStateMachine(CompositeState sm, Section section, Context ctx) {
-		StateJSState statemachine = JSSourceBuilder.stateJSState(section, sm.getName() != null ? sm.getName() : "default", "StateMachine");
+		StateJSState statemachine = JSSourceBuilder.stateJSState(section, sm.getName() != null ? sm.getName() : "default_statemachine", "State");
 		statemachine.assignTo("this._statemachine");
 		generateActionsForState(sm, statemachine, ctx);
 		
@@ -297,8 +297,6 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		StateJSState state = JSSourceBuilder.stateJSState(section, s.getName(), "State");
 		state.assignTo("let " + ThingMLElementHelper.qname(s, "_"));
 		state.setParent(containerName);
-		
-		if (s instanceof FinalState) state.setType("FinalState");
 		
 		generateActionsForState(s, state, ctx);
 	}
