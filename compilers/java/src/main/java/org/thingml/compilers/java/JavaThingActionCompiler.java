@@ -301,13 +301,13 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		for (Expression msg : action.getMsg()) {
 			final Type actual = TypeChecker.computeTypeOf(msg);
 			builder.append("System.err.print(");
-			if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
+			/*if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
 				builder.append("String.format(\"0x%02X\",(");
 				generate(msg, builder, ctx);
 				builder.append("))");
-			} else {
+			} else {*/
 				generate(msg, builder, ctx);
-			}
+			/*}*/
 			builder.append(");\n");
 		}
 		if (action.isLine())
@@ -323,13 +323,13 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		for (Expression msg : action.getMsg()) {
 			final Type actual = TypeChecker.computeTypeOf(msg);
 			builder.append("System.out.print(");
-			if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
+			/*if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
 				builder.append("String.format(\"0x%02X\",(");
 				generate(msg, builder, ctx);
 				builder.append("))");
-			} else {
+			} else {*/
 				generate(msg, builder, ctx);
-			}
+			/*}*/
 			builder.append(");\n");
 		}
 		if (action.isLine())

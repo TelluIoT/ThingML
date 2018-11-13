@@ -221,7 +221,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 			// FIXME: Why isn't this code re-using the generateStateMachine??
 			// FIXME: It also seems like regions inside sessions should not work in JavaScript here...
 			Session sm = (Session)cs;
-			StateJSState statemachine = JSSourceBuilder.stateJSState(section, sm.getName() != null ? sm.getName() : "default", "StateMachine");
+			StateJSState statemachine = JSSourceBuilder.stateJSState(section, sm.getName() != null ? sm.getName() : "default_statemachine", "State"); 
 			statemachine.assignTo("this._statemachine");
 			
 			StateJSState initial = JSSourceBuilder.stateJSState(section, "_initial", "PseudoState");
