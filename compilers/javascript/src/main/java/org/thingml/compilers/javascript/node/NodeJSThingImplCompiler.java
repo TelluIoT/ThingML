@@ -33,23 +33,20 @@ public class NodeJSThingImplCompiler extends JSThingImplCompiler {
 	@Override
 	protected Section createMainSection(Thing thing, JSSourceBuilder builder, JSContext jctx) {
 		builder.append("'use strict';").append("");
-		
+
 		Section imports = builder.section("imports").lines();
-        if (jctx.getContextAnnotation("hasEnum") != null && jctx.getContextAnnotation("hasEnum").equals("true")) {
-        	imports.append("const Enum = require('./enums');");
-        }
-        imports.append("const StateJS = require('state.js');");
-        imports.append("const EventEmitter = require('events').EventEmitter;");
-        builder.append("");
-        
-        builder.append("StateJS.internalTransitionsTriggerCompletion = true;");
-        builder.append("");
-        
-        Section main = builder.section("main").lines();
+		if (jctx.getContextAnnotation("hasEnum") != null && jctx.getContextAnnotation("hasEnum").equals("true")) {
+			imports.append("const Enum = require('./enums');");
+		}
+		imports.append("const StateJS = require('@steelbreeze/state');");
+		imports.append("const EventEmitter = require('events').EventEmitter;");
+		builder.append("");
 
-        builder.append("module.exports = " + jctx.firstToUpper(thing.getName()) + ";");
+		Section main = builder.section("main").lines();
 
-        return main;
+		builder.append("module.exports = " + jctx.firstToUpper(thing.getName()) + ";");
+
+		return main;
 	}
 
 	@Override

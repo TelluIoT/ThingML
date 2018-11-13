@@ -107,8 +107,8 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         	{
         		JSFunction initFunction = thingClass.addMethod("_init");
         		Section body = initFunction.body();
-        		body.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance\");")
-        			.append("StateJS.initialise(this._statemachine, this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance);")
+        		body.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() +
+        				"_instance = new StateJS.Instance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance\", this._statemachine);")
         			.append("this.ready = true;");
         	}
         	{
@@ -118,7 +118,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         		body.comment("msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}");
         		body.append("if (this.ready) {");
         		Section ifReady = body.section("if").lines().indent();
-        		ifReady.append("StateJS.evaluate(this._statemachine, this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);");
+        		ifReady.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance.evaluate(msg);");
         		if(ThingHelper.hasSession(thing))
         			ifReady.append("this.forks.forEach(function(fork){")
         			       .section("foreach").lines().indent()
