@@ -1,12 +1,14 @@
 import "datatypes.thingml" from stl
 
-thing fragment TimerMsgs {
+thing fragment TimerMsgs 
+@stl {
 	message timer_start(id : UInt8, time : UInt16);
 	message timer_cancel(id : UInt8);
 	message timer_timeout(id : UInt8);
 }
 
-thing fragment TimerClientPort includes TimerMsgs {
+thing fragment TimerClientPort includes TimerMsgs 
+@stl {
 	
 	required port timer {
 		sends timer_start, timer_cancel
@@ -14,7 +16,8 @@ thing fragment TimerClientPort includes TimerMsgs {
 	}
 }
 
-thing fragment Timer includes TimerMsgs {
+thing fragment Timer includes TimerMsgs 
+@stl {
 	
 	provided port timer {
 		receives timer_start, timer_cancel
@@ -23,6 +26,7 @@ thing fragment Timer includes TimerMsgs {
 }
 
 thing TimerJava includes Timer
+@stl
 @java_import "import java.util.*;"
 @java_features "
 	Hashtable<Integer, TimerTask> tasks = new Hashtable<Integer, TimerTask>();
@@ -62,7 +66,7 @@ thing TimerJava includes Timer
 object JSArray;
 
 thing TimerJS includes Timer
-{
+@stl {
 
   property Timeouts : JSArray = `{}` as JSArray
 
@@ -107,6 +111,7 @@ thing TimerJS includes Timer
  */
 object DriftLess;
 thing TimerNodeJS includes Timer
+@stl 
 @js_dep "driftless:2.0.3" 
 {
   property Timeouts : JSArray = `{}` as JSArray
@@ -149,7 +154,7 @@ thing TimerNodeJS includes Timer
 }
 
 thing TimerPosix includes Timer
-
+@stl 
 @c_header `
 #include <time.h>
 #include <unistd.h>
@@ -278,7 +283,7 @@ pthread_mutex_t Timer_mut;`
 }
 
 thing TimerArduino includes Timer
-
+@stl 
 @c_header `
 #define NB_SOFT_TIMERS 16
 `
@@ -379,6 +384,7 @@ object TimerMap @go_type `map[uint8]*time.Timer`
 
 // Manage a set of software timers.
 thing TimerGo includes TimerMsgs
+@stl 
 @go_import `time`
 {
 	provided port timer {

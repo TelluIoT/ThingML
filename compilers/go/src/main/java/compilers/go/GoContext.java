@@ -35,20 +35,11 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.LocalVariable;
-import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.Region;
-import org.thingml.xtext.thingML.Session;
-import org.thingml.xtext.thingML.State;
-import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 
 public class GoContext extends Context {
@@ -138,60 +129,6 @@ public class GoContext extends Context {
 	public String getConfigurationPath(Configuration cfg) {
 		return cfg.getName()+".go";
 	}
-
-	/*
-	public Element getTypeName(Type t) {
-		if (t instanceof Enumeration)
-			return getNameFor(t);
-		if (AnnotatedElementHelper.hasAnnotation(t, "go_type"))
-			return new Element(AnnotatedElementHelper.firstAnnotation(t, "go_type"));
-		return new Element("interface{}");
-	}
-
-	public Element addTypeRef(TypeRef ref, Section parent) {
-		if (ref.isIsArray()) parent.append("[]");
-		parent.append(getTypeName(ref.getType()));
-	}
-	*/
-
-	/*
-	public String getMessageName(Message msg) {
-		return "Thing"+ThingMLHelpers.findContainingThing(msg).getName()+"Msg"+msg.getName();
-	}
-
-	public String getPortName(Port prt) {
-		return "Thing"+ThingMLHelpers.findContainingThing(prt).getName()+"Port"+prt.getName();
-	}
-
-	public String getStateContainerName(StateContainer sc) {
-		String name = "";
-		// Check the containing element
-		if (sc.eContainer() instanceof Thing) {
-			// This should be the top-level statechart
-			name += "Thing"+((Thing)sc.eContainer()).getName()+"Statechart";
-		} else {
-			// This is within another state container, add its name
-			name += getStateContainerName((StateContainer)sc.eContainer());
-			// Also add the type of ourself
-			if (sc instanceof CompositeState) name += "Composite";
-			else if (sc instanceof Region) name += "Region";
-			else if (sc instanceof Session) name += "Session";
-		}
-		// Check the name of the current element
-		if (sc.getName() != null) {
-			name += sc.getName();
-		} else if (sc instanceof Region) {
-			// Find the region number in the parent array
-			CompositeState parent = (CompositeState)sc.eContainer();
-			name += parent.getRegion().indexOf(sc);
-		}
-		return name;
-	}
-	public String getStateName(State s) {
-		if (s instanceof StateContainer) return getStateContainerName((StateContainer)s);
-		else return getStateContainerName((StateContainer)s.eContainer())+"State"+s.getName();
-	}
-	*/
 
 	public static Element defaultInstanceStateName = GoSourceBuilder.STATE_E;
 	private Element currentInstanceStateName = defaultInstanceStateName;

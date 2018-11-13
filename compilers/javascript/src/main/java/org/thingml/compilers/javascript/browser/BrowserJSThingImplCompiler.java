@@ -33,10 +33,7 @@ public class BrowserJSThingImplCompiler extends JSThingImplCompiler {
 	@Override
 	protected Section createMainSection(Thing thing, JSSourceBuilder builder, JSContext jctx) {
 		builder.append("'use strict';").append("");
-        
-        builder.append("StateJS.internalTransitionsTriggerCompletion = true;");
-        builder.append("");
-        
+                
         Section main = builder.section("main").lines();
         
         return main;

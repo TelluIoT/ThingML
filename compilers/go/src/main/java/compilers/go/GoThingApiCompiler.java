@@ -16,16 +16,17 @@
  */
 package compilers.go;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Thing;
-
-import compilers.go.GoSourceBuilder.GoSection.Struct;
 
 public class GoThingApiCompiler extends ThingApiCompiler {
 	@Override
@@ -46,26 +47,21 @@ public class GoThingApiCompiler extends ThingApiCompiler {
 		importStatement.append(")").append("");
 		
 		// Imports from annotations
-		for (String annotationImport : AnnotatedElementHelper.annotation(thing, "go_import"))
+		Set<String> imp = new HashSet<>();
+		imp.addAll(AnnotatedElementHelper.annotation(thing, "go_import"));
+		for(Thing include : ThingHelper.allIncludedThings(thing))
+			imp.addAll(AnnotatedElementHelper.annotation(include, "go_import"));
+		for (String annotationImport : imp)
 			gctx.currentThingImport(annotationImport);
-		
-		// Add messages
-		builder.comment(" -- Messages -- ");
-		for (Message msg : thing.getMessages()) {
-			Struct msgStruct = builder.struct(gctx.getNameFor(msg));
-			for (Parameter p : msg.getParameters())
-				msgStruct.addField(gctx.getNameFor(p), gctx.getNameFor(p.getTypeRef()));
-		}
-		builder.append("");
 		
 		// Add ports
 		builder.comment(" -- Ports -- ");
-		if (!thing.getPorts().isEmpty()) {
+		if (!ThingMLHelpers.allPorts(thing).isEmpty()) {
 			Section portsConst = builder.appendSection("ports").lines();
 			portsConst.appendSection("before").append("const (");
 			Section ports = portsConst.appendSection("body").lines().indent();
 			portsConst.append(")");
-			for (Port p : thing.getPorts()) {
+			for (Port p : ThingMLHelpers.allPorts(thing)) {
 				ports.section("port").append(gctx.getNameFor(p)).append(" = ").append(gctx.getPortID(p));
 			}
 		}
