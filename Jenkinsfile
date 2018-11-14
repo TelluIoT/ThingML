@@ -1,3 +1,5 @@
+properties( [ buildDiscarder(logRotator(numToKeepStr: '20'))])
+
 timeout(60) {
 	node {
 	   stage('Downloading changes') { // for display purposes
