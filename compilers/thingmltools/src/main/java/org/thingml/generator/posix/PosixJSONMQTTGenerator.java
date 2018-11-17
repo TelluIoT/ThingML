@@ -213,14 +213,48 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	b.append(template.trim());
     }
     
-    public void generate_parsing_param(Port p, Message m, Parameter param, StringBuilder b) {
-    	String template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam.thingml");
+    public void generate_parsing_param(Port p, Message m, Parameter param, StringBuilder builder) {
+    	
+    	String template = "// UNSUPORTED PARAMERTER TYPE FOR /*PARAMNAME*/ (" + getCType(param.getTypeRef().getType()) + ")\n";
+    	
+        switch (getCType(param.getTypeRef().getType())) {
+        case "int8_t":
+        case "int16_t":
+        case "int32_t":
+        case "int64_t":
+        case "int":
+        case "byte":
+        case "long":
+        case "long int":
+        case "uint8_t":
+        case "uint16_t":
+        case "uint32_t":
+        case "uint64_t":
+        case "unsigned int":
+        case "unsigned long int":
+        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_integer.thingml");
+            break;
+        case "float":
+        case "double":
+        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_double.thingml");
+            break;
+        case "bool":
+        case "boolean":
+        case "char":
+        case "long long":
+        case "long long int":
+        case "unsigned long long":
+        case "unsigned long long int":
+        case "time_t":
+        // All other unsupported types
+        default:
+            break;
+        }
+        
     	template = template.replace("/*MSG_NAME*/", m.getName());
     	template = template.replace("/*PARAMNAME*/", param.getName());
-    	
-    	//TODO: Proper parsing according to the type of the parameter
-    	
-    	b.append(template.trim());
+    	builder.append(template.trim());
+
     }
     
     
