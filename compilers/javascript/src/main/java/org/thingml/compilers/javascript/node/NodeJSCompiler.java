@@ -62,7 +62,7 @@ public class NodeJSCompiler extends JSCompiler {
 
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
-        return "node\", \"main.js"; //Param main.js
+        return "node\", \"--expose-gc\", \"main.js"; //Param main.js
     }
 
     @Override
