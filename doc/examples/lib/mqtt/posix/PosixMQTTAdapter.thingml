@@ -5,7 +5,7 @@ object Mosquitto
 	@c_byte_size "*"
 	
 
-thing PosixMQTTAdapter includes MQTTAdapterMsgs
+thing PosixMQTTAdapter includes AbstractMQTTAdapter
 @c_header "
 #include <errno.h>
 #include <stdio.h>
@@ -16,37 +16,19 @@ thing PosixMQTTAdapter includes MQTTAdapterMsgs
 #include <math.h>
 #include <time.h>
 #include <mosquitto.h>"
-
 @c_global ""
 {
-	provided port mqtt 
-	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
-	{
-		receives mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix, mqtt_set_tls_certificates
-		sends mqtt_connected, mqtt_disconnected, mqtt_message
-	}
 	
 	property client : Mosquitto = `NULL`
 	
-	property broker_host : String = `NULL`
-	property broker_port : UInt16 = 1883
-	
-	property client_id : String = `NULL`
-	
-	property tls : Boolean = false
-	property username : String = `NULL`
-	property password : String = `NULL`
-	
-	property cafile : String = `NULL`
-	property capath : String = `NULL`
-	property certfile : String = `NULL`
-	property keyfile : String = `NULL`
-	
-	
-	property topic_prefix : String = `NULL`
-	
-	//readonly property will_topic : String = `NULL`
-	//readonly property will_string : String = `NULL`
+	function init_properties() do
+		username = `NULL`
+		password = `NULL`
+		cafile = `NULL`
+		capath = `NULL`
+		certfile = `NULL`
+		keyfile = `NULL`
+	end
 
 	function setTopicPrefix(src : String) do
 		`if (`&topic_prefix&` != NULL) free(`&topic_prefix&`);
@@ -241,12 +223,12 @@ thing PosixMQTTAdapter includes MQTTAdapterMsgs
 		return true
 	end
 
-	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) do
+	function mqtt_publish(topic : String, payload: Buffer, size : UInt16, qos: UInt8, retain : Boolean) do
 		`char top[256];`
 		if (topic_prefix != `NULL`) `snprintf(top, 256, "%s/%s", `&topic_prefix&`, `&topic&`);`
 		else `snprintf(top, 256, "%s", `&topic&`);`
 
-		var status : Integer = `mosquitto_publish(`&client&`, NULL, top, `&size&`, `&payload&`, 1, 0)`
+		var status : Integer = `mosquitto_publish(`&client&`, NULL, top, `&size&`, `&payload&`, `&qos&`, `&retain&`)`
 		if (status != `MOSQ_ERR_SUCCESS`) do
     		error "[MQTT] Error publishing message (mosquitto_publish returned " error status error ")\n"
     	end
@@ -259,13 +241,15 @@ thing PosixMQTTAdapter includes MQTTAdapterMsgs
 		if (topic_prefix != `NULL`) `snprintf(top, 256, "%s/%s", `&topic_prefix&`, `&topic&`);`
 		else `snprintf(top, 256, "%s", `&topic&`);`
 	
-		var status : Integer = `mosquitto_subscribe(`&client&`, NULL, top, 1)`
+		var status : Integer = `mosquitto_subscribe(`&client&`, NULL, top, 0)`
 		if (status != `MOSQ_ERR_SUCCESS`) do
     		error "[MQTT] Error subscribing to topic (mosquitto_subscribe returned " error status error ")\n"
     	end
 	end
 	
 	statechart MQTTAdapterThing init Start {
+		
+		on entry init_properties()
 		
 		internal event m: mqtt?mqtt_set_credentials action do
 			username = m.usr
@@ -292,7 +276,11 @@ thing PosixMQTTAdapter includes MQTTAdapterMsgs
 		end
 		
 		internal event m : mqtt?mqtt_publish action do
-			mqtt_publish(m.topic, m.payload, m.size)
+			mqtt_publish(m.topic, m.payload, m.size, 0, false)
+		end
+		
+		internal event m : mqtt?mqtt_publish_with_qos action do
+			mqtt_publish(m.topic, m.payload, m.size, m.qos, m.retain)
 		end
 		
 		internal event m : mqtt?mqtt_subscribe action do

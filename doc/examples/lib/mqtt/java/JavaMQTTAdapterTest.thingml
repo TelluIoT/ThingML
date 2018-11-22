@@ -38,6 +38,7 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 		
 		state DISCONNECTED {
 			transition -> CONNECTED event mqtt?mqtt_connected action print "Client got mqtt_connected\n"
+			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"
 		}
 		
 		state CONNECTED {
@@ -55,7 +56,7 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 			end
 			
 			internal event m:mqtt?mqtt_message action do
-				`System.out.println("RCV topic:"+`&m.topic&`+" payload:" + `&m.payload&`);`
+				`System.out.println("RCV topic:"+`&m.topic&`+" payload:" + new String(`&m.payload&`, java.nio.charset.StandardCharsets.UTF_8));`
 			end
 			
 			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"

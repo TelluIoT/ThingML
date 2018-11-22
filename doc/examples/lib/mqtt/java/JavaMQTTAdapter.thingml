@@ -1,16 +1,16 @@
 import "../MQTTAdapterMsgs.thingml"
 
 object MQTTMessage 
-	@java_type "org.eclipse.paho.client.mqttv3.MqttMessage"
+	@java_type `org.eclipse.paho.client.mqttv3.MqttMessage`
 
 object Throwable 
-	@java_type "Throwable"
+	@java_type `Throwable`
 	
 object IMqttDeliveryToken
-	@java_type "IMqttDeliveryToken"
+	@java_type `IMqttDeliveryToken`
 
-thing JavaMQTTAdapter includes MQTTAdapterMsgs
-@maven_dep "		
+thing JavaMQTTAdapter includes AbstractMQTTAdapter
+@maven_dep `		
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
 			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
@@ -21,31 +21,18 @@ thing JavaMQTTAdapter includes MQTTAdapterMsgs
 			<groupId>org.json</groupId>
 			<artifactId>org.json</artifactId>
 			<version>chargebee-1.0</version>
-		</dependency>"
+		</dependency>`
 
-@java_interface "org.eclipse.paho.client.mqttv3.MqttCallbackExtended"
-@java_import "import java.util.logging.Logger;"
-@java_import "import java.util.logging.Level;"
-@java_import "import org.eclipse.paho.client.mqttv3.*;"
-@java_import "import org.eclipse.paho.client.mqttv3.persist.*;"
-@java_features "org.eclipse.paho.client.mqttv3.MqttClient clientPub, clientSub;"
+@java_interface `org.eclipse.paho.client.mqttv3.MqttCallbackExtended`
+@java_import `import java.util.logging.Logger;`
+@java_import `import java.util.logging.Level;`
+@java_import `import org.eclipse.paho.client.mqttv3.*;`
+@java_import `import org.eclipse.paho.client.mqttv3.persist.*;`
+@java_features `org.eclipse.paho.client.mqttv3.MqttAsyncClient mqttAsyncClient;`
 {
-	provided port mqtt 
-	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
-	{
-		receives mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix 
-		sends mqtt_connected, mqtt_disconnected, mqtt_message
-	}
-	
+
 	property broker_uri : String = "tcp://localhost:1883"
 
-	
-	property client_id : String = `null`
-	
-	property username : String = `null`
-	property password : String = `null`
-	
-	property topic_prefix : String = `null`
 	
 	function setTopicPrefix(src : String) do
 		topic_prefix = src
@@ -58,6 +45,7 @@ thing JavaMQTTAdapter includes MQTTAdapterMsgs
 		    `MqttConnectOptions connOpts = new MqttConnectOptions();`
 	        `connOpts.setCleanSession(true);`
 	        `connOpts.setAutomaticReconnect(true);`
+	         `connOpts.setAutomaticReconnect(true);`
 	        
 	        if (username != `null` and password != `null`) do
 	        	`connOpts.setUserName(`&username&`);`
@@ -68,14 +56,26 @@ thing JavaMQTTAdapter includes MQTTAdapterMsgs
 	        	client_id = `MqttClient.generateClientId()`
 	        end
 		    
-		    `clientSub = new MqttClient(`&broker_uri&`, `&client_id&` + "_Sub", persistence);`
-	        `clientPub = new MqttClient(`&broker_uri&`, `&client_id&` + "_Pub", persistence);`
+		    `mqttAsyncClient = new MqttAsyncClient(`&broker_uri&`, `&client_id&` + "_Sub", persistence);`
 		    
 		    // For now we are only monitoring the connection on the subscriber client
-		    `clientSub.	setCallback(this);`
+		    `mqttAsyncClient.setCallback(this);`
 		    
-		    `clientSub.connect(connOpts);`
-	        `clientPub.connect(connOpts);`
+		    
+		    // Connect and collect associated callbacks
+		    `IMqttToken mqttConnectToken = mqttAsyncClient.connect(connOpts, null, new IMqttActionListener() {
+					@Override
+					public void onSuccess(IMqttToken asyncActionToken) {
+						`mqtt!mqtt_connected()`
+					}
+				
+					@Override
+					public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+						`mqtt!mqtt_error()`
+						`mqtt!mqtt_disconnected()`
+						exception.printStackTrace();
+					}
+				});`
 	        
 	    `} catch (org.eclipse.paho.client.mqttv3.MqttException ex) {`
             `Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
@@ -85,12 +85,27 @@ thing JavaMQTTAdapter includes MQTTAdapterMsgs
 	end
 
 	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) : Boolean do
-		if (`clientPub == null`) return false
+		if (`mqttAsyncClient == null`) return false
         `try {
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Publish: " + `&topic&` + " -> " + new String(`&payload&`));
+            //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Publish: " + `&topic&` + " -> " + new String(`&payload&`));
+            
             MqttMessage message = new MqttMessage(`&payload&`);
-            if (`&topic_prefix&` != null) clientPub.publish(`&topic_prefix&` + `&topic&`, message);
-            else clientPub.publish(`&topic&`, message);
+            String fulltopic = `&topic&`;
+            if (`&topic_prefix&` != null) fulltopic = `&topic_prefix&` + fulltopic;
+            
+            mqttAsyncClient.publish(fulltopic, message, null, new IMqttActionListener() {
+					@Override
+					public void onSuccess(IMqttToken asyncActionToken) {
+						`mqtt!mqtt_message_published()`
+					}
+				
+					@Override
+					public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+						`mqtt!mqtt_error()`
+						exception.printStackTrace();
+					}
+				});
+        
         } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
             return false
@@ -100,11 +115,11 @@ thing JavaMQTTAdapter includes MQTTAdapterMsgs
 
 
 	function mqtt_subscribe(topic : String) : Boolean do
-		if (`clientSub == null`) return false
+		if (`mqttAsyncClient == null`) return false
         `try {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Subscribe: " + `&topic&`);
-            if (`&topic_prefix&` != null) clientSub.subscribe(`&topic_prefix&` + `&topic&`);
-            else clientSub.subscribe(`&topic&`);
+            if (`&topic_prefix&` != null) mqttAsyncClient.subscribe(`&topic_prefix&` + `&topic&`, 0);
+            else mqttAsyncClient.subscribe(`&topic&`, 0);
         } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
             return false
@@ -112,30 +127,33 @@ thing JavaMQTTAdapter includes MQTTAdapterMsgs
         return true
 	end
 	
-	function messageArrived(topic : String, m : MQTTMessage) @override "true" @java_visibility "public"
+	function messageArrived(topic : String, m : MQTTMessage) 
+		@override "true" 
+		@java_visibility "public"
 	do
-		print "Message arrived on topic "
-		print topic
-		print "\n"
+		mqtt!mqtt_message(topic, ``&m&`.getPayload()`, ``&m&`.getPayload().length`)
 	end
 	
-	function connectionLost(t : Throwable) @override "true" @java_visibility "public"
+	function connectionLost(t : Throwable) 
+		@override "true" 
+		@java_visibility "public"
 	do
-		print "connectionLost \n"
 		mqtt!mqtt_disconnected()
 	end
 	
-	function deliveryComplete(imdt : IMqttDeliveryToken) @override "true" @java_visibility "public"
+	function deliveryComplete(imdt : IMqttDeliveryToken) 
+		@override "true"
+		@java_visibility "public"
 	do
-		print "deliveryComplete \n"	
+		// Handled in IMqttActionListener
 	end
 	
-	function connectComplete(reconnect : Boolean, serverURI : String) @override "true" @java_visibility "public"
+	function connectComplete(reconnect : Boolean, serverURI : String) 
+		@override "true"
+		@java_visibility "public"
 	do
-		print "connectComplete \n"
-		mqtt!mqtt_connected()
+		// Handled in IMqttActionListener
 	end
-	
 	
 	statechart MQTTAdapterThing init Start {
 		
