@@ -117,9 +117,24 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 	function mqtt_subscribe(topic : String) : Boolean do
 		if (`mqttAsyncClient == null`) return false
         `try {
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Subscribe: " + `&topic&`);
-            if (`&topic_prefix&` != null) mqttAsyncClient.subscribe(`&topic_prefix&` + `&topic&`, 0);
-            else mqttAsyncClient.subscribe(`&topic&`, 0);
+            // Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Subscribe: " + `&topic&`);
+            
+            String fulltopic = `&topic&`;
+            if (`&topic_prefix&` != null) fulltopic = `&topic_prefix&` + fulltopic;
+            
+            mqttAsyncClient.subscribe(fulltopic, 0, null, new IMqttActionListener() {
+					@Override
+					public void onSuccess(IMqttToken asyncActionToken) {
+						`mqtt!mqtt_topic_subscribed()` 
+					}
+				
+					@Override
+					public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+						`mqtt!mqtt_error()`
+						exception.printStackTrace();
+					}
+				});
+
         } catch (org.eclipse.paho.client.mqttv3.MqttException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
             return false
@@ -138,6 +153,7 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		@override "true" 
 		@java_visibility "public"
 	do
+		mqtt!mqtt_error()
 		mqtt!mqtt_disconnected()
 	end
 	
