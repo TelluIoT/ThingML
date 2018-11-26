@@ -20,7 +20,7 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 	required port mqtt 
 	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
 	{
-		sends mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix
+		sends mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix, mqtt_set_tls_certificates
 		receives mqtt_connected, mqtt_disconnected, mqtt_message
 	}
 	
@@ -31,7 +31,19 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 	statechart MQTTAdapterTestSC init DISCONNECTED {
 		
 		on entry do
-			if (broker_user != `null`) mqtt!mqtt_set_credentials(broker_user, broker_pass)
+			
+			
+			//mqtt!mqtt_set_credentials(broker_user, broker_pass)
+			
+			
+			mqtt!mqtt_set_tls_certificates("/home/franck/checkout/Ansible/RabbitMQ-Tutorials/clients/tellucloud_ca_cacert.pem", 
+												"", 
+												"/home/franck/checkout/Ansible/RabbitMQ-Tutorials/clients/TestUser_cert.pem", 
+												"/home/franck/checkout/Ansible/RabbitMQ-Tutorials/clients/TestUser_key.pem")
+			
+			
+			
+			
 			mqtt!mqtt_connect(client_id, broker_host, broker_port, broker_tls)
 		end
 		
@@ -44,7 +56,7 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 		state CONNECTED {
 			
 			on entry do
-				mqtt!mqtt_set_prefix("models18/")
+				mqtt!mqtt_set_prefix("test/models18/")
 				mqtt!mqtt_subscribe("#")
 				publish_hello()
 				clock!timer_start(timer_id, 5000)
@@ -75,10 +87,10 @@ configuration MQTTAdapterTest
 	instance test1 : MQTTAdapterTest
 		set test1.client_id = "Test1"
 		set test1.broker_host = "mqtt.tutorials.tellucloud.com"
-		set test1.broker_port = 1883
+		set test1.broker_port = 8883
 		set test1.broker_user = "models18"
 		set test1.broker_pass = "thingml"
-		set test1.broker_tls = false
+		set test1.broker_tls = true
 		connector test1.mqtt => adapter1.mqtt
 		set test1.timer_id = 1
 		connector test1.clock => timer.timer

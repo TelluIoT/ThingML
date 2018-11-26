@@ -154,19 +154,19 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
     	`mosquitto_unsubscribe_callback_set(`&client&`, mosquitto_unsubscribe_callback);`
     	`mosquitto_log_callback_set(`&client&`, mosquitto_log_callback);`
     	
-    	// Set username and password
-    	status = `mosquitto_username_pw_set(`& client &`, `&username&`, `&password&`);`
-    	
-    	if (status != `MOSQ_ERR_SUCCESS`) do
-    		error "[MQTT] Error setting up username / password (mosquitto_username_pw_set returned " error status error ")\n"
-    		return false
+    	if (enable_user_credentials) do
+	    	// Set username and password
+	    	status = `mosquitto_username_pw_set(`& client &`, `&username&`, `&password&`);`
+	    	
+	    	if (status != `MOSQ_ERR_SUCCESS`) do
+	    		error "[MQTT] Error setting up username / password (mosquitto_username_pw_set returned " error status error ")\n"
+	    		return false
+	    	end
     	end
     	
-    	if (tls) do
-    	
+    	if (enable_tls) do
 	    	// Set SSL/TLS connection
-	    	
-	    	if (cafile == `NULL` and capath == `NULL`) do
+	    	if (not enable_tls_certificates) do
 	    		// Put a random capath to enable tls without providing any certificates
 		    	status = `mosquitto_tls_set(`& client &`, NULL, "~/certs", NULL, NULL, NULL);`
 		    	if (status != `MOSQ_ERR_SUCCESS`) do
@@ -188,7 +188,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 	    	end
 	    	
 	    	/*
-	    	// Allow for insecure SSL connection
+	    	// Allow for insecure SSL connection - DISABLED
 	    	status = `mosquitto_tls_insecure_set(`& client &`, `& true &`);`
 			if (status != `MOSQ_ERR_SUCCESS`) do
 	    		error "[MQTT] Error setting up MQTT Client (mosquitto_tls_insecure_set returned " error status error ")\n"
@@ -254,6 +254,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 		internal event m: mqtt?mqtt_set_credentials action do
 			username = m.usr
 			password = m.pwd
+			enable_user_credentials = true
 		end
 		
 		internal event m: mqtt?mqtt_set_tls_certificates action do
@@ -261,6 +262,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 			capath = m.capath
 			certfile = m.certfile
 			keyfile = m.keyfile
+			enable_tls_certificates = true
 		end
 		
 		internal event m: mqtt?mqtt_set_prefix action do
@@ -271,7 +273,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 			client_id = m.client_id
 			broker_host = m.host
 			broker_port = m.portno
-			tls = m.tls
+			enable_tls = m.tls
 			mqtt_connect()
 		end
 		

@@ -17,6 +17,12 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 			<version>1.2.0</version>
 		</dependency>
 
+        <dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcpkix-jdk15on</artifactId>
+		    <version>1.60</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>org.json</artifactId>
@@ -28,7 +34,93 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 @java_import `import java.util.logging.Level;`
 @java_import `import org.eclipse.paho.client.mqttv3.*;`
 @java_import `import org.eclipse.paho.client.mqttv3.persist.*;`
+@java_import `import org.bouncycastle.jce.provider.*;`
+@java_import `import org.bouncycastle.openssl.*;`
+@java_import `import org.bouncycastle.openssl.jcajce.*;`
+@java_import `import javax.net.ssl.*;`
+@java_import `import java.security.*;`
+@java_import `import java.security.cert.*;`
+@java_import `import java.io.*;`
+
 @java_features `org.eclipse.paho.client.mqttv3.MqttAsyncClient mqttAsyncClient;`
+
+@java_features `
+        private static SSLSocketFactory getSocketFactory(final String caCrtFile, final String crtFile, final String keyFile, final String password, boolean fromClassLoaderRessource)
+			throws Exception {
+        
+        Class currentClass = new Object() { }.getClass().getEnclosingClass();
+        
+		Security.addProvider(new BouncyCastleProvider());
+
+		// load CA certificate
+        X509Certificate caCert = null;
+
+		InputStream is = null;
+		if (fromClassLoaderRessource) is = currentClass.getClassLoader().getResourceAsStream(caCrtFile);
+		else is = new FileInputStream(caCrtFile);
+        BufferedInputStream bis = new BufferedInputStream(is);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+
+		while (bis.available() > 0) {
+			caCert = (X509Certificate) cf.generateCertificate(bis);
+			//System.out.println(caCert.toString());
+		}
+
+		// load client certificate
+		if (fromClassLoaderRessource) is = currentClass.getClassLoader().getResourceAsStream(crtFile);
+		else is = new FileInputStream(crtFile);
+		bis = new BufferedInputStream(is);
+		X509Certificate cert = null;
+		while (bis.available() > 0) {
+			cert = (X509Certificate) cf.generateCertificate(bis);
+			//System.out.println(caCert.toString());
+		}
+
+		// load client private key
+		if (fromClassLoaderRessource) is = currentClass.getClassLoader().getResourceAsStream(keyFile);
+		else is = new FileInputStream(keyFile);
+		PEMParser pemParser = new PEMParser(new InputStreamReader(is));
+		Object object = pemParser.readObject();
+		PEMDecryptorProvider decProv = new JcePEMDecryptorProviderBuilder()
+				.build(password.toCharArray());
+		JcaPEMKeyConverter converter = new JcaPEMKeyConverter()
+				.setProvider("BC");
+		          KeyPair key;
+		if (object instanceof PEMEncryptedKeyPair) {
+			System.out.println("Encrypted key - we will use provided password");
+			key = converter.getKeyPair(((PEMEncryptedKeyPair) object)
+					.decryptKeyPair(decProv));
+		} else {
+			System.out.println("Unencrypted key - no password needed");
+			key = converter.getKeyPair((PEMKeyPair) object);
+		}
+		pemParser.close();
+
+		// CA certificate is used to authenticate server
+		KeyStore caKs = KeyStore.getInstance(KeyStore.getDefaultType());
+		caKs.load(null, null);
+		caKs.setCertificateEntry("ca-certificate", caCert);
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+		tmf.init(caKs);
+
+		// client key and certificates are sent to server so it can authenticate
+		// us
+		KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+		ks.load(null, null);
+		ks.setCertificateEntry("certificate", cert);
+		ks.setKeyEntry("private-key", key.getPrivate(), password.toCharArray(),
+				new java.security.cert.Certificate[] { cert });
+		          KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory
+				.getDefaultAlgorithm());
+		kmf.init(ks, password.toCharArray());
+
+		// finally, create SSL socket factory
+		SSLContext context = SSLContext.getInstance("TLSv1.2");
+		context.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+
+		return context.getSocketFactory();
+	}
+`
 {
 
 	property broker_uri : String = "tcp://localhost:1883"
@@ -45,22 +137,26 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		    `MqttConnectOptions connOpts = new MqttConnectOptions();`
 	        `connOpts.setCleanSession(true);`
 	        `connOpts.setAutomaticReconnect(true);`
-	         `connOpts.setAutomaticReconnect(true);`
+	        `connOpts.setConnectionTimeout(30);`
 	        
-	        if (username != `null` and password != `null`) do
+	        if (client_id == `null`) do
+	        	client_id = `MqttClient.generateClientId()`
+	        end
+	        
+	        if (enable_user_credentials) do
 	        	`connOpts.setUserName(`&username&`);`
 	        	`connOpts.setPassword(`&password&`.toCharArray());`        	
 	        end
 	        
-	        if (client_id == `null`) do
-	        	client_id = `MqttClient.generateClientId()`
+	        if (enable_tls_certificates) do
+	        	`SSLSocketFactory socketFactory = getSocketFactory(`&cafile&`, `&certfile&`, `&keyfile&`, "", false);`
+				`connOpts.setSocketFactory(socketFactory);`
 	        end
 		    
 		    `mqttAsyncClient = new MqttAsyncClient(`&broker_uri&`, `&client_id&` + "_Sub", persistence);`
 		    
 		    // For now we are only monitoring the connection on the subscriber client
 		    `mqttAsyncClient.setCallback(this);`
-		    
 		    
 		    // Connect and collect associated callbacks
 		    `IMqttToken mqttConnectToken = mqttAsyncClient.connect(connOpts, null, new IMqttActionListener() {
@@ -77,7 +173,7 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 					}
 				});`
 	        
-	    `} catch (org.eclipse.paho.client.mqttv3.MqttException ex) {`
+	    `} catch (Exception ex) {`
             `Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);`
             return false
         `}`
@@ -176,10 +272,19 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		internal event m: mqtt?mqtt_set_credentials action do
 			username = m.usr
 			password = m.pwd
+			enable_user_credentials = true
 		end
 		
 		internal event m: mqtt?mqtt_set_prefix action do
 			setTopicPrefix(m.prefix)
+		end
+		
+		internal event m: mqtt?mqtt_set_tls_certificates action do
+			cafile = m.cafile
+			capath = m.capath
+			certfile = m.certfile
+			keyfile = m.keyfile
+			enable_tls_certificates = true
 		end
 		
 		internal event m : mqtt?mqtt_connect action do
@@ -189,6 +294,7 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 			else `uri = "tcp://";`
 			`uri += `&m.host&` + ":" + `&m.portno&`;` 
 			broker_uri = `uri`
+			enable_tls = m.tls
 			mqtt_connect()
 		end
 		
