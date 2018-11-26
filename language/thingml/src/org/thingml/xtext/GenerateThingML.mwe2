@@ -71,6 +71,7 @@ Workflow {
 				composedCheck = "org.thingml.xtext.validation.checks.PropertyInitialization"
 				composedCheck = "org.thingml.xtext.validation.checks.Imports"
 				composedCheck = "org.thingml.xtext.validation.checks.Datatypes"
+				composedCheck = "org.thingml.xtext.validation.checks.Annotations"
 			}
 			
 			quickFixProvider = {
