@@ -1,0 +1,34 @@
+import "MQTTEcho.thingml"
+import "TestMQTTReceiverPortJavaMqttJson.thingml"
+import "TestMQTTSenderPortJavaMqttJson.thingml"
+import "../java/JavaMQTTAdapter.thingml"
+
+configuration EchoJava 
+@compiler "java"
+{
+	instance echo : MQTTEcho
+	
+	instance rx : TestMQTTReceiverPort_JavaMqttJson_Impl 
+	connector echo.receiver => tx.sender
+	
+	instance tx : TestMQTTSenderPort_JavaMqttJson_Impl
+	connector rx.receiver => echo.sender
+	
+	instance mqtt : JavaMQTTAdapter
+	
+	connector rx.javamqtt => mqtt.mqtt
+	connector tx.javamqtt => mqtt.mqtt
+	connector echo.mqtt => mqtt.mqtt
+	
+}
+ 
+
+
+
+
+
+
+
+
+ 
+

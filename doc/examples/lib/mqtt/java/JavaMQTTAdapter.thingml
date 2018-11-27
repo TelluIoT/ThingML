@@ -124,6 +124,8 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 {
 
 	property broker_uri : String = "tcp://localhost:1883"
+	
+	readonly property load_certificate_from_ressource : Boolean = false
 
 	
 	function setTopicPrefix(src : String) do
@@ -149,7 +151,7 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 	        end
 	        
 	        if (enable_tls_certificates) do
-	        	`SSLSocketFactory socketFactory = getSocketFactory(`&cafile&`, `&certfile&`, `&keyfile&`, "", false);`
+	        	`SSLSocketFactory socketFactory = getSocketFactory(`&cafile&`, `&certfile&`, `&keyfile&`, "", `&load_certificate_from_ressource&`);`
 				`connOpts.setSocketFactory(socketFactory);`
 	        end
 		    
@@ -242,7 +244,9 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		@override "true" 
 		@java_visibility "public"
 	do
-		mqtt!mqtt_message(topic, ``&m&`.getPayload()`, ``&m&`.getPayload().length`)
+		`String topic_without_prefix = `&topic&`;`
+		`if (topic_without_prefix.startsWith(`&topic_prefix&`)) topic_without_prefix = topic_without_prefix.substring(`&topic_prefix&`.length());`
+		mqtt!mqtt_message(`topic_without_prefix`, ``&m&`.getPayload()`, ``&m&`.getPayload().length`)
 	end
 	
 	function connectionLost(t : Throwable) 

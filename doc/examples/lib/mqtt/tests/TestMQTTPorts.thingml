@@ -1,0 +1,27 @@
+//import "../java/JavaMQTTAdapter.thingml"
+//import "../posix/PosixMQTTAdapter.thingml"
+
+import "TestMQTTMsgs.thingml"
+
+
+
+thing fragment TestMQTTSenderPort includes TestMQTTMsgs {
+	
+	provided port sender 
+	@external "posixmqttjson"
+	@external "javamqttjson"
+	{
+		sends no_parameters, some_numbers, some_strings, some_bytes, some_enum
+	}
+}
+
+thing fragment TestMQTTReceiverPort includes TestMQTTMsgs {
+	
+	required port receiver 
+	@external "posixmqttjson"
+	@external "javamqttjson"
+	{
+		receives no_parameters, some_numbers, some_strings, some_bytes, some_enum
+	}
+	
+}

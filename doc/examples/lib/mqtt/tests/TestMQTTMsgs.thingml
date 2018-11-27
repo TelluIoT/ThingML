@@ -1,0 +1,18 @@
+import "../MQTTAdapterMsgs.thingml"
+
+
+thing fragment TestMQTTMsgs {
+	
+	message no_parameters()
+	
+	message some_numbers(i8 : Int8, ui8 : UInt8, i : Integer, ui : UInt16, d : Double, l : Int64)
+	
+	message some_strings(c : Char, str : String)
+	
+	message some_bytes(b1 : Byte, b2 : Byte)
+	
+	message some_enum(d0 : DigitalState, d1 : DigitalState)
+	
+//	message some_array(a : Int8[], sa : String[])
+		
+}

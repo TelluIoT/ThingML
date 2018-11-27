@@ -1,0 +1,57 @@
+import "TestMQTTPorts.thingml"
+
+
+thing MQTTEcho includes TestMQTTSenderPort, TestMQTTReceiverPort, MQTTAdapterCtrlPort {
+	
+	statechart sc init Connect {
+		
+		state Connect {
+			on entry do
+				println "Echo: Connecting..."
+				mqtt!mqtt_set_prefix("test/mqttserializer/")
+				mqtt!mqtt_connect("ECHO", "localhost", 1883, false)
+			end
+			
+			transition -> Connected event mqtt?mqtt_connected
+		}
+		
+		internal event mqtt?mqtt_disconnected action print "Echo: MQTT Disconnected."
+		internal event mqtt?mqtt_error action print "Echo: MQTT Error."
+		
+		state Connected {
+			on entry do
+				println "Echo: Connected and ready."
+				sender!no_parameters()
+			end
+		}
+		
+		
+		internal event e : receiver?no_parameters action do
+			sender!no_parameters()
+			println "Echo: no_parameters"
+		end
+		
+		internal event e : receiver?some_numbers action do
+			sender!some_numbers(e.i8 as Int8, e.ui8 as UInt8, e.i as Integer, e.ui as UInt16, e.d as Double, e.l as Int64)
+			println "Echo: some_numbers"
+		end
+		
+		internal event e : receiver?some_strings action do 
+			sender!some_strings(e.c as Char, e.str as String)
+			println "Echo: some_strings"
+		end
+		
+		internal event e : receiver?some_bytes action do
+			sender!some_bytes(e.b1 as Byte, e.b2 as Byte)
+			println "Echo: some_bytes"
+		end
+		
+		internal event e : receiver?some_enum action do
+			sender!some_enum(e.d0 as DigitalState, e.d1 as DigitalState)
+			println "Echo: some_enum"
+		end
+		
+		
+	}
+}
+

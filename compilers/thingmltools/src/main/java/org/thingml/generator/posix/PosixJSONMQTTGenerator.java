@@ -33,10 +33,7 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 
-/**
- *
- * @author sintef
- */
+
 public class PosixJSONMQTTGenerator extends ThingMLTool {
 
 

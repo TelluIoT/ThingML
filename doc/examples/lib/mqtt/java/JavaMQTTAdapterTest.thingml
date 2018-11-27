@@ -42,8 +42,6 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 												"/home/franck/checkout/Ansible/RabbitMQ-Tutorials/clients/TestUser_key.pem")
 			
 			
-			
-			
 			mqtt!mqtt_connect(client_id, broker_host, broker_port, broker_tls)
 		end
 		
