@@ -27,13 +27,75 @@ public class AnnotationRegistry {
 	public static Map<String, Annotation> annotations = new HashMap<>();
 	
 	static {
+		
+		/** DEPS AND EXTERNS **/
+		//@maven_dep
+		final String maven_name = "maven_dep";
+		final String maven_desc = "Adds a Maven dependency to the generated pom.xml file.";
+		final EClass maven_scope[] = {ThingMLPackage.eINSTANCE.getType()};
+		final Annotation maven_annotation = new Annotation(maven_name, maven_desc, maven_scope);
+		annotations.put(maven_name, maven_annotation);
+		
+		//@java_interface
+		final String jitf_name = "java_interface";
+		final String jitf_desc = "Makes this Thing to implement that interface.";
+		final EClass jitf_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation jitf_annotation = new Annotation(jitf_name, jitf_desc, jitf_scope);
+		annotations.put(jitf_name, jitf_annotation);
+		
+		//@java_import
+		final String jimp_name = "java_import";
+		final String jimp_desc = "Adds an import to the generated code for this Thing.";
+		final EClass jimp_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation jimp_annotation = new Annotation(jimp_name, jimp_desc, jimp_scope);
+		annotations.put(jimp_name, jimp_annotation);
+		
+		//@java_features
+		final String jfeat_name = "java_features";
+		final String jfeat_desc = "Adds a standalone fragment of code into the generated code for this Thing.";
+		final EClass jfeat_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation jfeat_annotation = new Annotation(jfeat_name, jfeat_desc, jfeat_scope);
+		annotations.put(jfeat_name, jfeat_annotation);
+		
+		//@java_visibility
+		final String jvis_name = "java_visibility";
+		final String jvis_desc = "Changes the visibility of this function.";
+		final EClass jvis_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final Annotation jvis_annotation = new Annotation(jvis_name, jvis_desc, jvis_scope);
+		annotations.put(jvis_name, jvis_annotation);
+		
+		//@override
+		final String over_name = "override";
+		final String over_desc = "Marks this function as @Override.";
+		final EClass over_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final Annotation over_annotation = new Annotation(over_name, over_desc, over_scope);
+		annotations.put(over_name, over_annotation);
+		
+		//@js_dep
+		final String npm_name = "js_dep";
+		final String npm_desc = "Adds an NPM dependecy to the generated package.json file.";
+		final EClass npm_scope[] = {ThingMLPackage.eINSTANCE.getType()};
+		final Annotation npm_annotation = new Annotation(npm_name, npm_desc, npm_scope);
+		annotations.put(npm_name, npm_annotation);
 
+		/** MESSAGES AND PORTS **/
+		
 		//@code
 		final String code_name = "code";
 		final String code_desc = "Sets a code to a given message. Used by serializers to identify messages.";
 		final EClass code_scope[] = {ThingMLPackage.eINSTANCE.getMessage()};
 		final Annotation code_annotation = new Annotation(code_name, code_desc, code_scope);
 		annotations.put(code_name, code_annotation);
+		
+		//@sync_send
+		final String sync_name = "sync_send";
+		final String sync_desc = "Makes a port syncrhonous";
+		final EClass sync_scope[] = {ThingMLPackage.eINSTANCE.getPort()};
+		final Annotation sync_annotation = new Annotation(sync_name, sync_desc, sync_scope);
+		annotations.put(sync_name, sync_annotation);
+		
+		
+		/** TYPES **/
 		
 		//@type_checker
 		final String tc_name = "type_checker";
