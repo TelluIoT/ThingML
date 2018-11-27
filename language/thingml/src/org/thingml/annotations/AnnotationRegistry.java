@@ -28,6 +28,14 @@ public class AnnotationRegistry {
 	
 	static {
 		
+		/** DEPLOYMENT **/
+		//@docker
+		final String docker_name = "docker";
+		final String docker_desc = "Generates a Dockerfile for this configuration";
+		final EClass docker_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation docker_annotation = new Annotation(docker_name, docker_desc, docker_scope);
+		annotations.put(docker_name, docker_annotation);
+		
 		/** DEPS AND EXTERNS **/
 		//@maven_dep
 		final String maven_name = "maven_dep";
@@ -77,6 +85,41 @@ public class AnnotationRegistry {
 		final EClass npm_scope[] = {ThingMLPackage.eINSTANCE.getType()};
 		final Annotation npm_annotation = new Annotation(npm_name, npm_desc, npm_scope);
 		annotations.put(npm_name, npm_annotation);
+		
+		//@js_include
+		final String jsinc_name = "js_include";
+		final String jsinc_desc = "Includes a JS resource e.g. from a CDN or from a local file.";
+		final EClass jsinc_scope[] = {ThingMLPackage.eINSTANCE.getType()};
+		final Annotation jsinc_annotation = new Annotation(jsinc_name, jsinc_desc, jsinc_scope);
+		annotations.put(jsinc_name, jsinc_annotation);
+		
+		//@c_header
+		final String cheader_name = "c_header";
+		final String cheader_desc = "Adds a header (.h) to the generated code for this Thing.";
+		final EClass cheader_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation cheader_annotation = new Annotation(cheader_name, cheader_desc, cheader_scope);
+		annotations.put(cheader_name, cheader_annotation);
+		
+		//@c_global
+		final String cglobal_name = "c_global";
+		final String cglobal_desc = "Adds a standalone fragment of code into the generated code for this Thing.";
+		final EClass cglobal_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation cglobal_annotation = new Annotation(cglobal_name, cglobal_desc, cglobal_scope);
+		annotations.put(cglobal_name, cglobal_annotation);
+		
+		//@fork_linux_thread
+		final String cfork_name = "fork_linux_thread";
+		final String cfork_desc = "Makes this function to run in a separate thread.";
+		final EClass cfork_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final Annotation cfork_annotation = new Annotation(cfork_name, cfork_desc, cfork_scope);
+		annotations.put(cfork_name, cfork_annotation);
+		
+		//@fork_thread
+		final String fork_name = "fork_thread";
+		final String fork_desc = "Makes this function to run in a separate thread.";
+		final EClass fork_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final Annotation fork_annotation = new Annotation(fork_name, fork_desc, fork_scope);
+		annotations.put(fork_name, fork_annotation);
 
 		/** MESSAGES AND PORTS **/
 		
