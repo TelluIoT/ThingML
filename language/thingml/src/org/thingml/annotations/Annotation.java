@@ -16,8 +16,6 @@
  */
 package org.thingml.annotations;
 
-import java.util.Arrays;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -36,7 +34,7 @@ public class Annotation {
 	
 	public boolean check(EObject source, String value) {
 		for(EClass clazz : scope) {
-			if (source.eClass().equals(clazz)) {
+			if (clazz.isInstance(source)) {
 				return true;
 			}
 		}
