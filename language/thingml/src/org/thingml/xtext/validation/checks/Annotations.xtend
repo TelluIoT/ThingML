@@ -21,7 +21,7 @@ class Annotations extends ThingMLValidatorCheck {
 		val reg_a = AnnotationRegistry.annotations.get(a.name)
 		if (!reg_a.check(source, a.value)) {
 			val msg = "Annotation @" + a.name + " is invalid. " + reg_a
-			error(msg, source, ThingMLPackage.eINSTANCE.annotatedElement_Annotations, source.annotations.indexOf(a), "invalid-annotation")
+			warning(msg, source, ThingMLPackage.eINSTANCE.annotatedElement_Annotations, source.annotations.indexOf(a), "invalid-annotation")
 			return
 		}		
 	}
