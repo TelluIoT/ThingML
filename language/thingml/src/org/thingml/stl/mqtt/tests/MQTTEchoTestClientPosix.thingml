@@ -1,0 +1,42 @@
+import "MQTTEchoTestClient.thingml"
+import "TestMQTTReceiverPortPosixMqttJson.thingml"
+import "TestMQTTSenderPortPosixMqttJson.thingml"
+import "../posix/PosixMQTTAdapter.thingml"
+
+configuration EchoPosixTestClient
+@compiler "posix"
+@add_c_libraries "mosquitto"
+@add_c_modules "jsmn"
+{
+	instance echo : MQTTEchoTestClient
+	
+	instance timer : TimerPosix
+	connector echo.timer => timer.timer
+	
+	instance rx : TestMQTTReceiverPort_PosixMqttJson_Impl
+		set rx.mqtt_topic_name = "ping"
+	connector rx.receiver => echo.sender
+	
+	instance tx : TestMQTTSenderPort_PosixMqttJson_Impl
+		set tx.mqtt_topic_name = "pong"
+	connector echo.receiver => tx.sender
+	
+	
+	instance mqtt : PosixMQTTAdapter
+	
+	connector rx.posixmqtt => mqtt.mqtt
+	connector tx.posixmqtt => mqtt.mqtt
+	connector echo.mqtt => mqtt.mqtt
+	
+}
+ 
+
+
+
+
+
+
+
+
+ 
+

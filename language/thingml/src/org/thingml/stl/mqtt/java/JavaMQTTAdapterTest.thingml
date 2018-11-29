@@ -1,0 +1,105 @@
+import "JavaMQTTAdapter.thingml"
+import "timer.thingml" from stl
+
+thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
+	
+	readonly property client_id : String = "TestClient1"
+	property broker_host : String = "localhost"
+	property broker_port : UInt16 = 1883
+	property broker_user : String = `null`
+	property broker_pass : String = `null`
+	property broker_tls : Boolean = false
+	
+	readonly property timer_id 	: UInt8 = 0
+	
+	required port clock {
+		receives timer_timeout
+		sends timer_start, timer_cancel
+	}
+	
+	required port mqtt 
+	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
+	{
+		sends mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_subscribe, mqtt_set_credentials, mqtt_set_prefix, mqtt_set_tls_certificates
+		receives mqtt_connected, mqtt_disconnected, mqtt_message
+	}
+	
+	function publish_hello() do
+		mqtt!mqtt_publish("Hello", `"World".getBytes()`, 5)
+	end
+	
+	statechart MQTTAdapterTestSC init DISCONNECTED {
+		
+		on entry do
+			
+			
+			//mqtt!mqtt_set_credentials(broker_user, broker_pass)
+			
+			
+			mqtt!mqtt_set_tls_certificates("/home/franck/checkout/Ansible/RabbitMQ-Tutorials/clients/tellucloud_ca_cacert.pem", 
+												"", 
+												"/home/franck/checkout/Ansible/RabbitMQ-Tutorials/clients/TestUser_cert.pem", 
+												"/home/franck/checkout/Ansible/RabbitMQ-Tutorials/clients/TestUser_key.pem")
+			
+			
+			mqtt!mqtt_connect(client_id, broker_host, broker_port, broker_tls)
+		end
+		
+		
+		state DISCONNECTED {
+			transition -> CONNECTED event mqtt?mqtt_connected action print "Client got mqtt_connected\n"
+			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"
+		}
+		
+		state CONNECTED {
+			
+			on entry do
+				mqtt!mqtt_set_prefix("test/models18/")
+				mqtt!mqtt_subscribe("#")
+				publish_hello()
+				clock!timer_start(timer_id, 5000)
+			end
+			
+			internal event e : clock?timer_timeout guard e.id == timer_id action do
+				publish_hello()
+				clock!timer_start(timer_id, 5000)
+			end
+			
+			internal event m:mqtt?mqtt_message action do
+				`System.out.println("RCV topic:"+`&m.topic&`+" payload:" + new String(`&m.payload&`, java.nio.charset.StandardCharsets.UTF_8));`
+			end
+			
+			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"
+		}
+	}
+}
+
+
+configuration MQTTAdapterTest 
+{
+	instance adapter1 : JavaMQTTAdapter
+	//instance adapter2 : MQTTAdapter
+	
+	instance timer : TimerJava
+	
+	instance test1 : MQTTAdapterTest
+		set test1.client_id = "Test1"
+		set test1.broker_host = "mqtt.tutorials.tellucloud.com"
+		set test1.broker_port = 8883
+		set test1.broker_user = "models18"
+		set test1.broker_pass = "thingml"
+		set test1.broker_tls = true
+		connector test1.mqtt => adapter1.mqtt
+		set test1.timer_id = 1
+		connector test1.clock => timer.timer
+		/*
+	instance test2 : MQTTAdapterTest
+		set test2.client_id = "Test2"
+		set test2.broker_host = "broker.tellucloud.com"
+		set test2.broker_port = 8883
+		set test2.broker_port = 8883
+		connector test2.mqtt => adapter2.mqtt
+		set test2.timer_id = 2
+		connector test2.clock over Timer
+	 */
+}

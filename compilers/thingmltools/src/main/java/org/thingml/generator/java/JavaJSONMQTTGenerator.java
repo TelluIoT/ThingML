@@ -92,7 +92,7 @@ public class JavaJSONMQTTGenerator extends ThingMLTool {
     	StringBuilder subscriptions = new StringBuilder();
     	
     	for (Message m : p.getSends()) {
-    		subscriptions.append("\t\tjavamqtt!mqtt_subscribe(\""+m.getName()+"\" as String)\n");	
+    		subscriptions.append("\t\tsubscribe_for_message(\""+ m.getName()+"\")\n");	
     	}
     	
     	StringBuilder sendfunctions = new StringBuilder();
@@ -107,6 +107,7 @@ public class JavaJSONMQTTGenerator extends ThingMLTool {
     	template = template.replace("/*THING_INCLUDES*/", thing_includes);
     	template = template.replace("/*SUBSCRIBE*/", subscriptions.toString());
     	template = template.replace("/*SEND_HANDLERS*/", sendfunctions.toString());
+    	template = template.replace("/*MQTT_PORT_NAME*/", p.getName());
     
     	StringBuilder parsemsgs = new StringBuilder();
     	for (Message m : p.getSends()) {
@@ -130,7 +131,7 @@ public class JavaJSONMQTTGenerator extends ThingMLTool {
     	}
     	b.append("\t\t\t`\n");
     	
-    	b.append("\t\t\tjavamqtt!mqtt_publish(\""+m.getName()+"\", `json.toString().getBytes()`, `json.toString().length()`)\n");
+    	b.append("\t\t\tpublish_message(\""+ m.getName()+"\", `json.toString().getBytes()`, `json.toString().length()`)\n");
     	
     	b.append("\t\tend\n\n");
     	

@@ -1,0 +1,9 @@
+				if ( (`(tokens[`&__parse_i&`].end - tokens[`&__parse_i&`].start) == /*PARAMNAME_LENGTH*/`) and (`strncmp(`&payload&` + tokens[`&__parse_i&`].start , "/*PARAMNAME*/", tokens[`&__parse_i&`].end - tokens[`&__parse_i&`].start)` == 0)) do
+					// check the type of the parameter
+					if (`tokens[`&__parse_i+1&`].type` != 4 or `tokens[`&__parse_i+1&`].size` != 0) do
+						error "JSON ERROR: invalid parameters type/value for /*PARAMNAME*/ in /*MSG_NAME*/ message\n"
+						return false
+					end
+					/*PARSEPARAM_STATEMENT*/
+				end
+				else

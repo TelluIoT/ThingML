@@ -91,7 +91,7 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	StringBuilder subscriptions = new StringBuilder();
     	
     	for (Message m : p.getSends()) {
-    		subscriptions.append("\t\tposixmqtt!mqtt_subscribe(\""+m.getName()+"\" as String)\n");	
+    		subscriptions.append("\t\tsubscribe_for_message(\""+m.getName()+"\" as String)\n");	
     	}
     	
     	StringBuilder sendfunctions = new StringBuilder();
@@ -106,6 +106,7 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	template = template.replace("/*THING_INCLUDES*/", thing_includes);
     	template = template.replace("/*SUBSCRIBE*/", subscriptions.toString());
     	template = template.replace("/*SEND_HANDLERS*/", sendfunctions.toString());
+    	template = template.replace("/*MQTT_PORT_NAME*/", p.getName());
     
     	StringBuilder parsemsgs = new StringBuilder();
     	for (Message m : p.getSends()) {
@@ -143,7 +144,7 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	b.append("\t\t\t`payload[index++] = '}';`\n");
     	b.append("\t\t\t`payload[index++] = 0;`\n");
     	
-    	b.append("\t\t\tposixmqtt!mqtt_publish(\""+m.getName()+"\", `payload` as String, `strlen(payload)` as Integer)\n");
+    	b.append("\t\t\tpublish_message(\""+m.getName()+"\", `payload` as String, `strlen(payload)` as Integer)\n");
     	
     	b.append("\t\tend\n\n");
     	
@@ -202,7 +203,10 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	
     	if (!m.getParameters().isEmpty()) {
     		forwardmsg.append("\t\t\tend\n");
-    		forwardmsg.append("\t\t\telse return false\n");
+    		forwardmsg.append("\t\t\telse do\n");
+    		forwardmsg.append("\t\t\t\terror \"JSON ERROR: Dropping message "+m.getName()+" because of missing parameters\\n\"\n");
+    		forwardmsg.append("\t\t\t\treturn false\n");
+    		forwardmsg.append("\t\t\tend\n");
     	}
     	
     	template = template.replace("/*FWMSG*/", forwardmsg.toString());
@@ -212,7 +216,10 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     
     public void generate_parsing_param(Port p, Message m, Parameter param, StringBuilder builder) {
     	
-    	String template = "// UNSUPORTED PARAMERTER TYPE FOR /*PARAMNAME*/ (" + getCType(param.getTypeRef().getType()) + ")\n";
+    	//String template = "// UNSUPORTED PARAMERTER TYPE FOR /*PARAMNAME*/ (" + getCType(param.getTypeRef().getType()) + ")\n";
+    	
+    	String template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam.thingml");
+    	
     	
         switch (getCType(param.getTypeRef().getType())) {
         case "int8_t":
@@ -229,27 +236,29 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
         case "uint64_t":
         case "unsigned int":
         case "unsigned long int":
-        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_integer.thingml");
+        case "long long":
+        	template = template.replace("/*PARSEPARAM_STATEMENT*/", getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_integer.thingml"));
             break;
         case "float":
         case "double":
-        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_double.thingml");
+        	template = template.replace("/*PARSEPARAM_STATEMENT*/", getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_double.thingml"));
             break;
         case "bool":
         case "boolean":
         case "char":
-        case "long long":
         case "long long int":
         case "unsigned long long":
         case "unsigned long long int":
         case "time_t":
         // All other unsupported types
         default:
+        	template = template.replace("/*PARSEPARAM_STATEMENT*/", "error \"JSON ERROR: Cannot parse parameter "+param.getName()+" of type "+ getCType(param.getTypeRef().getType()) + " (type is not supported)\\n\" ");
             break;
         }
         
     	template = template.replace("/*MSG_NAME*/", m.getName());
     	template = template.replace("/*PARAMNAME*/", param.getName());
+    	template = template.replace("/*PARAMNAME_LENGTH*/", ""+param.getName().length());
     	builder.append(template.trim());
 
     }
@@ -336,6 +345,7 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
             case "byte":
             case "long":
             case "long int":
+            case "long long":
                 builder.append("\t\t\t`result = sprintf(&"+bufferName+"[index], \"%d\", `&e."+p.getName()+"&`);`\n");
                 builder.append("\t\t\t`if (result >= 0) { index += result; } else { return; }`\n");
                 serialized = true;
@@ -370,7 +380,6 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
             case "char":
                 // TODO: Jakob implement this, should be allowed with a single length string, or a number [-128->255]
                 // stroll is C++11, so we do not support it right now
-            case "long long":
             case "long long int":
             case "unsigned long long":
             case "unsigned long long int":

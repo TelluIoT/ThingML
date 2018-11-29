@@ -63,12 +63,13 @@ thing MQTTAdapterTest includes MQTTAdapterMsgs, TimerMsgs {
 	}
 }
 
-
 configuration MQTTAdapterTest 
 @add_c_libraries "mosquitto"
 {
 	instance adapter1 : PosixMQTTAdapter
 	//instance adapter2 : MQTTAdapter
+	
+	instance timer : TimerPosix
 	
 	instance test1 : MQTTAdapterTest
 		set test1.client_id = "Test1"
@@ -76,7 +77,7 @@ configuration MQTTAdapterTest
 		set test1.broker_port = 1883
 		connector test1.mqtt => adapter1.mqtt
 		set test1.timer_id = 1
-		connector test1.clock over Timer
+		connector test1.clock => timer.timer
 		/*
 	instance test2 : MQTTAdapterTest
 		set test2.client_id = "Test2"

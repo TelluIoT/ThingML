@@ -79,9 +79,17 @@ datatype UInt32<4>
 	@java_primitive "true"
 	@go_type "uint32";
 
+datatype Long<4>
+	@type_checker "Integer"
+	@c_type "uint32_t"
+	@java_type "long"
+	@js_type "long"
+	@java_primitive "true"
+	@go_type "uint32";
+
 datatype Int64<8>
 	@type_checker "Integer"
-    @c_type "long long"
+    @c_type "int64_t"
     @java_type "long"
     @js_type "long"
     @java_primitive "true"

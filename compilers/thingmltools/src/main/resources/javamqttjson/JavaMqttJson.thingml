@@ -26,21 +26,49 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		receives mqtt_message, mqtt_connected
 	}
 	
+	readonly property mqtt_topic_name : String  = "/*MQTT_PORT_NAME*/"
+	
+	
+	function subscribe_for_message(msg_name : String) do
+		`String topic = `&mqtt_topic_name&` + "/" + `&msg_name&`;`
+		javamqtt!mqtt_subscribe(`topic`)
+	end
+	
+	function publish_message(msg_name : String, payload: Buffer, size : UInt32) do
+		`String topic = `&mqtt_topic_name&` + "/" + `&msg_name&`;`
+		javamqtt!mqtt_publish(`topic`, payload, size)
+	end
+	
+	
 	function mqtt_subscribe() do
 /*SUBSCRIBE*/		
 	end
 	
 	function mqtt_parsemsg(topic : String, payload : Buffer, len : UInt32) : Boolean do
-	
+		
+		`try {`
 		`JSONObject json = (JSONObject) JSONSerializer.toJSON(new String(`&payload&`, java.nio.charset.StandardCharsets.UTF_8));`
 		`boolean __valid_msg = false;`
-		`switch (`&topic&`) {  
+		
+		`String[] split = `&topic&`.split("/");`
+		`if (split.length != 2)` return false // This is not a valid message
+		
+		var portname : String = `split[0]`
+		var msgname : String = `split[1]`
+		
+		if (`!split[0].equals(`&mqtt_topic_name&`)`) return false // This message is for another port
+		
+		`switch (`&msgname&`) {  
 /*PARSEMSG*/
 			default: break;
 		}`
 
 		return `__valid_msg`
-
+		`} catch(Throwable t) {
+			//t.printStackTrace();
+			`error "Unable to parse message invalid message from topic ", topic, ". Payload: ", `new String(`&payload&`, java.nio.charset.StandardCharsets.UTF_8)` ," Message Dropped.\n"`
+		}`
+		return false
 	end
 	
 	

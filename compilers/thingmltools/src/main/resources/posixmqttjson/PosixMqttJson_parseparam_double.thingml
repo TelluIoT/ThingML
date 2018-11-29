@@ -1,10 +1,2 @@
-				if (`strncmp(`&payload&` + tokens[`&i&`].start , "/*PARAMNAME*/", tokens[`&i&`].end - tokens[`&i&`].start)` == 0) do
-					// check the type of the parameter
-					if (`tokens[`&i+1&`].type` != 4 or `tokens[`&i+1&`].size` != 0) do
-						error "JSON ERROR: invalid parameters type/value for /*PARAMNAME*/ in /*MSG_NAME*/ message\n"
-						return false
-					end
-					/*PARAMNAME*/ = `strtod(`&payload&` + tokens[`&i+1&`].start, NULL)`
+/*PARAMNAME*/ = `strtod(`&payload&` + tokens[`&__parse_i+1&`].start, NULL)`
 					_found_/*PARAMNAME*/ = true
-				end
-				else

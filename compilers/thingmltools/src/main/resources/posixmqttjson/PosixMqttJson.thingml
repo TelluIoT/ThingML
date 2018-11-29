@@ -19,6 +19,21 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		receives mqtt_message, mqtt_connected
 	}
 	
+	readonly property mqtt_topic_name : String  = "/*MQTT_PORT_NAME*/"
+	
+	
+	function subscribe_for_message(msg_name : String) do
+		`char topic[256];`
+		`snprintf(topic, 256, "%s/%s", `&mqtt_topic_name&`, `&msg_name&`);`
+		posixmqtt!mqtt_subscribe(`topic`)
+	end
+	
+	function publish_message(msg_name : String, payload: Buffer, size : UInt32) do
+		`char topic[256];`
+		`snprintf(topic, 256, "%s/%s", `&mqtt_topic_name&`, `&msg_name&`);`
+		posixmqtt!mqtt_publish(`topic`, payload, size)
+	end
+	
 	function posixmqtt_subscribe() do
 /*SUBSCRIBE*/		
 	end
@@ -31,7 +46,13 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		jsmntok_t tokens[32];` // 32 should be adjusted for the largest message to be parsed
 		var parse_result : Int16
 		
-		// `printf("Topic:%s, Payload:%s\n", `&topic&`, `&payload&`);`
+		// Check that this is a message for this port
+		`int mqtt_topic_name_length = strlen(`&mqtt_topic_name&`);`
+		if (`!(strlen(`&topic&`) > mqtt_topic_name_length+1)`) return false
+		if (`strncmp(`&topic&`, `&mqtt_topic_name&`, mqtt_topic_name_length) != 0`) return false
+		if (`!(`&topic&`[mqtt_topic_name_length] == '/')`) return false
+		
+		var msg_name : String = `&`&topic&`[mqtt_topic_name_length+1]`
 		
 		parse_result = `jsmn_parse(&parser, `&payload&`, `&len&`, tokens, 32);`
 	

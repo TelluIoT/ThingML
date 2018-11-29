@@ -1,0 +1,127 @@
+import "TestMQTTPorts.thingml"
+import "timer.thingml" from stl
+
+
+thing MQTTEchoTestClient includes TestMQTTSenderPort, TestMQTTReceiverPort, MQTTAdapterCtrlPort, TimerClientPort {
+	
+	statechart sc init Connect {
+		
+		state Connect {
+			on entry do
+				println "Echo: Connecting..."
+				mqtt!mqtt_set_prefix("test/mqttserializer")
+				mqtt!mqtt_connect("TEST", "localhost", 1883, false)
+			end
+			
+			transition -> Connected event mqtt?mqtt_connected
+		}
+		
+		internal event mqtt?mqtt_error action print "Echo: MQTT Error."
+		
+		composite state Connected init TestNoParameters {
+			on entry do
+				println "Test: Connected and ready."
+			end
+			
+			transition -> Connect event mqtt?mqtt_disconnected action print "Echo: MQTT Disconnected."
+			
+			state TestNoParameters {
+				
+				on entry do 
+					print "TestNoParameters..."
+					sender!no_parameters()
+					timer!timer_start(0, 1000)
+				end
+				
+				on exit timer!timer_cancel(0)
+				
+				transition -> TestNumbers1 event receiver?no_parameters action println "OK"
+				transition -> TestNumbers1 event timer?timer_timeout action println "TIMEOUT"
+			}
+			
+			state TestNumbers1 {
+				
+				property i8 : Int8 		= 120
+				property ui8 : UInt8 	= 185
+				property i : Integer 	= 25001
+				property ui : UInt16 	= 43012
+				property d : Double 	= 35.51
+				property l : Int64 		= 1011121314
+				
+				on entry do 
+					print "TestNumbers1    ..."
+					sender!some_numbers(i8, ui8, i, ui, d, l)
+					timer!timer_start(0, 1000)
+				end
+				
+				on exit timer!timer_cancel(0)
+				
+				transition -> TestNumbers2 event timer?timer_timeout action println "TIMEOUT"
+				transition -> TestNumbers2 event e:receiver?some_numbers action do
+					if (e.i8 != i8) println "FAILED (i8)"
+					else if (e.ui8 != ui8) println "FAILED (ui8)"
+					else if (e.i != i) println "FAILED (i)"
+					else if (e.ui != ui) println "FAILED (ui)"
+					else if (e.d != d) println "FAILED (d)"
+					else if (e.l != l) println "FAILED (l). Expected ", l, " Got:", e.l
+					else println "OK"
+				end
+				
+			}
+			
+			state TestNumbers2 {
+				
+				property i8 : Int8 		= -120
+				property ui8 : UInt8 	= 35
+				property i : Integer 	= -27045
+				property ui : UInt16 	= 0
+				property d : Double 	= -35.75
+				property l : Int64 		= -101112650
+				
+				on entry do 
+					print "TestNumbers2    ..."
+					sender!some_numbers(i8, ui8, i, ui, d, l)
+					timer!timer_start(0, 1000)
+				end
+				
+				on exit timer!timer_cancel(0)
+				
+				transition -> TestString event timer?timer_timeout action println "TIMEOUT"
+				transition -> TestString event e:receiver?some_numbers action do
+					if (e.i8 != i8) println "FAILED (i8)"
+					else if (e.ui8 != ui8) println "FAILED (ui8)"
+					else if (e.i != i) println "FAILED (i)"
+					else if (e.ui != ui) println "FAILED (ui)"
+					else if (e.d != d) println "FAILED (d)"
+					else if (e.l != l) println "FAILED (l). Expected ", l, " Got:", e.l
+					else println "OK"
+				end
+				
+			}
+			
+			state TestString {
+				
+				property c : Char 		= 'c'
+				property str : String 	= "Hello World!"
+				
+				on entry do 
+					print "TestString      ..."
+					sender!some_strings(c, str)
+					timer!timer_start(0, 1000)
+				end
+				
+				on exit timer!timer_cancel(0)
+				
+				transition -> TestNoParameters event timer?timer_timeout action println "TIMEOUT"
+				transition -> TestNoParameters event e:receiver?some_strings action do
+					if (e.c != c) println "FAILED (c)"
+					//else if (`!`&e.str&`.equals(`&str&`)`) println "FAILED (str)"
+					else println "OK (but str not checked)"
+				end
+				
+			}
+			
+		}
+	}
+}
+
