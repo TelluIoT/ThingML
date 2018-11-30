@@ -19,7 +19,6 @@ package org.thingml.annotations;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EClass;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -145,7 +144,7 @@ public class AnnotationRegistry {
 		//@type_checker
 		final String tc_name = "type_checker";
 		final String tc_desc = "Specifies the abstract type of a ThingML-defined primitive type. Used by the type checker.";
-		final EClass tc_scope[] = {ThingMLPackage.eINSTANCE.getPrimitiveType()};
+		final EClass tc_scope[] = {ThingMLPackage.eINSTANCE.getType()};
 		final String tc_values[] = {"Byte", "Integer", "Boolean", "Character", "String", "Real", "Void", "Object"};
 		final Annotation tc_annotation = new EnumAnnotation(tc_name, tc_desc, tc_scope, tc_values);
 		annotations.put(tc_name, tc_annotation);
