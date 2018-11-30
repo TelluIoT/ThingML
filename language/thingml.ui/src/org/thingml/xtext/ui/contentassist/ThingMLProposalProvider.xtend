@@ -8,6 +8,7 @@ import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.RuleCall
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.thingml.annotations.AnnotationRegistry
 import org.thingml.xtext.constraints.ThingMLHelpers
 
 /**
@@ -15,9 +16,50 @@ import org.thingml.xtext.constraints.ThingMLHelpers
  * on how to customize the content assistant.
  */
 class ThingMLProposalProvider extends AbstractThingMLProposalProvider {
+	
+		override public void completePlatformAnnotation_Name(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+			println("completePlatformAnnotation_Name")
+			super.completePlatformAnnotation_Name(model, assignment, context, acceptor)
+			
+			AnnotationRegistry.availableAnnotations(model).forEach[a | 
+				val String proposal = "@" + a + " \"...\""
+				acceptor.accept(createCompletionProposal(proposal, context))
+			]
+		}
+		
+		def completeActionAndExpression(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+			val thing = ThingMLHelpers.findContainingThing(model)
+			if (thing != null) {
+				ThingMLHelpers.allProperties(thing).forEach[p |
+					val String proposal = p.name
+					acceptor.accept(createCompletionProposal(proposal, context))
+				]
+				
+				ThingMLHelpers.allFunctions(thing).forEach[f |
+					val String proposal = f.name
+					acceptor.accept(createCompletionProposal(proposal, context))
+				]			
+			}
+			
+			val state = ThingMLHelpers.findContainingState(model)
+			if (state != null) {
+				ThingMLHelpers.allProperties(state).forEach[p |
+					val String proposal = p.name
+					acceptor.accept(createCompletionProposal(proposal, context))
+				]
+			}
+		}
+		
+		override public void complete_Expression(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+			completeActionAndExpression(model, ruleCall, context, acceptor)
+		}
+		
+		override public void complete_Action(EObject model, RuleCall ruleCall, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+			completeActionAndExpression(model, ruleCall, context, acceptor)
+		}		
 
     	override public void completeThing_Messages(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
-    		super.completeThing_Messages(model, assignment, context, acceptor)
+    		super.completeThing_Messages(model, assignment, context, acceptor)    		
  
 			//compute the plain proposal
 			val String proposal0 = "message m()"
@@ -42,7 +84,7 @@ class ThingMLProposalProvider extends AbstractThingMLProposalProvider {
 			super.complete_PrimitiveType(model, ruleCall, context, acceptor)
  
 			//compute the plain proposal
-			val String proposal0 = "datatype MyType<size> @type_checker \"Any\" @c_type \"void\" @java_type \"Object\""
+			val String proposal0 = "datatype MyType<size>"
  
   			acceptor.accept(createCompletionProposal(proposal0, context))
 		}		

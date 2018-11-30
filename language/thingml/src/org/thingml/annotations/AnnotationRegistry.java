@@ -16,11 +16,14 @@
  */
 package org.thingml.annotations;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 public class AnnotationRegistry {
@@ -190,6 +193,19 @@ public class AnnotationRegistry {
 		});
 
 		return builder.toString();
+	}
+	
+	public static List<String> availableAnnotations(EObject o) {
+		final List<String> result = new ArrayList<>();
+		for(Annotation a : annotations.values()) {
+			for(EClass clazz : a.scope) {
+				if (clazz.isInstance(o)) {
+					result.add(a.name);
+					break;
+				}
+			}
+		}
+		return result;
 	}
 	
 	public static void main(String args[]) {
