@@ -22,7 +22,8 @@ import org.thingml.xtext.thingML.ThingMLPackage;
 
 public class Annotation {
 	
-	public String name;
+	public String name;	
+
 	public String description;
 	public EClass scope[] = {ThingMLPackage.eINSTANCE.getAnnotatedElement()}; //By default, annotations could apply to any AnnotatedElement
 	
@@ -30,6 +31,10 @@ public class Annotation {
 		this.name = name;
 		this.description = description;
 		this.scope = scope;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public boolean check(EObject source, String value) {

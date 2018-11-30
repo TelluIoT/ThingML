@@ -16,8 +16,10 @@
  */
 package org.thingml.annotations;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EClass;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -176,5 +178,22 @@ public class AnnotationRegistry {
 		final Annotation js_annotation = new Annotation(js_name, js_desc, js_scope);
 		annotations.put(js_name, js_annotation);
 		
+	}
+	
+	public static String toMD() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("# List of officially-supported annotations\n\n");
+		
+		annotations.values().stream().sorted(Comparator.comparing(Annotation::getName)).forEach(a -> {
+			builder.append("## @" + a.name + "\n\n");
+			builder.append("- *description*: " + a.description + "\n");
+			builder.append("- *applies to*: " + ((a.scope == null || a.scope.length == 0)? "all" : a.scopeToString()) + "\n\n");
+		});
+
+		return builder.toString();
+	}
+	
+	public static void main(String args[]) {
+		System.out.println(toMD());
 	}
 }
