@@ -139,7 +139,7 @@ public class JavaJSONMQTTGenerator extends ThingMLTool {
     
     public void generate_parsing_msg(Port p, Message m, StringBuilder b) {
     	
-    	b.append("\n\t\t\tcase \"" + m.getName() + "\" : \n");
+    	b.append("\n\t\t\tcase \"" + m.getName() + "\" : {\n");
     	b.append("\t\t\t\t__valid_msg = true;\n");
     	for (Parameter param : m.getParameters()) {
     		String jtype = getJavaType(param.getTypeRef().getType());
@@ -155,7 +155,7 @@ public class JavaJSONMQTTGenerator extends ThingMLTool {
     	b.append(")`\n");
     	b.append("\t\t\t\telse {\n");
     	b.append("\t\t\t\t\t`error \"JSON ERROR: error parsing message "+m.getName()+", message has been dropped.\"`\n");
-    	b.append("\t\t\t\t}break;\n");
+    	b.append("\t\t\t\t}} break;\n");
     }
     
     public String getJSONParseMethod(String javaType) {

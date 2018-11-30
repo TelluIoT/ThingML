@@ -126,6 +126,8 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 	property broker_uri : String = "tcp://localhost:1883"
 	
 	readonly property load_certificate_from_ressource : Boolean = false
+	
+	property debug_log : Boolean = false
 
 	
 	function setTopicPrefix(src : String) do
@@ -135,7 +137,7 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 	function mqtt_connect() : Boolean do
 	    `try {`
 		    `MemoryPersistence persistence = new MemoryPersistence();`
-		    `Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Connect to: " + `&broker_uri&`);`
+
 		    `MqttConnectOptions connOpts = new MqttConnectOptions();`
 	        `connOpts.setCleanSession(true);`
 	        `connOpts.setAutomaticReconnect(true);`
@@ -159,6 +161,8 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		    
 		    // For now we are only monitoring the connection on the subscriber client
 		    `mqttAsyncClient.setCallback(this);`
+		    
+		    `if (`&debug_log&`) Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Connect to: " + `&broker_uri&` );`
 		    
 		    // Connect and collect associated callbacks
 		    `IMqttToken mqttConnectToken = mqttAsyncClient.connect(connOpts, null, new IMqttActionListener() {
@@ -185,7 +189,7 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) : Boolean do
 		if (`mqttAsyncClient == null`) return false
         `try {
-            //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Publish: " + `&topic&` + " -> " + new String(`&payload&`));
+            if (`&debug_log&`) Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Publish: " + `&topic&` + " -> " + new String(`&payload&`));
             
             MqttMessage message = new MqttMessage(`&payload&`);
             String fulltopic = `&topic&`;
@@ -217,12 +221,11 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 	function mqtt_subscribe(topic : String) : Boolean do
 		if (`mqttAsyncClient == null`) return false
         `try {
-            // Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Subscribe: " + `&topic&`);
-            
+           
             String fulltopic = `&topic&`;
             if (`&topic_prefix&` != null) fulltopic = `&topic_prefix&` + "/" + fulltopic;
             
-            //System.out.println("Subscribe to " + fulltopic);
+            if (`&debug_log&`) Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Subscribe: " + fulltopic);
             
             mqttAsyncClient.subscribe(fulltopic, 0, null, new IMqttActionListener() {
 					@Override
@@ -248,17 +251,21 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		@override "true" 
 		@java_visibility "public"
 	do
+		
+		`if (`&debug_log&`) Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Message Arrived: " + `&topic&` + " -> " + new String(`&m&`.getPayload()));`
+	
 		`String topic_without_prefix = `&topic&`;`
 		`if (topic_without_prefix.startsWith(`&topic_prefix&`)) topic_without_prefix = topic_without_prefix.substring(`&topic_prefix&`.length());`
 		`if (topic_without_prefix.length()>1 && topic_without_prefix.charAt(0) == '/') topic_without_prefix = topic_without_prefix.substring(1);`
-		
-		mqtt!mqtt_message(`topic_without_prefix`, ``&m&`.getPayload()`, ``&m&`.getPayload().length`)
+
+		 mqtt!mqtt_message(`topic_without_prefix`, ``&m&`.getPayload()`, ``&m&`.getPayload().length`)
 	end
 	
 	function connectionLost(t : Throwable) 
 		@override "true" 
 		@java_visibility "public"
 	do
+		`if (`&debug_log&`) Logger.getLogger(this.getClass().getName()).log(Level.INFO, "MQTT Connection Lost.");`
 		mqtt!mqtt_error()
 		mqtt!mqtt_disconnected()
 	end
