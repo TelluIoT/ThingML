@@ -19,6 +19,8 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 @c_global ""
 {
 	
+	property debug_log : Boolean = false
+	
 	property client : Mosquitto = `NULL`
 	
 	function init_properties() do
@@ -54,7 +56,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 		3 - connection refused (broker unavailable)
 		4-255 - reserved for future use */
 		
-		 print "mosquitto_connect_callback\n"
+		 //if (debug_log) print "mosquitto_connect_callback\n"
 		 if (`result` == 0) mqtt!mqtt_connected()
 		
 	end
@@ -66,7 +68,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 		/*integer value indicating the reason for the disconnect.  A value of 0 means the client has called mosquitto_disconnect.  Any other value indicates that the disconnect is unexpected.
 		 */
 		 
-		 print "mosquitto_disconnect_callback\n"
+		 //if (debug_log) print "mosquitto_disconnect_callback\n"
 		 mqtt!mqtt_disconnected()
 		 
 		 
@@ -124,7 +126,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
 	do
 		// Uncomment to print MQTT log
-		// `printf("[MQTT %s:%d] %s\n", `&client_id&`, level, msg);`
+		if (debug_log) `printf("[MQTT %s:%d] %s\n", `&client_id&`, level, msg);`
 	end
 
 
@@ -228,6 +230,8 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 		if (topic_prefix != `NULL`) `snprintf(top, 256, "%s/%s", `&topic_prefix&`, `&topic&`);`
 		else `snprintf(top, 256, "%s", `&topic&`);`
 
+		//if (debug_log) `printf("MQTT Publish to topic: %s\n", top);`
+
 		var status : Integer = `mosquitto_publish(`&client&`, NULL, top, `&size&`, `&payload&`, `&qos&`, `&retain&`)`
 		if (status != `MOSQ_ERR_SUCCESS`) do
     		error "[MQTT] Error publishing message (mosquitto_publish returned " error status error ")\n"
@@ -241,7 +245,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 		if (topic_prefix != `NULL`) `snprintf(top, 256, "%s/%s", `&topic_prefix&`, `&topic&`);`
 		else `snprintf(top, 256, "%s", `&topic&`);`
 	
-		//`printf("MQTT Subscribe to %s\n", top);`
+		//if (debug_log) `printf("MQTT Subscribe to topic: %s\n", top);`
 	
 		var status : Integer = `mosquitto_subscribe(`&client&`, NULL, top, 0)`
 		if (status != `MOSQ_ERR_SUCCESS`) do
