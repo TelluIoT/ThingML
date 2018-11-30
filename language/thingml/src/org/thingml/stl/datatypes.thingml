@@ -8,7 +8,7 @@
  * TODO: some information is missing to properly serialize/deserialize some types, typically UInt and Int, which have the same size, but different encodings
  *****************************************************************************/
 datatype Byte<1>
-	@type_checker "Byte"
+	@type_checker "Integer"
 	@c_type "uint8_t"
 	@java_type "byte"
 	@js_type "byte"
@@ -16,7 +16,7 @@ datatype Byte<1>
 	@go_type "byte";
 
 datatype Char<1>
-	@type_checker "Byte"
+	@type_checker "Integer"
 	@c_type "char"
 	@java_type "byte"
 	@js_type "byte"
@@ -94,6 +94,14 @@ datatype Int64<8>
     @js_type "long"
     @java_primitive "true"
     @go_type "int64";
+
+datatype UInt64<8>
+    @type_checker "Integer"
+	@c_type "uint64_t"
+	@java_type "long"
+	@js_type "long"
+	@java_primitive "true"
+	@go_type "uint64";
 
 datatype Integer<2>
 	@type_checker "Integer"
