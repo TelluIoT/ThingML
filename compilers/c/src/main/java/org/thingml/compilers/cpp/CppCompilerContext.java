@@ -23,6 +23,7 @@ import org.thingml.compilers.c.CCompilerContext;
 /**
  * Created by rkumar
  */
+@Deprecated
 public abstract class CppCompilerContext extends CCompilerContext {
     
     public CppCompilerContext(ThingMLCompiler c) {

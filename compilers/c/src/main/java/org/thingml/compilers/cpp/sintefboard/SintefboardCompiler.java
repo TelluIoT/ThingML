@@ -28,6 +28,7 @@ import org.thingml.xtext.thingML.Thing;
 /**
  * Created by ffl on 25.11.14.
  */
+@Deprecated
 public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     public SintefboardCompiler() {

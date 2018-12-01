@@ -28,6 +28,7 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
 
+@Deprecated
 public class TeensyCompiler extends OpaqueThingMLCompiler{
 
 	public TeensyCompiler() {

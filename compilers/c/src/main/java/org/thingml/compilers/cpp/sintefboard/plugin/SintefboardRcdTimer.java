@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.Thing;
  *
  * @author sintef
  */
+@Deprecated
 public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
 
     public SintefboardRcdTimer(Configuration cfg, CCompilerContext ctx) {

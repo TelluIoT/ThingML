@@ -33,6 +33,7 @@ import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
+@Deprecated
 public class ReactJSCompiler extends JSCompiler {
 	
 	public ReactJSCompiler() {

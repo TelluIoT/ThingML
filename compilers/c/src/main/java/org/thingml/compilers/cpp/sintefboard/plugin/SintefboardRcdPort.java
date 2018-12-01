@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.Thing;
  *
  * @author sintef
  */
+@Deprecated
 public class SintefboardRcdPort extends CNetworkLibraryGenerator {
 
     public SintefboardRcdPort(Configuration cfg, CCompilerContext ctx) {
