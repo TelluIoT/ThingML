@@ -29,6 +29,7 @@ import org.thingml.xtext.thingML.Thing;
 /**
  * Created by bmori on 17.09.2015.
  */
+@Deprecated
 public class DebugProfile {
 
     final private Thing thing;

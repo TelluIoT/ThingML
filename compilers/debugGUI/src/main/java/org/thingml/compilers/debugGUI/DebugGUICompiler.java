@@ -36,6 +36,7 @@ import org.thingml.xtext.thingML.ExternalConnector;
  *
  * @author sintef
  */
+@Deprecated
 public class DebugGUICompiler extends OpaqueThingMLCompiler {
 
     public DebugGUICompiler() {
