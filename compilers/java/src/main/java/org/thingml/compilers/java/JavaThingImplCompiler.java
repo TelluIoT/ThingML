@@ -17,7 +17,9 @@
 package org.thingml.compilers.java;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
@@ -200,12 +202,14 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasMessages);
 
 		// Add import statements from the java_import annotation on the Thing
-		if (AnnotatedElementHelper.hasAnnotation(thing, "java_import")) {
-			builder.append("\n//START: @java_import annotation\n");
-			for (String str : AnnotatedElementHelper.annotation(thing, "java_import")) {
-				builder.append(str);
-				builder.append("\n");
-			}
+		Set<String> imp = new HashSet();
+		imp.addAll(AnnotatedElementHelper.annotation(thing, "java_import"));
+		for(Thing include : ThingHelper.allIncludedThings(thing))
+			imp.addAll(AnnotatedElementHelper.annotation(include, "java_import"));
+		for (String i : imp) {		
+			builder.append("\n//START: @java_import annotation\n");			
+			builder.append(i);
+			builder.append("\n");
 			builder.append("\n//END: @java_import annotation\n");
 		}
 
@@ -213,17 +217,21 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append(" * Definition for type : " + thing.getName() + "\n");
 		builder.append(" **/\n");
 
-		List<String> interfaces = new ArrayList<String>();
+		Set<String> interfaces = new HashSet<String>();
 		for (Port p : ThingMLHelpers.allPorts(thing)) {
 			if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getReceives().size() > 0) {
 				interfaces.add("I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName());
 			}
 		}
+		for(Thing include : ThingHelper.allIncludedThings(thing))
+			interfaces.addAll(AnnotatedElementHelper.annotation(include, "java_interface"));
 		if (AnnotatedElementHelper.hasAnnotation(thing, "java_interface")) {
 			interfaces.addAll(AnnotatedElementHelper.annotation(thing, "java_interface"));
 		}
+		
+		
 		builder.append("public class " + ctx.firstToUpper(thing.getName()) + " extends Component ");
-		if (interfaces.size() > 0) {
+		if (!interfaces.isEmpty()) {
 			builder.append("implements ");
 			int id = 0;
 			for (String i : interfaces) {
@@ -237,12 +245,14 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append(" {\n\n");
 
 		// Add import statements from the java_import annotation on the Thing
-		if (AnnotatedElementHelper.hasAnnotation(thing, "java_features")) {
+		Set<String> features = new HashSet();
+		features.addAll(AnnotatedElementHelper.annotation(thing, "java_features"));
+		for(Thing include : ThingHelper.allIncludedThings(thing))
+			features.addAll(AnnotatedElementHelper.annotation(include, "java_features"));
+		for (String f : features) {		
 			builder.append("\n\t// START: @java_features annotation\n");
-			for (String str : AnnotatedElementHelper.annotation(thing, "java_features")) {
-				builder.append(str);
-				builder.append("\n");
-			}
+			builder.append(f);
+			builder.append("\n");
 			builder.append("\n\t// END: @java_features annotation\n");
 			builder.append("\n");
 		}
