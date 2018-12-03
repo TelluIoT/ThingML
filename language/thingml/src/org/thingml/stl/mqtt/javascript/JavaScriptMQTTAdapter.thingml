@@ -1,0 +1,139 @@
+import "../MQTTAdapterMsgs.thingml"
+
+object MQTT
+@js_dep "mqtt:2.18.8"
+
+thing JavaScriptMQTTAdapter includes AbstractMQTTAdapter
+@js_include "https://unpkg.com/mqtt/dist/mqtt.min.js"
+{
+
+	property client : MQTT
+	property broker_uri : String = "tcp://localhost:1883"  //FIXME: I guess this should be built from included broker_host and broker_port?		
+	property debug_log : Boolean = false
+
+	set topic_prefix = ""	
+		
+	function setTopicPrefix(src : String) do
+		topic_prefix = src
+	end
+
+	function mqtt_connect() do
+		if (debug_log) println "connect to MQTT broker..."
+		
+		//Setting options
+		`var options = {};`		
+		if (enable_user_credentials) do
+			`options.username = ` & username & `;
+			options.password = ` & password & `;`
+		end		
+		if (enable_tls_certificates) do
+			`options.key = fs.readFileSync('` & keyfile & `');
+			options.cert = fs.readFileSync('` & certfile & `');
+			options.ca = fs.readFileSync('` & cafile & `');'`
+		end
+					
+		//Connecting
+		client = (`mqtt.connect('` & broker_uri & `, options)`) as MQTT
+			
+			
+		//Handling status
+		`` & client &`.on('connect', () => {`
+			mqtt!mqtt_connected()
+		`});`
+		
+		`` & client &`.on('error', () => {`
+			mqtt!mqtt_error()
+		`});`
+				
+		`` & client &`.on('close', () => {`
+			mqtt!mqtt_disconnected()
+			`` & client & `.end();`
+		`});`		
+		
+		//When message arrives
+		`` & client & `.on("message", (topic, message) => {`			
+			mqtt!mqtt_message((`topic.replace(` & topic_prefix & `)`) as String, `message` as Buffer, `message.length` as Int32) 	
+		`});`				
+	end
+
+	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) do
+		if (client == `undefined`) do
+			mqtt!mqtt_error()
+			return
+		end
+		
+		if (debug_log) println "publish on MQTT topic " + topic + ": " + payload
+		
+		var fulltopic : String = topic
+		if (topic_prefix != "") fulltopic = topic_prefix + "/" + topic
+		
+		`` & client &`.publish(` & fulltopic & `, ` & payload & `, {qos:0}, (err)=>{
+			if (err)` 
+				mqtt!mqtt_error()
+			`else` 
+				mqtt!mqtt_message_published()
+		`});`
+	end
+
+
+	function mqtt_subscribe(topic : String) do
+		if (client == `undefined`) do
+			mqtt!mqtt_error()
+			return
+		end
+		
+		var fulltopic : String = topic
+		if (topic_prefix != "") fulltopic = topic_prefix + "/" + topic
+		
+		`` & client &`.subscribe(` & topic & `, (err)=>{
+			if (err)` 
+				mqtt!mqtt_error()
+			`else` 
+				mqtt!mqtt_topic_subscribed()
+		`});`
+			
+	end
+	
+	
+	statechart MQTTAdapterThing init Start {
+		
+		internal event m: mqtt?mqtt_set_credentials action do
+			username = m.usr
+			password = m.pwd
+			enable_user_credentials = true
+		end
+		
+		internal event m: mqtt?mqtt_set_prefix action do
+			setTopicPrefix(m.prefix)
+		end
+		
+		internal event m: mqtt?mqtt_set_tls_certificates action do
+			cafile = m.cafile
+			capath = m.capath
+			certfile = m.certfile
+			keyfile = m.keyfile
+			enable_tls_certificates = true
+		end
+		
+		internal event m : mqtt?mqtt_connect action do
+			client_id = m.client_id
+			`uri = '';`
+			if (m.tls) `uri = 'ssl://';`
+			else `uri = 'tcp://';`
+			`uri += ` & m.host & ` + ":" + ` & m.portno & `;` 
+			broker_uri = `uri` as String
+			enable_tls = m.tls
+			mqtt_connect()
+		end
+		
+		internal event m : mqtt?mqtt_publish action do
+			mqtt_publish(m.topic, m.payload, m.size)
+		end
+		
+		internal event m : mqtt?mqtt_subscribe action do
+			mqtt_subscribe(m.topic)
+		end
+		
+		state Start {}
+	}
+}
