@@ -4,7 +4,7 @@
   "description": "<NAME> configuration generated from ThingML",
   "private": true,
   "dependencies": {
-    "state.js": "^5.11.0",
+    "@steelbreeze/state": "7.0.1",
     "events": "^1.1.1",
     "babel-core": "^6.2.1",
     "babel-loader": "^6.2.0",
