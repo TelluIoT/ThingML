@@ -17,7 +17,6 @@
 package org.thingml.compilers.java;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -26,7 +25,6 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.TyperHelper;
-import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
@@ -45,6 +43,7 @@ import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyReference;
@@ -286,7 +285,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 				generate(action.getTypeRef().getCardinality(), builder, ctx);
 				builder.append("];");
 			} else {
-				if (AnnotatedElementHelper.isDefined(action.getTypeRef().getType(), "java_primitive", "true")) {
+				if (action.getTypeRef().getType() instanceof PrimitiveType) {
 					builder.append(" = " + JavaHelper.getDefaultValue(action.getTypeRef().getType()) + ";");
 				} else {
 					builder.append(" = null;");
@@ -299,7 +298,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
 		for (Expression msg : action.getMsg()) {
-			final Type actual = TypeChecker.computeTypeOf(msg);
+			//final Type actual = TypeChecker.computeTypeOf(msg);
 			builder.append("System.err.print(");
 			/*if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
 				builder.append("String.format(\"0x%02X\",(");
@@ -321,7 +320,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			builder.append("synchronized(System.out) {\n");
 		}		
 		for (Expression msg : action.getMsg()) {
-			final Type actual = TypeChecker.computeTypeOf(msg);
+			//final Type actual = TypeChecker.computeTypeOf(msg);
 			builder.append("System.out.print(");
 			/*if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
 				builder.append("String.format(\"0x%02X\",(");

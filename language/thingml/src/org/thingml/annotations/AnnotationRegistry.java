@@ -83,6 +83,13 @@ public class AnnotationRegistry {
 		final Annotation over_annotation = new Annotation(over_name, over_desc, over_scope);
 		annotations.put(over_name, over_annotation);
 		
+		//@go_import
+		final String gimp_name = "go_import";
+		final String gimp_desc = "Imports a Go package into the generated code for this Thing.";
+		final EClass gimp_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation gimp_annotation = new Annotation(gimp_name, gimp_desc, gimp_scope);
+		annotations.put(gimp_name, gimp_annotation);
+		
 		//@js_dep
 		final String npm_name = "js_dep";
 		final String npm_desc = "Adds an NPM dependecy to the generated package.json file.";
@@ -151,6 +158,14 @@ public class AnnotationRegistry {
 		final String tc_values[] = {"Byte", "Integer", "Boolean", "Character", "String", "Real", "Void", "Object"};
 		final Annotation tc_annotation = new EnumAnnotation(tc_name, tc_desc, tc_scope, tc_values);
 		annotations.put(tc_name, tc_annotation);
+		
+		//@ignore
+		final String ig_name = "ignore";
+		final String ig_desc = "Ignores specific warnings raised by the checker";
+		final EClass ig_scope[] = {ThingMLPackage.eINSTANCE.getAnnotatedElement()};
+		final String ig_values[] = {"not-used", "sink-state"};
+		final Annotation ig_annotation = new EnumAnnotation(ig_name, ig_desc, ig_scope, ig_values);
+		annotations.put(ig_name, ig_annotation);
 		
 		//@c_type
 		final String c_name = "c_type";

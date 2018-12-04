@@ -12,7 +12,6 @@ datatype Byte<1>
 	@c_type "uint8_t"
 	@java_type "byte"
 	@js_type "byte"
-	@java_primitive "true"
 	@go_type "byte";
 
 datatype Char<1>
@@ -20,7 +19,6 @@ datatype Char<1>
 	@c_type "char"
 	@java_type "byte"
 	@js_type "byte"
-	@java_primitive "true"
 	@go_type "byte";
 
 datatype Boolean<1>
@@ -28,7 +26,6 @@ datatype Boolean<1>
 	@c_type "bool"
 	@java_type "boolean"
 	@js_type "boolean"
-	@java_primitive "true"
 	@go_type "bool";
 
 datatype UInt8<1>
@@ -36,7 +33,6 @@ datatype UInt8<1>
 	@c_type "uint8_t"
 	@java_type "int"
 	@js_type "short"
-	@java_primitive "true"
 	@go_type "uint8";
 
 datatype Int8<1>
@@ -44,7 +40,6 @@ datatype Int8<1>
 	@c_type "int8_t"
 	@java_type "int"
 	@js_type "short"
-	@java_primitive "true"
 	@go_type "int8";
 
 datatype UInt16<2>
@@ -52,7 +47,6 @@ datatype UInt16<2>
 	@c_type "uint16_t"
 	@java_type "int"
 	@js_type "int"
-	@java_primitive "true"
 	@go_type "uint16";
 
 datatype Int16<2>
@@ -60,7 +54,6 @@ datatype Int16<2>
 	@c_type "int16_t"
 	@java_type "int"
 	@js_type "short"
-	@java_primitive "true"
 	@go_type "int16";
 
 datatype Int32<4>
@@ -68,7 +61,6 @@ datatype Int32<4>
 	@c_type "int32_t"
 	@java_type "long"
 	@js_type "int"
-	@java_primitive "true"
 	@go_type "int32";
 
 datatype UInt32<4>
@@ -76,7 +68,6 @@ datatype UInt32<4>
 	@c_type "uint32_t"
 	@java_type "long"
 	@js_type "long"
-	@java_primitive "true"
 	@go_type "uint32";
 
 datatype Long<4>
@@ -84,7 +75,6 @@ datatype Long<4>
 	@c_type "uint32_t"
 	@java_type "long"
 	@js_type "long"
-	@java_primitive "true"
 	@go_type "uint32";
 
 datatype Int64<8>
@@ -92,7 +82,6 @@ datatype Int64<8>
     @c_type "int64_t"
     @java_type "long"
     @js_type "long"
-    @java_primitive "true"
     @go_type "int64";
 
 datatype UInt64<8>
@@ -100,7 +89,6 @@ datatype UInt64<8>
 	@c_type "uint64_t"
 	@java_type "long"
 	@js_type "long"
-	@java_primitive "true"
 	@go_type "uint64";
 
 datatype Integer<2>
@@ -108,7 +96,6 @@ datatype Integer<2>
 	@c_type "int16_t"
 	@java_type "int"
 	@js_type "short"
-	@java_primitive "true"
 	@go_type "int16";
 
 datatype Float<4>
@@ -116,7 +103,6 @@ datatype Float<4>
 	@c_type "float"
 	@java_type "float"
 	@js_type "float"
-	@java_primitive "true"
 	@go_type "float32";
 
 datatype Double<8>
@@ -124,7 +110,6 @@ datatype Double<8>
 	@c_type "double"
 	@java_type "double"
 	@js_type "double"
-	@java_primitive "true"
 	@go_type "float64";
 
 object String
@@ -136,7 +121,6 @@ object String
 
 enumeration DigitalState as Byte
 	@java_type "byte"
-	@java_primitive "true"
 	@c_type "uint8_t"
 	@go_type "uint8"
 {
