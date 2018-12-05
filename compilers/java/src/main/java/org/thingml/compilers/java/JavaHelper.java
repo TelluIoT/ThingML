@@ -25,6 +25,7 @@ import java.util.Set;
 import org.thingml.compilers.Context;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.Function;
@@ -146,7 +147,11 @@ public class JavaHelper {
     public static Set<String> allMavenDep(Configuration cfg) {
         Set<String> result = new HashSet<String>();
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            for (String dep : AnnotatedElementHelper.annotation(t, "maven_dep")) {
+        	Set<String> deps = new HashSet();
+    		deps.addAll(AnnotatedElementHelper.annotation(t, "maven_dep"));
+    		for(Thing include : ThingHelper.allIncludedThings(t))
+    			deps.addAll(AnnotatedElementHelper.annotation(include, "maven_dep"));        	        
+            for (String dep : deps) {
                 String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
                 result.add(cleanDep);
             }

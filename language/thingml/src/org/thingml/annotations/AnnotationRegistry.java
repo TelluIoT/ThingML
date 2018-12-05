@@ -163,7 +163,7 @@ public class AnnotationRegistry {
 		final String ig_name = "ignore";
 		final String ig_desc = "Ignores specific warnings raised by the checker";
 		final EClass ig_scope[] = {ThingMLPackage.eINSTANCE.getAnnotatedElement()};
-		final String ig_values[] = {"not-used", "sink-state"};
+		final String ig_values[] = {"not-used", "sink", "type-warning"};
 		final Annotation ig_annotation = new EnumAnnotation(ig_name, ig_desc, ig_scope, ig_values);
 		annotations.put(ig_name, ig_annotation);
 		
