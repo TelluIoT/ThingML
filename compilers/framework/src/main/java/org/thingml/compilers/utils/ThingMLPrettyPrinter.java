@@ -21,49 +21,12 @@ import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.xtext.helpers.ToString;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
-import org.thingml.xtext.thingML.AndExpression;
-import org.thingml.xtext.thingML.ArrayIndex;
-import org.thingml.xtext.thingML.BooleanLiteral;
-import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
-import org.thingml.xtext.thingML.CharLiteral;
-import org.thingml.xtext.thingML.ConditionalAction;
-import org.thingml.xtext.thingML.Decrement;
-import org.thingml.xtext.thingML.DivExpression;
-import org.thingml.xtext.thingML.DoubleLiteral;
-import org.thingml.xtext.thingML.EnumLiteralRef;
-import org.thingml.xtext.thingML.EqualsExpression;
-import org.thingml.xtext.thingML.ErrorAction;
-import org.thingml.xtext.thingML.EventReference;
-import org.thingml.xtext.thingML.ExpressionGroup;
-import org.thingml.xtext.thingML.ExternExpression;
-import org.thingml.xtext.thingML.ExternStatement;
-import org.thingml.xtext.thingML.ForAction;
+import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
-import org.thingml.xtext.thingML.GreaterExpression;
-import org.thingml.xtext.thingML.GreaterOrEqualExpression;
-import org.thingml.xtext.thingML.Increment;
-import org.thingml.xtext.thingML.IntegerLiteral;
-import org.thingml.xtext.thingML.LocalVariable;
-import org.thingml.xtext.thingML.LoopAction;
-import org.thingml.xtext.thingML.LowerExpression;
-import org.thingml.xtext.thingML.LowerOrEqualExpression;
-import org.thingml.xtext.thingML.MinusExpression;
-import org.thingml.xtext.thingML.ModExpression;
-import org.thingml.xtext.thingML.NotEqualsExpression;
-import org.thingml.xtext.thingML.NotExpression;
-import org.thingml.xtext.thingML.OrExpression;
-import org.thingml.xtext.thingML.PlusExpression;
-import org.thingml.xtext.thingML.PrintAction;
-import org.thingml.xtext.thingML.PropertyReference;
-import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
-import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.StringLiteral;
-import org.thingml.xtext.thingML.TimesExpression;
-import org.thingml.xtext.thingML.UnaryMinus;
-import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -72,13 +35,25 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     public static boolean USE_ELLIPSIS_FOR_PARAMS = true;
     public static int MAX_BLOCK_SIZE = 3;
-    public static boolean HIDE_BLOCKS = true;
+    public static boolean HIDE_BLOCKS = false;
 
     public final static String NEW_LINE = "\\n";
     public final static String INDENT = "  "; //two blank spaces for indentation
     public static int indent_level = 0;
 
     //ThingML pretty printer (useful for documentation, etc)
+
+    
+    /** ACTIONS **/
+    
+    /**
+     * Default behavior for any action. Override specific methods if needed to define an alternative behavior
+     */
+    @Override
+    public void generate(Action action, StringBuilder builder, Context ctx) {
+    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
+    	builder.append(NEW_LINE);
+    }
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {        
@@ -91,18 +66,6 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         	builder.append(NEW_LINE);
         }
         
-    }
-
-    @Override
-    public void generate(StartSession action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    	builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-        builder.append(NEW_LINE);
     }
 
     @Override
@@ -149,53 +112,6 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         builder.append(temp.toString().replace("\r\n", "\\n").replace("\n", "\\n"));
     }
 
-    @Override
-    public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-        builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(ConditionalAction action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-        builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(LoopAction action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    	builder.append(NEW_LINE);
-    }
-
-    @Override
-  	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(fa).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    	builder.append(NEW_LINE);
-  	}
-
-    @Override
-    public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-        builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-        builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-        builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));        
-        builder.append(NEW_LINE);
-    }
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
@@ -207,112 +123,14 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         }
     }
 
-
-    //ThingML expressions that can be compiled the same way for any imperative language like (Java, JS, C)
-
+    
+    /** EXPRESSIONS **/
+    
+    /**
+     * Default behavior for any expression. Override specific methods if needed to define an alternative behavior
+     */
     @Override
-    public void generate(ArrayIndex expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(OrExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(AndExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(LowerExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-    @Override
-    public void generate(PlusExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(MinusExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(TimesExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(DivExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(ModExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(UnaryMinus expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(NotExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-
-
-    @Override
-    public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(ByteLiteral expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(CharLiteral expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(IntegerLiteral expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(DoubleLiteral expression, StringBuilder builder, Context ctx) {
+    public void generate(Expression expression, StringBuilder builder, Context ctx) {
     	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
     }
 
@@ -322,49 +140,12 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     }
 
     @Override
-    public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
         if (USE_ELLIPSIS_FOR_PARAMS  && expression.getParameters().size() > 1) {
             builder.append(expression.getFunction().getName() + "(...)");
         } else {
         	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
         }
-    }
-
-    @Override
-    public void generate(Increment action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    	builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(Decrement action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    	builder.append(NEW_LINE);
-    }
-
-    @Override
-    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
-    }
-
-    @Override
-    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
     }
 
     @Override
