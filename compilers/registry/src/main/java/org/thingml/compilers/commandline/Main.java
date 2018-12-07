@@ -54,25 +54,17 @@ public class Main {
     @Parameter(names = {"--list-plugins"}, description = "Display the list of available plugins")
     private boolean listPlugins;
 
-    //START TOD0: comment
     @Parameter(names = {"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
     String tool;
     @Parameter(names = {"--options"}, description = "additional options for ThingML tools.")
     String tooloptions;
     boolean toolUsed;
-    //END TODO: vassik
 
     //comment
     public static void printUsage(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
-     //uncomment
-    //public static void printUsage(JCommander jcom, ThingMLCompilerRegistry registry) {
+    	logo();
         System.out.println(" --- ThingML help ---");
-
         System.out.println("Typical usages: ");
-        //uncomment
-        //System.out.println("    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>][-d]");
-
-        //comment test-relevant
         System.out.println("    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>][-d]");
 
         jcom.usage();
@@ -106,16 +98,19 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
+        
         ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
-
-        //comment
         ThingMLToolRegistry toolregistry = ThingMLToolRegistry.getInstance();
 
-        JCommander jcom = new JCommander(main, args);
+        JCommander jcom = JCommander.newBuilder().addObject(main).build();
+        jcom.parse(args);
+        
+        main.toolUsed = main.tool != null;
+        main.compilerUsed = main.compiler != null;
 
         // HELP Handling
         //comment test-relevant
-        if (main.help || ((main.compiler == null) && (main.tool == null) && (!main.listPlugins))) {
+        if (main.help || (!main.compilerUsed && !main.toolUsed && !main.listPlugins)) {
             // comment test-relevant
             printUsage(jcom, registry, toolregistry);
          //uncomment
@@ -135,35 +130,16 @@ public class Main {
         }
 
         if (main.listPlugins) {
-            //uncomment
-            //printPluginList(jcom, registry);
-
-            //comment test-relevant
             printUsage(jcom, registry, toolregistry);
             return;
         }
 
-        // COMPILER/TOOL Handling
+        // COMPILER/TOOL Handling        
 
-        //comment
-        main.toolUsed = main.tool != null;
-
-        main.compilerUsed = main.compiler != null;
-
-        /*
-        uncomment
-        if (main.compiler == null) {
-            System.out.println("Option --compiler must be used (or its short version -c).");
-            return;
-        }*/
-
-        //comment start, test-relevant
-        if (!((main.compiler != null) ^ (main.tool != null))) {
+        if (main.toolUsed && main.compilerUsed) {
            System.out.println("One (and only one) of the option --compiler or --tool must be used (or their short version -c and -t).");
-            return;
+           return;
         }
-        //commetn end, test-relevant
-
 
         //SOURCE Handling
         File input = null;
@@ -232,6 +208,7 @@ public class Main {
 
             //comment START test-relevant
             if (main.toolUsed) {
+            	logo();
                 ThingMLTool thingmlTool = toolregistry.createToolInstanceByName(main.tool.trim());
                 if (thingmlTool == null) {
                     System.out.println("ERROR: Cannot find tool " + main.tool.trim() + ". Use --help (or -h) to check the list of registered compilers.");
@@ -243,10 +220,12 @@ public class Main {
                 System.out.println("Generating code for input model. ");
                 thingmlTool.setSourceFile(input);
                 thingmlTool.generateThingMLFrom(input_model);
+                logo();
             }
             //comment END test-relevant
 
             if (main.compilerUsed) {
+            	logo();
                 if (ThingMLHelpers.allConfigurations(input_model).isEmpty()) {
                     System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
                     return;
@@ -264,17 +243,27 @@ public class Main {
                     System.out.println("Generating code for configuration: " + cfg.getName() + ". InputDirectory is " + indir);
                     thingmlCompiler.compile(cfg);
                 }
+                logo();
             }
             System.out.println("SUCCESS.");
+
 
         } catch (Throwable ex) {
             System.out.println("FATAL ERROR: " + ex.getMessage());
             System.out.println("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:");
             ex.printStackTrace();
             return;
-        }
-
+        }        
         return;
     }
+    
+	private static void logo() {
+		System.out.println("  _____ _     _             __  __ _           ");
+		System.out.println(" |_   _| |__ (_)_ __   __ _|  \\/  | |          ");
+		System.out.println("   | | | '_ \\| | '_ \\ / _\\`| |\\/| | |          ");
+		System.out.println("   | | | | | | | | | | (_| | |  | | |___       ");
+		System.out.println("   |_| |_| |_|_|_| |_|\\__, |_|  |_|_____|      ");
+		System.out.println("                      |___/                    ");
+	}
 
 }

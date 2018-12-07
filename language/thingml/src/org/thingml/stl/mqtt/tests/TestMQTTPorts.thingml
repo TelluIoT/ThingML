@@ -10,6 +10,7 @@ thing fragment TestMQTTSenderPort includes TestMQTTMsgs {
 	provided port sender 
 	@external "posixmqttjson"
 	@external "javamqttjson"
+	@external "javascriptmqttjson"
 	@sync_send "true"
 	{
 		sends no_parameters, some_numbers, some_strings, some_bytes, some_enum
@@ -21,6 +22,7 @@ thing fragment TestMQTTReceiverPort includes TestMQTTMsgs {
 	required port receiver 
 	@external "posixmqttjson"
 	@external "javamqttjson"
+	@external "javascriptmqttjson"
 	@sync_send "true"
 	{
 		receives no_parameters, some_numbers, some_strings, some_bytes, some_enum
