@@ -195,6 +195,15 @@ public class AnnotationRegistry {
 		final Annotation js_annotation = new Annotation(js_name, js_desc, js_scope);
 		annotations.put(js_name, js_annotation);
 		
+		/** DEBUG **/
+		
+		//@mock //FIXME: should actually be a flag...
+		final String mock_name = "mock";
+		final String mock_desc = "Generates a graphical mock-up for this thing.";
+		final EClass mock_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation mock_annotation = new Annotation(mock_name, mock_desc, mock_scope);
+		annotations.put(mock_name, mock_annotation);
+		
 	}
 	
 	public static String toMD() {

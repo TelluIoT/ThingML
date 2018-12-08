@@ -25,6 +25,7 @@ private synchronized void setColorOutput(boolean value){
 
 public $NAME$Mock(String name){
         super(name);
+        init();
         $PORT_DECL$
         initGUI(name);
         }
