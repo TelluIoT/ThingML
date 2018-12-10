@@ -5,7 +5,7 @@
   "main": "main.js",
   "private": true,
   "dependencies": {
-    "@steelbreeze/state": "7.0.1"
+    "@steelbreeze/state": "7.2.2"
   },
   "devDependencies": {
   },
