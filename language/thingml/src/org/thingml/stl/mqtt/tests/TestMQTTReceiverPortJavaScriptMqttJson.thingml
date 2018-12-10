@@ -43,8 +43,8 @@ thing TestMQTTReceiverPort_JavaScriptMqttJson_Impl includes TestMQTTReceiverPort
 			let split = ` & topic & `.split('/');`
 			`if (split.length != 2)` return false // This is not a valid message
 			
-			readonly var portname : String = `split[0]`
-			readonly var msgname : String = `split[1]`
+			readonly var portname : String = `split[0]` as String
+			readonly var msgname : String = `split[1]` as String
 			
 			if (portname != mqtt_topic_name) return false
 			
@@ -70,7 +70,7 @@ thing TestMQTTReceiverPort_JavaScriptMqttJson_Impl includes TestMQTTReceiverPort
 			// Sending for receiver!no_parameters
 			`let json = {};
 			let payload = JSON.stringify(json);`
-			publish_message("no_parameters", `payload`, `payload.length()`)
+			publish_message("no_parameters", `payload` as Buffer, `payload.length` as UInt32)
 		end
 
 		internal event e:receiver?some_numbers action do
@@ -83,7 +83,7 @@ thing TestMQTTReceiverPort_JavaScriptMqttJson_Impl includes TestMQTTReceiverPort
 			json.d = ` & e.d & `;
 			json.l = ` & e.l & `;
 			let payload = JSON.stringify(json);`
-			publish_message("some_numbers", `payload`, `payload.length()`)
+			publish_message("some_numbers", `payload` as Buffer, `payload.length` as UInt32)
 		end
 
 		internal event e:receiver?some_strings action do
@@ -92,7 +92,7 @@ thing TestMQTTReceiverPort_JavaScriptMqttJson_Impl includes TestMQTTReceiverPort
 			json.c = ` & e.c & `;
 			json.str = ` & e.str & `;
 			let payload = JSON.stringify(json);`
-			publish_message("some_strings", `payload`, `payload.length()`)
+			publish_message("some_strings", `payload` as Buffer, `payload.length` as UInt32)
 		end
 
 		internal event e:receiver?some_bytes action do
@@ -101,7 +101,7 @@ thing TestMQTTReceiverPort_JavaScriptMqttJson_Impl includes TestMQTTReceiverPort
 			json.b1 = ` & e.b1 & `;
 			json.b2 = ` & e.b2 & `;
 			let payload = JSON.stringify(json);`
-			publish_message("some_bytes", `payload`, `payload.length()`)
+			publish_message("some_bytes", `payload` as Buffer, `payload.length` as UInt32)
 		end
 
 		internal event e:receiver?some_enum action do
@@ -110,7 +110,7 @@ thing TestMQTTReceiverPort_JavaScriptMqttJson_Impl includes TestMQTTReceiverPort
 			json.d0 = ` & e.d0 & `;
 			json.d1 = ` & e.d1 & `;
 			let payload = JSON.stringify(json);`
-			publish_message("some_enum", `payload`, `payload.length()`)
+			publish_message("some_enum", `payload` as Buffer, `payload.length` as UInt32)
 		end
 
 

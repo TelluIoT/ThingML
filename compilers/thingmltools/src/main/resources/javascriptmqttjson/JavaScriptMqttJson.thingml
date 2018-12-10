@@ -42,8 +42,8 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 			let split = ` & topic & `.split('/');`
 			`if (split.length != 2)` return false // This is not a valid message
 			
-			readonly var portname : String = `split[0]`
-			readonly var msgname : String = `split[1]`
+			readonly var portname : String = `split[0]` as String
+			readonly var msgname : String = `split[1]` as String
 			
 			if (portname != mqtt_topic_name) return false
 			

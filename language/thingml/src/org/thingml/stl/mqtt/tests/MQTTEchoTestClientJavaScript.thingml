@@ -16,7 +16,7 @@ configuration EchoJavaTestClient
 	connector rx.receiver => echo.sender
 	
 	instance tx : TestMQTTSenderPort_JavaScriptMqttJson_Impl
-		set tx.mqtt_topic_name = "pong"
+		set tx.mqtt_topic_name = "ping"
 	connector echo.receiver => tx.sender
 	
 	

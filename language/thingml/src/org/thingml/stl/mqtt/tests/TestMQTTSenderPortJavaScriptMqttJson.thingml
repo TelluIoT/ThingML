@@ -48,96 +48,96 @@ thing TestMQTTSenderPort_JavaScriptMqttJson_Impl includes TestMQTTSenderPort, MQ
 			let split = ` & topic & `.split('/');`
 			`if (split.length != 2)` return false // This is not a valid message
 			
-			readonly var portname : String = `split[0]`
-			readonly var msgname : String = `split[1]`
+			readonly var portname : String = `split[0]` as String
+			readonly var msgname : String = `split[1]` as String
 			
 			if (portname != mqtt_topic_name) return false
 			
 			`switch (`&msgname&`) {  
 				
 			case 'no_parameters' :
-				__valid_msg = true;
+				var __valid_msg = true;
 				if(__valid_msg) `sender!no_parameters()`
 break;
 
 			case 'some_numbers' :
-				__valid_msg = true;
+				var __valid_msg = true;
 				let ___i8 = json.i8;
-				if(!___i8){
+				if(!json.hasOwnProperty('i8')){
 					`error "JSON ERROR: parsing message some_numbers, missing parameter i8\n"`
 					__valid_msg = false;
 				}
 				let ___ui8 = json.ui8;
-				if(!___ui8){
+				if(!json.hasOwnProperty('ui8')){
 					`error "JSON ERROR: parsing message some_numbers, missing parameter ui8\n"`
 					__valid_msg = false;
 				}
 				let ___i = json.i;
-				if(!___i){
+				if(!json.hasOwnProperty('i')){
 					`error "JSON ERROR: parsing message some_numbers, missing parameter i\n"`
 					__valid_msg = false;
 				}
 				let ___ui = json.ui;
-				if(!___ui){
+				if(!json.hasOwnProperty('ui')){
 					`error "JSON ERROR: parsing message some_numbers, missing parameter ui\n"`
 					__valid_msg = false;
 				}
 				let ___d = json.d;
-				if(!___d){
+				if(!json.hasOwnProperty('d')){
 					`error "JSON ERROR: parsing message some_numbers, missing parameter d\n"`
 					__valid_msg = false;
 				}
 				let ___l = json.l;
-				if(!___l){
+				if(!json.hasOwnProperty('l')){
 					`error "JSON ERROR: parsing message some_numbers, missing parameter l\n"`
 					__valid_msg = false;
 				}
-				if(__valid_msg) `sender!some_numbers(`___i8`, `___ui8`, `___i`, `___ui`, `___d`, `___l`)`
+				if(__valid_msg) `sender!some_numbers(`___i8` as Int8, `___ui8` as UInt8, `___i` as Integer, `___ui` as UInt16, `___d` as Double, `___l` as Int64)`
 break;
 
 			case 'some_strings' :
-				__valid_msg = true;
+				var __valid_msg = true;
 				let ___c = json.c;
-				if(!___c){
+				if(!json.hasOwnProperty('c')){
 					`error "JSON ERROR: parsing message some_strings, missing parameter c\n"`
 					__valid_msg = false;
 				}
 				let ___str = json.str;
-				if(!___str){
+				if(!json.hasOwnProperty('str')){
 					`error "JSON ERROR: parsing message some_strings, missing parameter str\n"`
 					__valid_msg = false;
 				}
-				if(__valid_msg) `sender!some_strings(`___c`, `___str`)`
+				if(__valid_msg) `sender!some_strings(`___c` as Char, `___str` as String)`
 break;
 
 			case 'some_bytes' :
-				__valid_msg = true;
+				var __valid_msg = true;
 				let ___b1 = json.b1;
-				if(!___b1){
+				if(!json.hasOwnProperty('b1')){
 					`error "JSON ERROR: parsing message some_bytes, missing parameter b1\n"`
 					__valid_msg = false;
 				}
 				let ___b2 = json.b2;
-				if(!___b2){
+				if(!json.hasOwnProperty('b2')){
 					`error "JSON ERROR: parsing message some_bytes, missing parameter b2\n"`
 					__valid_msg = false;
 				}
-				if(__valid_msg) `sender!some_bytes(`___b1`, `___b2`)`
+				if(__valid_msg) `sender!some_bytes(`___b1` as Byte, `___b2` as Byte)`
 break;
 
 			case 'some_enum' :
-				__valid_msg = true;
+				var __valid_msg = true;
 				let ___d0 = json.d0;
-				if(!___d0){
+				if(!json.hasOwnProperty('d0')){
 					`error "JSON ERROR: parsing message some_enum, missing parameter d0\n"`
 					__valid_msg = false;
 				}
 				let ___d1 = json.d1;
-				if(!___d1){
+				if(!json.hasOwnProperty('d1')){
 					`error "JSON ERROR: parsing message some_enum, missing parameter d1\n"`
 					__valid_msg = false;
 				}
-				if(__valid_msg) `sender!some_enum(`___d0`, `___d1`)`
+				if(__valid_msg) `sender!some_enum(`___d0` as DigitalState, `___d1` as DigitalState)`
 break;
 
 				default: break;
