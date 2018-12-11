@@ -53,8 +53,12 @@ thing TimerJava includes Timer
         state default {
 
           internal event m : timer?timer_start
-            guard m.time >= 0
-            action startTimer(m.id, m.time)
+          guard m.time > 0
+          action startTimer(m.id, m.time)
+          
+          internal event m : timer?timer_start
+          guard m.time == 0
+          action timer!timer_timeout(m.id)
 
           internal cancel
             event m : timer?timer_cancel
@@ -96,12 +100,16 @@ thing TimerJS includes Timer
         state default {
 
           internal event m : timer?timer_start
-            guard m.time >= 0
-            action startTimer(m.id, m.time)
+          guard m.time > 0
+          action startTimer(m.id, m.time)
+          
+          internal event m : timer?timer_start
+          guard m.time == 0
+          action timer!timer_timeout(m.id)
 
           internal cancel
-            event m : timer?timer_cancel
-            action cancel(m.id)
+          event m : timer?timer_cancel
+          action cancel(m.id)
         }
     }
 }
@@ -143,8 +151,12 @@ thing TimerNodeJS includes Timer
         state default {
 
           internal event m : timer?timer_start
-            guard m.time >= 0
-            action startTimer(m.id, m.time)
+          guard m.time > 0
+          action startTimer(m.id, m.time)
+          
+          internal event m : timer?timer_start
+          guard m.time == 0
+          action timer!timer_timeout(m.id)
 
           internal cancel
             event m : timer?timer_cancel
@@ -272,8 +284,12 @@ pthread_mutex_t Timer_mut;`
         state default {
 
           internal event m : timer?timer_start
-            guard m.time >= 0
-            action startTimer(m.id, m.time)
+          guard m.time > 0
+          action startTimer(m.id, m.time)
+          
+          internal event m : timer?timer_start
+          guard m.time == 0
+          action timer!timer_timeout(m.id)
 
           internal cancel
             event m : timer?timer_cancel
@@ -369,8 +385,12 @@ uint32_t Timer_prev;`
         state default {
 
           internal event m : timer?timer_start
-            guard m.time >= 0
-            action startTimer(m.id, m.time)
+          guard m.time > 0
+          action startTimer(m.id, m.time)
+          
+          internal event m : timer?timer_start
+          guard m.time == 0
+          action timer!timer_timeout(m.id)
 
           internal cancel
             event m : timer?timer_cancel
@@ -417,8 +437,12 @@ thing TimerGo includes TimerMsgs
     	
         state default {
           internal event m : timer?timer_start
-            guard m.time >= 0
-            action startTimer(m.id, m.time)
+          guard m.time > 0
+          action startTimer(m.id, m.time)
+          
+          internal event m : timer?timer_start
+          guard m.time == 0
+          action timer!timer_timeout(m.id)
 
           internal cancel
             event m : timer?timer_cancel
