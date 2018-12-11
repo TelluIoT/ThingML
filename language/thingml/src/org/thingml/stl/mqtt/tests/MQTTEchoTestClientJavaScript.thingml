@@ -1,0 +1,40 @@
+import "MQTTEchoTestClient.thingml"
+import "TestMQTTReceiverPortJavaScriptMqttJson.thingml"
+import "TestMQTTSenderPortJavaScriptMqttJson.thingml"
+import "../javascript/JavaScriptMQTTAdapter.thingml"
+
+configuration EchoJavaTestClient
+@compiler "nodejs"
+{
+	instance echo : MQTTEchoTestClient
+	
+	instance timer : TimerJS
+	connector echo.timer => timer.timer
+	
+	instance rx : TestMQTTReceiverPort_JavaScriptMqttJson_Impl
+		set rx.mqtt_topic_name = "ping"
+	connector rx.receiver => echo.sender
+	
+	instance tx : TestMQTTSenderPort_JavaScriptMqttJson_Impl
+		set tx.mqtt_topic_name = "ping"
+	connector echo.receiver => tx.sender
+	
+	
+	instance mqtt : JavaScriptMQTTAdapter
+	
+	connector rx.jsmqtt => mqtt.mqtt
+	connector tx.jsmqtt => mqtt.mqtt
+	connector echo.mqtt => mqtt.mqtt
+	
+}
+ 
+
+
+
+
+
+
+
+
+ 
+

@@ -54,6 +54,7 @@ import org.thingml.xtext.thingML.LowerExpression;
 import org.thingml.xtext.thingML.LowerOrEqualExpression;
 import org.thingml.xtext.thingML.MinusExpression;
 import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.NotExpression;
 import org.thingml.xtext.thingML.OrExpression;
 import org.thingml.xtext.thingML.PlusExpression;
@@ -208,6 +209,13 @@ public class TypeChecker extends ThingMLSwitch<Type> {
         Type t2 = computeTypeOf(object.getRhs());
         return caseComparison(t1, t2);
     }
+    
+    @Override
+    public Type caseNotEqualsExpression(NotEqualsExpression object) {
+        Type t1 = computeTypeOf(object.getLhs());
+        Type t2 = computeTypeOf(object.getRhs());
+        return caseComparison(t1, t2);
+    }    
 
     @Override
     public Type caseGreaterExpression(GreaterExpression object) {

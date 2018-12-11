@@ -1,5 +1,7 @@
 import "../MQTTAdapterMsgs.thingml"
 
+object JS_REQUIRE
+
 object MQTT
 @js_dep "mqtt:2.18.8"
 
@@ -7,6 +9,7 @@ thing JavaScriptMQTTAdapter includes AbstractMQTTAdapter
 @js_include "https://unpkg.com/mqtt/dist/mqtt.min.js"
 {
 
+	property mqtt : JS_REQUIRE = `require('mqtt')` as JS_REQUIRE
 	property client : MQTT
 	property broker_uri : String = "tcp://localhost:1883"  //FIXME: I guess this should be built from included broker_host and broker_port?		
 	property debug_log : Boolean = false
@@ -29,11 +32,11 @@ thing JavaScriptMQTTAdapter includes AbstractMQTTAdapter
 		if (enable_tls_certificates) do
 			`options.key = fs.readFileSync('` & keyfile & `');
 			options.cert = fs.readFileSync('` & certfile & `');
-			options.ca = fs.readFileSync('` & cafile & `');'`
+			options.ca = fs.readFileSync('` & cafile & `');`
 		end
 					
 		//Connecting
-		client = (`mqtt.connect('` & broker_uri & `, options)`) as MQTT
+		client = (`` & mqtt & `.connect(` & broker_uri & `, options)`) as MQTT
 			
 			
 		//Handling status
@@ -51,8 +54,9 @@ thing JavaScriptMQTTAdapter includes AbstractMQTTAdapter
 		`});`		
 		
 		//When message arrives
-		`` & client & `.on("message", (topic, message) => {`			
-			mqtt!mqtt_message((`topic.replace(` & topic_prefix & `)`) as String, `message` as Buffer, `message.length` as Int32) 	
+		`` & client & `.on("message", (topic, message) => {`		
+			if (debug_log) println "message arrived on MQTT topic " + `topic` + ": " + `message`	
+			mqtt!mqtt_message((`topic.replace(` & topic_prefix & ` + '/', '')`) as String, `message` as Buffer, `message.length` as Int32) 	
 		`});`				
 	end
 
@@ -62,10 +66,10 @@ thing JavaScriptMQTTAdapter includes AbstractMQTTAdapter
 			return
 		end
 		
-		if (debug_log) println "publish on MQTT topic " + topic + ": " + payload
-		
 		var fulltopic : String = topic
 		if (topic_prefix != "") fulltopic = topic_prefix + "/" + topic
+		
+		if (debug_log) println "publish on MQTT topic " + fulltopic + ": " + payload
 		
 		`` & client &`.publish(` & fulltopic & `, ` & payload & `, {qos:0}, (err)=>{
 			if (err)` 
@@ -80,12 +84,14 @@ thing JavaScriptMQTTAdapter includes AbstractMQTTAdapter
 		if (client == `undefined`) do
 			mqtt!mqtt_error()
 			return
-		end
+		end		
 		
 		var fulltopic : String = topic
 		if (topic_prefix != "") fulltopic = topic_prefix + "/" + topic
 		
-		`` & client &`.subscribe(` & topic & `, (err)=>{
+		if (debug_log) println "subscribe to MQTT topic " + fulltopic
+		
+		`` & client &`.subscribe(` & fulltopic & `, (err)=>{
 			if (err)` 
 				mqtt!mqtt_error()
 			`else` 
@@ -117,7 +123,7 @@ thing JavaScriptMQTTAdapter includes AbstractMQTTAdapter
 		
 		internal event m : mqtt?mqtt_connect action do
 			client_id = m.client_id
-			`uri = '';`
+			`var uri = '';`
 			if (m.tls) `uri = 'ssl://';`
 			else `uri = 'tcp://';`
 			`uri += ` & m.host & ` + ":" + ` & m.portno & `;` 
