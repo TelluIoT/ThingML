@@ -65,13 +65,13 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
 		Section property = section.section("property");
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-			property.append("var " + i.getName() + "_" + a.getName() + " = [];");
+			property.append("var inst_" + i.getName() + "_" + a.getName() + " = [];");
 		}
 		for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
 			for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
 				String result = "";
 				StringBuilder tempBuilder = new StringBuilder();
-				result += i.getName() + "_" + entry.getKey().getName() + " [";
+				result += "inst_" + i.getName() + "_" + entry.getKey().getName() + " [";
 				jctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, jctx);
 				result += tempBuilder.toString();
 				result += "] = ";
@@ -82,8 +82,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-			property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(a)) + "(");
-			property.append(i.getName() + "_" + a.getName());
+			property.append("inst_" + i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(a)) + "(");
+			property.append("inst_" + i.getName() + "_" + a.getName());
 			property.append(");\n");
 		}
 		
@@ -97,7 +97,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         	for(Property p : props) {
         		if (p.getTypeRef().getCardinality() == null) {
         			StringBuilder tempbuilder = new StringBuilder();
-    				property.append(i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p)) + "(");
+    				property.append("inst_" + i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p)) + "(");
     				Expression e = ConfigurationHelper.initExpression(cfg, i, p);
     				if (e!=null)
     					jctx.generateFixedAtInitValue(cfg, i, e, tempbuilder);
@@ -113,7 +113,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {
     	jctx.currentInstance = i;
 		Section instance = section.section("instance");
-		instance.append("const ")
+		instance.append("const inst_")
 		        .append(i.getName())
 		        .append(" = new ")
 		        .append(jctx.firstToUpper(i.getType().getName()));
@@ -182,7 +182,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 for (Message rec : p.getReceives()) {
                     for (Message send : p.getSends()) {
                         if (EcoreUtil.equals(rec, send)) {
-                            generateOnEvent(section, send, i.getName(), p.getName(), i.getName(), p.getName());
+                            generateOnEvent(section, send, "inst_" + i.getName(), p.getName(), "inst_" + i.getName(), p.getName());
                             break;
                         }
                     }
@@ -195,7 +195,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             for (Message req : c.getRequired().getReceives()) {
                 for (Message prov : c.getProvided().getSends()) {
                     if (req.getName().equals(prov.getName())) {
-                        generateOnEvent(section, req, c.getCli().getName(), c.getRequired().getName(), c.getSrv().getName(), c.getProvided().getName());
+                        generateOnEvent(section, req, "inst_" + c.getCli().getName(), c.getRequired().getName(), "inst_" + c.getSrv().getName(), c.getProvided().getName());
                         break;
                     }
                 }
@@ -203,7 +203,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             for (Message req : c.getProvided().getReceives()) {
                 for (Message prov : c.getRequired().getSends()) {
                     if (req.getName().equals(prov.getName())) {
-                        generateOnEvent(section, req, c.getSrv().getName(), c.getProvided().getName(), c.getCli().getName(), c.getRequired().getName());
+                        generateOnEvent(section, req, "inst_" + c.getSrv().getName(), c.getProvided().getName(), "inst_" + c.getCli().getName(), c.getRequired().getName());
                         break;
                     }
                 }

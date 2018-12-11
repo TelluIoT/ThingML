@@ -33,7 +33,7 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
-	@Override
+	/*@Override
 	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
 		super.generatePropertyDecl(i, cfg, section, jctx);
 		
@@ -47,8 +47,8 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
 		}
 		
 		//Generate a hook for other configuration plugins to redefine values for properties		
-		section.append("/*$CONFIGURATION " + i.getName() + "$*/");
-	}
+		section.append("/*$CONFIGURATION " + i.getName() + "$*//*");
+	}*/
 	
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
@@ -111,7 +111,7 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
         while (!orderedInstances.isEmpty()) {
             inst = orderedInstances.get(orderedInstances.size() - 1);
             orderedInstances.remove(inst);
-            main.append(inst.getName() + "._init();");
+            main.append("inst_" + inst.getName() + "._init();");
         }
         main.append("/*$PLUGINS_END$*/");
         main.append("");
@@ -124,8 +124,8 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
         while (!orderedInstances.isEmpty()) {
             inst = orderedInstances.get(0);
             orderedInstances.remove(inst);
-            terminate.append(inst.getName() + "._stop();");
-            terminate.append(inst.getName() + "._delete();");            
+            terminate.append("inst_" + inst.getName() + "._stop();");
+            terminate.append("inst_" + inst.getName() + "._delete();");            
         }
         main.append("};");
         

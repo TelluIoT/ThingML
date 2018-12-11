@@ -55,7 +55,7 @@ public class BrowserJSCfgMainGenerator extends JSCfgMainGenerator {
 	        while (!instances.isEmpty()) {
 	            inst = instances.get(instances.size() - 1);
 	            instances.remove(inst);
-	            body.append(inst.getName() + "._init();");
+	            body.append("inst_" + inst.getName() + "._init();");
 	        }
 	        body.append("");
 	        body.append("/*$PLUGINS_END$*/");
