@@ -26,11 +26,14 @@ import com.google.inject.Inject;
 
 public class ThingMLSerializer {
 
-	@Inject
-	ISerializer serializer;
+	// TODO: This Serializer should use the ThingMLFormatter to produce
+	// code that is properly pretty printed (same as Ctrl+Shift+F in eclipse
+	// and the saving of EMF Resources which actually works).
+	// I do not understand why this serializer defaults to OneWhitespaceFormatter
+	// See issue #272.
 	
 	@Inject
-	IFormatter2 formatter;
+	ISerializer serializer;
 	
 	private static ThingMLSerializer _instance = null;
 	

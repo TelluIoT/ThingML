@@ -171,7 +171,7 @@ public class JavaJSONMQTTGenerator extends ThingMLTool {
 
     		//String strMsgsFrag = serializer.serialize(msgsFrag, SaveOptions.newBuilder().noValidation().format().getOptions());
     		
-    		String strMsgsFrag = ThingMLSerializerDev.getInstance().toString(m2);
+    		String strMsgsFrag = ThingMLSerializerDev.getInstance().toString(msgsFrag);
     		
     		System.out.println(strMsgsFrag);
     		

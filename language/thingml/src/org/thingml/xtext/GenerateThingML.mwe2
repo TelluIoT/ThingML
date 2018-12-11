@@ -52,6 +52,7 @@ Workflow {
 
 			serializer = {
 				generateStub = true
+				
 			}
 			formatter = {
 				generateStub = true
@@ -77,6 +78,7 @@ Workflow {
 			quickFixProvider = {
 				generateStub = true
 			}
+			
 		}
 	}
 }
