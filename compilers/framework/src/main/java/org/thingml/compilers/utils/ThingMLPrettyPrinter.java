@@ -51,7 +51,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
      */
     @Override
     public void generate(Action action, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
+    	builder.append(ToString.toString(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
     	builder.append(NEW_LINE);
     }
 
@@ -62,7 +62,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
             builder.append("...");
             builder.append(")" + NEW_LINE);
         } else {
-        	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
+        	builder.append(ToString.toString(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
         	builder.append(NEW_LINE);
         }
         
@@ -118,7 +118,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         if (USE_ELLIPSIS_FOR_PARAMS  && action.getParameters().size() > 1) {
             builder.append(action.getFunction().getName() + "(...)" + NEW_LINE);
         } else {
-        	builder.append(ToString.valueOf(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
+        	builder.append(ToString.toString(action).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
         	builder.append(NEW_LINE);
         }
     }
@@ -131,7 +131,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
      */
     @Override
     public void generate(Expression expression, StringBuilder builder, Context ctx) {
-    	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
+    	builder.append(ToString.toString(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         if (USE_ELLIPSIS_FOR_PARAMS  && expression.getParameters().size() > 1) {
             builder.append(expression.getFunction().getName() + "(...)");
         } else {
-        	builder.append(ToString.valueOf(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
+        	builder.append(ToString.toString(expression).trim().replace("\r\n", "\\n").replace("\n", "\\n"));
         }
     }
 
