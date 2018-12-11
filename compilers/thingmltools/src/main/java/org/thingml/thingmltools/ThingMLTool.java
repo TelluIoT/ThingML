@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
@@ -43,6 +44,7 @@ public abstract class ThingMLTool {
     public String options;
 
     public ThingMLTool() {
+    	ThingMLStandaloneSetup.doSetup();
     }
 
     public abstract String getID();

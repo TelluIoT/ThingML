@@ -58,6 +58,7 @@ import org.thingml.xtext.thingML.Type
 import org.thingml.xtext.thingML.UnaryMinus
 import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.thingML.VariableAssignment
+import org.thingml.xtext.thingML.Import
 
 class ThingMLFormatter extends AbstractFormatter2 {
 	
@@ -104,6 +105,10 @@ class ThingMLFormatter extends AbstractFormatter2 {
 			cpa.format
 		}
 		//cfg.append[setNewLines(2,2,Integer.MAX_VALUE)]
+	}
+	
+	def dispatch void format(Import i, extension IFormattableDocument document) {
+		i.append[newLine]		
 	}
 
 	def dispatch void format(Connector c, extension IFormattableDocument document) {

@@ -39,6 +39,7 @@ public class ToString {
 		try {  
 			return getSerializer().serialize(eobj);  
 		} catch (Exception ex) { // fall back:  
+			ex.printStackTrace();
 			return eobj.getClass().getSimpleName()+'@'+eobj.hashCode();  
 		}  
 	}  

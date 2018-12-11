@@ -22,17 +22,38 @@
 package org.thingml.generator.java;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Set;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.serializer.impl.Serializer;
 import org.thingml.thingmltools.ThingMLTool;
+import org.thingml.xtext.ThingMLRuntimeModule;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.formatting2.ThingMLFormatter;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ThingMLSerializer;
+import org.thingml.xtext.helpers.ToString;
 import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.validation.TypeChecker;
+
+import com.google.inject.Guice;
 
 
 public class JavaJSONMQTTGenerator extends ThingMLTool {
@@ -84,6 +105,78 @@ public class JavaJSONMQTTGenerator extends ThingMLTool {
     }
     
     public void generateAdapterFor(ThingMLModel model, Thing t, Port p) {
+    	
+    	ArrayList<String> additional_parameters = new ArrayList<String>();
+    	for (String str :  AnnotatedElementHelper.annotationOrElse(p, "add_mqtt_topic_parameters", "").split("/")) {
+    		if (str.trim() != "") additional_parameters.add(str.trim());
+    	}
+    	
+    	if (additional_parameters.isEmpty()) System.out.println("No annotation @add_mqtt_topic_parameters found on port. Existing messages will be reused.\n");
+    	else {
+    		System.out.print("Found @add_mqtt_topic_parameters on port. " + additional_parameters.size() + " Parameters will be extrated from mqtt topic path: ");
+    		for (String s : additional_parameters) System.out.print(s  + " ");
+    		System.out.println();
+    		System.out.println("New messages and ports including those parameter(s) will be generated.\n");
+    		
+    		
+    		
+    		ArrayList<Parameter> params = new ArrayList<Parameter>();
+    		
+    		Type STRING_TYPE = ThingMLFactory.eINSTANCE.createPrimitiveType();
+            STRING_TYPE.setName("String");
+    		
+    		for (String s : additional_parameters) {
+    			Parameter param = ThingMLFactory.eINSTANCE.createParameter();
+    			param.setName(s);
+    			TypeRef tr = ThingMLFactory.eINSTANCE.createTypeRef();
+    			
+    			tr.setType(STRING_TYPE);
+    			param.setTypeRef(tr);
+    			params.add(param);
+    		}
+    		
+    		Set<Message> msgs = new HashSet<Message>();
+    		msgs.addAll(p.getReceives());
+    		msgs.addAll(p.getSends());
+    		
+    		Hashtable<Message, Message> copies = new Hashtable<>();
+    		
+    		for (Message m : msgs) {
+    			Message m2 = EcoreUtil2.copy(m);
+    			copies.put(m, m2);
+    			m2.setName("mqtt_" + m2.getName());
+    			for (int i=0; i<params.size(); i++) {
+    				m2.getParameters().add(i, EcoreUtil2.copy(params.get(i)));
+    			}
+    		}
+    		
+    		Thing msgsFrag = ThingMLFactory.eINSTANCE.createThing();
+    		msgsFrag.setName(t.getName() +"_JavaMqttJsonMsgs");
+    		
+    		msgsFrag.getMessages().addAll(copies.values());
+    		 
+    		ThingMLModel m2 = ThingMLFactory.eINSTANCE.createThingMLModel();
+    		m2.getTypes().add(msgsFrag);
+    		m2.getTypes().add(STRING_TYPE);
+    		
+    		for(Import im : model.getImports()) {
+    			m2.getImports().add(EcoreUtil2.copy(im));
+    		}
+    		
+    		model.eResource().getContents().add(m2);
+    		
+    		//String  strMsgsFrag= ToString.valueOf(msgsFrag);
+    		
+    		//Serializer serializer = Guice.createInjector(new ThingMLRuntimeModule()).getInstance(Serializer.class);  
+
+    		//String strMsgsFrag = serializer.serialize(msgsFrag, SaveOptions.newBuilder().noValidation().format().getOptions());
+    		
+    		String strMsgsFrag = ThingMLSerializerDev.getInstance().toString(m2);
+    		
+    		System.out.println(strMsgsFrag);
+    		
+    	}
+    	
     	
     	String imports = "import \"" + model.eResource().getURI().lastSegment() + "\"\n";
     	String thing_name = t.getName() +"_JavaMqttJson_Impl";

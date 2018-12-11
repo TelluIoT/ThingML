@@ -15,7 +15,7 @@ Import returns Import:
 
 
 PlatformAnnotation returns PlatformAnnotation:
-	name=ANNOTATION_ID (value=STRING | value=EXTERN)?; 
+	name=ANNOTATION_ID (value=EXTERN | value=STRING)?; 
 
 
 NamedElement:
