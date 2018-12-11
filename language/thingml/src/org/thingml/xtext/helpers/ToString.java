@@ -23,25 +23,10 @@ import org.thingml.xtext.ThingMLRuntimeModule;
 import com.google.inject.Guice;  
 
 public class ToString {  
-	private static Serializer SERIALIZER = null;  
+	
 
-	private static Serializer getSerializer() {  
-		if (SERIALIZER == null) { // lazy creation  
-			SERIALIZER = Guice.createInjector(new ThingMLRuntimeModule()).getInstance(Serializer.class);  
-		}  
-		return SERIALIZER;  
-	}  
-
-	public static String valueOf(EObject eobj) {  
-		if (eobj==null) {  
-			return "null";  
-		}  
-		try {  
-			return getSerializer().serialize(eobj);  
-		} catch (Exception ex) { // fall back:  
-			ex.printStackTrace();
-			return eobj.getClass().getSimpleName()+'@'+eobj.hashCode();  
-		}  
+	public static String toString(EObject eobj) {  
+		return ThingMLSerializer.getInstance().toString(eobj);
 	}  
 
 }  
