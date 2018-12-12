@@ -69,7 +69,6 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public boolean do_call_compiler(final Configuration cfg, Logger log, String... options) {
-        new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.writeGeneratedCodeToFiles();
@@ -79,7 +78,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         for (Thing th : ConfigurationHelper.allThings(t)) {
             for (CompositeState sm : ThingMLHelpers.allStateMachines(th)) {
-                ((FSMBasedThingImplCompiler) getThingImplCompiler()).generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
+                ((FSMBasedThingImplCompiler) getThingImplCompiler()).generateState(sm, ctx.getBuilder(th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }
         getMainCompiler().generateMainAndInit(t, model, ctx);
