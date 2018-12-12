@@ -17,7 +17,6 @@
 package org.thingml.compilers.uml;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -136,7 +135,6 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
 
 			for (Port p : thing.getPorts()) {
-				//final String type = (p instanceof ProvidedPort) ? new String("\u25B2".getBytes("UTF8"), "UTF8") : new String("\u25BC".getBytes("UTF8"), "UTF8");
 				final String type = (p instanceof ProvidedPort) ? "▲" : "▼";
 				classes.append(".." + type + " Port " + p.getName() + " " + type +"..\n");
 				for (Message m : p.getReceives()) {
@@ -229,8 +227,8 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
 
 		//Type/Thing class diagram
-		final StringBuilder classes = ctx.getBuilder(cfg.getName() + "_class.plantuml");
-		final StringBuilder classes2 = ctx.getBuilder(cfg.getName() + "_class_compact.plantuml");
+		final StringBuilder classes = ctx.getBuilder("detailed/" + cfg.getName() + "_class.plantuml");
+		final StringBuilder classes2 = ctx.getBuilder(cfg.getName() + "_class.plantuml");
 		classes.append("@startuml\n");
 		classes.append("caption Things used in configuration " + cfg.getName() + "\n");
 		classes2.append("@startuml\n");

@@ -18,20 +18,16 @@ package org.thingml.compilers.uml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
-import org.thingml.xtext.thingML.Event;
 import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.InternalTransition;
@@ -50,7 +46,8 @@ import org.thingml.xtext.thingML.Transition;
  */
 public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
-	public static boolean FACTORIZE_TRANSITIONS = true;
+	public boolean FACTORIZE_TRANSITIONS = true;
+	public boolean COMPACT = true;
 
 	private static Map<String, List<NamedElement>> names = new HashMap<String, List<NamedElement>>();
 
@@ -63,7 +60,10 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
-		ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
+		if (!COMPACT)
+			ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
+		else
+			builder.append("...\\n");
 	}
 
 	private void buildActions(State s, StringBuilder builder, Context ctx) {
@@ -209,7 +209,10 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 				builder.append("action ");
 			else
 				builder.append("\\naction ");
-			ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), builder, ctx);
+			if (!COMPACT)
+				ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), builder, ctx);
+			else
+				builder.append("...\\n");
 		}
 	}
 

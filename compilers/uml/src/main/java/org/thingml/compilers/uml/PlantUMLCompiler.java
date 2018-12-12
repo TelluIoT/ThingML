@@ -16,8 +16,6 @@
  */
 package org.thingml.compilers.uml;
 
-import java.io.File;
-
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -76,11 +74,32 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        for (Thing th : ConfigurationHelper.allThings(t)) {
-            for (CompositeState sm : ThingMLHelpers.allStateMachines(th)) {
-                ((FSMBasedThingImplCompiler) getThingImplCompiler()).generateState(sm, ctx.getBuilder(th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
-            }
+    	final PlantUMLThingImplCompiler plantUMLcompiler = ((PlantUMLThingImplCompiler)ctx.getCompiler().getThingImplCompiler());
+    	final ThingMLPrettyPrinter prettyPrinter = ((ThingMLPrettyPrinter)ctx.getCompiler().getThingActionCompiler());
+    	
+    	plantUMLcompiler.FACTORIZE_TRANSITIONS = false;
+    	plantUMLcompiler.COMPACT = false;
+    	prettyPrinter.USE_ELLIPSIS_FOR_PARAMS = false;
+    	prettyPrinter.HIDE_BLOCKS = false;
+    	prettyPrinter.MAX_BLOCK_SIZE = 5;
+    	for (Thing th : ConfigurationHelper.allThings(t)) {
+        	for (CompositeState sm : ThingMLHelpers.allStateMachines(th)) {
+        		plantUMLcompiler.generateState(sm, ctx.getBuilder("detailed/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
+            }            
         }
+    	
+    	plantUMLcompiler.FACTORIZE_TRANSITIONS = true;
+    	plantUMLcompiler.COMPACT = true;
+    	prettyPrinter.USE_ELLIPSIS_FOR_PARAMS = true;
+    	prettyPrinter.HIDE_BLOCKS = true;
+    	prettyPrinter.MAX_BLOCK_SIZE = 0;
+    	for (Thing th : ConfigurationHelper.allThings(t)) {
+            for (CompositeState sm : ThingMLHelpers.allStateMachines(th)) {
+            	plantUMLcompiler.generateState(sm, ctx.getBuilder(th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
+            }
+            
+        }
+    	
         getMainCompiler().generateMainAndInit(t, model, ctx);
     }
 }

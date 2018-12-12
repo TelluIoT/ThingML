@@ -33,13 +33,13 @@ import org.thingml.xtext.thingML.StringLiteral;
  */
 public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
-    public static boolean USE_ELLIPSIS_FOR_PARAMS = true;
-    public static int MAX_BLOCK_SIZE = 3;
-    public static boolean HIDE_BLOCKS = false;
+    public boolean USE_ELLIPSIS_FOR_PARAMS = true;
+    public int MAX_BLOCK_SIZE = 3;
+    public boolean HIDE_BLOCKS = false;
 
-    public final static String NEW_LINE = "\\n";
-    public final static String INDENT = "  "; //two blank spaces for indentation
-    public static int indent_level = 0;
+    public static String NEW_LINE = "\\n";
+    public static String INDENT = "  "; //two blank spaces for indentation
+    public int indent_level = 0;
 
     //ThingML pretty printer (useful for documentation, etc)
 
