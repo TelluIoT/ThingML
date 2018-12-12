@@ -17,12 +17,15 @@
 package org.thingml.compilers;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -285,11 +288,9 @@ public class Context {
      * @param content
      */
     public void writeTextFile(String path, String content) {
-        try {
+        try {     	
             File file = openOutputFile(path);
-            PrintWriter w = new PrintWriter(file);
-            w.print(content);
-            w.close();
+            FileUtils.write(file, content, "UTF-8");
         } catch (Exception ex) {
             System.err.println("Problem while dumping the code");
             ex.printStackTrace();

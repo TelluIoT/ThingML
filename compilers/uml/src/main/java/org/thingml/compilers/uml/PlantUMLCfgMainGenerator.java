@@ -137,13 +137,13 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
 			for (Port p : thing.getPorts()) {
 				//final String type = (p instanceof ProvidedPort) ? new String("\u25B2".getBytes("UTF8"), "UTF8") : new String("\u25BC".getBytes("UTF8"), "UTF8");
-				final String type = (p instanceof ProvidedPort) ? new String("▲".getBytes("UTF-8"), "UTF-8") : "▼";
+				final String type = (p instanceof ProvidedPort) ? "▲" : "▼";
 				classes.append(".." + type + " Port " + p.getName() + " " + type +"..\n");
 				for (Message m : p.getReceives()) {
-					classes.append("▶ " + m.getName() + " ◀ \n");
+					classes.append("▶ " + m.getName() + "\n");
 				}
 				for (Message m : p.getSends()) {
-					classes.append("◀ " + m.getName() + " ▶\n");
+					classes.append("◀ " + m.getName() + "\n");
 				}
 			}
 
