@@ -17,10 +17,6 @@
 package org.thingml.xtext.helpers;
 
 import org.eclipse.emf.ecore.EObject;  
-import org.eclipse.xtext.serializer.impl.Serializer;
-import org.thingml.xtext.ThingMLRuntimeModule;
-
-import com.google.inject.Guice;  
 
 public class ToString {  
 	

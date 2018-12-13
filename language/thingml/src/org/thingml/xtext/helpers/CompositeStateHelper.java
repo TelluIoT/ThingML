@@ -23,12 +23,9 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.CompositeState;
-import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StateContainer;
@@ -174,15 +171,6 @@ public class CompositeStateHelper {
         result.addAll(self.getRegion());
         return result;
     }
-    
-    /*
-    public static List<StateContainer> allContainedRegionsInDepth(CompositeState self) {
-    	List<StateContainer> result = new ArrayList<StateContainer>();
-        result.add(self);
-        result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, Region.class));
-        return result;
-    }
-     */
 
     public static List<StateContainer> allContainedStateContainers(CompositeState self) {
         List<StateContainer> result = new ArrayList<StateContainer>();

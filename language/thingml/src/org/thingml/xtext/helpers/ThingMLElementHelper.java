@@ -71,7 +71,6 @@ public class ThingMLElementHelper {
         String name = null;
         while(elem != null) {
             name = elem.getName();
-            //if (name == null || name == "") name = elem.getClass().getName();
             if (result == null) result = name;
             else result = name + separator + result;
             if (elem.eContainer() != null && elem.eContainer() instanceof NamedElement)

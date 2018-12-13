@@ -57,25 +57,6 @@ import org.thingml.xtext.thingML.ThingMLFactory;
  */
 public class ConfigurationHelper {
 
-
-	/*public static class MergedConfigurationCache {
-
-		static Map<Configuration, Configuration> cache = new HashMap<Configuration, Configuration>();
-
-		static Configuration getMergedConfiguration(Configuration c) {
-			return cache.get(c);
-		}
-
-		static void cacheMergedConfiguration(Configuration c, Configuration mc)  {
-			cache.put(c, mc);
-		}
-
-		public static void clearCache() {
-			cache.clear();
-		}
-
-	}*/
-
 	public static Map<Instance, String[]> allRemoteInstances(Configuration self) {
 		Map<Instance, String[]> result = new HashMap<Instance, String[]>();
 		for (PlatformAnnotation a : self.getAnnotations()) {
@@ -93,9 +74,7 @@ public class ConfigurationHelper {
 
 
 	public static Set<Instance> allInstances(Configuration self) {
-		//MergedConfigurationCache.clearCache();
 		Set<Instance> result = new HashSet<Instance>();
-		//result.addAll(merge(self).getInstances());
 		result.addAll(self.getInstances());
 		return result;
 	}
@@ -131,8 +110,6 @@ public class ConfigurationHelper {
 
 	public static Set<Connector> allConnectors(Configuration self) {
 		Set<Connector> result = new HashSet<Connector>();
-		//MergedConfigurationCache.clearCache();
-		//result.addAll(ConfigurationHelper.getInternalConnectors(merge(self)));
 		result.addAll(ConfigurationHelper.getInternalConnectors(self));
 		return result;
 	}
@@ -140,8 +117,6 @@ public class ConfigurationHelper {
 
 	public static Set<ConfigPropertyAssign> allPropAssigns(Configuration self) {
 		Set<ConfigPropertyAssign> result = new HashSet<ConfigPropertyAssign>();
-		//MergedConfigurationCache.clearCache();
-
 		for(ConfigPropertyAssign cpa : self.getPropassigns()) {
 			if (cpa.getInit() != null && cpa.getInit() instanceof ArrayInit) {
 				final ArrayInit ai = (ArrayInit)cpa.getInit();
@@ -347,14 +322,12 @@ public class ConfigurationHelper {
 		}
 		if (size == 1) {
 			assigns.add(new AbstractMap.SimpleImmutableEntry<Expression, Expression>(index, init));
-			//result.put(p, new AbstractMap.SimpleImmutableEntry<Expression, Expression>(index, init));
 		}
 		else if (size == 0)
 			System.err.println("ERROR: Malformed array initialization for property " + p.getName() + " " + errMsg + ". No initialization is possible!");
 		else {
 			System.err.println("WARNING: Malformed array initialization for property " + p.getName() + " " + errMsg +". Multiple initializations are possible! We're going to take one among them...");
 			assigns.add(new AbstractMap.SimpleImmutableEntry<Expression, Expression>(index, init));
-			//result.put(p, new AbstractMap.SimpleImmutableEntry<Expression, Expression>(index, init));
 		}
 	}
 
@@ -511,7 +484,6 @@ public class ConfigurationHelper {
 
 	private static List<Instance> isRequiredBy(Configuration self, Instance cur, List<Connector> Cos, List<Instance> Instances) {
 		List<Instance> res = new LinkedList<Instance>();
-		//List<Connector> toBeRemoved = new LinkedList<Connector>();
 		Instance needed;
 		for (Connector co : Cos) {
 			if(co.getCli().getName().compareTo(cur.getName()) == 0) {
@@ -519,7 +491,6 @@ public class ConfigurationHelper {
 				for(Instance inst : Instances) {
 					if(inst.getName().compareTo(needed.getName()) == 0) {
 						Instances.remove(inst);
-						//Cos.remove(co);
 						res.addAll(0, isRequiredBy(self, inst,Cos,Instances));
 						res.add(0, inst);
 						break;

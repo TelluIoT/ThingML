@@ -35,7 +35,6 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.PropertyReference;
-import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
@@ -98,7 +97,6 @@ public class ThingHelper {
 	}
 
 	public static List<Transition> allTransitionsWithAction(Thing self) {
-		//var result = new ArrayList[Handler]()
 		final List<Transition> result = new ArrayList<Transition>();
 		if (self.getBehaviour() != null) {
 			for(State s : StateHelper.allStates(self.getBehaviour())) {
@@ -113,7 +111,6 @@ public class ThingHelper {
 	}
 
 	public static List<InternalTransition> allInternalTransitionsWithAction(Thing self) {
-		//var result = new ArrayList[Handler]()
 		final List<InternalTransition> result = new ArrayList<InternalTransition>();
 		if (self.getBehaviour() != null) {
 			for(State s : StateHelper.allStates(self.getBehaviour())) {
@@ -156,13 +153,8 @@ public class ThingHelper {
 
 			// If the expression is defined locally return the init expression
 			if (self.getProperties().contains(p)) {
-				/*if (assigns.size() > 0)
-					System.out.println("Error: Thing " + self.getName() + " cannot redefine initial value for property " + p.getName());*/
 				return p.getInit();
 			}
-
-			/*if (assigns.size() > 1)
-				System.out.println("Error: Thing " + self.getName() + " contains several assignments for property " + p.getName());*/
 
 			if (assigns.size() == 1) {
 				return assigns.get(0).getInit();

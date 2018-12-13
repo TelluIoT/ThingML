@@ -35,10 +35,6 @@ import org.thingml.xtext.thingML.Type;
  */
 public class StateContainerHelper {
 
-    //Derived properties
-
-	
-
     public static List<State> allContainedStates(StateContainer self) {
         return ThingMLHelpers.<State>allContainedElementsOfType(self, State.class);
     }

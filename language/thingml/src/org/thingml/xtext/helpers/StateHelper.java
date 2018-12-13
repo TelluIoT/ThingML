@@ -118,7 +118,6 @@ public class StateHelper {
 		Map<Port, Map<Message, List<Handler>>> result = new HashMap<Port, Map<Message, List<Handler>>>();
 		for(State s1 : self.getSubstate()) {
 			for (State s : allStates(s1)) {//FIXME: avoid code duplicatio with method below and rather merge the results provided by method below
-				//println("Processisng state " + s.getName)
 				List<Handler> handlers = new ArrayList<Handler>();
 				for (Transition t : s.getOutgoing()) {
 					handlers.add(t);
@@ -127,7 +126,6 @@ public class StateHelper {
 					handlers.add(i);
 				}
 				for (Handler t : handlers) {
-					//println("  Processisng handler " + t + " Event = " + t.getEvent)
 					Event e = t.getEvent();
 					if (e != null) {
 						if (e instanceof ReceiveMessage) {
@@ -206,33 +204,9 @@ public class StateHelper {
 		return result;
 	}
 
-
-	/**
-	 * Add a new handler to the list of current found handler.
-	 *
-	 * @param handlers Set of all current handler
-	 * @param rm       Message to add
-	 * @param t
-	 */
-	private static void addMessageToHandlers(Map<Port, Map<Message, List<Handler>>> handlers, ReceiveMessage rm, Handler t) {
-		Map<Message, List<Handler>> phdlrs = handlers.get(rm.getPort());
-		if (phdlrs == null) {
-			phdlrs = new HashMap<>();
-			handlers.put(rm.getPort(), phdlrs);
-		}
-		List<Handler> hdlrs = phdlrs.get(rm.getMessage());
-		if (hdlrs == null) {
-			hdlrs = new ArrayList<>();
-			phdlrs.put(rm.getMessage(), hdlrs);
-		}
-		if (t != null)
-			hdlrs.add(t);
-	}
-
 	public static Map<Port, Map<Message, List<Handler>>> allMessageHandlersIncludingSessions(State self) {
 		Map<Port, Map<Message, List<Handler>>> result = new HashMap<Port, Map<Message, List<Handler>>>();
 		for (State s : allStatesIncludingSessions(self)) {
-			//println("Processisng state " + s.getName)
 			List<Handler> handlers = new ArrayList<Handler>();
 			for (Transition t : s.getOutgoing()) {
 				handlers.add(t);
@@ -241,7 +215,6 @@ public class StateHelper {
 				handlers.add(i);
 			}
 			for (Handler t : handlers) {
-				//println("  Processisng handler " + t + " Event = " + t.getEvent)
 				Event e = t.getEvent();
 				if (e != null) {
 					if (e instanceof ReceiveMessage) {
@@ -261,35 +234,6 @@ public class StateHelper {
 				}
 			}
 		}
-		/*
-        //add stream handlers if not present
-        if (self instanceof CompositeState) {
-            for (Stream s : ThingMLElementHelper.findContainingThing(self).getStreams()) {
-                ReceiveMessage rMsg;
-
-                if (s.getInput() instanceof SimpleSource) {
-                    rMsg = ((SimpleSource) s.getInput()).getMessage();
-                    addMessageToHandlers(result, rMsg, null);
-                } else if (s.getInput() instanceof JoinSources) {
-                    for (Source source : ((JoinSources) s.getInput()).getSources()) {
-                        if (source instanceof SimpleSource) {
-                            rMsg = ((SimpleSource) source).getMessage();
-                            addMessageToHandlers(result, rMsg, null);
-                        }
-                    }
-                } else if (s.getInput() instanceof MergeSources) {
-                    for (Source source : ((MergeSources) s.getInput()).getSources()) {
-                        if (source instanceof SimpleSource) {
-                            rMsg = ((SimpleSource) source).getMessage();
-                            addMessageToHandlers(result, rMsg, null);
-                        }
-
-                    }
-                }
-
-            }
-        }
-		 */
 		return result;
 	}
 
