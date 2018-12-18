@@ -2,8 +2,9 @@ import "datatypes.thingml" from stl
 
 object Buffer
 	@java_type " byte[]"
-	@java_primitive "true"
 	@c_type "uint8_t *"
+	@go_type "string"
+	@js_type "string"
 	@c_byte_size "*"
 
 thing fragment MQTTAdapterMsgs {

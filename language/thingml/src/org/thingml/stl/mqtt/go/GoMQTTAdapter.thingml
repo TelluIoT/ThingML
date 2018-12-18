@@ -1,0 +1,136 @@
+import "../MQTTAdapterMsgs.thingml"
+
+object MQTT
+@go_type "mqtt.Client"
+
+thing GoMQTTAdapter includes AbstractMQTTAdapter
+@go_import `mqtt "github.com/eclipse/paho.mqtt.golang"`
+@go_import "strings"
+{
+
+	property client : MQTT
+	property broker_uri : String = "tcp://localhost:1883"  //FIXME: I guess this should be built from included broker_host and broker_port?		
+	property debug_log : Boolean = false
+
+	set topic_prefix = ""	
+		
+	function setTopicPrefix(src : String) do
+		topic_prefix = src
+	end
+
+	function mqtt_connect() do
+		if (debug_log) println "connect to MQTT broker..."
+
+        `var onMessage mqtt.MessageHandler = func(client *mqtt.Client, msg mqtt.Message) {`
+        	if (debug_log) println "message arrived on MQTT topic " + `msg.Topic()` + ": " + `msg.Payload()`	
+			mqtt!mqtt_message((`strings.Replace(msg.Topic(),` & topic_prefix & ` + '/', '', 1)`) as String, `msg.Payload()` as Buffer, `msg.Payload().length` as Int32)
+		`}`
+		
+		`var onConnLost mqtt.ConnectionLostHandler = func(client *mqtt.Client, err error) {`
+        	mqtt!mqtt_disconnected()
+		`}`
+		
+		//Setting options
+		`opts := mqtt.NewClientOptions().AddBroker(` & broker_uri & `)`		
+		`opts.SetDefaultPublishHandler(onMessage)`
+		`opts.SetOnConnectionLost(onConnLost)`
+		//TODO: username/password + TLS, see https://godoc.org/github.com/eclipse/paho.mqtt.golang#ClientOptions
+					
+		//Connecting
+		client = `mqtt.NewClient(opts)` as MQTT
+		`if token := ` & client & `.Connect(); token.Wait() && token.Error() != nil {`
+			mqtt!mqtt_error()
+        `} else {`	
+        	mqtt!mqtt_connected()        
+        `}`					
+	end
+
+	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) do
+		if (client == `nil`) do
+			mqtt!mqtt_error()
+			return
+		end
+		
+		var fulltopic : String = topic
+		if (topic_prefix != "") fulltopic = topic_prefix + "/" + topic
+		
+		if (debug_log) println "publish on MQTT topic " + fulltopic + ": " + payload
+		
+		
+		`if token := c.Publish(` & fulltopic & `, 0, false, ` & payload & `); token.Wait() && token.Error() != nil {`
+			mqtt!mqtt_error()		
+		`} else {`
+			mqtt!mqtt_message_published()
+		`}`
+	end
+
+
+	function mqtt_subscribe(topic : String) do
+		if (client == `nil`) do
+			mqtt!mqtt_error()
+			return
+		end		
+		
+		`if token := ` & client & `.Subscribe(` & topic & `, 0, nil); token.Wait() && token.Error() != nil {`
+			mqtt!mqtt_error()
+		`} else {`
+			mqtt!mqtt_topic_subscribed()
+		`}`
+		
+		var fulltopic : String = topic
+		if (topic_prefix != "") fulltopic = topic_prefix + "/" + topic
+		
+		if (debug_log) println "subscribe to MQTT topic " + fulltopic
+		
+		`` & client &`.subscribe(` & fulltopic & `, (err)=>{
+			if (err)` 
+				mqtt!mqtt_error()
+			`else` 
+				mqtt!mqtt_topic_subscribed()
+		`});`
+			
+	end
+	
+	
+	statechart MQTTAdapterThing init Start {
+		
+		internal event m: mqtt?mqtt_set_credentials action do
+			username = m.usr
+			password = m.pwd
+			enable_user_credentials = true
+		end
+		
+		internal event m: mqtt?mqtt_set_prefix action do
+			setTopicPrefix(m.prefix)
+		end
+		
+		internal event m: mqtt?mqtt_set_tls_certificates action do
+			cafile = m.cafile
+			capath = m.capath
+			certfile = m.certfile
+			keyfile = m.keyfile
+			enable_tls_certificates = true
+		end
+		
+		internal event m : mqtt?mqtt_connect action do
+			client_id = m.client_id
+			`var uri = '';`
+			if (m.tls) `uri = 'ssl://';`
+			else `uri = 'tcp://';`
+			`uri += ` & m.host & ` + ":" + ` & m.portno & `;` 
+			broker_uri = `uri` as String
+			enable_tls = m.tls
+			mqtt_connect()
+		end
+		
+		internal event m : mqtt?mqtt_publish action do
+			mqtt_publish(m.topic, m.payload, m.size)
+		end
+		
+		internal event m : mqtt?mqtt_subscribe action do
+			mqtt_subscribe(m.topic)
+		end
+		
+		state Start {}
+	}
+}

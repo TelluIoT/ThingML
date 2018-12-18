@@ -19,7 +19,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.generator.javascript;
+package org.thingml.generator.go;
 
 import java.io.File;
 
@@ -33,36 +33,36 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 
-public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
+public class GoSONMQTTGenerator extends ThingMLTool {
 
 
-    public JavaScriptJSONMQTTGenerator() {
+    public GoSONMQTTGenerator() {
         super();
     }
 
     @Override
     public String getID() {
-        return "javascriptmqttjson";
+        return "gomqttjson";
     }
 
     @Override
     public String getName() {
-        return "ThingML JavaScript generator for messaging JSON over MQTT";
+        return "ThingML Go generator for messaging JSON over MQTT";
     }
 
     @Override
     public String getDescription() {
-        return "Generate JSON serialization for messages to be sent over MQTT. Javascript specific.";
+        return "Generate JSON serialization for messages to be sent over MQTT. Go specific.";
     }
 
     @Override
     public ThingMLTool clone() {
-        return new JavaScriptJSONMQTTGenerator();
+        return new GoSONMQTTGenerator();
     }
 
     @Override
     public void generateThingMLFrom(ThingMLModel model) {
-        System.out.println("[javascriptmqttjson] Processing Model " + model.eResource().getURI().toString() + "\n");
+        System.out.println("[gomqttjson] Processing Model " + model.eResource().getURI().toString() + "\n");
         
         setOutputDirectory(new File(model.eResource().getURI().path()).getParentFile());
         
@@ -71,20 +71,20 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
         	// Loop over ports
         	for (Port p : ThingMLHelpers.allPorts(t)) {
         		
-        		if (AnnotatedElementHelper.isDefined(p, "external", "javascriptmqttjson")) {
-        			System.out.println("[javascriptmqttjson] Generating for Thing: " + t.getName() + " Port: " + p.getName() + "\n");
+        		if (AnnotatedElementHelper.isDefined(p, "external", "gomqttjson")) {
+        			System.out.println("[gomqttjson] Generating for Thing: " + t.getName() + " Port: " + p.getName() + "\n");
         			generateAdapterFor(model, t, p);
             	}
         	}
         }
-        System.out.println("[javascriptmqttjson] Done. (Model " + model.eResource().getURI().toString() + ")\n");
+        System.out.println("[gomqttjson] Done. (Model " + model.eResource().getURI().toString() + ")\n");
         writeGeneratedCodeToFiles();
     }
     
     public void generateAdapterFor(ThingMLModel model, Thing t, Port p) {
     	
     	String imports = "import \"" + model.eResource().getURI().lastSegment() + "\"\n";
-    	String thing_name = t.getName() +"_JavaScriptMqttJson_Impl";
+    	String thing_name = t.getName() +"_GoMqttJson_Impl";
     	String thing_includes = t.getName() + ", MQTTAdapterMsgs";
     	
     	StringBuilder subscriptions = new StringBuilder();
@@ -99,7 +99,7 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
     		generate_send_handler(p, m, sendfunctions);
     	}
     	
-    	String template = getTemplateByID("javascriptmqttjson/JavaScriptMqttJson.thingml");
+    	String template = getTemplateByID("gomqttjson/GoMqttJson.thingml");
     	template = template.replace("/*IMPORTS*/", imports);
     	template = template.replace("/*THING_NAME*/", thing_name);
     	template = template.replace("/*THING_INCLUDES*/", thing_includes);
@@ -115,7 +115,7 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
     	
     	StringBuilder builder = new StringBuilder(template);
     	
-    	String genfilename = t.getName() + "JavaScriptMqttJson.thingml";
+    	String genfilename = t.getName() + "GoMqttJson.thingml";
     	generatedCode.put(genfilename, builder);
     }
 
@@ -123,11 +123,11 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
     	b.append("\t\tinternal event e:" + p.getName() + "?" + m.getName() + " action do\n");
     	
     	b.append("\t\t\t// Sending for " + p.getName() + "!" + m.getName() + "\n");
-    	b.append("\t\t\t`let json = {};\n");
+    	b.append("\t\t\t`var json interface{}\n");
     	for (Parameter param : m.getParameters()) {
-    		b.append("\t\t\tjson." + param.getName() + " = ` & e."+param.getName()+" & `;\n");
+    		b.append("\t\t\tjson." + param.getName() + " = ` & e."+param.getName()+" & `\n");
     	}
-    	b.append("\t\t\tlet payload = JSON.stringify(json);`\n");
+    	b.append("\t\t\tvar payload = json.Marshal(json)`\n");
     	b.append("\t\t\tpublish_message(\""+ m.getName()+"\", `payload` as Buffer, `payload.length` as UInt32)\n");
     	
     	b.append("\t\tend\n\n");
@@ -135,12 +135,11 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
     
     public void generate_parsing_msg(Port p, Message m, StringBuilder b) {
     	
-    	b.append("\n\t\t\tcase '" + m.getName() + "' :\n");
-    	b.append("\t\t\t\tvar __valid_msg = true;\n");
-    	for (Parameter param : m.getParameters()) {
-    		
-    		b.append("\t\t\t\tlet ___" + param.getName() + " = json." + param.getName() + ";\n");
-    		b.append("\t\t\t\tif(!json.hasOwnProperty('" + param.getName() + "')){\n");
+    	b.append("\n\t\t\tcase \"" + m.getName() + "\" :\n");
+    	b.append("\t\t\t\t__valid_msg := true\n");
+    	for (Parameter param : m.getParameters()) {    		
+    		b.append("\t\t\t\t___" + param.getName() + " := json." + param.getName() + "\n");
+    		b.append("\t\t\t\tif(___" + param.getName() + " == nil){\n");
     		b.append("\t\t\t\t\t`error \"JSON ERROR: parsing message "+m.getName()+", missing parameter "+param.getName()+"\\n\"`\n\t\t\t\t\t__valid_msg = false;\n\t\t\t\t}\n");
     	}
     	b.append("\t\t\t\tif(__valid_msg) `"+ p.getName() +"!" + m.getName() + "(");
@@ -149,7 +148,7 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
     		b.append("`___" + param.getName()+"` as " + param.getTypeRef().getType().getName());
     	}
     	b.append(")`\n");
-    	b.append("break;\n");
+    	b.append("break\n");
     }
     
 }
