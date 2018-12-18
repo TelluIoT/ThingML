@@ -5,10 +5,11 @@
 /*                                                              */
 /****************************************************************/
 
-/*IMPORTS*/
+import "MQTTEchoTestClientGo.thingml"
 
 
-thing /*THING_NAME*/ includes /*THING_INCLUDES*/ 
+
+thing TestMQTTReceiverPort_GoMqttJson_Impl includes TestMQTTReceiverPort, MQTTAdapterMsgs 
 @go_import "encoding/json"
 @go_import "strings"
 {
@@ -20,7 +21,7 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		receives mqtt_message, mqtt_connected
 	}
 	
-	readonly property mqtt_topic_name : String  = "/*MQTT_PORT_NAME*/"
+	readonly property mqtt_topic_name : String  = "receiver"
 	
 	
 	function subscribe_for_message(msg_name : String) do
@@ -35,7 +36,7 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 	
 	
 	function mqtt_subscribe() do
-/*SUBSCRIBE*/		
+		
 	end
 	
 	function mqtt_parsemsg(topic : String, payload : Buffer, length : UInt32) : Boolean do
@@ -60,7 +61,7 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		`}`
 		
 		`switch (` & msgname & `) {  
-			/*PARSEMSG*/
+			
 			default: break;
 		}`
 		
@@ -73,7 +74,42 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		internal event gomqtt?mqtt_connected action mqtt_subscribe()
 		internal event m : gomqtt?mqtt_message action mqtt_parsemsg(m.topic, m.payload, m.size)
 
-		/*SEND_HANDLERS*/
+				internal event e:receiver?no_parameters action do
+			// Sending for receiver!no_parameters
+			`j := FragmentTestMQTTMsgsMsgno_parameters{}
+			payload, err := json.Marshal(j)`
+			publish_message("no_parameters", `payload` as Buffer, `len(payload)` as UInt32)
+		end
+
+		internal event e:receiver?some_numbers action do
+			// Sending for receiver!some_numbers
+			`j := FragmentTestMQTTMsgsMsgsome_numbers{` & e.i8 & `,` & e.ui8 & `,` & e.i & `,` & e.ui & `,` & e.d & `,` & e.l & `,}
+			payload, err := json.Marshal(j)`
+			publish_message("some_numbers", `payload` as Buffer, `len(payload)` as UInt32)
+		end
+
+		internal event e:receiver?some_strings action do
+			// Sending for receiver!some_strings
+			`j := FragmentTestMQTTMsgsMsgsome_strings{` & e.c & `,` & e.str & `,}
+			payload, err := json.Marshal(j)`
+			publish_message("some_strings", `payload` as Buffer, `len(payload)` as UInt32)
+		end
+
+		internal event e:receiver?some_bytes action do
+			// Sending for receiver!some_bytes
+			`j := FragmentTestMQTTMsgsMsgsome_bytes{` & e.b1 & `,` & e.b2 & `,}
+			payload, err := json.Marshal(j)`
+			publish_message("some_bytes", `payload` as Buffer, `len(payload)` as UInt32)
+		end
+
+		internal event e:receiver?some_enum action do
+			// Sending for receiver!some_enum
+			`j := FragmentTestMQTTMsgsMsgsome_enum{` & e.d0 & `,` & e.d1 & `,}
+			payload, err := json.Marshal(j)`
+			publish_message("some_enum", `payload` as Buffer, `len(payload)` as UInt32)
+		end
+
+
 
 		state Running {}
 		

@@ -5,10 +5,11 @@
 /*                                                              */
 /****************************************************************/
 
-/*IMPORTS*/
+import "MQTTEchoTestClientGo.thingml"
 
 
-thing /*THING_NAME*/ includes /*THING_INCLUDES*/ 
+
+thing TestMQTTSenderPort_GoMqttJson_Impl includes TestMQTTSenderPort, MQTTAdapterMsgs 
 @go_import "encoding/json"
 @go_import "strings"
 {
@@ -20,7 +21,7 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		receives mqtt_message, mqtt_connected
 	}
 	
-	readonly property mqtt_topic_name : String  = "/*MQTT_PORT_NAME*/"
+	readonly property mqtt_topic_name : String  = "sender"
 	
 	
 	function subscribe_for_message(msg_name : String) do
@@ -35,7 +36,12 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 	
 	
 	function mqtt_subscribe() do
-/*SUBSCRIBE*/		
+		subscribe_for_message("no_parameters")
+		subscribe_for_message("some_numbers")
+		subscribe_for_message("some_strings")
+		subscribe_for_message("some_bytes")
+		subscribe_for_message("some_enum")
+		
 	end
 	
 	function mqtt_parsemsg(topic : String, payload : Buffer, length : UInt32) : Boolean do
@@ -60,7 +66,64 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		`}`
 		
 		`switch (` & msgname & `) {  
-			/*PARSEMSG*/
+			
+			case "no_parameters" :
+			j := FragmentTestMQTTMsgsMsgno_parameters{}
+err := json.Unmarshal([]byte(` & payload & `), &j)
+if (err != nil){
+return false
+}
+`sender!no_parameters()`
+break
+
+			case "some_numbers" :
+			j := FragmentTestMQTTMsgsMsgsome_numbers{}
+err := json.Unmarshal([]byte(` & payload & `), &j)
+if (err != nil){
+return false
+}
+				___i8 := j.i8
+				___ui8 := j.ui8
+				___i := j.i
+				___ui := j.ui
+				___d := j.d
+				___l := j.l
+`sender!some_numbers(`___i8` as Int8, `___ui8` as UInt8, `___i` as Integer, `___ui` as UInt16, `___d` as Double, `___l` as Int64)`
+break
+
+			case "some_strings" :
+			j := FragmentTestMQTTMsgsMsgsome_strings{}
+err := json.Unmarshal([]byte(` & payload & `), &j)
+if (err != nil){
+return false
+}
+				___c := j.c
+				___str := j.str
+`sender!some_strings(`___c` as Char, `___str` as String)`
+break
+
+			case "some_bytes" :
+			j := FragmentTestMQTTMsgsMsgsome_bytes{}
+err := json.Unmarshal([]byte(` & payload & `), &j)
+if (err != nil){
+return false
+}
+				___b1 := j.b1
+				___b2 := j.b2
+`sender!some_bytes(`___b1` as Byte, `___b2` as Byte)`
+break
+
+			case "some_enum" :
+			j := FragmentTestMQTTMsgsMsgsome_enum{}
+err := json.Unmarshal([]byte(` & payload & `), &j)
+if (err != nil){
+return false
+}
+				___d0 := j.d0
+				___d1 := j.d1
+`sender!some_enum(`___d0` as DigitalState, `___d1` as DigitalState)`
+break
+
 			default: break;
 		}`
 		
@@ -73,7 +136,7 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 		internal event gomqtt?mqtt_connected action mqtt_subscribe()
 		internal event m : gomqtt?mqtt_message action mqtt_parsemsg(m.topic, m.payload, m.size)
 
-		/*SEND_HANDLERS*/
+		
 
 		state Running {}
 		

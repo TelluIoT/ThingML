@@ -35,7 +35,6 @@ import org.thingml.xtext.thingML.ThingMLModel;
 
 public class GoSONMQTTGenerator extends ThingMLTool {
 
-
     public GoSONMQTTGenerator() {
         super();
     }
@@ -123,12 +122,17 @@ public class GoSONMQTTGenerator extends ThingMLTool {
     	b.append("\t\tinternal event e:" + p.getName() + "?" + m.getName() + " action do\n");
     	
     	b.append("\t\t\t// Sending for " + p.getName() + "!" + m.getName() + "\n");
-    	b.append("\t\t\t`var json interface{}\n");
+    	
+    	final Thing t = ThingMLHelpers.findContainingThing(m);
+    	String msg_name = (t.isFragment()) ? "Fragment" + t.getName() + "Msg" + m.getName() : t.getName() + "Msg" + m.getName();
+    	
+    	b.append("\t\t\t`j := " + msg_name + "{");
     	for (Parameter param : m.getParameters()) {
-    		b.append("\t\t\tjson." + param.getName() + " = ` & e."+param.getName()+" & `\n");
+    		b.append("` & e."+param.getName()+" & `,");
     	}
-    	b.append("\t\t\tvar payload = json.Marshal(json)`\n");
-    	b.append("\t\t\tpublish_message(\""+ m.getName()+"\", `payload` as Buffer, `payload.length` as UInt32)\n");
+    	b.append("}\n");
+    	b.append("\t\t\tpayload, err := json.Marshal(j)`\n");//TODO: if err==nil publish else error
+    	b.append("\t\t\tpublish_message(\""+ m.getName()+"\", `payload` as Buffer, `len(payload)` as UInt32)\n");
     	
     	b.append("\t\tend\n\n");
     }
@@ -136,13 +140,17 @@ public class GoSONMQTTGenerator extends ThingMLTool {
     public void generate_parsing_msg(Port p, Message m, StringBuilder b) {
     	
     	b.append("\n\t\t\tcase \"" + m.getName() + "\" :\n");
-    	b.append("\t\t\t\t__valid_msg := true\n");
+    	
+    	final Thing t = ThingMLHelpers.findContainingThing(m);
+    	String msg_name = (t.isFragment()) ? "Fragment" + t.getName() + "Msg" + m.getName() : t.getName() + "Msg" + m.getName();
+    	
+    	b.append("\t\t\tj := " + msg_name + "{}\n");
+    	b.append("err := json.Unmarshal([]byte(` & payload & `), &j)\n");
+    	b.append("if (err != nil){\nreturn false\n}\n");
     	for (Parameter param : m.getParameters()) {    		
-    		b.append("\t\t\t\t___" + param.getName() + " := json." + param.getName() + "\n");
-    		b.append("\t\t\t\tif(___" + param.getName() + " == nil){\n");
-    		b.append("\t\t\t\t\t`error \"JSON ERROR: parsing message "+m.getName()+", missing parameter "+param.getName()+"\\n\"`\n\t\t\t\t\t__valid_msg = false;\n\t\t\t\t}\n");
+    		b.append("\t\t\t\t___" + param.getName() + " := j." + param.getName() + "\n");
     	}
-    	b.append("\t\t\t\tif(__valid_msg) `"+ p.getName() +"!" + m.getName() + "(");
+    	b.append("`"+ p.getName() +"!" + m.getName() + "(");
     	for (Parameter param : m.getParameters()) {
     		if (!param.equals(m.getParameters().get(0))) b.append(", ");
     		b.append("`___" + param.getName()+"` as " + param.getTypeRef().getType().getName());

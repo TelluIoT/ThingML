@@ -11,6 +11,7 @@ thing fragment TestMQTTSenderPort includes TestMQTTMsgs {
 	@external "posixmqttjson"
 	@external "javamqttjson"
 	@external "javascriptmqttjson"
+	@external "gomqttjson"
 	@sync_send "true"
 	{
 		sends no_parameters, some_numbers, some_strings, some_bytes, some_enum
@@ -23,6 +24,7 @@ thing fragment TestMQTTReceiverPort includes TestMQTTMsgs {
 	@external "posixmqttjson"
 	@external "javamqttjson"
 	@external "javascriptmqttjson"
+	@external "gomqttjson"
 	@sync_send "true"
 	{
 		receives no_parameters, some_numbers, some_strings, some_bytes, some_enum

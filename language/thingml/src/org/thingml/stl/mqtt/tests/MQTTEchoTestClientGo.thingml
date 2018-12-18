@@ -1,0 +1,40 @@
+import "MQTTEchoTestClient.thingml"
+import "TestMQTTReceiverPortGoMqttJson.thingml"
+import "TestMQTTSenderPortGoMqttJson.thingml"
+import "../go/GoMQTTAdapter.thingml"
+
+configuration EchoGoTestClient
+@compiler "go"
+{
+	instance echo : MQTTEchoTestClient
+	
+	instance timer : TimerGo
+	connector echo.timer => timer.timer
+	
+	instance rx : TestMQTTReceiverPort_GoMqttJson_Impl
+		set rx.mqtt_topic_name = "ping"
+	connector rx.receiver => echo.sender
+	
+	instance tx : TestMQTTSenderPort_GoMqttJson_Impl
+		set tx.mqtt_topic_name = "ping"
+	connector echo.receiver => tx.sender
+	
+	
+	instance mqtt : GoMQTTAdapter
+	
+	connector rx.gomqtt => mqtt.mqtt
+	connector tx.gomqtt => mqtt.mqtt
+	connector echo.mqtt => mqtt.mqtt
+	
+}
+ 
+
+
+
+
+
+
+
+
+ 
+

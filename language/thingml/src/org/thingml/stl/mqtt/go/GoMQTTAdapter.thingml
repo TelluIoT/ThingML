@@ -22,8 +22,8 @@ thing GoMQTTAdapter includes AbstractMQTTAdapter
 		if (debug_log) println "connect to MQTT broker..."
 
         `var onMessage mqtt.MessageHandler = func(client *mqtt.Client, msg mqtt.Message) {`
-        	if (debug_log) println "message arrived on MQTT topic " + `msg.Topic()` + ": " + `msg.Payload()`	
-			mqtt!mqtt_message((`strings.Replace(msg.Topic(),` & topic_prefix & ` + '/', '', 1)`) as String, `msg.Payload()` as Buffer, `msg.Payload().length` as Int32)
+        	if (debug_log) println "message arrived on MQTT topic " + `msg.Topic()` + ": " + `string(msg.Payload())`	
+			mqtt!mqtt_message((`strings.Replace(msg.Topic(),` & topic_prefix & ` + "/", "", 1)`) as String, `msg.Payload()` as Buffer, `len(msg.Payload())` as UInt32)
 		`}`
 		
 		`var onConnLost mqtt.ConnectionLostHandler = func(client *mqtt.Client, err error) {`
@@ -33,7 +33,7 @@ thing GoMQTTAdapter includes AbstractMQTTAdapter
 		//Setting options
 		`opts := mqtt.NewClientOptions().AddBroker(` & broker_uri & `)`		
 		`opts.SetDefaultPublishHandler(onMessage)`
-		`opts.SetOnConnectionLost(onConnLost)`
+		`opts.SetConnectionLostHandler(onConnLost)`
 		//TODO: username/password + TLS, see https://godoc.org/github.com/eclipse/paho.mqtt.golang#ClientOptions
 					
 		//Connecting
@@ -45,7 +45,7 @@ thing GoMQTTAdapter includes AbstractMQTTAdapter
         `}`					
 	end
 
-	function mqtt_publish(topic : String, payload: Buffer, size : UInt16) do
+	function mqtt_publish(topic : String, payload: Buffer, size : UInt32) do
 		if (client == `nil`) do
 			mqtt!mqtt_error()
 			return
@@ -57,7 +57,7 @@ thing GoMQTTAdapter includes AbstractMQTTAdapter
 		if (debug_log) println "publish on MQTT topic " + fulltopic + ": " + payload
 		
 		
-		`if token := c.Publish(` & fulltopic & `, 0, false, ` & payload & `); token.Wait() && token.Error() != nil {`
+		`if token := ` & client & `.Publish(` & fulltopic & `, 0, false, ` & payload & `); token.Wait() && token.Error() != nil {`
 			mqtt!mqtt_error()		
 		`} else {`
 			mqtt!mqtt_message_published()
@@ -70,25 +70,17 @@ thing GoMQTTAdapter includes AbstractMQTTAdapter
 			mqtt!mqtt_error()
 			return
 		end		
-		
-		`if token := ` & client & `.Subscribe(` & topic & `, 0, nil); token.Wait() && token.Error() != nil {`
-			mqtt!mqtt_error()
-		`} else {`
-			mqtt!mqtt_topic_subscribed()
-		`}`
-		
+
 		var fulltopic : String = topic
 		if (topic_prefix != "") fulltopic = topic_prefix + "/" + topic
 		
 		if (debug_log) println "subscribe to MQTT topic " + fulltopic
 		
-		`` & client &`.subscribe(` & fulltopic & `, (err)=>{
-			if (err)` 
-				mqtt!mqtt_error()
-			`else` 
-				mqtt!mqtt_topic_subscribed()
-		`});`
-			
+		`if token := ` & client & `.Subscribe(` & fulltopic & `, 0, nil); token.Wait() && token.Error() != nil {`
+			mqtt!mqtt_error()
+		`} else {`
+			mqtt!mqtt_topic_subscribed()
+		`}`			
 	end
 	
 	
@@ -114,10 +106,10 @@ thing GoMQTTAdapter includes AbstractMQTTAdapter
 		
 		internal event m : mqtt?mqtt_connect action do
 			client_id = m.client_id
-			`var uri = '';`
-			if (m.tls) `uri = 'ssl://';`
-			else `uri = 'tcp://';`
-			`uri += ` & m.host & ` + ":" + ` & m.portno & `;` 
+			`var uri = "";`
+			if (m.tls) `uri = "ssl://";`
+			else `uri = "tcp://";`
+			`uri += ` & m.host & ` + ":" + string(` & m.portno & `);` 
 			broker_uri = `uri` as String
 			enable_tls = m.tls
 			mqtt_connect()
