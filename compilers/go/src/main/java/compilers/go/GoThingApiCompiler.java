@@ -49,10 +49,17 @@ public class GoThingApiCompiler extends ThingApiCompiler {
 		// Imports from annotations
 		Set<String> imp = new HashSet<>();
 		imp.addAll(AnnotatedElementHelper.annotation(thing, "go_import"));
-		for(Thing include : ThingHelper.allIncludedThings(thing))
+		for(Thing include : ThingHelper.allIncludedThings(thing)) {
 			imp.addAll(AnnotatedElementHelper.annotation(include, "go_import"));
-		for (String annotationImport : imp)
-			gctx.currentThingImport(annotationImport);
+		}
+		for (String annotationImport : imp) {
+			if (annotationImport.contains(" ")) {//e.g. mqtt "github.com/eclipse/paho.mqtt.golang"
+				imports.append(annotationImport);
+			}
+			else {
+				imports.append("\""+annotationImport+"\"");
+			}
+		}
 		
 		// Add ports
 		builder.comment(" -- Ports -- ");
@@ -62,7 +69,8 @@ public class GoThingApiCompiler extends ThingApiCompiler {
 			Section ports = portsConst.appendSection("body").lines().indent();
 			portsConst.append(")");
 			for (Port p : ThingMLHelpers.allPorts(thing)) {
-				ports.section("port").append(gctx.getNameFor(p)).append(" = ").append(gctx.getPortID(p));
+				final String port_name = thing.getName() + "_" + ThingMLHelpers.findContainingThing(p).getName() + "_" + p.getName();
+				ports.section("port").append(port_name).append(" = ").append(gctx.getPortID(p));
 			}
 		}
 		builder.append("");

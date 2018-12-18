@@ -335,9 +335,10 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 					gctx.currentThingContext.messageUsedInTransition = false;
 					if (et.msg != null) {
 						ReceiveMessage receive = (ReceiveMessage)handler.getEvent();
+						final String port_name = thing.getName() + "_" + ThingMLHelpers.findContainingThing(receive.getPort()).getName() + "_" + receive.getPort().getName();
 						handlerIfBefore
 							.append("port == ")
-							.append(gctx.getNameFor(receive.getPort()))
+							.append(port_name)
 							.append(" && ");
 					}
 					Section guard = handlerIfBefore.appendSection("guard").lines(false).surroundWith("(", ")");
@@ -360,9 +361,10 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 						Section handlerIfBefore = handlerIf.appendSection("before").append("if ");
 						Element localMessage = generateTransitionLocalMessage(handlerIfBefore, handler.getEvent(), gctx);
 						gctx.currentThingContext.messageUsedInTransition = false;
+						final String port_name = thing.getName() + "_" + ThingMLHelpers.findContainingThing(receive.getPort()).getName() + "_" + receive.getPort().getName();
 						handlerIfBefore
 							.append("port == ")
-							.append(gctx.getNameFor(receive.getPort()))
+							.append(port_name)
 							.append(" {");
 						generateTransistionReturn(thing, handler, handlerIf.appendSection("body").lines().indent(), gctx);
 						handlerIf.appendSection("after")

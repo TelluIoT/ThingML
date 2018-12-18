@@ -22,6 +22,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.thing.common.NewCommonThingActionCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.CastExpression;
@@ -102,10 +103,13 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	@Override
 	public void generate(SendAction action, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
+		
+		final String port_name = ThingMLHelpers.findContainingThing(action).getName() + "_" + ThingMLHelpers.findContainingThing(action.getPort()).getName() + "_" + action.getPort().getName();
+		
 		Section send = section.section("send").lines();
 		Section before = send.section("before");
 		before.append("state.Send(");
-		before.append(gctx.getNameFor(action.getPort())).append(", ");
+		before.append(port_name).append(", ");
 		before.append(gctx.getNameFor(action.getMessage())).append("{");
 		List<Parameter> parameters = action.getMessage().getParameters();
 		List<Expression> values = action.getParameters();

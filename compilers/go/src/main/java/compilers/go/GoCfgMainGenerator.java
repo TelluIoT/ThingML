@@ -25,6 +25,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.AbstractConnector;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
@@ -109,8 +110,14 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		importStatement.append("import (");
 		Section imports = importStatement.appendSection("imports").lines().indent();
 		imports.append("\"github.com/SINTEF-9012/gosm\"");
-		for (String imp : new HashSet<String>(AnnotatedElementHelper.annotation(cfg, "go_import")))
-			imports.append("\""+imp+"\"");
+		for (String imp : new HashSet<String>(AnnotatedElementHelper.annotation(cfg, "go_import"))) {
+			if (imp.contains(" ")) { //e.g. mqtt "github.com/eclipse/paho.mqtt.golang"
+				imports.append(imp);
+			}
+			else {
+				imports.append("\""+imp+"\"");
+			}
+		}
 		importStatement.append(")").append("");
 
 
@@ -135,12 +142,15 @@ public class GoCfgMainGenerator extends CfgMainGenerator {
 		for (AbstractConnector aConnector : cfg.getConnectors()) {
 			if (aConnector instanceof Connector) {
 				Connector connector = (Connector)aConnector;
+				final String req_port = connector.getCli().getType().getName() + "_" + ThingMLHelpers.findContainingThing(connector.getRequired()).getName() + "_" + connector.getRequired().getName();
+				final String prov_port = connector.getSrv().getType().getName() + "_" + ThingMLHelpers.findContainingThing(connector.getProvided()).getName() + "_" + connector.getProvided().getName();
+
 				connectors.appendSection("connector")
 					.append("gosm.Connector(")
 					.append(gctx.getNameFor(connector.getCli())).append(".Component, ")
 					.append(gctx.getNameFor(connector.getSrv())).append(".Component, ")
-					.append(gctx.getNameFor(connector.getRequired())).append(", ")
-					.append(gctx.getNameFor(connector.getProvided()))
+					.append(req_port).append(", ")
+					.append(prov_port)
 					.append(")");
 			} else if (aConnector instanceof ExternalConnector) {
 				// TODO: Implement something here!
