@@ -51,21 +51,12 @@ thing TestMQTTReceiverPort_GoMqttJson_Impl includes TestMQTTReceiverPort, MQTTAd
 			
 		if (portname != mqtt_topic_name) return false
 		
-		
-		`var j interface{}
-		err := json.Unmarshal([]byte(` & payload & `), &j)
-		if (err != nil) {`
-			errorln "Unable to parse message invalid message from topic ", topic, ". Payload: ", payload ," Message Dropped."
-			errorln `err`
-			return false
-		`}`
-		
 		`switch (` & msgname & `) {  
 			
 			default: break;
 		}`
 		
-		return false
+		return true
 	end
 	
 	
@@ -77,36 +68,46 @@ thing TestMQTTReceiverPort_GoMqttJson_Impl includes TestMQTTReceiverPort, MQTTAd
 				internal event e:receiver?no_parameters action do
 			// Sending for receiver!no_parameters
 			`j := FragmentTestMQTTMsgsMsgno_parameters{}
-			payload, err := json.Marshal(j)`
-			publish_message("no_parameters", `payload` as Buffer, `len(payload)` as UInt32)
+			payload, err := json.Marshal(j)
+			if (err == nil){`
+				publish_message("no_parameters", `payload` as Buffer, `len(payload)` as UInt32)
+			`}`
 		end
 
 		internal event e:receiver?some_numbers action do
 			// Sending for receiver!some_numbers
 			`j := FragmentTestMQTTMsgsMsgsome_numbers{` & e.i8 & `,` & e.ui8 & `,` & e.i & `,` & e.ui & `,` & e.d & `,` & e.l & `,}
-			payload, err := json.Marshal(j)`
-			publish_message("some_numbers", `payload` as Buffer, `len(payload)` as UInt32)
+			payload, err := json.Marshal(j)
+			if (err == nil){`
+				publish_message("some_numbers", `payload` as Buffer, `len(payload)` as UInt32)
+			`}`
 		end
 
 		internal event e:receiver?some_strings action do
 			// Sending for receiver!some_strings
 			`j := FragmentTestMQTTMsgsMsgsome_strings{` & e.c & `,` & e.str & `,}
-			payload, err := json.Marshal(j)`
-			publish_message("some_strings", `payload` as Buffer, `len(payload)` as UInt32)
+			payload, err := json.Marshal(j)
+			if (err == nil){`
+				publish_message("some_strings", `payload` as Buffer, `len(payload)` as UInt32)
+			`}`
 		end
 
 		internal event e:receiver?some_bytes action do
 			// Sending for receiver!some_bytes
 			`j := FragmentTestMQTTMsgsMsgsome_bytes{` & e.b1 & `,` & e.b2 & `,}
-			payload, err := json.Marshal(j)`
-			publish_message("some_bytes", `payload` as Buffer, `len(payload)` as UInt32)
+			payload, err := json.Marshal(j)
+			if (err == nil){`
+				publish_message("some_bytes", `payload` as Buffer, `len(payload)` as UInt32)
+			`}`
 		end
 
 		internal event e:receiver?some_enum action do
 			// Sending for receiver!some_enum
 			`j := FragmentTestMQTTMsgsMsgsome_enum{` & e.d0 & `,` & e.d1 & `,}
-			payload, err := json.Marshal(j)`
-			publish_message("some_enum", `payload` as Buffer, `len(payload)` as UInt32)
+			payload, err := json.Marshal(j)
+			if (err == nil){`
+				publish_message("some_enum", `payload` as Buffer, `len(payload)` as UInt32)
+			`}`
 		end
 
 

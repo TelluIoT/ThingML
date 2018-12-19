@@ -3,7 +3,7 @@ import "datatypes.thingml" from stl
 object Buffer
 	@java_type " byte[]"
 	@c_type "uint8_t *"
-	@go_type "string"
+	@go_type "[]byte"
 	@js_type "string"
 	@c_byte_size "*"
 

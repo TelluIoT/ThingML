@@ -19,6 +19,7 @@ package org.thingml.compilers.builder;
 import java.io.IOException;
 import java.io.Writer;
 
+@Deprecated
 public class SourceBuilder extends Section {
 	final String TAB = "\t";
 	final String NEWLINE = System.lineSeparator();

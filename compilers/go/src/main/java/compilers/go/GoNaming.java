@@ -142,9 +142,9 @@ public class GoNaming {
 	/* -- Naming strategy -- */
 	private ThingMLSwitch<Name> namingStrategy = new ThingMLSwitch<Name>() {
 		
-		public Name caseEnumeration(Enumeration object) {
+		/*public Name caseEnumeration(Enumeration object) {
 			return singleName("Enum"+object.getName());
-		};
+		};*/
 		
 		public Name caseEnumerationLiteral(EnumerationLiteral object) {
 			return appendToParentName(object.eContainer(), object.getName());
@@ -224,6 +224,12 @@ public class GoNaming {
 		};
 		
 		public Name caseParameter(Parameter object) {
+			if (object.eContainer() instanceof Message) {
+				if (object.getName().length()>1)
+					return singleName(object.getName().substring(0, 1).toUpperCase() + object.getName().substring(1));
+				else
+					return singleName(object.getName().substring(0, 1).toUpperCase());
+			}
 			return singleName(object.getName());
 		};
 		

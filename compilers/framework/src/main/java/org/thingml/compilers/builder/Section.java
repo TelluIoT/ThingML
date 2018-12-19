@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class Section extends Element {
 	protected Section parent;
 	protected String name;

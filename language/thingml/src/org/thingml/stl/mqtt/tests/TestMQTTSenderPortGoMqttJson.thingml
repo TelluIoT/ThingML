@@ -56,15 +56,6 @@ thing TestMQTTSenderPort_GoMqttJson_Impl includes TestMQTTSenderPort, MQTTAdapte
 			
 		if (portname != mqtt_topic_name) return false
 		
-		
-		`var j interface{}
-		err := json.Unmarshal([]byte(` & payload & `), &j)
-		if (err != nil) {`
-			errorln "Unable to parse message invalid message from topic ", topic, ". Payload: ", payload ," Message Dropped."
-			errorln `err`
-			return false
-		`}`
-		
 		`switch (` & msgname & `) {  
 			
 			case "no_parameters" :
@@ -82,12 +73,12 @@ err := json.Unmarshal([]byte(` & payload & `), &j)
 if (err != nil){
 return false
 }
-				___i8 := j.i8
-				___ui8 := j.ui8
-				___i := j.i
-				___ui := j.ui
-				___d := j.d
-				___l := j.l
+				___i8 := j.I8
+				___ui8 := j.Ui8
+				___i := j.I
+				___ui := j.Ui
+				___d := j.D
+				___l := j.L
 `sender!some_numbers(`___i8` as Int8, `___ui8` as UInt8, `___i` as Integer, `___ui` as UInt16, `___d` as Double, `___l` as Int64)`
 break
 
@@ -97,8 +88,8 @@ err := json.Unmarshal([]byte(` & payload & `), &j)
 if (err != nil){
 return false
 }
-				___c := j.c
-				___str := j.str
+				___c := j.C
+				___str := j.Str
 `sender!some_strings(`___c` as Char, `___str` as String)`
 break
 
@@ -108,8 +99,8 @@ err := json.Unmarshal([]byte(` & payload & `), &j)
 if (err != nil){
 return false
 }
-				___b1 := j.b1
-				___b2 := j.b2
+				___b1 := j.B1
+				___b2 := j.B2
 `sender!some_bytes(`___b1` as Byte, `___b2` as Byte)`
 break
 
@@ -119,15 +110,15 @@ err := json.Unmarshal([]byte(` & payload & `), &j)
 if (err != nil){
 return false
 }
-				___d0 := j.d0
-				___d1 := j.d1
+				___d0 := j.D0
+				___d1 := j.D1
 `sender!some_enum(`___d0` as DigitalState, `___d1` as DigitalState)`
 break
 
 			default: break;
 		}`
 		
-		return false
+		return true
 	end
 	
 	

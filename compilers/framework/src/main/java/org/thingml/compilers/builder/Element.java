@@ -19,6 +19,7 @@ package org.thingml.compilers.builder;
 import java.io.IOException;
 import java.io.Writer;
 
+@Deprecated
 public class Element {
 	protected String value = null;
 	protected boolean enabled = true;

@@ -16,6 +16,7 @@
  */
 package org.thingml.compilers.builder;
 
+@Deprecated
 public class StringBuilderSection extends Section {
 	StringBuilder stringbuilder = new StringBuilder();
 

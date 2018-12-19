@@ -131,8 +131,10 @@ public class GoSONMQTTGenerator extends ThingMLTool {
     		b.append("` & e."+param.getName()+" & `,");
     	}
     	b.append("}\n");
-    	b.append("\t\t\tpayload, err := json.Marshal(j)`\n");//TODO: if err==nil publish else error
-    	b.append("\t\t\tpublish_message(\""+ m.getName()+"\", `payload` as Buffer, `len(payload)` as UInt32)\n");
+    	b.append("\t\t\tpayload, err := json.Marshal(j)\n");//TODO: what to do if err? (though it should, in principle, not happen...
+    	b.append("\t\t\tif (err == nil){`\n");
+    	b.append("\t\t\t\tpublish_message(\""+ m.getName()+"\", `payload` as Buffer, `len(payload)` as UInt32)\n");
+    	b.append("\t\t\t`}`\n");
     	
     	b.append("\t\tend\n\n");
     }
@@ -147,8 +149,13 @@ public class GoSONMQTTGenerator extends ThingMLTool {
     	b.append("\t\t\tj := " + msg_name + "{}\n");
     	b.append("err := json.Unmarshal([]byte(` & payload & `), &j)\n");
     	b.append("if (err != nil){\nreturn false\n}\n");
-    	for (Parameter param : m.getParameters()) {    		
-    		b.append("\t\t\t\t___" + param.getName() + " := j." + param.getName() + "\n");
+    	for (Parameter param : m.getParameters()) {    	
+    		String param_name = "";
+			if (param.getName().length()>1)
+				param_name = param.getName().substring(0, 1).toUpperCase() + param.getName().substring(1);
+			else
+				param_name = param.getName().substring(0, 1).toUpperCase();
+    		b.append("\t\t\t\t___" + param.getName() + " := j." + param_name + "\n");
     	}
     	b.append("`"+ p.getName() +"!" + m.getName() + "(");
     	for (Parameter param : m.getParameters()) {

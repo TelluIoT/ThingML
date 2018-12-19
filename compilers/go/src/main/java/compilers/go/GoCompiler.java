@@ -127,9 +127,13 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		msgBuilder.append("package main").append("");
 		msgBuilder.comment(" -- Messages -- ");
 		for (Message msg : ConfigurationHelper.allMessages(cfg)) {
-			Struct msgStruct = msgBuilder.struct(ctx.getNameFor(msg));
-			for (Parameter p : msg.getParameters())
-				msgStruct.addField(ctx.getNameFor(p), ctx.getNameFor(p.getTypeRef()));
+			final Thing t = ThingMLHelpers.findContainingThing(msg);
+			final String msg_name = (t.isFragment()) ? "Fragment" + t.getName() + "Msg" + msg.getName() : t.getName() + "Msg" + msg.getName(); 
+			msgBuilder.append("type " + msg_name + " struct {\n");
+			for (Parameter p : msg.getParameters()) {			
+				msgBuilder.append(ctx.firstToUpper(p.getName()) + " " + AnnotatedElementHelper.annotationOrElse(p.getTypeRef().getType(), "go_type", "interface{}") + "\n");
+			}
+			msgBuilder.append("}\n");
 		}
 		msgBuilder.append("");
 

@@ -112,8 +112,10 @@ thing MQTTEchoTestClient includes TestMQTTSenderPort, TestMQTTReceiverPort, MQTT
 				
 				on exit timer!timer_cancel(0)
 				
-				transition -> TestNoParameters event timer?timer_timeout action println "TIMEOUT"
-				transition -> TestNoParameters event e:receiver?some_strings action do
+				//transition -> TestNoParameters 
+				internal event timer?timer_timeout action println "TIMEOUT"
+				//transition -> TestNoParameters 
+				internal event e:receiver?some_strings action do
 					if (e.c != c) println "FAILED (c)"
 					//else if (`!`&e.str&`.equals(`&str&`)`) println "FAILED (str)"
 					else println "OK (but str not checked)"

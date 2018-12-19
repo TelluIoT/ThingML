@@ -50,21 +50,12 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 			
 		if (portname != mqtt_topic_name) return false
 		
-		
-		`var j interface{}
-		err := json.Unmarshal([]byte(` & payload & `), &j)
-		if (err != nil) {`
-			errorln "Unable to parse message invalid message from topic ", topic, ". Payload: ", payload ," Message Dropped."
-			errorln `err`
-			return false
-		`}`
-		
 		`switch (` & msgname & `) {  
 			/*PARSEMSG*/
 			default: break;
 		}`
 		
-		return false
+		return true
 	end
 	
 	
