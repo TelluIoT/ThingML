@@ -11,7 +11,7 @@ thing GoMQTTAdapter includes AbstractMQTTAdapter
 
 	property client : MQTT
 	property broker_uri : String = "tcp://localhost:1883"  //FIXME: I guess this should be built from included broker_host and broker_port?		
-	property debug_log : Boolean = true
+	property debug_log : Boolean = false
 
 	set topic_prefix = ""	
 		

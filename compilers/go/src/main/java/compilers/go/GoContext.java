@@ -184,6 +184,10 @@ public class GoContext extends Context {
 				if (this.addedImports.add(i))
 					this.imports.append("\""+i+"\"");
 		}
+		
+		public Thing getThing() {
+			return thing;
+		}
 	}
 
 	public void currentThingImport(String...imports) {

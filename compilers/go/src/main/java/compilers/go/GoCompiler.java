@@ -37,8 +37,6 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-import compilers.go.GoSourceBuilder.GoSection.Struct;
-
 public class GoCompiler extends OpaqueThingMLCompiler {
 
 	public GoCompiler() {
@@ -126,9 +124,9 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		GoSourceBuilder msgBuilder = ctx.getSourceBuilder("messages.go");
 		msgBuilder.append("package main").append("");
 		msgBuilder.comment(" -- Messages -- ");
-		for (Message msg : ConfigurationHelper.allMessages(cfg)) {
+		for (Message msg : ConfigurationHelper.allMessages(cfg)) {			
 			final Thing t = ThingMLHelpers.findContainingThing(msg);
-			final String msg_name = (t.isFragment()) ? "Fragment" + t.getName() + "Msg" + msg.getName() : t.getName() + "Msg" + msg.getName(); 
+			final String msg_name = (t.isFragment()) ? "Fragment" + t.getName() + "Msg" + msg.getName() : t.getName() + "Msg" + msg.getName();
 			msgBuilder.append("type " + msg_name + " struct {\n");
 			for (Parameter p : msg.getParameters()) {			
 				msgBuilder.append(ctx.firstToUpper(p.getName()) + " " + AnnotatedElementHelper.annotationOrElse(p.getTypeRef().getType(), "go_type", "interface{}") + "\n");

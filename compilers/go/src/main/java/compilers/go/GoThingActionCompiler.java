@@ -103,8 +103,8 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	@Override
 	public void generate(SendAction action, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
-		
-		final String port_name = ThingMLHelpers.findContainingThing(action).getName() + "_" + ThingMLHelpers.findContainingThing(action.getPort()).getName() + "_" + action.getPort().getName();
+				
+		final String port_name = gctx.currentThingContext.getThing().getName() + "_" + ThingMLHelpers.findContainingThing(action.getPort()).getName() + "_" + action.getPort().getName();
 		
 		Section send = section.section("send").lines();
 		Section before = send.section("before");
