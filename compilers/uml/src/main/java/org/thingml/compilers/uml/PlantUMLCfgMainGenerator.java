@@ -36,6 +36,7 @@ import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Parameter;
@@ -135,8 +136,12 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
 
 			for (Port p : thing.getPorts()) {
-				final String type = (p instanceof ProvidedPort) ? "▲" : "▼";
-				classes.append(".." + type + " Port " + p.getName() + " " + type +"..\n");
+				if (p instanceof InternalPort) {
+					classes.append("..▶  Port " + p.getName() + " ◀ ..\n");	
+				} else {
+					final String type = (p instanceof ProvidedPort) ? "▲" : "▼";
+					classes.append(".." + type + " Port " + p.getName() + " " + type +"..\n");
+				}
 				for (Message m : p.getReceives()) {
 					classes.append("▶ " + m.getName() + "\n");
 				}
