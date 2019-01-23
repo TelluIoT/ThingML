@@ -33,16 +33,13 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.thingml.thingmltools.ThingMLTool;
 import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.SendAction;
@@ -76,7 +73,7 @@ public class MonitorGenerator extends ThingMLTool {
 
     @Override
     public String getDescription() {
-        return "[UNDER ACTIVE DEVELOPMENT] Generates monotiring base on @monitor annotations";
+        return "[UNDER ACTIVE DEVELOPMENT] Generates monitoring based on @monitor annotations";
     }
 
     @Override
@@ -136,7 +133,6 @@ public class MonitorGenerator extends ThingMLTool {
     }
     
     private void save(ThingMLModel model, String location) throws IOException {
-    	System.out.println("Saving to " + location + " : " + model);
     	ThingMLStandaloneSetup.doSetup();    	
     	if (!model.getImports().isEmpty())
     		throw new Error("Only models without imports can be saved with this method. Use the 'flattenModel' method first.");
@@ -144,9 +140,6 @@ public class MonitorGenerator extends ThingMLTool {
         ResourceSet rs = new ResourceSetImpl();
         Resource res = rs.createResource(URI.createFileURI(location));
 
-        System.out.println("debug res = " + res);
-        System.out.println("debug res.getContents() = " + res.getContents());
-        
         res.getContents().add(model);
         EcoreUtil.resolveAll(res);
         
@@ -191,9 +184,14 @@ public class MonitorGenerator extends ThingMLTool {
         	}
         	
         	//Send monitoring message before each return statement (or as the first statement in the function)
-        	//FIXME: consider one-statement functions which do not declare a block for their bodies        	
         	if (f.getTypeRef()==null) {
-        		final ActionBlock block = (ActionBlock) f.getBody();
+        		ActionBlock block;
+        		if (f.getBody() instanceof ActionBlock) {
+        			block = (ActionBlock) f.getBody();
+        		} else {
+        			block = ThingMLFactory.eINSTANCE.createActionBlock();
+        			block.getActions().add(f.getBody());
+        		}
         		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
         		send.setMessage(onFunctionCalled);
         		send.setPort(monitoringPort);
