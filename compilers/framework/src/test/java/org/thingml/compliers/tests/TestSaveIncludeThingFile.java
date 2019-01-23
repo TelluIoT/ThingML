@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public class TestSaveIncludeThingFile extends LoadModelTestsCommon {
@@ -46,7 +47,7 @@ public class TestSaveIncludeThingFile extends LoadModelTestsCommon {
 			// Create temporary file to save to
 			File tmp = File.createTempFile("thingml-model", ".thingml");
 			
-			ThingMLModel flatmodel = ThingMLCompiler.flattenModel(model);
+			ThingMLModel flatmodel = ThingMLHelpers.flattenModel(model);
 			
 			// Save the ThingML model
 			ThingMLCompiler.saveAsThingML(flatmodel, tmp.toString());

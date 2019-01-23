@@ -174,50 +174,7 @@ public abstract class ThingMLCompiler {
     private static void registerThingMLFactory() {
     	ThingMLStandaloneSetup.doSetup();
     }
-    
-    
-    /**
-     * Take a copy and flatten the model (removes imports and add all elements from the imports in the model)
-     * @param model
-     * @return
-     */
-    public static ThingMLModel flattenModel(ThingMLModel model) {
-
-    	Copier copier = new Copier();
-    	
-    	if (model.eResource() != null) // TODO: Jakob - when models are flattened once, their resource dissapears
-    		EcoreUtil.resolveAll(model.eResource().getResourceSet());
-    	
-    	ThingMLModel result = (ThingMLModel)copier.copy(model);
-    	
-    	Collection<ThingMLModel> importedmodels = new ArrayList<ThingMLModel>();
-    	for(ThingMLModel m : ThingMLHelpers.allThingMLModelModels(model)) {
-    		if (m != model) {
-    			importedmodels.add((ThingMLModel)copier.copy(m));
-    		}
-    	}
-    	
-    	copier.copyReferences();
-    		
-    	for(ThingMLModel m : importedmodels) {
-        	if (m != result) {
-        		result.getConfigs().addAll(m.getConfigs());
-        		result.getProtocols().addAll(m.getProtocols());
-        		result.getTypes().addAll(m.getTypes());
-        	}
-        }
-    	
-    	result.getImports().clear();
-    	
-    	// Add the new model to a resource set
-    	String uriString = "memory:/"+UUID.randomUUID().toString()+".thingml";
-    	ResourceSet rs = new ResourceSetImpl();
-        Resource res = rs.createResource(URI.createURI(uriString));
-        res.getContents().add(result);
-    	
-    	return result;
-    }
-    
+      
 
     private static void save(ThingMLModel model, String location) throws IOException {
     	

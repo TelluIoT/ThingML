@@ -24,6 +24,7 @@ import org.thingml.generator.go.GoSONMQTTGenerator;
 import org.thingml.generator.java.JavaJSONMQTTGenerator;
 import org.thingml.generator.javascript.JavaScriptJSONMQTTGenerator;
 import org.thingml.generator.posix.PosixJSONMQTTGenerator;
+import org.thingml.monitor.MonitorGenerator;
 /**
  * Created by vassik on 05.04.17.
  */
@@ -47,6 +48,7 @@ public class ThingMLToolRegistry {
             instance.addTool(new JavaJSONMQTTGenerator());
             instance.addTool(new JavaScriptJSONMQTTGenerator());
             instance.addTool(new GoSONMQTTGenerator());
+            instance.addTool(new MonitorGenerator());
         }
 
         return instance;

@@ -33,6 +33,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.testing.errors.ThingMLTimeoutError;
 import org.thingml.testing.utilities.CommandRunner.Output;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
@@ -160,7 +161,7 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 		// Flatten the model so that it can be modified later without destroying anything
 		if (shouldFlatten) {
 			synchronized (flattenLock) {
-				this.model = ThingMLCompiler.flattenModel(this.model);
+				this.model = ThingMLHelpers.flattenModel(this.model);
 			}
 		}
 		return true;

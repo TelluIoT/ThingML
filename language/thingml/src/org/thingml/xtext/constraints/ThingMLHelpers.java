@@ -31,15 +31,20 @@ package org.thingml.xtext.constraints;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
@@ -79,6 +84,49 @@ import org.thingml.xtext.thingML.VariableAssignment;
 
 
 public class ThingMLHelpers {
+	
+    /**
+     * Take a copy and flatten the model (removes imports and add all elements from the imports in the model)
+     * @param model
+     * @return
+     */
+    public static ThingMLModel flattenModel(ThingMLModel model) {
+
+    	Copier copier = new Copier();
+    	
+    	if (model.eResource() != null) // TODO: Jakob - when models are flattened once, their resource dissapears
+    		EcoreUtil.resolveAll(model.eResource().getResourceSet());
+    	
+    	ThingMLModel result = (ThingMLModel)copier.copy(model);
+    	
+    	Collection<ThingMLModel> importedmodels = new ArrayList<ThingMLModel>();
+    	for(ThingMLModel m : ThingMLHelpers.allThingMLModelModels(model)) {
+    		if (m != model) {
+    			importedmodels.add((ThingMLModel)copier.copy(m));
+    		}
+    	}
+    	
+    	copier.copyReferences();
+    		
+    	for(ThingMLModel m : importedmodels) {
+        	if (m != result) {
+        		result.getConfigs().addAll(m.getConfigs());
+        		result.getProtocols().addAll(m.getProtocols());
+        		result.getTypes().addAll(m.getTypes());
+        	}
+        }
+    	
+    	result.getImports().clear();
+    	
+    	// Add the new model to a resource set
+    	String uriString = "memory:/"+UUID.randomUUID().toString()+".thingml";
+    	ResourceSet rs = new ResourceSetImpl();
+        Resource res = rs.createResource(URI.createURI(uriString));
+        res.getContents().add(result);
+    	
+    	return result;
+    }
+	
 	
 	/* ***********************************************************
 	 * Resolution of containers

@@ -45,6 +45,7 @@ import org.thingml.testing.utilities.CommandRunner.Output;
 import org.thingml.testing.utilities.TemporaryDirectory;
 import org.thingml.utilities.logging.BufferedLogger;
 import org.thingml.utilities.logging.Logger;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Property;
@@ -129,7 +130,7 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 		// Make a copy of the test model so that we can modify it without breaking it for other compilers
 		ThingMLModel caseModel;
 		synchronized (flattenLock) {
-			caseModel = ThingMLCompiler.flattenModel(this.parent.model);
+			caseModel = ThingMLHelpers.flattenModel(this.parent.model);
 		}
 		
 		try {
@@ -156,7 +157,7 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 				dir.mkdirs();
 				File file = new File(dir, this.parent.name+".thingml");
 				synchronized (flattenLock) {
-					ThingMLModel saveCopy = ThingMLCompiler.flattenModel(caseModel);
+					ThingMLModel saveCopy = ThingMLHelpers.flattenModel(caseModel);
 					ThingMLCompiler.saveAsThingML(saveCopy, file.getAbsolutePath());
 				}
 			} catch (Throwable t) {} // We don't want this to screw up any testing
