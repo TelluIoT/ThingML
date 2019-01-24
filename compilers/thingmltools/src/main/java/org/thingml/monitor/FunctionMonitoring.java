@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ToString;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.LocalVariable;
@@ -115,18 +114,23 @@ public class FunctionMonitoring implements MonitoringAspect {
         			}
         			
         			//Assign return expression to a readonly local variable
-        			final LocalVariable var = ThingMLFactory.eINSTANCE.createLocalVariable();
-            		var.setName("return_" + ra.eContainer().eContents().indexOf(ra));
-            		var.setReadonly(true);
-            		var.setTypeRef(EcoreUtil.copy(f.getTypeRef()));
-            		var.setInit(ra.getExp());
-            		block.getActions().add(block.getActions().indexOf(ra), var);
-            		
-            		//Assign ref to this local variable to the former return
-            		final PropertyReference ref_var = ThingMLFactory.eINSTANCE.createPropertyReference();
-            		ref_var.setProperty(var);
-            		ra.setExp(ref_var);
-            		
+        			PropertyReference ref_var = null;
+        			if (ra.getExp() instanceof PropertyReference) {
+        				ref_var = (PropertyReference) EcoreUtil.copy(ra.getExp());
+        			} else {
+        				final LocalVariable var = ThingMLFactory.eINSTANCE.createLocalVariable();
+        				var.setName("return_" + ra.eContainer().eContents().indexOf(ra));
+        				var.setReadonly(true);
+        				var.setTypeRef(EcoreUtil.copy(f.getTypeRef()));
+        				var.setInit(ra.getExp());
+        				block.getActions().add(block.getActions().indexOf(ra), var);
+        				
+        				//Assign ref to this local variable to the former return
+                		ref_var = ThingMLFactory.eINSTANCE.createPropertyReference();
+                		ref_var.setProperty(var);
+                		ra.setExp(ref_var);
+        			}
+            		            		            		
             		//Send monitoring message
             		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
             		send.setMessage(onFunctionCalled);

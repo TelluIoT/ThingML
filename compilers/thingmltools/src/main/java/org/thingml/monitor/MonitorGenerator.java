@@ -35,7 +35,9 @@ import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.RequiredPort;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -93,8 +95,16 @@ public class MonitorGenerator extends ThingMLTool {
         	
         	//Create monitoring API
         	final Thing monitoringMsgs = ThingMLFactory.eINSTANCE.createThing();
-        	monitoringMsgs.setName("MonitoringMsgs");
+        	monitoringMsgs.setName(t.getName() + "MonitoringMsgs");
         	monitoringMsgs.setFragment(true);
+        	final Property id = ThingMLFactory.eINSTANCE.createProperty(); //FIXME: this should be refined in the configuration, so as to integrate the instance name
+        	id.setTypeRef(EcoreUtil.copy(stringTypeRef));
+        	id.setName("monitoringID");
+        	id.setReadonly(true);
+        	monitoringMsgs.getProperties().add(id);
+        	final StringLiteral defaultID = ThingMLFactory.eINSTANCE.createStringLiteral();
+        	defaultID.setStringValue(t.getName());
+        	id.setInit(defaultID);
         	copy.getTypes().add(monitoringMsgs);
         	t.getIncludes().add(monitoringMsgs);
         	
@@ -114,7 +124,7 @@ public class MonitorGenerator extends ThingMLTool {
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
-        		//TODO
+        		new PropertyMonitoring().monitor(t, monitoringPort, monitoringMsgs, stringTypeRef);
         	}
         		
         }
