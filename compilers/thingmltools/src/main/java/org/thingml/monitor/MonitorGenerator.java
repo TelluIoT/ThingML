@@ -35,7 +35,9 @@ import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
@@ -109,10 +111,10 @@ public class MonitorGenerator extends ThingMLTool {
         	t.getIncludes().add(monitoringMsgs);
         	
         	
-        	//FIXME: check if a monitor port already exists
+        	//FIXME: check if a monitor port already exists to avoid clashes with names
         	final RequiredPort monitoringPort = ThingMLFactory.eINSTANCE.createRequiredPort();
         	monitoringPort.setName("monitor");
-        	monitoringPort.setOptional(true);        	
+        	monitoringPort.setOptional(true);
         	t.getPorts().add(monitoringPort);
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "events")) {
@@ -126,7 +128,38 @@ public class MonitorGenerator extends ThingMLTool {
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
         		new PropertyMonitoring().monitor(t, monitoringPort, monitoringMsgs, stringTypeRef);
         	}
-        		
+        	
+        	//Create MQTT proxy
+        	//FIXME: ideally, we should be able to use other network libs, like serial, etc
+        	final Thing mqtt = ThingMLFactory.eINSTANCE.createThing();
+        	mqtt.setName(t.getName() + "MQTTMonitoringProxy");
+        	mqtt.setFragment(true);
+        	mqtt.getIncludes().add(monitoringMsgs);
+        	final ProvidedPort mqttPort = ThingMLFactory.eINSTANCE.createProvidedPort();
+        	mqttPort.setName("monitor");
+        	mqttPort.getReceives().addAll(monitoringPort.getSends());
+        	final PlatformAnnotation sync_send = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+        	sync_send.setName("sync_send");
+        	sync_send.setValue("true");
+        	mqttPort.getAnnotations().add(sync_send);
+        	final PlatformAnnotation ext1 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+        	ext1.setName("external");
+        	ext1.setValue("posixmqttjson");
+        	mqttPort.getAnnotations().add(ext1);
+        	final PlatformAnnotation ext2 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+        	ext2.setName("external");
+        	ext2.setValue("javamqttjson");
+        	mqttPort.getAnnotations().add(ext2);
+        	final PlatformAnnotation ext3 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+        	ext3.setName("external");
+        	ext3.setValue("javascriptmqttjson");
+        	mqttPort.getAnnotations().add(ext3);
+        	final PlatformAnnotation ext4 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+        	ext4.setName("external");
+        	ext4.setValue("gomqttjson");
+        	mqttPort.getAnnotations().add(ext4);
+        	mqtt.getPorts().add(mqttPort);
+        	copy.getTypes().add(mqtt);
         }
 
         try {
