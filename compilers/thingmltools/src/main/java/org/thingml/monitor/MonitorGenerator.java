@@ -34,16 +34,8 @@ import org.thingml.thingmltools.ThingMLTool;
 import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.ActionBlock;
-import org.thingml.xtext.thingML.Function;
-import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
-import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.RequiredPort;
-import org.thingml.xtext.thingML.SendAction;
-import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -113,14 +105,18 @@ public class MonitorGenerator extends ThingMLTool {
         	monitoringPort.setOptional(true);        	
         	t.getPorts().add(monitoringPort);
         	
-        	if (AnnotatedElementHelper.isDefined(t, "monitor", "events"))
-        		monitorEvents(t, monitoringPort, monitoringMsgs, stringTypeRef);
+        	if (AnnotatedElementHelper.isDefined(t, "monitor", "events")) {
+        		//TODO
+        	}
         	
-        	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions"))
-        		monitorFunctions(t, monitoringPort, monitoringMsgs, stringTypeRef);
+        	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {
+        		new FunctionMonitoring().monitor(t, monitoringPort, monitoringMsgs, stringTypeRef);
+        	}
         	
-        	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties"))
-        		monitorProperties(t, monitoringPort, monitoringMsgs, stringTypeRef);
+        	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
+        		//TODO
+        	}
+        		
         }
 
         try {
@@ -146,75 +142,5 @@ public class MonitorGenerator extends ThingMLTool {
         SaveOptions opt = SaveOptions.newBuilder().format().noValidation().getOptions();
         res.save(opt.toOptionsMap());
     }
-
-    private void monitorEvents(Thing thing, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef) {
-    	
-    }
-    
-    private void monitorFunctions(Thing thing, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef) {
-    	for(Function f : thing.getFunctions()) {
-    		if (f.isAbstract()) continue;
-    		if (AnnotatedElementHelper.isDefined(f, "monitor", "not")) continue;
-    		
-    		//Update monitoring API
-    		final Message onFunctionCalled = ThingMLFactory.eINSTANCE.createMessage();
-        	onFunctionCalled.setName(f.getName() + "_called");
-        	monitoringMsgs.getMessages().add(onFunctionCalled);
-        	monitoringPort.getSends().add(onFunctionCalled);
-        	final Parameter onFunctionCalled_name = ThingMLFactory.eINSTANCE.createParameter(); //FIXME?: somehow a useless parameter... repeating the name of message
-        	onFunctionCalled_name.setName("name");        
-        	onFunctionCalled_name.setTypeRef(EcoreUtil.copy(stringTypeRef));
-        	onFunctionCalled.getParameters().add(onFunctionCalled_name);
-        	if (f.getTypeRef()!=null) {
-            	final Parameter onFunctionCalled_type = ThingMLFactory.eINSTANCE.createParameter();
-            	onFunctionCalled_type.setName("type");        
-            	onFunctionCalled_type.setTypeRef(EcoreUtil.copy(stringTypeRef));
-            	onFunctionCalled.getParameters().add(onFunctionCalled_type);
-            	
-            	final Parameter onFunctionCalled_return = ThingMLFactory.eINSTANCE.createParameter();
-            	onFunctionCalled_return.setName("returns");        
-            	onFunctionCalled_return.setTypeRef(EcoreUtil.copy(f.getTypeRef()));
-            	onFunctionCalled.getParameters().add(onFunctionCalled_return);
-        	}
-        	for(Parameter p : f.getParameters()) {
-        		final Parameter onFunctionCalled_p = ThingMLFactory.eINSTANCE.createParameter();
-            	onFunctionCalled_p.setName(p.getName());        
-            	onFunctionCalled_p.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
-            	onFunctionCalled.getParameters().add(onFunctionCalled_p);
-        	}
-        	
-        	//Send monitoring message before each return statement (or as the first statement in the function)
-        	if (f.getTypeRef()==null) {
-        		ActionBlock block;
-        		if (f.getBody() instanceof ActionBlock) {
-        			block = (ActionBlock) f.getBody();
-        		} else {
-        			block = ThingMLFactory.eINSTANCE.createActionBlock();
-        			block.getActions().add(f.getBody());
-        		}
-        		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
-        		send.setMessage(onFunctionCalled);
-        		send.setPort(monitoringPort);
-        		final StringLiteral name_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-        		name_exp.setStringValue(f.getName());
-        		send.getParameters().add(name_exp);
-        		
-        		for(Parameter p : f.getParameters()) {
-        			final PropertyReference p_exp = ThingMLFactory.eINSTANCE.createPropertyReference();
-        			p_exp.setProperty(p);
-        			send.getParameters().add(p_exp);
-        		}
-        		
-        		block.getActions().add(0, send);
-        	} else {//FIXME: store return expression in a variable, so as to avoid side effect e.g. if it returns a function call (which would then be called twice)
-        		//TODO
-        	}
-    	}
-    }
-    
-    private void monitorProperties(Thing thing, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef) {
-    	
-    }
-    
 
 }
