@@ -260,12 +260,12 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "const MQTT = require('./MQTTJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getName() + ", function (started) {if (!started) {console.error(\"Cannot start mqtt!\"); process.exit(1);}});\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", inst_" + conn.getInst().getName() + ", function (started) {if (!started) {console.error(\"Cannot start mqtt!\"); process.exit(1);}});\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "mqtt._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', (");
+                    builder.append("inst_" + conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', (");
                     for (Parameter p : req.getParameters()) {
                     	if (req.getParameters().indexOf(p)>0)
                     		builder.append(", ");
