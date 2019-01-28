@@ -28,9 +28,23 @@ import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TypeRef;
 
 public class PropertyMonitoring implements MonitoringAspect {
+	
+	final Thing thing;
+	final Property id;
+	final Port monitoringPort;
+	final Thing monitoringMsgs;
+	final TypeRef stringTypeRef;
 
+	public PropertyMonitoring(Thing thing, Property id, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef) {
+		this.thing = thing;
+		this.id = id;
+		this.monitoringPort = monitoringPort;
+		this.monitoringMsgs = monitoringMsgs;
+		this.stringTypeRef = stringTypeRef;
+	}
+	
 	@Override
-	public void monitor(Thing thing, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef) {
+	public void monitor() {
 		for(Property p : ThingMLHelpers.allProperties(thing)) {
 			if (AnnotatedElementHelper.isDefined(p, "monitoring", "not")) continue;
 			if (p.getTypeRef().getCardinality() != null) continue;//FIXME: handle arrays
@@ -45,7 +59,7 @@ public class PropertyMonitoring implements MonitoringAspect {
         	onUpdate_old.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
         	onUpdate.getParameters().add(onUpdate_old);
         	final Parameter onUpdate_new = ThingMLFactory.eINSTANCE.createParameter();
-        	onUpdate_new.setName("new");        
+        	onUpdate_new.setName("current");        
         	onUpdate_new.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
         	onUpdate.getParameters().add(onUpdate_new);
         	

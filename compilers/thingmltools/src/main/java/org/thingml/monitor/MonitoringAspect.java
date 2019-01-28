@@ -16,10 +16,7 @@
  */
 package org.thingml.monitor;
 
-import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.thingML.TypeRef;
-
+//FIXME refactor to an abstract class defining the common fields for all aspect (id, monitoring port, etc)
 interface MonitoringAspect {
-	void monitor(Thing thing, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef);
+	void monitor();
 }

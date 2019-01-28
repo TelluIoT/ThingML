@@ -30,7 +30,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResource;
 import org.thingml.thingmltools.ThingMLTool;
+import org.thingml.thingmltools.ThingMLToolRegistry;
 import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
@@ -122,11 +124,11 @@ public class MonitorGenerator extends ThingMLTool {
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {
-        		new FunctionMonitoring().monitor(t, monitoringPort, monitoringMsgs, stringTypeRef);
+        		new FunctionMonitoring(t, id, monitoringPort, monitoringMsgs, stringTypeRef).monitor();;
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
-        		new PropertyMonitoring().monitor(t, monitoringPort, monitoringMsgs, stringTypeRef);
+        		new PropertyMonitoring(t, id, monitoringPort, monitoringMsgs, stringTypeRef).monitor();;
         	}
         	
         	//Create MQTT proxy
@@ -161,16 +163,51 @@ public class MonitorGenerator extends ThingMLTool {
         	mqtt.getPorts().add(mqttPort);
         	copy.getTypes().add(mqtt);
         }
-
-        try {
-        	final File monitoringFile = new File(outDir, "monitor/merged.thingml");
+        
+        final File monitoringFile = new File(outDir, "monitor/merged.thingml");
+        try {        	
         	save(ThingMLHelpers.flattenModel(copy), monitoringFile.getAbsolutePath());
         } catch (Exception e) {
         	System.err.println("Error while saving the instrumented model...");
         	e.printStackTrace();
+        	System.exit(1);
         }
+        
+        //Call the MQTT tool
+        //FIXME: or ideally, any other tool related to network communications
+        ThingMLModel instrumented = null;
+        try {        	            
+        	instrumented = load(monitoringFile);
+        } catch (Exception e) {
+        	System.err.println("Error while reloading the instrumented model...");
+        	e.printStackTrace();
+        	System.exit(2);
+        }
+        switch(options) {
+        	case "java":
+        		final ThingMLTool t = ThingMLToolRegistry.getInstance().createToolInstanceByName("javamqttjson");
+        		t.generateThingMLFrom(instrumented);
+        		break;
+        	case "nodejs":
+        		ThingMLToolRegistry.getInstance().createToolInstanceByName("javascriptmqttjson").generateThingMLFrom(copy);
+        		break;
+        	case "browser"://not sure this is actually supported...
+        		ThingMLToolRegistry.getInstance().createToolInstanceByName("javascriptmqttjson").generateThingMLFrom(copy);
+        		break;
+        	case "go":
+        		ThingMLToolRegistry.getInstance().createToolInstanceByName("gomqttjson").generateThingMLFrom(copy);
+        		break;
+        	case "posix":
+        		ThingMLToolRegistry.getInstance().createToolInstanceByName("posixmqttjson").generateThingMLFrom(copy);
+        		break;
+        	default:
+        		System.out.println("Compiler " + options + " not currently supported");
+        		break;
+        }
+        //TODO: update configuration so as MQTT stuff is instantiated and properly connected (this might be an idea to actually do it in the MQTT tools)
     }
     
+    //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc
     private void save(ThingMLModel model, String location) throws IOException {
     	ThingMLStandaloneSetup.doSetup();    	
     	if (!model.getImports().isEmpty())
@@ -186,4 +223,16 @@ public class MonitorGenerator extends ThingMLTool {
         res.save(opt.toOptionsMap());
     }
 
+    //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc
+    private ThingMLModel load(File file) throws IOException {
+    	ThingMLStandaloneSetup.doSetup();    	
+        ResourceSet rs = new ResourceSetImpl();
+        URI xmiuri = URI.createFileURI(file.getAbsolutePath());
+        Resource model = rs.createResource(xmiuri);
+        XtextResource resource = (XtextResource) model;        
+        model.load(null);
+        EcoreUtil.resolveAll(model);
+        ThingMLModel m = (ThingMLModel) model.getContents().get(0);
+        return m;        
+    }
 }

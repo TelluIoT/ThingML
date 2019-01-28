@@ -5,6 +5,8 @@
 /*                                                              */
 /****************************************************************/
 
+import "mqtt/MQTTAdapterMsgs.thingml" from stl
+import "mqtt/java/JavaMQTTAdapter.thingml" from stl
 /*IMPORTS*/
 
 
