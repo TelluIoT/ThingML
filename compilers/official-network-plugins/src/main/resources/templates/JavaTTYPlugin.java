@@ -43,10 +43,10 @@ public class StdIOJava extends Component {
 	@Override
 	public Component buildBehavior(String id, Component root) {
         /*$INIT PORTS$*/
-		final java.util.List < AtomicState > states = new java.util.ArrayList < AtomicState > ();
 		final AtomicState init = new AtomicState("Init");
-		states.add(init);
-		behavior = new CompositeState("default", states, init, java.util.Collections.EMPTY_LIST);
+		behavior = new CompositeState("default");
+		behavior.add(init);
+		behavior.initial(init);
 		return this;
 	}
 }

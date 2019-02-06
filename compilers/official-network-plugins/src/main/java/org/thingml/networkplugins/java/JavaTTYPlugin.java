@@ -199,12 +199,8 @@ public class JavaTTYPlugin extends NetworkPlugin {
 
         private String initPort(Context ctx, String template) {
             for (Port p : ports) {
-                template = template.replace("/*$PORTS$*/", "/*$PORTS$*/\nprivate Port " + p.getName() + "_port;\npublic Port get" + ctx.firstToUpper(p.getName()) + "_port(){return " + p.getName() + "_port;}\n");
-                String portType = "PortType.PROVIDED";
-                if (p instanceof RequiredPort)
-                    portType = "PortType.REQUIRED";
-
-                template = template.replace("/*$INIT PORTS$*/", "/*$INIT PORTS$*/\n" + p.getName() + "_port = new Port(" + portType + ", \"" + p.getName() + "\", this);\n");
+                template = template.replace("/*$PORTS$*/", "/*$PORTS$*/\nprivate Port " + p.getName() + "_port;\npublic Port get" + ctx.firstToUpper(p.getName()) + "_port(){return " + p.getName() + "_port;}\n");                
+                template = template.replace("/*$INIT PORTS$*/", "/*$INIT PORTS$*/\n" + p.getName() + "_port = new Port(\"" + p.getName() + "\", this);\n");
             }
             return template;
         }
