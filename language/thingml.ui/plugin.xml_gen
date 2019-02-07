@@ -249,15 +249,6 @@
 		<super type="org.eclipse.xtext.ui.check.expensive"/>
 		<persistent value="true"/>
 	</extension>
-	<extension point="org.eclipse.ui.preferencePages">
-		<page
-			category="org.thingml.xtext.ThingML"
-			class="org.thingml.xtext.ui.ThingMLExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
-			id="org.thingml.xtext.ThingML.validator.preferencePage"
-			name="Errors/Warnings">
-			<keywordReference id="org.thingml.xtext.ui.keyword_ThingML"/>
-		</page>
-	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="org.thingml.xtext.ui.ThingMLExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"

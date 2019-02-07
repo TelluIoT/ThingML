@@ -33,7 +33,7 @@
     </parent>
 
 	<properties>
-	<xtextVersion>2.14.0</xtextVersion>
+	<xtextVersion>2.16.0</xtextVersion>
 	</properties>
 
     <dependencies>
@@ -43,13 +43,13 @@
             <artifactId>thingml</artifactId>
             <version>${thingml.version}</version>
         </dependency>
-        
+
         <!--<dependency>
             <groupId>org.thingml</groupId>
             <artifactId>thingml.ide</artifactId>
             <version>${thingml.version}</version>
         </dependency>-->
-        
+
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>
 			<artifactId>org.eclipse.xtext</artifactId>
@@ -61,7 +61,7 @@
 			<artifactId>org.eclipse.xtext.xbase</artifactId>
 			<version>${xtextVersion}</version>
 		</dependency>
-			
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

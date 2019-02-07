@@ -30,7 +30,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <thingml.version>${project.version}</thingml.version>
-        <bundle.vendor>SINTEF</bundle.vendor>
+        <bundle.vendor>Tellu IoT</bundle.vendor>
 	<maven.compiler.source>1.8</maven.compiler.source>
 	<maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -50,9 +50,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git@github.com:SINTEF-9012/ThingML.git</connection>
-        <developerConnection>scm:git@github.com:SINTEF-9012/ThingML.git</developerConnection>
-        <url>https://github.com/SINTEF-9012/ThingML.git</url>
+        <connection>scm:git@github.com:TelluIoT/ThingML.git</connection>
+        <developerConnection>scm:git@github.com:TelluIoT/ThingML.git</developerConnection>
+        <url>https://github.com/TelluIoT/ThingML.git</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -76,7 +76,7 @@
                 <role>developer</role>
             </roles>
             <timezone>+1</timezone>
-        </developer>        
+        </developer>
     </developers>
 
     <build>
@@ -206,12 +206,12 @@
 
     <modules>
         <module>utilities</module>
-      
+
 		<module>language/thingml.target</module>
         <module>language/thingml</module>
-	
+
         <module>compilers</module>
-        
+
         <module>testing/framework</module>
         <module>testing/reportbuilder</module>
 

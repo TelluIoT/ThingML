@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: thingml.tests
-Bundle-Vendor: My Company
+Bundle-Vendor: Tellu
 Bundle-Version: 2.0.0.qualifier
 Bundle-SymbolicName: thingml.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
@@ -9,7 +9,7 @@ Require-Bundle: thingml,
  org.junit;bundle-version="4.12.0",
  org.eclipse.xtext.testing,
  org.eclipse.xtext.xbase.testing,
- org.eclipse.xtext.xbase.lib;bundle-version="2.14.0"
+ org.eclipse.xtext.xbase.lib;bundle-version="2.16.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.thingml.xtext.tests;x-internal=true
 Import-Package: org.hamcrest.core,
