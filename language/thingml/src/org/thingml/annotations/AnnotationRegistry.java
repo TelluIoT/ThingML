@@ -213,6 +213,17 @@ public class AnnotationRegistry {
 		final Annotation mock_annotation = new Annotation(mock_name, mock_desc, mock_scope);
 		annotations.put(mock_name, mock_annotation);
 		
+		final String html_body_name = "html_body";
+		final String html_body_desc = "Content to be appended to HTML <body>, when using Browser compiler";
+		final EClass html_body_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation html_body_annotation = new Annotation(html_body_name, html_body_desc, html_body_scope);
+		annotations.put(html_body_name, html_body_annotation);
+
+		final String html_head_name = "html_head";
+		final String html_head_desc = "Content to be appended to HTML <head>, when using Browser compiler";
+		final EClass html_head_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation html_head_annotation = new Annotation(html_head_name, html_head_desc, html_head_scope);
+		annotations.put(html_head_name, html_head_annotation);
 	}
 	
 	public static String toMD() {
