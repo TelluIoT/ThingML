@@ -19,6 +19,8 @@ package org.thingml.compilers.javascript.browser;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSThingActionCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.PropertyReference;
@@ -31,6 +33,15 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
 	
 	private long counter = 0;
 
+    @Override
+    public void generate(EnumLiteralRef action, StringBuilder builder, Context ctx) {
+    	if (action.getLiteral().getInit() != null) {
+    		generate(action.getLiteral().getInit(), builder, ctx);
+    	} else {
+    		super.generate(action, builder, ctx);
+    	}
+    }
+	
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
     	
@@ -74,23 +85,6 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
     	builder2.append(ctx.getContextAnnotation("thisRef"));
         builder2.append("bus.emit('" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
         builder2.append(builder3.toString());
-        /*for (Expression pa : action.getParameters()) {
-            builder3.append(", ");
-            if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-            	if (pa instanceof PropertyReference) {
-            		PropertyReference pr = (PropertyReference)pa;
-            		builder3.append(pr.getProperty().getName() + "_const");
-            	} else if (pa instanceof FunctionCallExpression) {
-            		FunctionCallExpression fc = (FunctionCallExpression)pa;
-            		builder3.append(fc.getFunction().getName() + "_" + Math.abs(fc.getParameters().hashCode()) + "_const");
-            	} else {
-            		generate(pa, builder3, ctx);
-            	} 
-            }
-            else {
-        		generate(pa, builder3, ctx);
-        	}
-        }*/
         builder2.append(")");
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
             builder2.append(", 0)");
