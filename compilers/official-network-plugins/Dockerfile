@@ -30,6 +30,8 @@ FROM openjdk:8-jre-slim
 
 COPY --from=0 /ThingML/compilers/official-network-plugins/target/*-jar-with-dependencies.jar thingml.jar
 
-CMD java -jar thingml.jar
+RUN chmod +x thingml.jar
 
 
+ENTRYPOINT ["java", "-jar", "thingml.jar"]
+CMD ["-h"]
