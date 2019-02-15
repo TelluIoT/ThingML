@@ -304,7 +304,7 @@ public class ConfigurationHelper {
 				}				
 			}
 			for(ConfigPropertyAssign a : allPropAssigns(self)) {
-				if(EcoreUtil.equals(a.getProperty(), p)) {
+				if (EcoreUtil.equals(a.getInstance(), i) && EcoreUtil.equals(a.getProperty(), p)) {
 					if (a.getIndex() != null) {
 						initExpressionsForInstanceArraysHelper(self, result, "in instance " + i.getName(), p, 1, a.getIndex(), a.getInit());
 					}									
