@@ -20,8 +20,10 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +83,42 @@ public class BrowserJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		return dependencies;
 	}
 	
+	protected Set<String> getHTMLBody(Configuration cfg) {
+		Set<String> result = new HashSet<>();		
+		for (String an : AnnotatedElementHelper.annotation(cfg, "html_body")) {			
+			result.add(an);
+		}
+		for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (String an : AnnotatedElementHelper.annotation(t, "html_body")) {
+            	result.add(an);
+            }
+        }
+        for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
+            for (String an : AnnotatedElementHelper.annotation(t, "html_body")) {
+            	result.add(an);
+            }
+        }		
+		return result;
+	}
+	
+	protected Set<String> getHTMLHead(Configuration cfg) {
+		Set<String> result = new HashSet<>();		
+		for (String an : AnnotatedElementHelper.annotation(cfg, "html_head")) {			
+			result.add(an);
+		}
+		for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (String an : AnnotatedElementHelper.annotation(t, "html_head")) {
+            	result.add(an);
+            }
+        }
+        for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
+            for (String an : AnnotatedElementHelper.annotation(t, "html_head")) {
+            	result.add(an);
+            }
+        }		
+		return result;
+	}	
+	
 	@Override
 	public void generateBuildScript(Configuration cfg, Context ctx) {
 		SourceBuilder builder = ctx.getSourceBuilder("index.html");
@@ -98,7 +136,14 @@ public class BrowserJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		head.append("<script type=\"application/javascript\" src=\"lib/state.min.js\" target=\"StateJS\"></script>");
 		copyResourceToFile("lib/EventEmitter.min.js", "lib/EventEmitter.min.js", ctx);
 		head.append("<script type=\"application/javascript\" src=\"lib/EventEmitter.min.js\"></script>");
+		for(String h : getHTMLHead(cfg)) {
+			body.append(h);
+		}
 		
+		
+		for(String b : getHTMLBody(cfg)) {
+			body.append(b);
+		}
 
         // External dependencies
         for (Entry<String,String> dep : getExternalDependencies(cfg).entrySet()) {

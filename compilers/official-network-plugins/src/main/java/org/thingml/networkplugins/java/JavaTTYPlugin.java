@@ -180,8 +180,10 @@ public class JavaTTYPlugin extends NetworkPlugin {
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
             }
             template = initPort(ctx, template);
+            Set<String> conns = new HashSet<>();
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
-                updateMain(ctx, cfg, conn);
+            		updateMain(ctx, cfg, conn, conns.contains(conn.getProtocol().getName()));
+            		conns.add(conn.getProtocol().getName());
             }
             template = template.replace("/*$PARSING CODE$*/", parseBuilder.toString());
 
@@ -205,7 +207,7 @@ public class JavaTTYPlugin extends NetworkPlugin {
             return template;
         }
 
-        private void updateMain(Context ctx, Configuration cfg, ExternalConnector conn) {
+        private void updateMain(Context ctx, Configuration cfg, ExternalConnector conn, boolean isAlreadyInstantiated) {
             try {
                 final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/Main.java");
                 final List<String> packLines = IOUtils.readLines(input);
@@ -214,7 +216,10 @@ public class JavaTTYPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nStdIOJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (StdIOJava) new StdIOJava().buildBehavior(null, null);\n");
+                
+                if (!isAlreadyInstantiated) {
+                	main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nStdIOJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (StdIOJava) new StdIOJava().buildBehavior(null, null);\n");
+                }
 
                 StringBuilder connBuilder = new StringBuilder();
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");
@@ -223,8 +228,10 @@ public class JavaTTYPlugin extends NetworkPlugin {
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port());\n");
                 main = main.replace("/*$EXT CONNECTORS$*/", "/*$EXT CONNECTORS$*/\n" + connBuilder.toString());
 
-                main = main.replace("/*$START$*/", "/*$START$*/\n" + conn.getName() + "_" + conn.getProtocol().getName() + ".init().start();\n");
-                main = main.replace("/*$STOP$*/", "/*$STOP$*/\n" + conn.getName() + "_" + conn.getProtocol().getName() + ".stop();\n");
+                if (!isAlreadyInstantiated) {
+                	main = main.replace("/*$START$*/", "/*$START$*/\n" + conn.getName() + "_" + conn.getProtocol().getName() + ".init().start();\n");
+                	main = main.replace("/*$STOP$*/", "/*$STOP$*/\n" + conn.getName() + "_" + conn.getProtocol().getName() + ".stop();\n");
+                }
 
                 final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/Main.java");
                 final OutputStream output = new FileOutputStream(f);
