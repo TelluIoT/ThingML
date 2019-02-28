@@ -1,0 +1,73 @@
+import "datatypes.thingml" from stl
+
+thing fragment LogMsgs {
+	
+	/*
+	 * inst: name of the thing instance as defined in the configuration
+	 * fn_name: name of the invoked function
+	 * ty: return type of the function ("void" for no return type)
+	 * returns: value returned by the function ("" for no return)
+	 * params: list of parameters ("" for no param, "p1=v1, p2=v2, ...pn=vn")
+	 */
+	message function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
+	
+	/*
+	 * inst: name of the thing instance as defined in the configuration
+	 * prop_name: name of the property that has been updated
+	 * ty: type of the property
+	 * old: value before update (serialized as string)
+	 * new: value after update (serialized as string) 
+	 */
+	message property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+}
+
+/*
+ * Things we want to log needs to include WithLog 
+ */
+thing fragment WithLog includes LogMsgs {
+	
+	readonly property DEBUG_ID : String
+	
+	required port log {
+		sends function_called, property_changed
+	}
+	
+}
+
+/*
+ * Generic proxy listening to things WithLog and forwarding to 
+ */
+thing fragment Logger includes LogMsgs {
+	
+	provided port log {
+		receives function_called, property_changed
+	}
+	
+	abstract function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
+	abstract function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+		
+	statechart init INIT {
+		
+		state INIT {
+			
+			internal event d : log?function_called
+			action log_function_called(d.inst, d.fn_name, d.ty, d.returns, d.params)
+			
+			internal event d : log?property_changed
+			action log_property_changed(d.inst, d.prop_name, d.ty, d.old, d.new)
+			
+		}
+		
+	}
+	
+}
+
+thing ConsoleLogger includes Logger {
+	
+	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
+		println "log: function_called(", inst, ", ", fn_name, ", ", ty, ", ", returns, ", ", params, ")"
+		
+	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+		println "log: property_changed(", inst, ", ", prop_name, ", ", ty, ", ", old, ", ", new, ")"
+		
+}

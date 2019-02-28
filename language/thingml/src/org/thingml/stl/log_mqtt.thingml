@@ -1,0 +1,225 @@
+import "log.thingml" from stl
+import "mqtt/MQTTAdapterMsgs.thingml" from stl
+
+thing fragment MQTTLogger includes LogMsgs, MQTTAdapterMsgs {
+	
+	readonly property mqtt_topic_name : String  = "log"	
+	readonly property client_id : String = "MQTTLogger"
+	property broker_host : String = "localhost"
+	property broker_port : UInt16 = 1883
+	property broker_tls : Boolean = false
+		
+	provided port log @sync_send `true` @external `posixmqttjson` @external `javamqttjson` @external `javascriptmqttjson` @external `gomqttjson`
+	{
+		receives function_called, property_changed
+	}
+	
+	optional required port mqtt 
+	@sync_send "true" // Some of the messages pass pointers (Strings) which should not be put on the FIFO
+	{
+		sends mqtt_connect, mqtt_disconnect, mqtt_publish, mqtt_set_credentials, mqtt_set_prefix, mqtt_set_tls_certificates
+		receives mqtt_connected, mqtt_disconnected
+	}
+	
+	abstract function publish_message(msg_name : String, payload: Buffer, size : UInt32)
+	abstract function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
+	abstract function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+	
+	statechart MQTTAdapterTestSC init DISCONNECTED {		
+		
+		state DISCONNECTED {
+			on entry do //TODO: more clever way of handling closed connections and re-connection
+				//TODO: optional TLS, certificates, etc
+				mqtt!mqtt_connect(client_id, broker_host, broker_port, broker_tls)
+			end
+			
+			transition -> CONNECTED event mqtt?mqtt_connected action print "Client got mqtt_connected\n"
+			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"
+		}
+		
+		state CONNECTED {
+			
+			on entry do
+				mqtt!mqtt_set_prefix("log/")				
+			end
+			
+			internal event o : log?function_called
+			action log_function_called(o.inst, o.fn_name, o.ty, o.returns, o.params)
+			
+			internal event o : log?property_changed
+			action log_property_changed(o.inst, o.prop_name, o.ty, o.old, o.new)
+													
+			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"
+		}
+	}
+	
+}
+
+thing JavaMQTTLogger includes MQTTLogger {
+	
+	function publish_message(msg_name : String, payload: Buffer, size : UInt32) do
+		`String topic = `&mqtt_topic_name&` + "/" + `&msg_name&`;`
+		mqtt!mqtt_publish(`topic` as String, payload, size)
+	end
+	
+	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String) do
+			`JSONObject json = new JSONObject();
+			json.put("inst", ` & inst & `);
+			json.put("fn_name", ` & fn_name & `);
+			json.put("ty", ` & ty & `);
+			json.put("returns", ` & returns & `);
+			json.put("params", ` & params & `);
+			`
+			publish_message("function_called", `json.toString().getBytes()` as Buffer, `json.toString().length()` as UInt32)	
+	end
+	
+	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
+			`JSONObject json = new JSONObject();
+			json.put("inst", ` & inst & `);
+			json.put("prop_name", ` & prop_name & `);
+			json.put("ty", ` & ty & `);
+			json.put("old", ` & old & `);
+			json.put("new", ` & new & `);
+			`
+			publish_message("property_changed", `json.toString().getBytes()` as Buffer, `json.toString().length()` as UInt32)
+	end
+	
+}
+
+thing JavaScriptMQTTLogger includes MQTTLogger {
+	
+	function publish_message(msg_name : String, payload: Buffer, size : UInt32) do
+		readonly var topic : String = mqtt_topic_name + "/" + msg_name
+		mqtt!mqtt_publish(topic, payload, size)
+	end
+	
+	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String) do
+		`let json = {};
+		json.inst = ` & inst & `;
+		json.fn_name = ` & fn_name & `;
+		json.ty = ` & ty & `;
+		json.returns = ` & returns & `;
+		json.params = ` & params & `;
+		let payload = JSON.stringify(json);`
+		publish_message("function_called", `payload` as Buffer, `payload.length` as UInt32)
+	end
+	
+	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
+		`let json = {};
+		json.inst = ` & inst & `;
+		json.prop_name = ` & prop_name & `;
+		json.ty = ` & ty & `;
+		json.old = ` & old & `;
+		json.new = ` & new & `;
+		let payload = JSON.stringify(json);`
+		publish_message("property_changed", `payload` as Buffer, `payload.length` as UInt32)
+	end
+}
+
+thing GoMQTTLogger includes MQTTLogger {
+	
+	function publish_message(msg_name : String, payload: Buffer, size : UInt32) do
+		readonly var topic : String = mqtt_topic_name + "/" + msg_name
+		mqtt!mqtt_publish(topic, payload, size)
+	end
+	
+	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String) do
+		`j := FragmentLogMsgsMsgfunction_called{` & inst & `,` & fn_name & `,` & ty & `,` & returns & `,` & params & `,}
+		payload, err := json.Marshal(j)
+		if (err == nil){`
+			publish_message("function_called", `payload` as Buffer, `len(payload)` as UInt32)
+		`}`
+	end
+	
+	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
+		`j := FragmentLogMsgsMsgproperty_changed{` & inst & `,` & prop_name & `,` & ty & `,` & old & `,` & new & `,}
+		payload, err := json.Marshal(j)
+		if (err == nil){`
+			publish_message("property_changed", `payload` as Buffer, `len(payload)` as UInt32)
+		`}`
+	end
+}
+
+thing PosixMQTTLogger includes MQTTLogger {
+
+	function publish_message(msg_name : String, payload: Buffer, size : UInt32) do
+		`char topic[256];`
+		`snprintf(topic, 256, "%s/%s", `&mqtt_topic_name&`, `&msg_name&`);`
+		mqtt!mqtt_publish(`topic` as String, payload, size)
+	end
+	
+	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String) do
+			`char payload[83];`
+			`uint16_t index = 0;`
+			`int result = 0;`
+			`payload[index++] = '{';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "inst");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & inst & `) { result = sprintf(&payload[index],"%.*s", 83-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "fn_name");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & fn_name & `) { result = sprintf(&payload[index],"%.*s", 83-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "ty");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & ty & `) { result = sprintf(&payload[index],"%.*s", 83-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "returns");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & returns & `) { result = sprintf(&payload[index],"%.*s", 83-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "params");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & params & `) { result = sprintf(&payload[index],"%.*s", 83-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = '}';`
+			`payload[index++] = 0;`
+			publish_message("function_called", `payload` as String, `strlen(payload)` as Integer)
+	end
+	
+	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
+			`char payload[78];`
+			`uint16_t index = 0;`
+			`int result = 0;`
+			`payload[index++] = '{';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "inst");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & inst & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "prop_name");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & prop_name & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "ty");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & ty & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "old");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & old & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = ',';payload[index++] = ' ';`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "new");`
+			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
+			`if (` & new & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
+			`if (result >= 0) { index += result; } else { return; }`
+			`payload[index++] = '}';`
+			`payload[index++] = 0;`
+			publish_message("property_changed", `payload` as String, `strlen(payload)` as Integer)
+	end
+	
+}
+
+/*configuration MQTTLogger {
+	
+	instance logger : MQTTLogger
+	
+}*/
