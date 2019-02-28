@@ -1,0 +1,148 @@
+import "datatypes.thingml" from stl
+
+enumeration PinMode as UInt8
+{
+	INPUT = 0
+	OUTPUT = 1
+}
+
+enumeration DigitalPin as UInt8
+{
+	PIN_0 = 0
+	PIN_1 = 2
+	PIN_2 = 3
+	PIN_3 = 4
+	PIN_4 = 5
+	PIN_5 = 6
+	PIN_6 = 7
+	PIN_7 = 8
+	PIN_8 = 9
+	PIN_9 = 10
+	PIN_10 = 11
+	PIN_11 = 12
+	PIN_12 = 13
+	PIN_13 = 14
+	A_0  = 15
+	A_1  = 16
+	A_2  = 17
+	A_3  = 18
+	A_4  = 19
+	A_5  = 20
+}
+
+enumeration PWMPin as UInt8 
+{
+	PWM_PIN_3 = 3
+	PWM_PIN_5 = 5
+	PWM_PIN_6 = 6
+	PWM_PIN_9 = 9
+	PWM_PIN_10 = 10
+	PWM_PIN_11 = 11
+}
+
+
+enumeration AnalogPin as UInt8
+{
+	A_0 = 14
+	A_1 = 15
+	A_2 = 16
+	A_3 = 17
+	A_4 = 18
+	A_5 = 19
+}
+
+enumeration AnalogReference as UInt8 
+{
+	DEFAULT = 1
+	INTERNAL = 3
+	EXTERNAL = 0
+}
+
+enumeration InterruptPin as UInt8 
+{
+	PIN_2_INT0 = 0
+	PIN_3_INT1 = 1
+}
+
+enumeration InterruptTrigger as UInt8 
+{
+	CHANGE = 1
+	RISING = 3
+	FALLING = 2
+	LOW = 0
+}
+
+thing fragment ArduinoMsgs 
+@c_header "#include <EEPROM.h>"
+{
+
+	// Digital I/O
+	message pin_mode (pin : DigitalPin, mode : PinMode) @code "2";
+	message digital_write (pin : DigitalPin, value : DigitalState) @code "3";
+	message digital_read (pin : DigitalPin) @code "4"
+		@sync_response "digitalReadResult#value" @timeout "500" @retry "0";
+	message digital_read_result (pin : DigitalPin, value : DigitalState) @code "5";
+	
+	// Analog I/O
+	message analog_reference (type : AnalogReference) @code "6";
+	message analog_read (pin : AnalogPin) @code "7" 
+		@sync_response "analogReadResult#value" @timeout "500" @retry "0";
+	message analog_read_result (pin : AnalogPin, value : Int16) @code "8";
+	message analog_write (pin : PWMPin, value : UInt8) @code "9";
+	
+	// Advanced I/O
+	message tone (pin : DigitalPin, frequency : Int16, duration : Int16) @code "10";
+	message no_tone (pin : DigitalPin) @code "11";
+	
+	// Simple Ping
+	message ping () @code "66"
+		@sync_ack "pong" @timeout "1000" @retry "3" ;
+	message pong () @code "67";
+	
+	// Interrupts
+	message attach_interrupt (interrupt : InterruptPin, mode : InterruptTrigger) @code "21";
+	message detach_interrupt (interrupt : InterruptPin) @code "22";
+	message interrupt_notification (interrupt : InterruptPin) @code "23";
+	
+	// EEPROM Library
+	message eeprom_read (address : Int16) @code "31"
+		@sync_response "eeprom_value#value" @timeout "500" @retry "0";
+	message eeprom_value (value : Int8) @code "32";
+	message eeprom_write (address : Int16, value : Int8) @code "33";
+	message eeprom_sync_write (address : Int16, value : Int8) @code "34"
+		@sync_ack "eeprom_write_ack" @timeout "500" @retry "0" ;
+	message eeprom_write_ack () @code "35";
+}
+
+thing Arduino includes ArduinoMsgs
+{
+	provided port DigitalIO {
+		receives pin_mode, digital_read, digital_write
+		sends digital_read_result
+	}
+	
+	provided port AnalogIO {
+		receives analog_reference, analog_read, analog_write
+		sends analog_read_result
+	}
+	
+	provided port AdvancedIO {
+		receives tone, no_tone
+	}
+	
+	provided port Ping {
+		receives ping
+		sends pong
+	}
+	/*
+	provided port Interrupts {
+		receives attach_interrupt, detach_interrupt
+		sends interrupt_notification
+	}
+    */	
+	provided port EEPROM {
+		receives eeprom_read, eeprom_sync_write, eeprom_write
+		sends eeprom_value, eeprom_write_ack
+	}
+
+}

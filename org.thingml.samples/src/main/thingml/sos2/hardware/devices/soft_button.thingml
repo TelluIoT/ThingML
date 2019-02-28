@@ -1,0 +1,61 @@
+import "../bricks/button.thingml"
+
+thing fragment SoftButtonMsgs 
+{
+	message click ();
+	message double_click ();
+	message long_press ();
+}
+
+thing SoftButton includes ButtonMsgs, SoftButtonMsgs, TimerClientPort
+{	
+
+	readonly property long_delay : UInt16 = 1000
+	readonly property double_delay : UInt16 = 250
+
+	required port Button 
+    {
+		receives press, release
+	}
+
+	provided port SoftButton 
+    {
+		sends click, double_click, long_press
+	}
+
+	statechart SoftButtonImpl init Idle 
+    {
+        state Idle 
+        {
+            transition pressed -> Pressed
+            event m: Button?press
+        }
+        
+        state Pressed 
+        {
+			on entry timer!timer_start (0, long_delay)
+			
+			transition long -> Idle
+			event timer?timer_timeout
+			action SoftButton!long_press ()
+			
+			transition click -> Released
+			event Button?release
+			action timer!timer_cancel (0)
+        }
+        
+        state Released 
+        {
+        	on entry timer!timer_start (0, double_delay)
+        	on exit timer!timer_cancel (0)
+        
+        	transition click -> Idle
+			event timer?timer_timeout
+			action SoftButton!click ()
+			
+			transition double -> Idle
+            event Button?press
+            action SoftButton!double_click () 
+        }
+    }
+}

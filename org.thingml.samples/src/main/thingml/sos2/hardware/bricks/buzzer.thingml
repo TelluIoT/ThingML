@@ -1,0 +1,57 @@
+//*
+// Fabien Fleurey - 22/08/2011
+// Electronic bricks library.
+//
+// This file provides an interface with the buzzer. 
+//*
+
+import "../io/digital_output.thingml"
+import "timer.thingml" from stl
+
+thing fragment BuzzerMsgs
+{
+	message buzzer_on ();
+	message buzzer_off ();
+	message buzzer_delay (delay : UInt16);
+}
+
+thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerClientPort
+{ 
+	provided port Buzzer 
+    {
+		receives buzzer_on, buzzer_off, buzzer_delay
+	}
+
+    required port DigitalOutput
+    {
+        sends set_digital_output    
+    }
+    
+    statechart BuzzerImpl init BuzzerOff 
+    {    
+        state BuzzerOff 
+        {
+            on entry DigitalOutput!set_digital_output (DigitalState:LOW)
+            
+            transition switch_on -> BuzzerOn 
+            event Buzzer?buzzer_on 
+            
+            transition delay -> BuzzerOn
+            event m : Buzzer?buzzer_delay
+            action timer!timer_start (0, m.delay)
+        }
+        
+        state BuzzerOn
+        {
+            on entry DigitalOutput!set_digital_output (DigitalState:HIGH)
+  
+            transition switch_off -> BuzzerOff 
+            event Buzzer?buzzer_off 
+            action timer!timer_cancel (0)
+            
+            transition switch_off -> BuzzerOff  
+            event timer?timer_timeout
+            action timer!timer_cancel (0)   
+        }
+    }
+}
