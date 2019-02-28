@@ -1,0 +1,163 @@
+import "datatypes.thingml" from stl
+import "timer.thingml" from stl
+
+//define the messages to be exchanged 
+thing fragment SOSMsgs {
+	message begin() //begin SOS signal and repeat until stop()
+	message stop()
+}
+
+thing SOSClient includes SOSMsgs {
+	
+	required port sos {
+		sends begin, stop
+	}
+	
+	statechart init INIT {
+		
+		state INIT {
+			on entry sos!begin()
+		}
+		
+	}
+}
+
+
+thing fragment SOS includes SOSMsgs, TimerClientPort {
+	
+	abstract function initialize()
+	abstract function turn_on()    //use abstract functions to abstract away from platform-specific behavior, so as to keep the state machine PIM 
+	abstract function turn_off()
+	
+	provided port sos {
+		receives begin, stop
+	}
+	
+	statechart init IDLE {
+		
+		on entry initialize()
+		
+		state IDLE {
+			
+			transition -> ACTIVE
+			event sos?begin
+			
+		}
+		
+		composite state ACTIVE init S { //Loop until active S -> O -> S -> O -> ...
+			
+			transition -> IDLE
+			event sos?stop
+		
+			composite state S init ON { //Play short on/off sequences three times (S)
+				
+				property counter : UInt8 = 0
+			
+				on entry counter = 0
+			
+				state ON {
+				
+					on entry do
+						print "."
+						turn_on()
+						timer!timer_start(0, 250)
+					end
+				
+					transition -> OFF
+					event t : timer?timer_timeout
+					guard t.id == 0
+				}
+			
+				state OFF {
+				
+					on entry do
+						print " "
+						turn_off()
+						counter++
+						timer!timer_start(0, 250)
+					end
+					
+					transition -> ON
+					event t : timer?timer_timeout
+					guard t.id == 0 and counter < 3
+					
+					transition -> OFF
+					event t : timer?timer_timeout
+					guard t.id == 0 and counter == 3
+				
+				}
+				
+				transition -> PAUSE1
+				guard counter > 3 
+				
+			}
+		
+			state PAUSE1 {
+				on entry do
+					print "  "
+					timer!timer_start(0, 500)
+				end
+				
+				transition -> O
+				event t : timer?timer_timeout
+				guard t.id == 0
+			}
+		
+			composite state O init ON { //Play long on/off sequences three times (O)
+			
+				property counter : UInt8 = 0
+				
+				on entry counter = 0
+			
+				state ON {
+				
+					on entry do
+						print "-"
+						turn_on()						
+						timer!timer_start(0, 1000)
+					end
+				
+					transition -> OFF
+					event t : timer?timer_timeout
+					guard t.id == 0
+				}
+			
+				state OFF {
+				
+					on entry do
+						print " "
+						turn_off()
+						counter++
+						timer!timer_start(0, 250)
+					end
+					
+					transition -> ON
+					event t : timer?timer_timeout
+					guard t.id == 0  and counter < 3
+					
+					transition -> OFF
+					event t : timer?timer_timeout
+					guard t.id == 0 and counter == 3
+				
+				}
+			
+				transition -> PAUSE2
+				guard counter > 3 			
+			}
+		
+			state PAUSE2 {
+				on entry do
+					print "  "
+					timer!timer_start(0, 500)
+				end
+				
+				transition -> S
+				event t : timer?timer_timeout
+				guard t.id == 0			
+			}
+		
+		}
+		
+	}
+	
+}

@@ -1,0 +1,39 @@
+import "../sos.thingml"
+
+thing SOSArduinoLED includes SOS {
+	
+	readonly property pin : UInt8 = 13
+	
+	function initialize() do
+		`pinMode(` & pin & `, OUTPUT);`
+	end
+	
+	function turn_on() do
+		`digitalWrite(` & pin & `, HIGH);`
+	end
+	 
+	function turn_off() do
+		`digitalWrite(` & pin & `, LOW);`
+	end
+}
+
+//TODO: more or less the same, using Arduino tune instead
+/*thing SOSArduinoBuzzer includes SOS {
+
+}*/
+
+configuration test 
+@arduino_stdout "Serial"
+@arduino_stdout_baudrate "115200" //use those annotations to redirect ThingML print to Serial (not to be used if you also use Serial in your program)
+{
+	
+	instance sos : SOSArduinoLED
+		//set sos.pin = 12 //to change the pin number
+	
+	instance client : SOSClient
+	instance timer : TimerArduino
+	
+	connector client.sos => sos.sos
+	connector sos.timer => timer.timer
+	
+}
