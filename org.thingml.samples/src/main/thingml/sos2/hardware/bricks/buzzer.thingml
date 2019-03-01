@@ -33,7 +33,10 @@ thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerClientPort
     {    
         state BuzzerOff 
         {
-            on entry DigitalOutput!set_digital_output (DigitalState:LOW)
+            on entry do
+            	print "/" 
+            	DigitalOutput!set_digital_output (DigitalState:LOW)
+            end
             
             transition switch_on -> BuzzerOn 
             event Buzzer?buzzer_on 
@@ -45,7 +48,10 @@ thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerClientPort
         
         state BuzzerOn
         {
-            on entry DigitalOutput!set_digital_output (DigitalState:HIGH)
+            on entry do
+            	print "*"
+            	DigitalOutput!set_digital_output (DigitalState:HIGH)
+            end
   
             transition switch_off -> BuzzerOff 
             event Buzzer?buzzer_off 

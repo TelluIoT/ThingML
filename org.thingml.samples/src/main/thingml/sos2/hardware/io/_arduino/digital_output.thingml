@@ -25,7 +25,13 @@ thing DigitalOutputArduino includes DigitalOutput, ArduinoMsgs
     	state Running
     	{
     		internal event m : DigitalOutput?set_digital_output
-    		action DigitalIO!digital_write (pin, m.value)
+    		action do
+    			DigitalIO!digital_write (pin, m.value)
+    			if (m.value == DigitalState:HIGH)
+    				print "1"
+    			else
+    				print "0"
+    		end
     	}
     }
 }

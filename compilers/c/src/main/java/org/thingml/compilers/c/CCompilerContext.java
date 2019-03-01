@@ -337,12 +337,18 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getEnumLiteralValue(Enumeration e, EnumerationLiteral l) {
-        if (AnnotatedElementHelper.hasAnnotation(l, "enum_val")) {
-            return AnnotatedElementHelper.annotation(l, "enum_val").iterator().next();
-        } else {
-            System.err.println("Warning: Missing annotation enum_val on litteral " + l.getName() + " in enum " + e.getName() + ", will use default value 0.");
-            return "0";
-        }
+    	if (l.getInit() != null) {
+    		StringBuilder b = new StringBuilder();
+    		getCompiler().getThingActionCompiler().generate(l.getInit(), b, this);
+    		return b.toString();
+    	} else {    	    	
+    		if (AnnotatedElementHelper.hasAnnotation(l, "enum_val")) {
+    			return AnnotatedElementHelper.annotation(l, "enum_val").iterator().next();
+    		} else {
+    			System.err.println("Warning: Missing annotation enum_val on litteral " + l.getName() + " in enum " + e.getName() + ", will use default value 0.");
+    			return "0";
+    		}
+    	}
     }
 
     public void changeInstanceVarName(String new_name) {
