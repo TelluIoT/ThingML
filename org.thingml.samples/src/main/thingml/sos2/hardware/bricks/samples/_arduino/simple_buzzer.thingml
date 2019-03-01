@@ -15,20 +15,23 @@ import "../../../arduino/_arduino/arduino.thingml"
 import "../../../io/_arduino/digital_output.thingml"
 
 configuration SimpleBuzzerArduino
+@arduino_stdout "Serial"
+@arduino_stdout_baudrate "115200"
 {    
     instance arduino : ArduinoArduino
     instance digital_output : DigitalOutputArduino
     	set digital_output.pin = DigitalPin:PIN_8
     connector digital_output.DigitalIO => arduino.DigitalIO
     
-    instance timer0 : TimerArduino
+    instance timer : TimerArduino
     instance buzzer : Buzzer	 
+    	set buzzer.timerID = 0
     connector buzzer.DigitalOutput => digital_output.DigitalOutput
-    connector buzzer.timer => timer0.timer
+    connector buzzer.timer => timer.timer
     
-        
-    instance timer1 : TimerArduino
+            
     instance simple_buzzer : SimpleBuzzer
+    	set simple_buzzer.timerID = 1
 	connector simple_buzzer.Buzzer => buzzer.Buzzer
-	connector simple_buzzer.timer => timer1.timer
+	connector simple_buzzer.timer => timer.timer
 }

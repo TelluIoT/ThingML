@@ -17,6 +17,8 @@ thing fragment BuzzerMsgs
 
 thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerClientPort
 { 
+	readonly property timerID : UInt8
+	
 	provided port Buzzer 
     {
 		receives buzzer_on, buzzer_off, buzzer_delay
@@ -38,7 +40,7 @@ thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerClientPort
             
             transition delay -> BuzzerOn
             event m : Buzzer?buzzer_delay
-            action timer!timer_start (0, m.delay)
+            action timer!timer_start(timerID, m.delay)
         }
         
         state BuzzerOn
@@ -47,11 +49,12 @@ thing Buzzer includes BuzzerMsgs, DigitalOutputMsgs, TimerClientPort
   
             transition switch_off -> BuzzerOff 
             event Buzzer?buzzer_off 
-            action timer!timer_cancel (0)
+            action timer!timer_cancel(timerID)
             
             transition switch_off -> BuzzerOff  
-            event timer?timer_timeout
-            action timer!timer_cancel (0)   
+            event t : timer?timer_timeout
+            guard t.id == timerID
+            action timer!timer_cancel(timerID)   
         }
     }
 }

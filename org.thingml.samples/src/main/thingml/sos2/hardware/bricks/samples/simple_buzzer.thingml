@@ -17,6 +17,7 @@ thing SimpleBuzzer includes BuzzerMsgs, TimerClientPort
 {
 	property counter : UInt8 = 0
     property end_motif : Boolean = false 
+    readonly property timerID : UInt8
 	
 	required port Buzzer
 	{
@@ -27,52 +28,64 @@ thing SimpleBuzzer includes BuzzerMsgs, TimerClientPort
 	{       
 		state Fast
 		{
-            on entry counter = 0
+            on entry do
+            	print "F"
+            	counter = 0
+            end
             
-			internal repeat event timer?timer_timeout
-            guard counter < 3
+			internal repeat event t : timer?timer_timeout
+            guard t.id == timerID and counter < 3
             action do
+            	print "."
                 Buzzer!buzzer_delay (100)
                 counter = counter + 1
-                timer!timer_start (0, 150)
+                timer!timer_start (timerID, 150)
                 end
                 
             transition switch -> Slow
-            event timer?timer_timeout 
-            guard counter == 3 and not end_motif
-            action timer!timer_start (0, 50)
+            event t : timer?timer_timeout 
+            guard t.id == timerID and counter == 3 and not end_motif
+            action timer!timer_start (timerID, 50)
             
             transition waiting -> Wait
-            event timer?timer_timeout
-            guard counter == 3 and end_motif
+            event t : timer?timer_timeout
+            guard t.id == timerID and counter == 3 and end_motif
 		}
 			
 		state Slow
 		{	
-            on entry counter = 0
+            on entry do
+            	print "S"
+            	counter = 0
+           	end
             on exit end_motif = true
                 
-            internal repeat event timer?timer_timeout
-            guard counter < 3
+            internal repeat event t : timer?timer_timeout
+            guard t.id == timerID and counter < 3
             action do
+            	print "-"
                 Buzzer!buzzer_delay (200)
                 counter = counter + 1
-                timer!timer_start (0, 250)
+                timer!timer_start (timerID, 250)
                 end
                 
             transition switch -> Fast
-            event timer?timer_timeout
-            guard counter == 3
-            action timer!timer_start (0, 50)
+            event t : timer?timer_timeout
+            guard t.id == timerID and counter == 3
+            action timer!timer_start (timerID, 50)
 		}
 
         state Wait
         {
-            on entry timer!timer_start (0, 1000)
-            on exit timer!timer_start (0, 50)
+            on entry do
+            	println "W"
+            	timer!timer_start (timerID, 1000)
+            end
+            on exit timer!timer_start (timerID, 50)
             
             transition begin -> Fast
-            event timer?timer_timeout
+            event t : timer?timer_timeout
+            guard t.id == timerID
             action end_motif = false
         } 
 	}
