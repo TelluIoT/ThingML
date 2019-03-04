@@ -16,15 +16,12 @@
  */
 package org.thingml.monitor;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TypeRef;
 
 public class PropertyMonitoring implements MonitoringAspect {
@@ -32,14 +29,14 @@ public class PropertyMonitoring implements MonitoringAspect {
 	final Thing thing;
 	final Property id;
 	final Port monitoringPort;
-	final Thing monitoringMsgs;
+	final Message msg;
 	final TypeRef stringTypeRef;
 
-	public PropertyMonitoring(Thing thing, Property id, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef) {
+	public PropertyMonitoring(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef stringTypeRef) {
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
-		this.monitoringMsgs = monitoringMsgs;
+		this.msg = msg;
 		this.stringTypeRef = stringTypeRef;
 	}
 	
@@ -48,20 +45,6 @@ public class PropertyMonitoring implements MonitoringAspect {
 		for(Property p : ThingMLHelpers.allProperties(thing)) {
 			if (AnnotatedElementHelper.isDefined(p, "monitoring", "not")) continue;
 			if (p.getTypeRef().getCardinality() != null) continue;//FIXME: handle arrays
-			
-			//Update monitoring API
-			final Message onUpdate = ThingMLFactory.eINSTANCE.createMessage();
-        	onUpdate.setName(p.getName() + "_updated");
-        	monitoringMsgs.getMessages().add(onUpdate);
-        	monitoringPort.getSends().add(onUpdate);
-        	final Parameter onUpdate_old = ThingMLFactory.eINSTANCE.createParameter();
-        	onUpdate_old.setName("old");        
-        	onUpdate_old.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
-        	onUpdate.getParameters().add(onUpdate_old);
-        	final Parameter onUpdate_new = ThingMLFactory.eINSTANCE.createParameter();
-        	onUpdate_new.setName("current");        
-        	onUpdate_new.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
-        	onUpdate.getParameters().add(onUpdate_new);
         	
         	//TODO: look for all property assigment and send monitoring message
 		}

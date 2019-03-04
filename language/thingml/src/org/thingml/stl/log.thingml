@@ -18,7 +18,7 @@ thing fragment LogMsgs {
 	 * old: value before update (serialized as string)
 	 * new: value after update (serialized as string) 
 	 */
-	message property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+	message property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)
 }
 
 /*
@@ -54,7 +54,7 @@ thing fragment Logger includes LogMsgs {
 			action log_function_called(d.inst, d.fn_name, d.ty, d.returns, d.params)
 			
 			internal event d : log?property_changed
-			action log_property_changed(d.inst, d.prop_name, d.ty, d.old, d.new)
+			action log_property_changed(d.inst, d.prop_name, d.ty, d.old_value, d.new_value)
 			
 		}
 		

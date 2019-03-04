@@ -60,6 +60,8 @@ public class TyperHelper {
 	
     public static Type getBroadType(Type self) {
     	if (self instanceof ObjectType) {
+    		if (self.getName().equals("String"))
+    			return Types.STRING_TYPE;
             return Types.OBJECT_TYPE;
         }
     	if (self instanceof Enumeration) {

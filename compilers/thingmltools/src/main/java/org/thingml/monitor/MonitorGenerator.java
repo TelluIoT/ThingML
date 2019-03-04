@@ -14,15 +14,11 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.thingml.monitor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -32,16 +28,14 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.thingml.thingmltools.ThingMLTool;
-import org.thingml.thingmltools.ThingMLToolRegistry;
 import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Import;
+import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.RequiredPort;
-import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -81,7 +75,26 @@ public class MonitorGenerator extends ThingMLTool {
 
     @Override
     public void generateThingMLFrom(ThingMLModel model) {
-    	final ThingMLModel copy = ThingMLHelpers.flattenModel(model);
+    	ThingMLModel copy = model;//ThingMLHelpers.flattenModel(model);
+    	    			
+        System.out.println("Generate ThingML from model");
+        
+        Import log_import = ThingMLFactory.eINSTANCE.createImport();
+        log_import.setFrom("stl");
+        log_import.setImportURI("log.thingml");
+        copy.getImports().add(log_import);
+
+        copy = ThingMLHelpers.flattenModel(copy);
+        final File tempFile = new File(outDir, "monitor/temp.thingml");
+        try {        	
+        	save(copy, tempFile.getAbsolutePath());
+        	copy = load(tempFile);
+        } catch (Exception e) {
+        	System.err.println("Error while saving the instrumented model...");
+        	e.printStackTrace();
+        	System.exit(1);
+        }
+        
     	Type stringType = null;
     	for (Type t : copy.getTypes()) {
             if (t instanceof ObjectType) {
@@ -89,79 +102,56 @@ public class MonitorGenerator extends ThingMLTool {
                 	stringType = t;
             }
         }
+    	if (stringType == null) throw new NoSuchElementException("Cannot find String type");
+    	
     	final TypeRef stringTypeRef = ThingMLFactory.eINSTANCE.createTypeRef();
     	stringTypeRef.setType(stringType);
-    	    			
-        System.out.println("Generate ThingML from model");
+        
+        Thing logAPI = null;
+        for(Thing t : ThingMLHelpers.allThings(copy)) {
+        	if (t.getName().equals("WithLog")) {
+        		logAPI = t;
+        		break;
+        	}
+        }        
+        if (logAPI == null) throw new NoSuchElementException("Cannot find WithLog thing");
+                
+        final Property id = logAPI.getProperties().get(0);
+    	final RequiredPort monitoringPort = (RequiredPort) logAPI.getPorts().get(0);
+    	        
         for (Thing t : ThingMLHelpers.allThings(copy)) {
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "not")) continue;
         	if (!AnnotatedElementHelper.hasAnnotation(t, "monitor")) continue;
         	
-        	//Create monitoring API
-        	final Thing monitoringMsgs = ThingMLFactory.eINSTANCE.createThing();
-        	monitoringMsgs.setName(t.getName() + "MonitoringMsgs");
-        	monitoringMsgs.setFragment(true);
-        	final Property id = ThingMLFactory.eINSTANCE.createProperty(); //FIXME: this should be refined in the configuration, so as to integrate the instance name
-        	id.setTypeRef(EcoreUtil.copy(stringTypeRef));
-        	id.setName("monitoringID");
-        	id.setReadonly(true);
-        	monitoringMsgs.getProperties().add(id);
-        	final StringLiteral defaultID = ThingMLFactory.eINSTANCE.createStringLiteral();
-        	defaultID.setStringValue(t.getName());
-        	id.setInit(defaultID);
-        	copy.getTypes().add(monitoringMsgs);
-        	t.getIncludes().add(monitoringMsgs);
+        	t.getIncludes().add(logAPI);
         	
-        	
-        	//FIXME: check if a monitor port already exists to avoid clashes with names
-        	final RequiredPort monitoringPort = ThingMLFactory.eINSTANCE.createRequiredPort();
-        	monitoringPort.setName("monitor");
-        	monitoringPort.setOptional(true);
-        	t.getPorts().add(monitoringPort);
+        	//////////////////////////////////////////
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "events")) {
         		//TODO
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {
-        		new FunctionMonitoring(t, id, monitoringPort, monitoringMsgs, stringTypeRef).monitor();;
+        		Message msg = null;
+        		for (Message m : monitoringPort.getSends()) {
+        			if (m.getName().equals("function_called")) {
+        				msg = m;
+        				break;
+        			}
+        		}
+        		new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();;
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
-        		new PropertyMonitoring(t, id, monitoringPort, monitoringMsgs, stringTypeRef).monitor();;
-        	}
-        	
-        	//Create MQTT proxy
-        	//FIXME: ideally, we should be able to use other network libs, like serial, etc
-        	final Thing mqtt = ThingMLFactory.eINSTANCE.createThing();
-        	mqtt.setName(t.getName() + "MQTTMonitoringProxy");
-        	mqtt.setFragment(true);
-        	mqtt.getIncludes().add(monitoringMsgs);
-        	final ProvidedPort mqttPort = ThingMLFactory.eINSTANCE.createProvidedPort();
-        	mqttPort.setName("monitor");
-        	mqttPort.getReceives().addAll(monitoringPort.getSends());
-        	final PlatformAnnotation sync_send = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-        	sync_send.setName("sync_send");
-        	sync_send.setValue("true");
-        	mqttPort.getAnnotations().add(sync_send);
-        	final PlatformAnnotation ext1 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-        	ext1.setName("external");
-        	ext1.setValue("posixmqttjson");
-        	mqttPort.getAnnotations().add(ext1);
-        	final PlatformAnnotation ext2 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-        	ext2.setName("external");
-        	ext2.setValue("javamqttjson");
-        	mqttPort.getAnnotations().add(ext2);
-        	final PlatformAnnotation ext3 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-        	ext3.setName("external");
-        	ext3.setValue("javascriptmqttjson");
-        	mqttPort.getAnnotations().add(ext3);
-        	final PlatformAnnotation ext4 = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-        	ext4.setName("external");
-        	ext4.setValue("gomqttjson");
-        	mqttPort.getAnnotations().add(ext4);
-        	mqtt.getPorts().add(mqttPort);
-        	copy.getTypes().add(mqtt);
+        		Message msg = null;
+        		for (Message m : monitoringPort.getSends()) {
+        			if (m.getName().equals("property_changed")) {
+        				msg = m;
+        				break;
+        			}
+        		}
+        		new PropertyMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();;
+        	}        	
         }
         
         final File monitoringFile = new File(outDir, "monitor/merged.thingml");
@@ -173,38 +163,6 @@ public class MonitorGenerator extends ThingMLTool {
         	System.exit(1);
         }
         
-        //Call the MQTT tool
-        //FIXME: or ideally, any other tool related to network communications
-        ThingMLModel instrumented = null;
-        try {        	            
-        	instrumented = load(monitoringFile);
-        } catch (Exception e) {
-        	System.err.println("Error while reloading the instrumented model...");
-        	e.printStackTrace();
-        	System.exit(2);
-        }
-        switch(options) {
-        	case "java":
-        		final ThingMLTool t = ThingMLToolRegistry.getInstance().createToolInstanceByName("javamqttjson");
-        		t.generateThingMLFrom(instrumented);
-        		break;
-        	case "nodejs":
-        		ThingMLToolRegistry.getInstance().createToolInstanceByName("javascriptmqttjson").generateThingMLFrom(copy);
-        		break;
-        	case "browser"://not sure this is actually supported...
-        		ThingMLToolRegistry.getInstance().createToolInstanceByName("javascriptmqttjson").generateThingMLFrom(copy);
-        		break;
-        	case "go":
-        		ThingMLToolRegistry.getInstance().createToolInstanceByName("gomqttjson").generateThingMLFrom(copy);
-        		break;
-        	case "posix":
-        		ThingMLToolRegistry.getInstance().createToolInstanceByName("posixmqttjson").generateThingMLFrom(copy);
-        		break;
-        	default:
-        		System.out.println("Compiler " + options + " not currently supported");
-        		break;
-        }
-        //TODO: update configuration so as MQTT stuff is instantiated and properly connected (this might be an idea to actually do it in the MQTT tools)
     }
     
     //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc

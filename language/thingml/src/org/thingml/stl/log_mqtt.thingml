@@ -23,7 +23,7 @@ thing fragment MQTTLogger includes LogMsgs, MQTTAdapterMsgs {
 	
 	abstract function publish_message(msg_name : String, payload: Buffer, size : UInt32)
 	abstract function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
-	abstract function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+	abstract function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)
 	
 	statechart MQTTAdapterTestSC init DISCONNECTED {		
 		
@@ -47,7 +47,7 @@ thing fragment MQTTLogger includes LogMsgs, MQTTAdapterMsgs {
 			action log_function_called(o.inst, o.fn_name, o.ty, o.returns, o.params)
 			
 			internal event o : log?property_changed
-			action log_property_changed(o.inst, o.prop_name, o.ty, o.old, o.new)
+			action log_property_changed(o.inst, o.prop_name, o.ty, o.old_value, o.new_value)
 													
 			transition -> DISCONNECTED event mqtt?mqtt_disconnected action print "Client got mqtt_disconnected\n"
 		}
@@ -63,7 +63,7 @@ thing JavaMQTTLogger includes MQTTLogger {
 	end
 	
 	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String) do
-			`JSONObject json = new JSONObject();
+			`JSONObject json = new_value JSONObject();
 			json.put("inst", ` & inst & `);
 			json.put("fn_name", ` & fn_name & `);
 			json.put("ty", ` & ty & `);
@@ -73,13 +73,13 @@ thing JavaMQTTLogger includes MQTTLogger {
 			publish_message("function_called", `json.toString().getBytes()` as Buffer, `json.toString().length()` as UInt32)	
 	end
 	
-	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
-			`JSONObject json = new JSONObject();
+	function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String) do
+			`JSONObject json = new_value JSONObject();
 			json.put("inst", ` & inst & `);
 			json.put("prop_name", ` & prop_name & `);
 			json.put("ty", ` & ty & `);
-			json.put("old", ` & old & `);
-			json.put("new", ` & new & `);
+			json.put("old_value", ` & old_value & `);
+			json.put("new_value", ` & new_value & `);
 			`
 			publish_message("property_changed", `json.toString().getBytes()` as Buffer, `json.toString().length()` as UInt32)
 	end
@@ -104,13 +104,13 @@ thing JavaScriptMQTTLogger includes MQTTLogger {
 		publish_message("function_called", `payload` as Buffer, `payload.length` as UInt32)
 	end
 	
-	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
+	function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String) do
 		`let json = {};
 		json.inst = ` & inst & `;
 		json.prop_name = ` & prop_name & `;
 		json.ty = ` & ty & `;
-		json.old = ` & old & `;
-		json.new = ` & new & `;
+		json.old_value = ` & old_value & `;
+		json.new_value = ` & new_value & `;
 		let payload = JSON.stringify(json);`
 		publish_message("property_changed", `payload` as Buffer, `payload.length` as UInt32)
 	end
@@ -131,8 +131,8 @@ thing GoMQTTLogger includes MQTTLogger {
 		`}`
 	end
 	
-	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
-		`j := FragmentLogMsgsMsgproperty_changed{` & inst & `,` & prop_name & `,` & ty & `,` & old & `,` & new & `,}
+	function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String) do
+		`j := FragmentLogMsgsMsgproperty_changed{` & inst & `,` & prop_name & `,` & ty & `,` & old_value & `,` & new_value & `,}
 		payload, err := json.Marshal(j)
 		if (err == nil){`
 			publish_message("property_changed", `payload` as Buffer, `len(payload)` as UInt32)
@@ -182,7 +182,7 @@ thing PosixMQTTLogger includes MQTTLogger {
 			publish_message("function_called", `payload` as String, `strlen(payload)` as Integer)
 	end
 	
-	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String) do
+	function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String) do
 			`char payload[78];`
 			`uint16_t index = 0;`
 			`int result = 0;`
@@ -202,14 +202,14 @@ thing PosixMQTTLogger includes MQTTLogger {
 			`if (` & ty & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
 			`if (result >= 0) { index += result; } else { return; }`
 			`payload[index++] = ',';payload[index++] = ' ';`
-			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "old");`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "old_value");`
 			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
-			`if (` & old & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
+			`if (` & old_value & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
 			`if (result >= 0) { index += result; } else { return; }`
 			`payload[index++] = ',';payload[index++] = ' ';`
-			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "new");`
+			`payload[index++] = '"'; result = sprintf(&payload[index],"%s", "new_value");`
 			`if (result >= 0) { index += result; payload[index++] = '"';payload[index++] = ':';} else { return; }`
-			`if (` & new & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
+			`if (` & new_value & `) { result = sprintf(&payload[index],"%.*s", 78-index, "null"); }`
 			`if (result >= 0) { index += result; } else { return; }`
 			`payload[index++] = '}';`
 			`payload[index++] = 0;`

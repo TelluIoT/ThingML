@@ -38,25 +38,24 @@ import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 public class FunctionMonitoring implements MonitoringAspect {
 	
 	final StringLiteral empty;
-	final StringLiteral void_;
-	
-	final Message onFunctionCalled;
+	final StringLiteral void_;	
 	
 	final Thing thing;
 	final Property id;
 	final Port monitoringPort;
-	final Thing monitoringMsgs;
+	final Message onFunctionCalled;
 	final TypeRef stringTypeRef;
 	
-	public FunctionMonitoring(Thing thing, Property id, Port monitoringPort, Thing monitoringMsgs, TypeRef stringTypeRef) {
+	public FunctionMonitoring(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef stringTypeRef) {
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
-		this.monitoringMsgs = monitoringMsgs;
+		this.onFunctionCalled = msg;
 		this.stringTypeRef = stringTypeRef;
 		
 		empty = ThingMLFactory.eINSTANCE.createStringLiteral();
@@ -64,32 +63,6 @@ public class FunctionMonitoring implements MonitoringAspect {
 	
 		void_ = ThingMLFactory.eINSTANCE.createStringLiteral();
 		void_.setStringValue("void_");
-		
-		//Update monitoring API
-		onFunctionCalled = ThingMLFactory.eINSTANCE.createMessage();
-    	onFunctionCalled.setName("function_called");
-    	monitoringMsgs.getMessages().add(onFunctionCalled);
-    	monitoringPort.getSends().add(onFunctionCalled);
-    	final Parameter onFunctionCalled_id = ThingMLFactory.eINSTANCE.createParameter();
-    	onFunctionCalled_id.setName("id");        
-    	onFunctionCalled_id.setTypeRef(EcoreUtil.copy(stringTypeRef));
-    	onFunctionCalled.getParameters().add(onFunctionCalled_id);
-    	final Parameter onFunctionCalled_name = ThingMLFactory.eINSTANCE.createParameter();
-    	onFunctionCalled_name.setName("name");        
-    	onFunctionCalled_name.setTypeRef(EcoreUtil.copy(stringTypeRef));
-    	onFunctionCalled.getParameters().add(onFunctionCalled_name);
-    	final Parameter onFunctionCalled_type = ThingMLFactory.eINSTANCE.createParameter();
-    	onFunctionCalled_type.setName("ty");        
-    	onFunctionCalled_type.setTypeRef(EcoreUtil.copy(stringTypeRef));
-    	onFunctionCalled.getParameters().add(onFunctionCalled_type);
-    	final Parameter onFunctionCalled_return = ThingMLFactory.eINSTANCE.createParameter();
-    	onFunctionCalled_return.setName("returns");        
-    	onFunctionCalled_return.setTypeRef(EcoreUtil.copy(stringTypeRef));
-    	onFunctionCalled.getParameters().add(onFunctionCalled_return);
-    	final Parameter onFunctionCalled_p = ThingMLFactory.eINSTANCE.createParameter();
-    	onFunctionCalled_p.setName("params");        
-    	onFunctionCalled_p.setTypeRef(EcoreUtil.copy(stringTypeRef));
-    	onFunctionCalled.getParameters().add(onFunctionCalled_p);
 	}
 
 	@Override
@@ -192,34 +165,28 @@ public class FunctionMonitoring implements MonitoringAspect {
 			final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
 			lv.setName("params");
 			lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
-			PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
-			concat.setLhs(EcoreUtil.copy(empty));    				
-			for(Parameter p : f.getParameters()) { //FIXME
-				final String name = (f.getParameters().indexOf(p)==0)? p.getName() + "=" : ", " + p.getName() + "="; 				
-				final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();				
-				PlusExpression concat_p = ThingMLFactory.eINSTANCE.createPlusExpression();
-    			final StringLiteral p_i_name = ThingMLFactory.eINSTANCE.createStringLiteral();
-    			p_i_name.setStringValue(name);
-    			final PropertyReference p_i_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-    			p_i_ref.setProperty(p);
-    			concat_p.setLhs(p_i_name);
-    			concat_p.setRhs(p_i_ref);
-    			group.setTerm(concat_p);
-    			concat.setRhs(group);    			    			
-    			if (f.getParameters().indexOf(p) != f.getParameters().size()-1) {
-    				final PlusExpression concat_up = ThingMLFactory.eINSTANCE.createPlusExpression();
-    				concat_up.setLhs(concat);
-    				concat = concat_up;
-    			}
-    		}
+			lv.setInit(EcoreUtil.copy(empty));
 			
-			lv.setInit(concat);
+			final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
+    		block.getActions().add(lv);
+			
+			for(Parameter p : f.getParameters()) {
+				final VariableAssignment assig = ThingMLFactory.eINSTANCE.createVariableAssignment();
+				final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
+				final PropertyReference l_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+				l_ref.setProperty(lv);
+				final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+				r_ref.setProperty(p);
+				concat.setLhs(l_ref);
+				concat.setRhs(r_ref);
+				assig.setProperty(lv);
+				assig.setExpression(concat);
+				block.getActions().add(assig);
+			}
+			
     		final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
     		lv_ref.setProperty(lv);
-    		send.getParameters().add(lv_ref);
-    		
-    		final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
-    		block.getActions().add(lv);
+    		send.getParameters().add(lv_ref);    		    	
     		block.getActions().add(send);
     		return block;
 		}

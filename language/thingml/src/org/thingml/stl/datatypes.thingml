@@ -119,11 +119,8 @@ object String
     @js_type "String"
     @go_type "string";
 
-enumeration DigitalState as Byte
-	@java_type "byte"
-	@c_type "uint8_t"
-	@go_type "uint8"
+enumeration DigitalState as UInt8
 {
-	LOW = 0x00
-	HIGH = 0x01
+	LOW = 0
+	HIGH = 1
 }
