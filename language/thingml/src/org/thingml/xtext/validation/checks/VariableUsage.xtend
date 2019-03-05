@@ -171,9 +171,10 @@ class VariableUsage extends ThingMLValidatorCheck {
 	
 	@Check(FAST)
 	def checkPropertyUsage(Thing thing) {
+		if (thing.isFragment) return;
 		val usedProperties = ThingHelper.allUsedProperties(thing)
 		// Check all thing properties
-		thing.properties.filter[p | !AnnotatedElementHelper.isDefined(p, "ignore", "not-used")]
+		ThingHelper.allPropertiesInDepth(thing).filter[p | !AnnotatedElementHelper.isDefined(p, "ignore", "not-used")]
 		.forEach[p, i|
 			val isUsed = usedProperties.contains(p)
 			if (!isUsed) {
@@ -181,18 +182,5 @@ class VariableUsage extends ThingMLValidatorCheck {
 				warning(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name, "property-not-used");
 			}
 		]
-		// Check all state properties
-		if (thing.behaviour !== null) {
-			CompositeStateHelper.allContainedStatesIncludingSessions(thing.behaviour).forEach[state|
-				state.properties.filter[p | !AnnotatedElementHelper.isDefined(p, "ignore", "not-used")]
-				.forEach[p, i|
-					val isUsed = usedProperties.contains(p)
-					if (!isUsed) {
-						val msg = "Property " + p.getName() + " of Thing " + thing.getName() + " is never used. Consider removing (or using) it, or use @ignore \"not-used\".";
-						warning(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name, "property-not-used");
-					}
-				]
-			]
-		}
 	}
 }

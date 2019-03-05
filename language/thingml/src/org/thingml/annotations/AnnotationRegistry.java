@@ -224,6 +224,12 @@ public class AnnotationRegistry {
 		final EClass html_head_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
 		final Annotation html_head_annotation = new Annotation(html_head_name, html_head_desc, html_head_scope);
 		annotations.put(html_head_name, html_head_annotation);
+		
+		final String stdout_sync_name = "stdout_sync";
+		final String stdout_sync_desc = "Syncs prints to stdout";
+		final EClass stdout_sync_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration(), ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation stdout_sync_annotation = new Annotation(stdout_sync_name, stdout_sync_desc, stdout_sync_scope);
+		annotations.put(stdout_sync_name, stdout_sync_annotation);
 	}
 	
 	public static String toMD() {

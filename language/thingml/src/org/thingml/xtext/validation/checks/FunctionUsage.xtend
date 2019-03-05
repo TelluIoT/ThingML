@@ -45,25 +45,19 @@ class FunctionUsage extends ThingMLValidatorCheck {
 	def checkUsage(Function f) {
 		val thing = ThingMLHelpers.findContainingThing(f)
 		//Checks if the containing thing calls the function
-		if (ActionHelper.getAllActions(thing, FunctionCallStatement).exists[call | call.function == f])
+		if (ActionHelper.getAllActions(thing, FunctionCallStatement).exists[call | call.function == f || call.function.name == f.name])
 			return;
-		if (ThingMLHelpers.getAllExpressions(thing, FunctionCallExpression).exists[call | call.function == f])
+		if (ThingMLHelpers.getAllExpressions(thing, FunctionCallExpression).exists[call | call.function == f || call.function.name == f.name])
 			return;			
 		
 		//if not, check if any thing that includes the function actually calls it
-		val model = ThingMLHelpers.findContainingModel(thing)
-		val isUsedByIncludingThings = ThingMLHelpers.allThings(model).filter[t | ThingHelper.allIncludedThings(t).exists[t2 | t2 == thing]]
-		.exists[t |
-			ActionHelper.getAllActions(t, FunctionCallStatement).exists[call | call.function.name == f.name] //we check on names, as included function may call abstract function. Should be fine as long as we do not support overloading...
-			|| ThingMLHelpers.getAllExpressions(t, FunctionCallExpression).exists[call | call.function.name == f.name]
+		val isUsedByIncludingThings = ThingHelper.allIncludedThings(thing)
+		.exists[included |
+			ActionHelper.getAllActions(included, FunctionCallStatement).exists[call | call.function.name == f.name] //we check on names, as included function may call abstract function. Should be fine as long as we do not support overloading...
+			|| ThingMLHelpers.getAllExpressions(included, FunctionCallExpression).exists[call | call.function.name == f.name]
 		]
 		
-		val isUsed = isUsedByIncludingThings || ThingHelper.allIncludedThings(thing).exists[t |
-			ActionHelper.getAllActions(t, FunctionCallStatement).exists[call | call.function.name == f.name] //we check on names, as included function may call abstract function. Should be fine as long as we do not support overloading...
-			|| ThingMLHelpers.getAllExpressions(t, FunctionCallExpression).exists[call | call.function.name == f.name]
-		]
-		
-		if (!isUsed) {
+		if (!isUsedByIncludingThings) {
 			val msg = "Function " + f.name + " is never called."
 			warning(msg, f, ThingMLPackage.eINSTANCE.namedElement_Name, "function-never-called", f.name);
 		}
