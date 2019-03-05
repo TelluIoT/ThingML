@@ -21,15 +21,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
-import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
@@ -48,15 +47,13 @@ public class Checker {
 		// TODO: Add a constructor that accepts compiler-specific validators as well
 	}
     
-    private static synchronized List<Issue> validate(List<Issue> out, ThingMLModel model) {
+    private static synchronized List<Issue> validate(List<Issue> out, EObject o) {
     	out.clear();
-    	ResourceSet rs = model.eResource().getResourceSet();
-    	for (Resource r : rs.getResources()) {
-    		if (r instanceof XtextResource) {
-    			IResourceValidator validator = ((XtextResource)r).getResourceServiceProvider().getResourceValidator();
-    			List<Issue> issues = validator.validate(r, CheckMode.ALL, CancelIndicator.NullImpl);
-    			out.addAll(issues);
-    		}
+    	final Resource r = o.eResource();
+    	if (r instanceof XtextResource) {
+    		IResourceValidator validator = ((XtextResource)r).getResourceServiceProvider().getResourceValidator();
+    		List<Issue> issues = validator.validate(r, CheckMode.ALL, CancelIndicator.NullImpl);
+    		out.addAll(issues);    	
     	}
     	return out;
     }
@@ -67,7 +64,7 @@ public class Checker {
     }
     
     public boolean validateConfiguration(Configuration cfg) {
-    	validate(this.issues, ThingMLHelpers.findContainingModel(cfg));
+    	validate(this.issues, cfg);
     	return !this.hasErrors();
     }
     

@@ -272,6 +272,7 @@ public abstract class ThingMLCompiler {
      * @param cfg
      */
     //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
+    @Deprecated
     public void processDebug(Configuration cfg) {
         final boolean debugCfg = AnnotatedElementHelper.isDefined(cfg, "debug", "true");
         this.containsDebug = this.containsDebug || debugCfg;
