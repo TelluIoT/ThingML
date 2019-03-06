@@ -2,6 +2,9 @@ import "datatypes.thingml" from stl
 
 thing fragment LogMsgs {
 	
+	message log_on()
+	message log_off()
+	
 	/*
 	 * inst: name of the thing instance as defined in the configuration
 	 * fn_name: name of the invoked function
@@ -40,15 +43,15 @@ thing fragment WithLog includes LogMsgs {
 thing fragment Logger includes LogMsgs {
 	
 	provided port log {
-		receives function_called, property_changed
+		receives function_called, property_changed, log_on, log_off
 	}
 	
 	abstract function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
 	abstract function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
 		
-	statechart init INIT {
+	statechart init ON {
 		
-		state INIT {
+		state ON {
 			
 			internal event d : log?function_called
 			action log_function_called(d.inst, d.fn_name, d.ty, d.returns, d.params)
@@ -56,6 +59,13 @@ thing fragment Logger includes LogMsgs {
 			internal event d : log?property_changed
 			action log_property_changed(d.inst, d.prop_name, d.ty, d.old_value, d.new_value)
 			
+			transition -> OFF
+			event log?log_off
+		}
+		
+		state OFF {
+			transition -> ON
+			event log?log_on
 		}
 		
 	}
