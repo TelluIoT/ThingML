@@ -123,12 +123,20 @@ public class MonitorGenerator extends ThingMLTool {
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "not")) continue;
         	if (!AnnotatedElementHelper.hasAnnotation(t, "monitor")) continue;
         	
+        	//FIXME: do not include it if it has already been included manually
         	t.getIncludes().add(logAPI);
         	
         	//////////////////////////////////////////
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "events")) {
-        		//TODO
+        		Message msg_lost = null;
+        		for (Message m : monitoringPort.getSends()) {
+        			if (m.getName().equals("message_lost")) {
+        				msg_lost = m;
+        				break;
+        			}
+        		}
+        		new EventMonitoring(t, id, monitoringPort, msg_lost, stringTypeRef).monitor();
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {
@@ -139,7 +147,7 @@ public class MonitorGenerator extends ThingMLTool {
         				break;
         			}
         		}
-        		new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();;
+        		new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
@@ -150,7 +158,7 @@ public class MonitorGenerator extends ThingMLTool {
         				break;
         			}
         		}
-        		new PropertyMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();;
+        		new PropertyMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
         	}        	
         }
         

@@ -81,6 +81,7 @@ public class PropertyMonitoring implements MonitoringAspect {
 				final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
 				lv.setName("old_" + p.getName() + "_" + counter);
 				lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
+				lv.setReadonly(true);
 				final PropertyReference ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 				ref.setProperty(p);
 				final PlusExpression plus = ThingMLFactory.eINSTANCE.createPlusExpression();
@@ -95,6 +96,7 @@ public class PropertyMonitoring implements MonitoringAspect {
 				final LocalVariable lv2 = ThingMLFactory.eINSTANCE.createLocalVariable();
 				lv2.setName("new_" + p.getName() + "_" + counter);
 				lv2.setTypeRef(EcoreUtil.copy(stringTypeRef));
+				lv2.setReadonly(true);
 				final PropertyReference ref2 = ThingMLFactory.eINSTANCE.createPropertyReference();
 				ref2.setProperty(p);
 				final PlusExpression plus2 = ThingMLFactory.eINSTANCE.createPlusExpression();
