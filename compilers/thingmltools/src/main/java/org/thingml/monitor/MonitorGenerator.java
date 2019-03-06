@@ -136,7 +136,14 @@ public class MonitorGenerator extends ThingMLTool {
         				break;
         			}
         		}
-        		new EventMonitoring(t, id, monitoringPort, msg_lost, stringTypeRef).monitor();
+        		Message msg_handled = null;
+        		for (Message m : monitoringPort.getSends()) {
+        			if (m.getName().equals("message_handled")) {
+        				msg_handled = m;
+        				break;
+        			}
+        		}
+        		new EventMonitoring(t, id, monitoringPort, msg_lost, msg_handled, stringTypeRef).monitor();
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {

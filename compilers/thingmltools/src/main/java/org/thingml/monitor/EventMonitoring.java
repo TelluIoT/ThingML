@@ -39,9 +39,11 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
+import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.VariableAssignment;
 
@@ -53,13 +55,15 @@ public class EventMonitoring implements MonitoringAspect {
 	final Property id;
 	final Port monitoringPort;
 	final Message lost_msg;
+	final Message handled_msg;
 	final TypeRef stringTypeRef;
 
-	public EventMonitoring(Thing thing, Property id, Port monitoringPort, Message lost_msg, TypeRef stringTypeRef) {
+	public EventMonitoring(Thing thing, Property id, Port monitoringPort, Message lost_msg, Message handled_msg, TypeRef stringTypeRef) {
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
 		this.lost_msg = lost_msg;
+		this.handled_msg = handled_msg;
 		this.stringTypeRef = stringTypeRef;
 		
 		empty = ThingMLFactory.eINSTANCE.createStringLiteral();
@@ -68,8 +72,80 @@ public class EventMonitoring implements MonitoringAspect {
 	
 	@Override
 	public void monitor() {
+		logHandledMessages(thing.getBehaviour());
 		catchLostMessages(thing.getBehaviour());
-		//TODO: 
+	}
+	
+	private void logHandledMessages(CompositeState root) {
+		final Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlers(root);
+		for(Map<Message, List<Handler>> e : handlers.values()) {
+			for(List<Handler> l : e.values()) {
+				for(Handler h : l) {
+					final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
+					final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
+					
+					send.setPort(monitoringPort);
+					send.setMessage(handled_msg);
+										
+					final PropertyReference id_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+					id_ref.setProperty(id);
+					send.getParameters().add(id_ref);
+					final StringLiteral source_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
+					source_exp.setStringValue(((State)h.eContainer()).getName());        	
+					send.getParameters().add(source_exp);
+					final StringLiteral target_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
+					if (h instanceof InternalTransition) {
+						target_exp.setStringValue("_");
+					} else {
+						target_exp.setStringValue(((Transition)h).getTarget().getName());
+					}										        	
+					send.getParameters().add(target_exp);
+					final StringLiteral port_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
+					final StringLiteral msg_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
+					Expression params_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
+					if (h.getEvent() == null) {
+						port_exp.setStringValue("_");
+						msg_exp.setStringValue("_");
+						((StringLiteral)params_exp).setStringValue("_");
+					} else {
+						final ReceiveMessage rm = (ReceiveMessage)h.getEvent();
+						port_exp.setStringValue(rm.getPort().getName());
+						msg_exp.setStringValue(rm.getMessage().getName());
+																														
+						final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+						lv.setName("params");
+						lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
+						lv.setInit(EcoreUtil.copy(empty));										
+			    		block.getActions().add(lv);						
+						for(Parameter param : rm.getMessage().getParameters()) {
+							final VariableAssignment assig = ThingMLFactory.eINSTANCE.createVariableAssignment();
+							final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
+							final PropertyReference l_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+							l_ref.setProperty(lv);
+							final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
+							r_ref.setParameter(param);
+							r_ref.setReceiveMsg(rm);
+							concat.setLhs(l_ref);
+							concat.setRhs(r_ref);
+							assig.setProperty(lv);
+							assig.setExpression(concat);
+							block.getActions().add(assig);
+						}						
+			    		params_exp = ThingMLFactory.eINSTANCE.createPropertyReference();
+			    		((PropertyReference)params_exp).setProperty(lv);						
+					}
+					send.getParameters().add(port_exp);
+					send.getParameters().add(msg_exp);
+					send.getParameters().add(params_exp);											
+					
+					block.getActions().add(send);
+					if (h.getAction() != null) {
+						block.getActions().add(h.getAction());
+					}
+					h.setAction(block);
+				}
+			}
+		}
 	}
 	
 	/**
