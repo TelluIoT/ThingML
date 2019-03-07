@@ -308,24 +308,24 @@ public class EventMonitoring implements MonitoringAspect {
 						final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
 						lv.setName("params");
 						lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
-						lv.setInit(EcoreUtil.copy(empty));											
-						block.getActions().add(lv);
-					
-						for(Parameter param : m.getParameters()) {
-							final VariableAssignment assig = ThingMLFactory.eINSTANCE.createVariableAssignment();
+						lv.setReadonly(true);
+						Expression init = EcoreUtil.copy(empty);							
+						for(Parameter param : rm.getMessage().getParameters()) {
 							final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
-							final PropertyReference l_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-							l_ref.setProperty(lv);
+							final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
+							final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
 							final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
 							r_ref.setParameter(param);
 							r_ref.setReceiveMsg(rm);
-							concat.setLhs(l_ref);
-							concat.setRhs(r_ref);
-							assig.setProperty(lv);
-							assig.setExpression(concat);
-							block.getActions().add(assig);
+							plus_comma.setLhs(r_ref);
+							plus_comma.setRhs(EcoreUtil.copy(comma));					
+							group.setTerm(plus_comma);
+							concat.setLhs(init);
+							concat.setRhs(group);
+							init = concat;
 						}
-					
+						lv.setInit(init);
+						block.getActions().add(lv);
 						final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 						lv_ref.setProperty(lv);
 						send.getParameters().add(lv_ref);  
