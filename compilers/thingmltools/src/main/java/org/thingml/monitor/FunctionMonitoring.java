@@ -23,6 +23,7 @@ import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.LocalVariable;
@@ -38,11 +39,11 @@ import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TypeRef;
-import org.thingml.xtext.thingML.VariableAssignment;
 
 public class FunctionMonitoring implements MonitoringAspect {
 	
 	final StringLiteral empty;
+	final StringLiteral comma;
 	final StringLiteral void_;	
 	
 	final Thing thing;
@@ -60,6 +61,9 @@ public class FunctionMonitoring implements MonitoringAspect {
 		
 		empty = ThingMLFactory.eINSTANCE.createStringLiteral();
 		empty.setStringValue("");
+		
+		comma = ThingMLFactory.eINSTANCE.createStringLiteral();
+		comma.setStringValue(",");
 	
 		void_ = ThingMLFactory.eINSTANCE.createStringLiteral();
 		void_.setStringValue("void_");
@@ -165,6 +169,35 @@ public class FunctionMonitoring implements MonitoringAspect {
 			final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
 			lv.setName("params");
 			lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
+			lv.setReadonly(true);
+			Expression init = EcoreUtil.copy(empty);
+			final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
+    		block.getActions().add(lv);
+			for(Parameter param : f.getParameters()) {
+				final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
+				final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
+				final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
+				final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+				r_ref.setProperty(param);
+				plus_comma.setLhs(r_ref);
+				plus_comma.setRhs(EcoreUtil.copy(comma));
+				group.setTerm(plus_comma);
+				concat.setLhs(init);
+				concat.setRhs(group);
+				init = concat;
+			}
+			lv.setInit(init);
+			block.getActions().add(lv);
+		
+			final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+			lv_ref.setProperty(lv);
+			send.getParameters().add(lv_ref);  
+			lv.setInit(init);
+			
+			/*		
+			final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+			lv.setName("params");
+			lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
 			lv.setInit(EcoreUtil.copy(empty));
 			
 			final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
@@ -186,7 +219,7 @@ public class FunctionMonitoring implements MonitoringAspect {
 			
     		final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
     		lv_ref.setProperty(lv);
-    		send.getParameters().add(lv_ref);    		    	
+    		send.getParameters().add(lv_ref);*/    		    	
     		block.getActions().add(send);
     		return block;
 		}

@@ -16,17 +16,22 @@
  */
 package org.thingml.monitor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ToString;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.LocalVariable;
@@ -50,30 +55,126 @@ import org.thingml.xtext.thingML.VariableAssignment;
 public class EventMonitoring implements MonitoringAspect {
 
 	final StringLiteral empty;
+	final StringLiteral comma;
 	
 	final Thing thing;
 	final Property id;
 	final Port monitoringPort;
+	final Message sent_msg;
 	final Message lost_msg;
 	final Message handled_msg;
 	final TypeRef stringTypeRef;
+	
+	private static int counter = 0;
 
-	public EventMonitoring(Thing thing, Property id, Port monitoringPort, Message lost_msg, Message handled_msg, TypeRef stringTypeRef) {
+	public EventMonitoring(Thing thing, Property id, Port monitoringPort, Message lost_msg, Message handled_msg, Message sent_msg, TypeRef stringTypeRef) {
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
 		this.lost_msg = lost_msg;
 		this.handled_msg = handled_msg;
+		this.sent_msg = sent_msg;
 		this.stringTypeRef = stringTypeRef;
 		
 		empty = ThingMLFactory.eINSTANCE.createStringLiteral();
 		empty.setStringValue("");
+		
+		comma = ThingMLFactory.eINSTANCE.createStringLiteral();
+		comma.setStringValue(",");
 	}
 	
 	@Override
 	public void monitor() {
+		logSentMessages(thing);
 		logHandledMessages(thing.getBehaviour());
 		catchLostMessages(thing.getBehaviour());
+	}
+	
+	private void logSentMessages(Thing root) {
+		for(SendAction s : ActionHelper.getAllActions(root, SendAction.class)) {
+			
+			final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
+	    	if (s.eContainingFeature().getUpperBound() == -1) {//Collection
+	            final EList list = (EList) s.eContainer().eGet(s.eContainingFeature());
+	            final int index = list.indexOf(s);
+	            list.add(index, block);
+	            list.remove(s);
+	        } else {
+	        	s.eContainer().eSet(s.eContainingFeature(), block);
+	        }
+
+			//create a readonly local variable for each parameter of s (to avoid side-effects e.g. if a param is a function call)
+			List<LocalVariable> lvs = new ArrayList<>();
+			for(Expression p : s.getParameters()) {
+				final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+				lv.setReadonly(true);
+				lv.setTypeRef(EcoreUtil.copy(s.getMessage().getParameters().get(s.getParameters().indexOf(p)).getTypeRef()));
+				lv.setName(s.getMessage().getParameters().get(s.getParameters().indexOf(p)).getName() + "_" + counter);
+				counter++;
+				lv.setInit(EcoreUtil.copy(p));
+				lvs.add(lv);
+				block.getActions().add(lv);
+			}						
+			
+			//update s to use those local variables instead
+			final SendAction updatedSend = ThingMLFactory.eINSTANCE.createSendAction();
+			updatedSend.setPort(s.getPort());
+			updatedSend.setMessage(s.getMessage());
+			for(LocalVariable lv : lvs) {
+				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+				pr.setProperty(lv);
+				updatedSend.getParameters().add(pr);
+			}
+			block.getActions().add(updatedSend);
+			
+			//send log message, also using those local variables
+			final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
+			send.setPort(monitoringPort);
+			send.setMessage(sent_msg);
+								
+			final PropertyReference id_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+			id_ref.setProperty(id);
+			send.getParameters().add(id_ref);
+			final StringLiteral port_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
+			port_exp.setStringValue(s.getPort().getName());        	
+			send.getParameters().add(port_exp);
+			final StringLiteral m_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
+			m_exp.setStringValue(s.getMessage().getName());        	
+			send.getParameters().add(m_exp);
+			
+			if (s.getMessage().getParameters().size() > 0) {
+				final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+				lv.setName("params_" + counter);
+				counter++;
+				lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
+				lv.setReadonly(true);
+				Expression init = EcoreUtil.copy(empty);							
+				for(LocalVariable param : lvs) {
+					final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
+					final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
+					final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
+					final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+					r_ref.setProperty(param);
+					plus_comma.setLhs(r_ref);
+					plus_comma.setRhs(EcoreUtil.copy(comma));
+					group.setTerm(plus_comma);
+					concat.setLhs(init);
+					concat.setRhs(group);
+					init = concat;
+				}
+				lv.setInit(init);
+				block.getActions().add(lv);
+			
+				final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+				lv_ref.setProperty(lv);
+				send.getParameters().add(lv_ref);  
+			} else {
+				send.getParameters().add(EcoreUtil.copy(empty));
+			}
+    		
+    		
+    		block.getActions().add(send);			
+		}
 	}
 	
 	private void logHandledMessages(CompositeState root) {
@@ -111,28 +212,33 @@ public class EventMonitoring implements MonitoringAspect {
 						final ReceiveMessage rm = (ReceiveMessage)h.getEvent();
 						port_exp.setStringValue(rm.getPort().getName());
 						msg_exp.setStringValue(rm.getMessage().getName());
-																														
-						final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
-						lv.setName("params");
-						lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
-						lv.setInit(EcoreUtil.copy(empty));										
-			    		block.getActions().add(lv);						
-						for(Parameter param : rm.getMessage().getParameters()) {
-							final VariableAssignment assig = ThingMLFactory.eINSTANCE.createVariableAssignment();
-							final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
-							final PropertyReference l_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-							l_ref.setProperty(lv);
-							final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
-							r_ref.setParameter(param);
-							r_ref.setReceiveMsg(rm);
-							concat.setLhs(l_ref);
-							concat.setRhs(r_ref);
-							assig.setProperty(lv);
-							assig.setExpression(concat);
-							block.getActions().add(assig);
-						}						
-			    		params_exp = ThingMLFactory.eINSTANCE.createPropertyReference();
-			    		((PropertyReference)params_exp).setProperty(lv);						
+						if (rm.getMessage().getParameters().isEmpty()) {
+							((StringLiteral)params_exp).setStringValue("_");	
+						} else {		
+							final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+							lv.setName("params");
+							lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
+							lv.setReadonly(true);
+							Expression init = EcoreUtil.copy(empty);							
+							for(Parameter param : rm.getMessage().getParameters()) {
+								final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
+								final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
+								final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
+								final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
+								r_ref.setParameter(param);
+								r_ref.setReceiveMsg(rm);
+								plus_comma.setLhs(r_ref);
+								plus_comma.setRhs(EcoreUtil.copy(comma));					
+								group.setTerm(plus_comma);
+								concat.setLhs(init);
+								concat.setRhs(group);
+								init = concat;
+							}
+							lv.setInit(init);
+							block.getActions().add(lv);						
+							params_exp = ThingMLFactory.eINSTANCE.createPropertyReference();
+			    			((PropertyReference)params_exp).setProperty(lv);			    		
+						}
 					}
 					send.getParameters().add(port_exp);
 					send.getParameters().add(msg_exp);
@@ -196,32 +302,38 @@ public class EventMonitoring implements MonitoringAspect {
 					final StringLiteral m_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
 					m_exp.setStringValue(m.getName());        	
 					send.getParameters().add(m_exp);
-																				
-					final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
-					lv.setName("params");
-					lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
-					lv.setInit(EcoreUtil.copy(empty));					
+					
 					final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
-		    		block.getActions().add(lv);
+					if (m.getParameters().size() > 0) {
+						final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+						lv.setName("params");
+						lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
+						lv.setInit(EcoreUtil.copy(empty));											
+						block.getActions().add(lv);
 					
-					for(Parameter param : m.getParameters()) {
-						final VariableAssignment assig = ThingMLFactory.eINSTANCE.createVariableAssignment();
-						final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
-						final PropertyReference l_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-						l_ref.setProperty(lv);
-						final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
-						r_ref.setParameter(param);
-						r_ref.setReceiveMsg(rm);
-						concat.setLhs(l_ref);
-						concat.setRhs(r_ref);
-						assig.setProperty(lv);
-						assig.setExpression(concat);
-						block.getActions().add(assig);
+						for(Parameter param : m.getParameters()) {
+							final VariableAssignment assig = ThingMLFactory.eINSTANCE.createVariableAssignment();
+							final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
+							final PropertyReference l_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+							l_ref.setProperty(lv);
+							final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
+							r_ref.setParameter(param);
+							r_ref.setReceiveMsg(rm);
+							concat.setLhs(l_ref);
+							concat.setRhs(r_ref);
+							assig.setProperty(lv);
+							assig.setExpression(concat);
+							block.getActions().add(assig);
+						}
+					
+						final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+						lv_ref.setProperty(lv);
+						send.getParameters().add(lv_ref);  
+					} else {
+						send.getParameters().add(EcoreUtil.copy(empty));
 					}
-					
-		    		final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-		    		lv_ref.setProperty(lv);
-		    		send.getParameters().add(lv_ref);    		    	
+		    		
+		    		
 		    		block.getActions().add(send);					
 					it.setAction(block);										
 					root.getInternal().add(it);
