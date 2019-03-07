@@ -24,7 +24,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.StateHelper;
-import org.thingml.xtext.helpers.ToString;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.BooleanLiteral;
@@ -50,7 +49,6 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.TypeRef;
-import org.thingml.xtext.thingML.VariableAssignment;
 
 public class EventMonitoring implements MonitoringAspect {
 
@@ -151,15 +149,22 @@ public class EventMonitoring implements MonitoringAspect {
 				Expression init = EcoreUtil.copy(empty);							
 				for(LocalVariable param : lvs) {
 					final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
+					final ExpressionGroup group_name = ThingMLFactory.eINSTANCE.createExpressionGroup();
 					final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
-					final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
+					final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();
+					final PlusExpression plus_name = ThingMLFactory.eINSTANCE.createPlusExpression();
+					final StringLiteral name = ThingMLFactory.eINSTANCE.createStringLiteral();
+					name.setStringValue(s.getMessage().getParameters().get(lvs.indexOf(param)).getName() + "=");
 					final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 					r_ref.setProperty(param);
 					plus_comma.setLhs(r_ref);
 					plus_comma.setRhs(EcoreUtil.copy(comma));
 					group.setTerm(plus_comma);
+					plus_name.setLhs(name);
+					plus_name.setRhs(group);
+					group_name.setTerm(plus_name);
 					concat.setLhs(init);
-					concat.setRhs(group);
+					concat.setRhs(group_name);
 					init = concat;
 				}
 				lv.setInit(init);
@@ -221,17 +226,24 @@ public class EventMonitoring implements MonitoringAspect {
 							lv.setReadonly(true);
 							Expression init = EcoreUtil.copy(empty);							
 							for(Parameter param : rm.getMessage().getParameters()) {
-								final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
+								final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
+								final ExpressionGroup group_name = ThingMLFactory.eINSTANCE.createExpressionGroup();
 								final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
-								final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
+								final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();
+								final PlusExpression plus_name = ThingMLFactory.eINSTANCE.createPlusExpression();
+								final StringLiteral name = ThingMLFactory.eINSTANCE.createStringLiteral();
+								name.setStringValue(param.getName() + "=");
 								final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
 								r_ref.setParameter(param);
 								r_ref.setReceiveMsg(rm);
 								plus_comma.setLhs(r_ref);
-								plus_comma.setRhs(EcoreUtil.copy(comma));					
+								plus_comma.setRhs(EcoreUtil.copy(comma));
 								group.setTerm(plus_comma);
+								plus_name.setLhs(name);
+								plus_name.setRhs(group);
+								group_name.setTerm(plus_name);
 								concat.setLhs(init);
-								concat.setRhs(group);
+								concat.setRhs(group_name);
 								init = concat;
 							}
 							lv.setInit(init);
@@ -311,17 +323,24 @@ public class EventMonitoring implements MonitoringAspect {
 						lv.setReadonly(true);
 						Expression init = EcoreUtil.copy(empty);							
 						for(Parameter param : rm.getMessage().getParameters()) {
-							final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
+							final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
+							final ExpressionGroup group_name = ThingMLFactory.eINSTANCE.createExpressionGroup();
 							final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
-							final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
+							final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();
+							final PlusExpression plus_name = ThingMLFactory.eINSTANCE.createPlusExpression();
+							final StringLiteral name = ThingMLFactory.eINSTANCE.createStringLiteral();
+							name.setStringValue(param.getName() + "=");
 							final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
 							r_ref.setParameter(param);
 							r_ref.setReceiveMsg(rm);
 							plus_comma.setLhs(r_ref);
-							plus_comma.setRhs(EcoreUtil.copy(comma));					
+							plus_comma.setRhs(EcoreUtil.copy(comma));
 							group.setTerm(plus_comma);
+							plus_name.setLhs(name);
+							plus_name.setRhs(group);
+							group_name.setTerm(plus_name);
 							concat.setLhs(init);
-							concat.setRhs(group);
+							concat.setRhs(group_name);
 							init = concat;
 						}
 						lv.setInit(init);

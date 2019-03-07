@@ -175,15 +175,22 @@ public class FunctionMonitoring implements MonitoringAspect {
     		block.getActions().add(lv);
 			for(Parameter param : f.getParameters()) {
 				final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
+				final ExpressionGroup group_name = ThingMLFactory.eINSTANCE.createExpressionGroup();
 				final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
-				final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();					
+				final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();
+				final PlusExpression plus_name = ThingMLFactory.eINSTANCE.createPlusExpression();
+				final StringLiteral name = ThingMLFactory.eINSTANCE.createStringLiteral();
+				name.setStringValue(param.getName() + "=");
 				final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 				r_ref.setProperty(param);
 				plus_comma.setLhs(r_ref);
 				plus_comma.setRhs(EcoreUtil.copy(comma));
 				group.setTerm(plus_comma);
+				plus_name.setLhs(name);
+				plus_name.setRhs(group);
+				group_name.setTerm(plus_name);
 				concat.setLhs(init);
-				concat.setRhs(group);
+				concat.setRhs(group_name);
 				init = concat;
 			}
 			lv.setInit(init);
@@ -191,35 +198,7 @@ public class FunctionMonitoring implements MonitoringAspect {
 		
 			final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 			lv_ref.setProperty(lv);
-			send.getParameters().add(lv_ref);  
-			lv.setInit(init);
-			
-			/*		
-			final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
-			lv.setName("params");
-			lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
-			lv.setInit(EcoreUtil.copy(empty));
-			
-			final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
-    		block.getActions().add(lv);
-			
-			for(Parameter p : f.getParameters()) {
-				final VariableAssignment assig = ThingMLFactory.eINSTANCE.createVariableAssignment();
-				final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();
-				final PropertyReference l_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-				l_ref.setProperty(lv);
-				final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-				r_ref.setProperty(p);
-				concat.setLhs(l_ref);
-				concat.setRhs(r_ref);
-				assig.setProperty(lv);
-				assig.setExpression(concat);
-				block.getActions().add(assig);
-			}
-			
-    		final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-    		lv_ref.setProperty(lv);
-    		send.getParameters().add(lv_ref);*/    		    	
+			send.getParameters().add(lv_ref);      		    	
     		block.getActions().add(send);
     		return block;
 		}
