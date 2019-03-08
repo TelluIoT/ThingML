@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.thingML.ActionBlock;
@@ -283,12 +284,16 @@ public class EventMonitoring implements MonitoringAspect {
 							guard = null;
 							break;
 						} else {//if there is a guarded event for p,m, it is lost iff guard is false (note: there might be several handlers for the same p,m, hence the guard = guard && !h.guard)
+							final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
 							final AndExpression and = ThingMLFactory.eINSTANCE.createAndExpression();
 							and.setLhs(guard);
 							final NotExpression not = ThingMLFactory.eINSTANCE.createNotExpression();
-							not.setTerm(EcoreUtil.copy(h.getGuard()));
+							final ExpressionGroup not_group = ThingMLFactory.eINSTANCE.createExpressionGroup();
+							not_group.setTerm(EcoreUtil.copy(h.getGuard()));
+							not.setTerm(not_group);
 							and.setRhs(not);
-							guard = and;
+							group.setTerm(and);
+							guard = group;
 						}
 					}
 				}
@@ -301,6 +306,21 @@ public class EventMonitoring implements MonitoringAspect {
 					rm.setMessage(m);
 					it.setEvent(rm);
 					it.setGuard(guard);
+					
+					//Update the event references in the guard
+					for(EventReference ref : ThingMLHelpers.getAllExpressions(guard, EventReference.class)) {
+						final Parameter currentParam = ref.getParameter();
+						Parameter newParam = null;
+						for(Parameter param : m.getParameters()) {
+							if (param.getName().equals(currentParam.getName())) {
+								newParam = param;
+								break;
+							}
+						}
+						ref.setReceiveMsg(rm);
+						ref.setParameter(newParam);
+					}
+					
 					final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 					send.setPort(monitoringPort);
 					send.setMessage(lost_msg);
