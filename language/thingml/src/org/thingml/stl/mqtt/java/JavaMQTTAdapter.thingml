@@ -306,11 +306,13 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		
 		internal event m : mqtt?mqtt_connect action do
 			client_id = m.client_id
-			`String uri;`
-			if (m.tls) `uri = "ssl://";`
-			else `uri = "tcp://";`
-			`uri += `&m.host&` + ":" + `&m.portno&`;` 
-			broker_uri = `uri`
+			if (broker_uri == `null`) do
+				`String uri;`
+				if (m.tls) `uri = "ssl://";`
+				else `uri = "tcp://";`
+				`uri += `&m.host&` + ":" + `&m.portno&`;` 
+				broker_uri = `uri`
+			end
 			enable_tls = m.tls
 			mqtt_connect()
 		end
