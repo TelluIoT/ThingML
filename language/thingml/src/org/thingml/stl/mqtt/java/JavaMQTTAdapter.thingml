@@ -128,6 +128,8 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 	readonly property load_certificate_from_ressource : Boolean = false
 	
 	property debug_log : Boolean = false
+	
+	readonly property max_inflight : UInt16 = 10
 
 	
 	function setTopicPrefix(src : String) do
@@ -139,6 +141,7 @@ thing JavaMQTTAdapter includes AbstractMQTTAdapter
 		    `MemoryPersistence persistence = new MemoryPersistence();`
 
 		    `MqttConnectOptions connOpts = new MqttConnectOptions();`
+		    `connOpts.setMaxInflight(` & max_inflight & `);`
 	        `connOpts.setCleanSession(true);`
 	        `connOpts.setAutomaticReconnect(true);`
 	        `connOpts.setConnectionTimeout(30);`
