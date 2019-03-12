@@ -17,6 +17,7 @@
 package compilers.go;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
@@ -68,42 +69,25 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 	}
 
 	private void generateEnumerations(ThingMLModel model, GoSourceBuilder builder, GoContext gctx) {
-		for (Enumeration enumeration : ThingMLHelpers.allEnumerations(model)) {
-			Section enumS = builder.appendSection("enumeration").lines();
-			Section enumT = enumS.appendSection("type");
-			enumT.append("type ")
-				 .append(gctx.getNameFor(enumeration))
-				 .append(" ");
-			if (enumeration.getTypeRef() != null)
-				enumT.append(gctx.getNameFor(enumeration.getTypeRef()));
-			else
-				enumT.append("int");
-
-			Section constS = enumS.appendSection("consts").lines();
-			constS.appendSection("before")
-				  .append("const (");
-			Section constBody = constS.appendSection("body").lines().indent();
+		final List<Enumeration> enums = ThingMLHelpers.allEnumerations(model);
+		if (enums.isEmpty()) return;
+		builder.append("const(\n");
+		for (Enumeration enumeration : enums) {
 			for (EnumerationLiteral literal : enumeration.getLiterals()) {
-				Section litSec = constBody.appendSection("literal");
-				litSec.append(gctx.getNameFor(literal))
-				 	  .append(" ")
-				 	  .append(gctx.getNameFor(enumeration))
-				 	  .append(" = ");
-				Section value = litSec.section("value");
+				builder.append(enumeration.getName() + "_" + literal.getName() + " = ");
 				if (literal.getInit() != null) {
-					gctx.getCompiler().getNewThingActionCompiler().generate(literal.getInit(), value, gctx);
+					gctx.getCompiler().getNewThingActionCompiler().generate(literal.getInit(), builder, gctx);
 				} else {
-					value.append("iota");
+					if (AnnotatedElementHelper.hasAnnotation(literal, "enum_val")) {
+						builder.append(AnnotatedElementHelper.firstAnnotation(literal, "enum_val"));
+					} else {
+						builder.append("iota");
+					}
 				}
-
-				// FIXME: Remove this. Currently kept for backwards compatibility
-				if (AnnotatedElementHelper.hasAnnotation(literal, "enum_val"))
-					value.set(AnnotatedElementHelper.firstAnnotation(literal, "enum_val"));
-
+				builder.append("\n");
 			}
-			constS.appendSection("after")
-				  .append(")");
 		}
+		builder.append(")\n\n");
 	}
 
 	@Override

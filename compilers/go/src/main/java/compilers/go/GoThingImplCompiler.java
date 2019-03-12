@@ -509,11 +509,13 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 	
 	private void generateInternalPorts(Thing thing, GoSection body, GoContext gctx) {
 		for (Port port : ThingMLHelpers.allPorts(thing))
-			if (port instanceof InternalPort)
+			if (port instanceof InternalPort) {
+				final String port_name = thing.getName() + "_" + ThingMLHelpers.findContainingThing(port).getName() + "_" + port.getName();
 				body.appendSection("internalportconnector")
 					.append("gosm.InternalPort(instance.Component, ")
-					.append(gctx.getNameFor(port))
+					.append(port_name)
 					.append(")");
+			}
 	}
 	
 	

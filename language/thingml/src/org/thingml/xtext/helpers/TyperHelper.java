@@ -83,6 +83,8 @@ public class TyperHelper {
     	t = getBroadType(t);
         if (self == t) // T is a T
             return true;
+        if (t == Types.STRING_TYPE) //Anything is (can be casted to) a String //That is a workaround so that we can use + to concatenate vars in a String (since we do not have a str concat in ThingML, but + is widely used)
+    		return true;
     	if (t == Types.OBJECT_TYPE) //Only String, Object and Any are Object
     		return self == Types.ANY_TYPE || self == Types.OBJECT_TYPE || self == Types.STRING_TYPE; 
         if (self == Types.ANY_TYPE)//Any is anything

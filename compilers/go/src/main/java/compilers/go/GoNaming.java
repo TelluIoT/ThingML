@@ -50,6 +50,7 @@ import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.util.ThingMLSwitch;
 
 //FIXME: a heavy machinery just to get a convoluted (and somehow useless) test to pass...
+@Deprecated
 public class GoNaming {
 	private static int MAX_RESOLVE_TRIES = 100;
 	

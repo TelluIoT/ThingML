@@ -23,6 +23,8 @@ import org.thingml.compilers.builder.Element;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.thing.common.NewCommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.CastExpression;
@@ -30,6 +32,7 @@ import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
@@ -53,9 +56,11 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
+import org.thingml.xtext.validation.TypeChecker;
 
 public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	
@@ -282,8 +287,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	
 	@Override
 	public void generate(EnumLiteralRef expression, Section section, Context ctx) {
-		GoContext gctx = (GoContext)ctx;
-		section.append(gctx.getNameFor(expression.getLiteral()));
+		section.append(expression.getEnum().getName() + "_" + expression.getLiteral().getName());
 	}
 	
 	@Override
@@ -423,7 +427,28 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		Section cst = section.section("cast");
 		if (expression.isIsArray())
 			cst.append("[]");
-		cst.append(gctx.getNameFor(expression.getType()));
-		generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
+		final Type cast = TyperHelper.getBroadType(expression.getType());
+		if (cast == Types.STRING_TYPE) {
+			final Type t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getTerm()));
+			if (t == Types.INTEGER_TYPE || t == Types.BYTE_TYPE) {
+				cst.append("fmt.Sprintf(\"%d\", int64(");				
+				generate(expression.getTerm(), cst.section("expression"), ctx);
+				cst.append("))");
+			} else if (t == Types.BOOLEAN_TYPE) {
+				cst.append("fmt.Sprintf(\"%t\", ");				
+				generate(expression.getTerm(), cst.section("expression"), ctx);
+				cst.append(")");
+			} else if (t == Types.REAL_TYPE) {
+				cst.append("fmt.Sprintf(\"%f\", float64(");				
+				generate(expression.getTerm(), cst.section("expression"), ctx);
+				cst.append("))");
+			} else {//hope for the best
+				cst.append(gctx.getNameFor(expression.getType()));
+				generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
+			}			
+		} else {		
+			cst.append(gctx.getNameFor(expression.getType()));
+			generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
+		}
 	}
 }

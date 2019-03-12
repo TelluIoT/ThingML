@@ -23,6 +23,7 @@ import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.Function;
@@ -113,9 +114,12 @@ public class FunctionMonitoring implements MonitoringAspect {
         			var_return.setTypeRef(EcoreUtil.copy(f.getTypeRef()));
         			var_return.setInit(EcoreUtil.copy(ra.getExp()));
         			
-        			PropertyReference ref_var = ThingMLFactory.eINSTANCE.createPropertyReference();
+        			final PropertyReference ref_var = ThingMLFactory.eINSTANCE.createPropertyReference();
                 	ref_var.setProperty(var_return);
-                	ra.setExp(ref_var);   
+                	ra.setExp(ref_var);
+                	final CastExpression asString = ThingMLFactory.eINSTANCE.createCastExpression();
+                	asString.setTerm(EcoreUtil.copy(ref_var));
+                	asString.setType(stringTypeRef.getType());
         			
         			final LocalVariable var = ThingMLFactory.eINSTANCE.createLocalVariable();
         			var.setName("return_as_string" + ra.eContainer().eContents().indexOf(ra));
@@ -124,7 +128,7 @@ public class FunctionMonitoring implements MonitoringAspect {
         			final PlusExpression string_return = ThingMLFactory.eINSTANCE.createPlusExpression();
         			string_return.setLhs(EcoreUtil.copy(empty));
         			final ExpressionGroup g = ThingMLFactory.eINSTANCE.createExpressionGroup();
-        			g.setTerm(EcoreUtil.copy(ref_var));
+        			g.setTerm(EcoreUtil.copy(asString));
         			string_return.setRhs(g);
         			var.setInit(string_return);
         			block.getActions().add(block.getActions().indexOf(ra), var_return);
@@ -181,9 +185,12 @@ public class FunctionMonitoring implements MonitoringAspect {
 				final PlusExpression plus_name = ThingMLFactory.eINSTANCE.createPlusExpression();
 				final StringLiteral name = ThingMLFactory.eINSTANCE.createStringLiteral();
 				name.setStringValue(param.getName() + "=");
+				final CastExpression asString = ThingMLFactory.eINSTANCE.createCastExpression();
 				final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 				r_ref.setProperty(param);
-				plus_comma.setLhs(r_ref);
+				asString.setTerm(r_ref);
+				asString.setType(stringTypeRef.getType());
+				plus_comma.setLhs(asString);
 				plus_comma.setRhs(EcoreUtil.copy(comma));
 				group.setTerm(plus_comma);
 				plus_name.setLhs(name);

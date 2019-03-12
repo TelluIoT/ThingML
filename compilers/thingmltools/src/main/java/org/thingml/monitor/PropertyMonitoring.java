@@ -23,6 +23,7 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.LocalVariable;
@@ -103,9 +104,12 @@ public class PropertyMonitoring implements MonitoringAspect {
 		lv.setReadonly(true);
 		final PropertyReference ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 		ref.setProperty(p);
+		final CastExpression asString = ThingMLFactory.eINSTANCE.createCastExpression();
+		asString.setTerm(ref);
+		asString.setType(stringTypeRef.getType());
 		final PlusExpression plus = ThingMLFactory.eINSTANCE.createPlusExpression();
 		plus.setLhs(EcoreUtil.copy(empty));
-		plus.setRhs(ref);
+		plus.setRhs(asString);
 		lv.setInit(plus);
 		block.getActions().add(lv);
 		
@@ -118,9 +122,12 @@ public class PropertyMonitoring implements MonitoringAspect {
 		lv2.setReadonly(true);
 		final PropertyReference ref2 = ThingMLFactory.eINSTANCE.createPropertyReference();
 		ref2.setProperty(p);
+		final CastExpression asString2 = ThingMLFactory.eINSTANCE.createCastExpression();
+		asString2.setTerm(ref2);
+		asString2.setType(stringTypeRef.getType());
 		final PlusExpression plus2 = ThingMLFactory.eINSTANCE.createPlusExpression();
 		plus2.setLhs(EcoreUtil.copy(empty));
-		plus2.setRhs(ref2);
+		plus2.setRhs(asString2);
 		lv2.setInit(plus2);
 		block.getActions().add(lv2);
 		
