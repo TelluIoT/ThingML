@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -46,6 +47,7 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
@@ -88,6 +90,20 @@ public class EventMonitoring implements MonitoringAspect {
 		logSentMessages(thing);
 		logHandledMessages(thing.getBehaviour());
 		catchLostMessages(thing.getBehaviour());
+	}
+	
+	private String qName(State s) {
+		String qName = s.getName();
+		EObject parent = s.eContainer();
+		while (parent != null && (parent instanceof State || parent instanceof StateContainer))	{
+			if (parent instanceof State) {
+				qName = ((State)parent).getName() + "." + qName;
+			} else {//StateContainer (Region or Session, CompositeState behind handled as State above)
+				qName = ((StateContainer)parent).getName() + ":" + qName;
+			}
+			parent = parent.eContainer();
+		}
+		return qName;
 	}
 	
 	private void logSentMessages(Thing root) {
@@ -202,13 +218,13 @@ public class EventMonitoring implements MonitoringAspect {
 					id_ref.setProperty(id);
 					send.getParameters().add(id_ref);
 					final StringLiteral source_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-					source_exp.setStringValue(((State)h.eContainer()).getName());        	
+					source_exp.setStringValue(qName(((State)h.eContainer())));        	
 					send.getParameters().add(source_exp);
 					final StringLiteral target_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
 					if (h instanceof InternalTransition) {
 						target_exp.setStringValue("_");
 					} else {
-						target_exp.setStringValue(((Transition)h).getTarget().getName());
+						target_exp.setStringValue(qName(((Transition)h).getTarget()));
 					}										        	
 					send.getParameters().add(target_exp);
 					final StringLiteral port_exp = ThingMLFactory.eINSTANCE.createStringLiteral();

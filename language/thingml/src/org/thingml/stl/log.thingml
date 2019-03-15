@@ -35,7 +35,7 @@ thing fragment WithLog includes LogMsgs {
 	
 	readonly property DEBUG_ID : String
 	
-	required port log {
+	required port log @sync_send "true" {
 		sends function_called, property_changed, message_lost, message_handled, message_sent
 	}
 	
