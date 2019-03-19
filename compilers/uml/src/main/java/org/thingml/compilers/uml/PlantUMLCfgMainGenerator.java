@@ -123,9 +123,8 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 					if (m.getParameters().size() > 0)
 						classes.append("...");
 				} else {
-					int i = 0;
 					for (Parameter p : m.getParameters()) {
-						if (i > 0)
+						if (m.getParameters().indexOf(p) > 0)
 							classes.append(", ");
 						classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
 					}
@@ -160,9 +159,8 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 						if (f.getParameters().size() > 0)
 							classes.append("...");
 					} else {
-						int i = 0;
 						for (Parameter p : f.getParameters()) {
-							if (i > 0)
+							if (f.getParameters().indexOf(p) > 0)
 								classes.append(", ");
 							classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
 						}
