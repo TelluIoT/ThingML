@@ -185,7 +185,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append(getName(s) + " --> [*]\n");
 	}
 
-	public void generateRegion(Region r, StringBuilder builder, Context ctx) {
+	public void generateRegion(StateContainer r, StringBuilder builder, Context ctx) {
 		builder.append("--\n");
 		builder.append("[*] --> " + getName(r.getInitial()) + "\n");
 		for (State s : r.getSubstate()) {
@@ -193,8 +193,10 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 		}
 		if (r instanceof Session) {
 			builder.append("Note top of " + getName(r.getInitial()) + " : Session " + getName(r) + "\n");
-		} else {
+		} else if (r instanceof Region) {
 			builder.append("Note top of " + getName(r.getInitial()) + " : Region " + getName(r) + "\n");
+		} else {
+	        throw new UnsupportedOperationException(r.getClass() + ".generateRegion(...) invalid");
 		}
 	}
 

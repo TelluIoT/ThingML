@@ -273,7 +273,7 @@ public class CompileThingFile implements IHandler {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
 			ThingMLConsole.getInstance().printError("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:\n");
-			ThingMLConsole.getInstance().printError("FATAL ERROR: Exeption calling ThingML Compiler: " + e.toString() + "\n");			
+			ThingMLConsole.getInstance().printError("FATAL ERROR: Exception calling ThingML Compiler: " + e.toString() + "\n");			
 			for(StackTraceElement ste : e.getStackTrace()) {//This should now print the stack trace to Eclipse ThingML Console.
 				ThingMLConsole.getInstance().printError("\t" + ste.toString() + "\n");
 			}
