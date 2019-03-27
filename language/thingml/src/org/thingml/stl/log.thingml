@@ -46,6 +46,8 @@ thing fragment WithLog includes LogMsgs {
  */
 thing fragment Logger includes LogMsgs {
 	
+	readonly property ACTIVATE_ON_STARTUP : Boolean
+	
 	provided port log {
 		receives function_called, property_changed, message_lost, message_handled, message_sent, log_on, log_off
 	}
@@ -56,7 +58,17 @@ thing fragment Logger includes LogMsgs {
 	abstract function log_message_sent(inst : String, port_name : String, msg_name : String, params : String)
 	abstract function log_message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)
 		
-	statechart init ON {
+	statechart init STARTUP {
+		
+		state STARTUP {
+			
+			transition -> ON
+			guard ACTIVATE_ON_STARTUP
+			
+			transition -> OFF
+			guard not ACTIVATE_ON_STARTUP
+			
+		}
 		
 		state ON {
 			
@@ -88,7 +100,7 @@ thing fragment Logger includes LogMsgs {
 	
 }
 
-thing ConsoleLogger includes Logger {
+thing ConsoleLogger includes Logger @stdout_sync "true" {
 	
 	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
 		println "log: function_called(", inst, ", ", fn_name, ", ", ty, ", ", returns, ", ", params, ")"

@@ -14,12 +14,6 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.thingml.compilers.commandline;
 
 import java.io.File;
@@ -27,7 +21,6 @@ import java.io.File;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.thingmltools.ThingMLTool;
-//comment
 import org.thingml.thingmltools.ThingMLToolRegistry;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
@@ -60,7 +53,6 @@ public class Main {
     String tooloptions;
     boolean toolUsed;
 
-    //comment
     public static void printUsage(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
     	logo();
         System.out.println(" --- ThingML help ---");
@@ -83,10 +75,7 @@ public class Main {
 
     }
 
-    //comment test-relevant
     public static void printPluginList(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
-    //uncomment
-    //public static void printPluginList(JCommander jcom, ThingMLCompilerRegistry registry) {
         registry.printNetworkPluginList();
 
         System.out.println();
@@ -108,22 +97,10 @@ public class Main {
         main.toolUsed = main.tool != null;
         main.compilerUsed = main.compiler != null;
 
-        // HELP Handling
-        //comment test-relevant
         if (main.help || (!main.compilerUsed && !main.toolUsed && !main.listPlugins)) {
-            // comment test-relevant
             printUsage(jcom, registry, toolregistry);
-         //uncomment
-        //if (main.help || ((main.compiler == null) && (!main.listPlugins))) {
-            //uncomment
-            //printUsage(jcom, registry);
-
             if (main.listPlugins) {
                 System.out.println();
-                //uncomment
-                //printPluginList(jcom, registry);
-
-                //comment test-relevant
                 printPluginList(jcom, registry, toolregistry);
             }
             return;
@@ -152,6 +129,9 @@ public class Main {
 
         if (!input.exists() || !input.isFile() || !input.canRead()) {
             System.out.println("ERROR: Cannot find or read input file " + input.getAbsolutePath() + ".");
+            System.out.println("\texists=" + input.exists());
+            System.out.println("\tisFile=" + input.isFile());
+            System.out.println("\tcanRead=" + input.canRead());
             return;
         }
 
@@ -166,6 +146,9 @@ public class Main {
             }
             if (!o.exists() || !o.isDirectory() || !o.canWrite()) {
                 System.out.println("ERROR: Cannot find or write in output dir " + o.getAbsolutePath() + ".");
+                System.out.println("\texists=" + o.exists());
+                System.out.println("\tisDirectory=" + o.isDirectory());
+                System.out.println("\tcanWrite=" + o.canWrite());
                 return;
             }
             outdir = o;
@@ -187,7 +170,6 @@ public class Main {
         if (main.compiler != null)
             System.out.print(" -c " + main.compiler);
 
-        //comment
         if (main.tool != null)
             System.out.print(" -t " + main.tool);
 
@@ -206,7 +188,6 @@ public class Main {
                 return;
             }
 
-            //comment START test-relevant
             if (main.toolUsed) {
             	logo();
                 ThingMLTool thingmlTool = toolregistry.createToolInstanceByName(main.tool.trim());
@@ -222,7 +203,6 @@ public class Main {
                 thingmlTool.generateThingMLFrom(input_model);
                 logo();
             }
-            //comment END test-relevant
 
             if (main.compilerUsed) {
             	logo();
