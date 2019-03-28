@@ -146,35 +146,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	}
 
 	@Override
-	public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
-		/*
-		 * if ((action.getProperty().eContainer() instanceof Thing) &&
-		 * action.getProperty().getCardinality() == null) {//FIXME: support
-		 * debugging of arrays (needs to copy array) builder.append("debug_" +
-		 * ctx.getVariableName(action.getProperty()) + " = " +
-		 * ctx.getVariableName(action.getProperty()) + ";\n"); }
-		 */
-	}
-
-	@Override
-	public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
-		/*
-		 * if ((action.getProperty().eContainer() instanceof Thing) &&
-		 * action.getProperty().getCardinality() == null) {//FIXME: see above
-		 * //builder.
-		 * append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|magenta \" + getName() + \": property "
-		 * + action.getProperty().getName() + " changed from \" + debug_" +
-		 * ctx.getVariableName(action.getProperty()) + " + \" to \" + " +
-		 * ctx.getVariableName(action.getProperty()) + " + \"|@\"));\n");
-		 * builder.append("if(isDebug()) " +
-		 * "System.out.println(getName() + \": property " +
-		 * action.getProperty().getName() + " changed from \" + debug_" +
-		 * ctx.getVariableName(action.getProperty()) + " + \" to \" + " +
-		 * ctx.getVariableName(action.getProperty()) + ");\n"); }
-		 */
-	}
-
-	@Override
 	public void generate(SendAction action, StringBuilder builder, Context ctx) {
 		builder.append(
 				"send" + ctx.firstToUpper(action.getMessage().getName()) + "_via_" + action.getPort().getName() + "(");
@@ -297,20 +268,23 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-		for (Expression msg : action.getMsg()) {
-			//final Type actual = TypeChecker.computeTypeOf(msg);
-			builder.append("System.err.print(");
-			/*if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
-				builder.append("String.format(\"0x%02X\",(");
-				generate(msg, builder, ctx);
-				builder.append("))");
-			} else {*/
-				generate(msg, builder, ctx);
-			/*}*/
-			builder.append(");\n");
-		}
+		final Thing t = ThingMLHelpers.findContainingThing(action);
+		if (AnnotatedElementHelper.isDefined(t, "stdout_sync", "true")) {
+			builder.append("synchronized(System.err) {\n");
+		}		
 		if (action.isLine())
-			builder.append("System.err.println();\n");
+			builder.append("System.err.println(\"\"");
+		else
+			builder.append("System.err.print(\"\"");
+		for (Expression msg : action.getMsg()) {
+			builder.append("+(");
+			generate(msg, builder, ctx);
+			builder.append(")");
+		}
+		builder.append(");\n");
+		if (AnnotatedElementHelper.isDefined(t, "stdout_sync", "true")) {
+			builder.append("}\n");
+		}
 	}
 
 	@Override
@@ -319,20 +293,16 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		if (AnnotatedElementHelper.isDefined(t, "stdout_sync", "true")) {
 			builder.append("synchronized(System.out) {\n");
 		}		
-		for (Expression msg : action.getMsg()) {
-			//final Type actual = TypeChecker.computeTypeOf(msg);
-			builder.append("System.out.print(");
-			/*if (actual == Types.BYTE_TYPE) {//Print bytes as unsigned byte (they are signed in Java...)
-				builder.append("String.format(\"0x%02X\",(");
-				generate(msg, builder, ctx);
-				builder.append("))");
-			} else {*/
-				generate(msg, builder, ctx);
-			/*}*/
-			builder.append(");\n");
-		}
 		if (action.isLine())
-			builder.append("System.out.println();\n");
+			builder.append("System.out.println(\"\"");
+		else
+			builder.append("System.out.print(\"\"");
+		for (Expression msg : action.getMsg()) {
+			builder.append("+(");
+			generate(msg, builder, ctx);
+			builder.append(")");
+		}
+		builder.append(");\n");
 		if (AnnotatedElementHelper.isDefined(t, "stdout_sync", "true")) {
 			builder.append("}\n");
 		}

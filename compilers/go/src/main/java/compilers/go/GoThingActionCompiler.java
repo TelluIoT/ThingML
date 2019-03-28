@@ -24,6 +24,7 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.thing.common.NewCommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.ArrayInit;
@@ -32,7 +33,6 @@ import org.thingml.xtext.thingML.CharLiteral;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
-import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
@@ -56,6 +56,7 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
@@ -76,18 +77,52 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 			section.append(gctx.getNameFor(variable));
 	}
 	
+	private void stringify(Expression expression, Section section, Context ctx) {
+		final GoContext gctx = (GoContext) ctx;
+		Section cst = section.section("tostring");
+		final Type t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression));
+		if (t == Types.STRING_TYPE) {
+			generate(expression, cst.section("expression").surroundWith("(", ")"), ctx);
+		} else if (t == Types.INTEGER_TYPE || t == Types.BYTE_TYPE) {
+			cst.append("fmt.Sprintf(\"%d\", int64(");				
+			generate(expression, cst.section("expression"), ctx);
+			cst.append("))");
+		} else if (t == Types.BOOLEAN_TYPE) {
+			cst.append("fmt.Sprintf(\"%t\", ");				
+			generate(expression, cst.section("expression"), ctx);
+			cst.append(")");
+		} else if (t == Types.REAL_TYPE) {
+			cst.append("fmt.Sprintf(\"%f\", float64(");				
+			generate(expression, cst.section("expression"), ctx);
+			cst.append("))");
+		} else {//hope for the best
+			cst.append(gctx.getNameFor(t));
+			generate(expression, cst.section("expression").surroundWith("(", ")"), ctx);
+		}
+	}
+	
 	@Override
 	public void generate(PrintAction action, Section section, Context ctx) {
 		GoContext gctx = (GoContext) ctx;
-		gctx.currentThingContext.addImports("fmt");
-		for (Expression msg : action.getMsg()) {
-			Section print = section.section("print");
-			print.append("fmt.Print(");
-			generate(msg, print.section("expression"), ctx);
-			print.append(")");
+		String pack = "fmt";
+		final Thing t = ThingMLHelpers.findContainingThing(action);
+		if (AnnotatedElementHelper.isDefined(t, "stdout_sync", "true")) {
+			gctx.currentThingContext.addImports("log");
+			pack = "log";
+		} else {
+			gctx.currentThingContext.addImports("fmt");
 		}
+		Section print = section.section("print");
 		if (action.isLine())
-			section.append("fmt.Println()");
+			print.append(pack + ".Println(\"\"");
+		else
+			print.append(pack + ".Print(\"\"");
+		for (Expression msg : action.getMsg()) {
+			print.append("+");
+			stringify(msg, print, gctx);
+			//generate(msg, print.section("expression"), ctx);
+		}
+		print.append(")");					
 	}
 	
 	@Override
@@ -95,14 +130,17 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		GoContext gctx = (GoContext) ctx;
 		gctx.currentThingContext.addImports("fmt");
 		gctx.currentThingContext.addImports("os");
-		for (Expression msg : action.getMsg()) {
-			Section print = section.section("printerror");
-			print.append("fmt.Fprint(os.Stderr, ");
-			generate(msg, print.section("expression"), ctx);
-			print.append(")");
-		}
+		Section print = section.section("printerror");
 		if (action.isLine())
-			section.append("fmt.Fprintln(os.Stderr)");
+			print.append("fmt.Fprintln(os.Stderr, \"\"");
+		else
+			print.append("fmt.Fprint(os.Stderr, \"\"");
+		for (Expression msg : action.getMsg()) {
+			print.append(" + ");
+			stringify(msg, print, gctx);
+			//generate(msg, print.section("expression"), ctx);			
+		}
+		print.append(")");		
 	}
 	
 	@Override

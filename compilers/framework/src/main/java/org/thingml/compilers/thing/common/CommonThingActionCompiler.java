@@ -61,7 +61,6 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.TimesExpression;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.UnaryMinus;
-import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
@@ -71,17 +70,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     //ThingML actions that can be compiled the same way for any imperative language like (Java, JS, C)
 
-    public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
-
-    }
-
-    public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
-
-    }
-
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
-        traceVariablePre(action, builder, ctx);
         if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
                 builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
@@ -101,7 +91,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             //generateMainAndInit(action.getExpression(), builder, ctx);
             builder.append(";\n");
         }
-        traceVariablePost(action, builder, ctx);
     }
 
     public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
