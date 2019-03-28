@@ -57,7 +57,7 @@ public class NodeJSCompiler extends JSCompiler {
 
 	@Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return "node:alpine";
+        return "node:lts-alpine";
     }
 
     @Override
@@ -67,8 +67,8 @@ public class NodeJSCompiler extends JSCompiler {
 
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "RUN npm install @steelbreeze/state@7.0.1\n" +
-						"FROM node:alpine\n" +
+        return "RUN npm install @steelbreeze/state@7.2.2\n" +
+						"FROM node:lts-alpine\n" +
 						"COPY --from=0 /node_modules .\n" +
 						"COPY package.json package.json\n" +
         		"RUN npm install --production\n" +
