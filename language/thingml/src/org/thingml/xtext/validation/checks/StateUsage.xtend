@@ -69,15 +69,12 @@ class StateUsage extends ThingMLValidatorCheck {
 	}
 
 	@Check(FAST)
-	def checkSinkState(StateContainer sc) {
-		if (sc instanceof CompositeState) {
-			val c = sc as CompositeState
-			if (!c.internal.empty) return;
-			if (!c.outgoing.empty) return;
-			if (c instanceof FinalState) return;
-		}
-		if (AnnotatedElementHelper.isDefined(sc, "ignore", "sink")) return;
-		sc.substate.forEach [ s, i |
+	def checkSinkState(CompositeState c) {
+		if (!c.internal.empty) return;
+		if (!c.outgoing.empty) return;
+		if (AnnotatedElementHelper.isDefined(c, "ignore", "sink")) return;
+		c.substate.forEach [ s, i |
+			if (s instanceof CompositeState) return;
 			if (!s.internal.empty) return;
 			if (!s.outgoing.empty) return;
 			if (s instanceof FinalState) return;
