@@ -3,10 +3,12 @@
  */
 package org.thingml.xtext.validation
 
-import java.util.LinkedList
 import org.eclipse.xtext.validation.Check
+import org.thingml.xtext.helpers.IncludeCycle
+import org.thingml.xtext.helpers.ThingHelper
 import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.constraints.ThingMLHelpers
 
 /**
  * This class contains custom validation rules. 
@@ -17,24 +19,12 @@ class ThingMLValidator extends AbstractThingMLValidator {
 
 	@Check
 	def checkNoCyclesInThingIncludes(Thing thing) {
-		if(thing.includes.isEmpty) return;
-
-		val visitedThings = newHashSet(thing);
-		var toCheck = new LinkedList<Thing>();
-		toCheck.addAll(thing.includes);
-
-		while (!toCheck.empty) {
-			val current = toCheck.pollFirst
-
-			if (visitedThings.contains(current)) {
-				error("Cycle in the hierarchy of Thing '" + current.name + "'",
-					ThingMLPackage.eINSTANCE.thing_Includes);
-				return;
-			}
-
-			visitedThings.add(current);
-			for (Thing t : current.includes)
-				if(!toCheck.contains(t)) toCheck.add(t);
+		try {
+			ThingHelper.allIncludedThingsWithCheck(thing)
+			ThingMLHelpers.allThingFragmentsWithCheck(thing)
+		} catch (IncludeCycle e) {
+			error(e.message, thing, ThingMLPackage.eINSTANCE.thing_Includes);
+			return;
 		}
 	}
 

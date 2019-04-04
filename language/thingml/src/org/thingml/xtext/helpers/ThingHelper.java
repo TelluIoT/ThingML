@@ -48,12 +48,26 @@ import org.thingml.xtext.thingML.VariableAssignment;
  */
 public class ThingHelper {
 
+	public static Set<Thing> allIncludedThingsWithCheck(Thing self) throws IncludeCycle {//Exception is used by the checker, so it can be silenced everywhere else
+		final HashSet<Thing> result = new HashSet<>();
+		for(Thing t : self.getIncludes()) {
+			if (EcoreUtil.equals(t, self)) throw new IncludeCycle("Thing " + t.getName() + " cannot include itself.");
+			result.add(t);
+			for(Thing i : t.getIncludes()) {
+				if (EcoreUtil.equals(i, t) || EcoreUtil.equals(i, self))
+					throw new IncludeCycle("Thing " + t.getName() + " cannot include itself, even indirecty. Check your include hierarchy.");
+			}
+			result.addAll(allIncludedThings(t));
+		}
+		return result;
+	}
 
 	public static Set<Thing> allIncludedThings(Thing self) {
 		HashSet<Thing> result = new HashSet<>();
-		for(Thing t : self.getIncludes()) {
-			result.add(t);
-			result.addAll(allIncludedThings(t));
+		try {
+			result.addAll(allIncludedThingsWithCheck(self));
+		} catch (IncludeCycle e) {
+			e.printStackTrace();
 		}
 		return result;
 	}

@@ -46,6 +46,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.IncludeCycle;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Action;
@@ -464,14 +465,29 @@ public class ThingMLHelpers {
 	 * Resolution for Things: Ports, Properties, StateMachines, Messages
 	 * ***********************************************************/
 	
-	public static ArrayList<Thing> allThingFragments(Thing thing) {
+	public static ArrayList<Thing> allThingFragmentsWithCheck(Thing thing) throws IncludeCycle {
 		ArrayList<Thing> result = new ArrayList<Thing>();
 		result.add(thing);
-		for (Thing t : thing.getIncludes())
-			//if (t != thing) {
-				for (Thing c : allThingFragments(t))
-					if (!result.contains(c)) result.add(result.indexOf(thing),c);
-			//}
+		for (Thing t : thing.getIncludes()) {
+			if (EcoreUtil.equals(t, thing)) throw new IncludeCycle("Thing " + thing.getName() + " cannot include itself.");
+			for(Thing i : t.getIncludes()) {
+				if (EcoreUtil.equals(i, t) || EcoreUtil.equals(i, thing))
+					throw new IncludeCycle("Thing " + t.getName() + " cannot include itself, even indirecty. Check your include hierarchy.");
+			}
+			for (Thing c : allThingFragments(t)) {
+				if (!result.contains(c)) result.add(result.indexOf(thing),c);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<Thing> allThingFragments(Thing thing) {
+		ArrayList<Thing> result = new ArrayList<Thing>();
+		try {
+			result.addAll(allThingFragmentsWithCheck(thing));
+		} catch (IncludeCycle e) {
+			e.printStackTrace();
+		}
 		return result;
 	}
 	
