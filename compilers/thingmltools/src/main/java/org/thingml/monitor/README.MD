@@ -116,3 +116,4 @@ configuration test {
 }
 ```
 
+Other "back-ends" (really, proxies to external log back-ends) will be made available in the STL. A very experimental MQTT "back-end" is already there.
