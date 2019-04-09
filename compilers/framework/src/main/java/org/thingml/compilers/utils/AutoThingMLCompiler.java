@@ -16,6 +16,7 @@
  */
 package org.thingml.compilers.utils;
 
+import java.io.File;
 import java.util.List;
 import java.util.function.Function;
 
@@ -61,12 +62,9 @@ public class AutoThingMLCompiler extends ThingMLCompiler {
 			log.error("Compiler was set to 'auto', but no @compiler annotation was found on the configuration \""+cfg.getName()+"\".");
 			return false;
 		}
-		if (compilerIds.size() > 1) {
-			log.error("Multiple @compiler annotations found on the configuration \""+cfg.getName()+"\". Unable to choose.");
-			return false;
-		}
 		
-		String compilerId = compilerIds.get(0);
+		boolean status = true;
+		for(String compilerId : compilerIds) {
 		// Make sure we aren't going to overflow the stack
 		if (compilerId.equals(getID())) {
 			log.error("Cannot use @compiler `auto` for the configuration \""+cfg.getName()+"\"");
@@ -80,10 +78,16 @@ public class AutoThingMLCompiler extends ThingMLCompiler {
 		}
 		
 		// TODO: A better way to do this
-		actualCompiler.setInputDirectory(getInputDirectory());
-		actualCompiler.setOutputDirectory(getOutputDirectory());
+			final File in = new File(getInputDirectory(), compilerId+"/");
+			in.mkdirs();
+			final File out = new File(getOutputDirectory(), compilerId+"/");
+			out.mkdirs();
 		
-		return actualCompiler.compile(cfg, log, options);
+			actualCompiler.setInputDirectory(in);
+			actualCompiler.setOutputDirectory(out);
+			status &= actualCompiler.compile(cfg, log, options);
+		}
+		return status;
 	}
 
 }

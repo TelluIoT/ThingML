@@ -32,6 +32,12 @@ public class AnnotationRegistry {
 	
 	static {
 		
+		final String compiler_name = "compiler";
+		final String compiler_desc = "Specifies the compiler to be used by the auto compiler";
+		final EClass compiler_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation compiler_annotation = new Annotation(compiler_name, compiler_desc, compiler_scope);
+		annotations.put(compiler_name, compiler_annotation);
+		
 		/** MONITORING **/
 		//@monitor
 		final String monitor_name = "monitor";
