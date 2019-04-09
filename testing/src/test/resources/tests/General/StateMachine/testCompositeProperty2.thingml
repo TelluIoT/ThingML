@@ -19,7 +19,7 @@ thing TestHistory includes Test
 
 		composite state C init C1 keeps history {
 
-			//p should be reset to 0 every time we re-enter C (see #282)
+			//p should no be reset as we re-enter C (see #282), since C keeps history
 			property p : UInt8 = 0
 
 			state C1 {
