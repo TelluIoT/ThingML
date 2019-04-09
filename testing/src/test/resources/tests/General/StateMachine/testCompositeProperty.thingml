@@ -1,0 +1,47 @@
+import "../../thingml.thingml"
+
+thing TestHistory includes Test
+@test "t # IAA"
+{
+
+	property counter : UInt8 = 0
+
+	statechart TestHistory init I {
+		internal event Test?Done
+		action TestDone()
+
+		state I {
+			on entry TestOut('I')
+			transition -> C
+			event m : Test?In
+			guard m.c == 't'
+		}
+
+		composite state C init C1 {
+
+			//p should be reset to 0 every time we re-enter C (see #282)
+			property p : UInt8 = 0
+
+			state C1 {
+				on entry do
+					if (p == 0) TestOut('A')
+					else TestOut('B')
+				end
+			}
+
+			transition -> C
+			guard counter == 0
+			action do
+				p = p + 1
+				counter = counter + 1
+			end
+
+			transition -> STOP
+			guard counter == 1
+		}
+
+		final state STOP {
+			on entry TestDone()
+		}
+	}
+}
