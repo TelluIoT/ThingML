@@ -397,24 +397,30 @@ public class GoThingImplCompiler extends ThingImplCompiler {
 	private void generateStateHandlers(Thing thing, State state, GoSourceBuilder builder, GoContext gctx) {
 		if (state instanceof StateContainer) {
 			if (state instanceof CompositeState) {
-				CompositeState cs = (CompositeState)state;
-				// The composite state has a default implementation of handlers
-				// So overriding is only necessary if some are defined in the metamodel
-				// FIXME: This doesn't seem to work anymore??
-				//if (cs.getEntry() != null) {
-					GoMethod onEntry = builder.onEntry(state, gctx);
-					generateAction(thing, cs.getEntry(), onEntry.body(), gctx);
-					onEntry.body().append("state.CompositeState.OnEntry()");
-				//}
-				//if (!cs.getOutgoing().isEmpty() || !cs.getInternal().isEmpty()) {
-					GoMethod handler = builder.handler(state, gctx);
-					generateTransitions(thing, state, handler.body(), gctx);
-				//}
-				//if (cs.getExit() != null) {
-					GoMethod onExit = builder.onExit(state, gctx);
-					onExit.body().append("state.CompositeState.OnExit()");
-					generateAction(thing, cs.getExit(), onExit.body(), gctx);
-				//}
+				final CompositeState cs = (CompositeState)state;
+				GoMethod onEntry = builder.onEntry(state, gctx);
+				if (!cs.isHistory()) {
+					for(Property p : cs.getProperties()) {
+						if (p.isReadonly()) continue;
+						Section section = onEntry.body().appendSection("section");
+						gctx.variable(p, section, gctx);
+						section.append(" = ");
+						if (p.getInit() != null) {
+							((GoThingActionCompiler)gctx.getCompiler().getNewThingActionCompiler()).generate(p.getInit(), section, gctx);
+						} else {
+							section.append(gctx.getDefaultValue(p.getTypeRef().getType()));
+						}
+					}
+				}
+				generateAction(thing, cs.getEntry(), onEntry.body(), gctx);
+				onEntry.body().append("state.CompositeState.OnEntry()");
+
+				GoMethod handler = builder.handler(state, gctx);
+				generateTransitions(thing, state, handler.body(), gctx);
+
+				GoMethod onExit = builder.onExit(state, gctx);
+				onExit.body().append("state.CompositeState.OnExit()");
+				generateAction(thing, cs.getExit(), onExit.body(), gctx);
 			}
 		} else {
 			GoMethod onEntry = builder.onEntry(state, gctx);

@@ -35,12 +35,17 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.Variable;
 
 public class GoContext extends Context {
 
@@ -88,6 +93,32 @@ public class GoContext extends Context {
 
 	public Logger Logger() {
 		return this.logger;
+	}
+	
+    public String getDefaultValue(Type type) {
+    	if (AnnotatedElementHelper.hasAnnotation(type, "go_type")) {
+    		final String go_type = AnnotatedElementHelper.firstAnnotation(type, "go_type");
+    		if (go_type.contains("int") || go_type.equals("byte"))
+    			return "0";
+    		if (go_type.contains("float"))
+    			return "0.0";
+    		if (go_type.equals("bool"))
+    			return "false";
+    		return "nil";
+    	}
+    	return "nil";
+    }
+	
+	public void variable(Variable variable, Section section, Context ctx) {	
+		GoContext gctx = (GoContext)ctx;
+		if (variable instanceof LocalVariable)
+			section.append(gctx.getNameFor(variable));
+		else if (variable instanceof Property) {
+			if (gctx.currentThingContext != null) gctx.currentThingContext.instanceUsedInInitialisation = true;
+			section.append(gctx.getCurrentInstanceStateName()).append(".").append(gctx.getNameFor(variable));
+		}
+		else if (variable instanceof Parameter)
+			section.append(gctx.getNameFor(variable));
 	}
 
 	/* --- NEW naming helpers --- */

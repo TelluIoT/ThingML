@@ -19,6 +19,8 @@ package org.thingml.compilers.javascript;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.builder.SourceBuilder;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Type;
 
 public class JSContext extends Context {	
 	public JSContext(ThingMLCompiler compiler) {
@@ -34,4 +36,26 @@ public class JSContext extends Context {
 		// TODO Auto-generated method stub
 		return (JSSourceBuilder)super.getSourceBuilder(path);
 	}
+	
+	protected String getDefaultValue(Type type) {
+		if (AnnotatedElementHelper.isDefined(type, "js_type", "boolean"))
+			return "false";
+		else if (AnnotatedElementHelper.isDefined(type, "js_type", "int"))
+			return "0";
+		else if (AnnotatedElementHelper.isDefined(type, "js_type", "long"))
+			return "0";
+		else if (AnnotatedElementHelper.isDefined(type, "js_type", "float"))
+			return "0.0";
+		else if (AnnotatedElementHelper.isDefined(type, "js_type", "double"))
+			return "0.0";
+		else if (AnnotatedElementHelper.isDefined(type, "js_type", "byte"))
+			return "0";
+		else if (AnnotatedElementHelper.isDefined(type, "js_type", "short"))
+			return "0";
+		else if (AnnotatedElementHelper.isDefined(type, "js_type", "char"))
+			return "'\u0000'";
+		else
+			return "null";
+	}
+	
 }

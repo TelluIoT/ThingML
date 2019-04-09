@@ -456,52 +456,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctx.clearConcreteThing();
     }
 
-/*   DEAD CODE ?
-    public int generateSerializationForForwarder(CCompilerContext ctx, Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
-
-        builder.append("byte forward_buf[" + (ctx.getMessageSerializationSize(m) - 2) + "];\n");
-
-        builder.append("forward_buf[0] = (" + HandlerCode + " >> 8) & 0xFF;\n");
-        builder.append("forward_buf[1] =  " + HandlerCode + " & 0xFF;\n\n");
-
-
-        int j = 2;
-
-        for (Parameter pt : m.getParameters()) {
-            builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = ctx.getCByteSize(pt.getTypeRef().getType(), 0);
-            String v = pt.getName();
-            if (ctx.isPointer(pt.getTypeRef().getType())) {
-                // This should not happen and should be checked before.
-                throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
-            } else {
-                //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
-                if (!ignoreList.contains(pt.getName())) {
-
-                    builder.append("union u_" + v + "_t {\n");
-                    builder.append(ctx.getCType(pt.getTypeRef().getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
-                    builder.append("} u_" + v + ";\n");
-                    builder.append("u_" + v + ".p = " + v + ";\n");
-
-                    while (i > 0) {
-                        i = i - 1;
-                        //if (i == 0)
-                        //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                        builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
-                        j++;
-                    }
-                }
-            }
-        }
-
-        if (j == 2) {
-            return j;
-        } else {
-            return j - 1;
-        }
-    }
-*/
     protected boolean isThereNetworkListener(Configuration cfg) {
         boolean ret = false;
 

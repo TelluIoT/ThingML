@@ -370,12 +370,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
-        // steffend - This is commented out because it is already generated as part of the API
-        //if (isGeneratingCpp()) {
-        //    cppHeaderBuilder.append("// generateEntryActions \nvoid " + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
-        //    cppHeaderBuilder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-        //}
-
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
 
@@ -398,6 +392,21 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
                 }
             }
+            
+			if (!cs.isHistory()) {
+				for(Property p : cs.getProperties()) {
+					if (p.isReadonly()) continue;
+					builder.append(ctx.getVariableName(p));
+					builder.append(" = ");
+					if (p.getInit() != null) {
+						ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
+					} else {
+						builder.append("0");//FIXME: might not be the best default value for any type, though it should work almost everywhere in C.
+					}
+					builder.append(";\n");
+				}
+			}
+            
             // Execute Entry actions
             if (cs.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(cs.getEntry(), builder, ctx);
 

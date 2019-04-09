@@ -508,18 +508,7 @@ public abstract class CCompilerContext extends Context {
         } else {
             return "printf(\"%i\", ";
         }
-    }
-
-    //public List<String> getFormalParameterNamelist(Thing thing, Message m) {
-    //    List<String> paramList = new ArrayList<String>();
-    //
-    //    for (Parameter p : m.getParameters()) {
-    //        paramList.add(p.getName());
-    //    }
-    //    return paramList;
-    //}
-
-    
+    }    
     
     boolean traceLevelIsAbove(AnnotatedElement E, int level) {
         Integer traceLevel = 0;
@@ -697,27 +686,6 @@ public abstract class CCompilerContext extends Context {
             return t.getName() + "_buf";
         }
     }
-
-    /* removed on 22.06.2017
-    public String deserializeFromByte(Type t, String buffer, int idx, Context ctx) {
-        String result = "";
-        int i = getCByteSize(t, 0);
-        int index = idx;
-
-        if (isPointer(t)) {
-            // This should not happen and should be checked before.
-            throw  new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
-        } else {
-            while (i > 0) {
-                i = i - 1;
-                if (i == 0) result += buffer + "[" + index + "]";
-                else result += "(" + buffer + "[" + index + "]" + "<<" + (8 * i) + ") + ";
-                index = index + 1;
-            }
-        }
-        return result;
-    }
-    */
 
     public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
         long i = getCByteSize(t, 0);

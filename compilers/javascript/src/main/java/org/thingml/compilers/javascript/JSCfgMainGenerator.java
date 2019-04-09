@@ -40,27 +40,6 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 
 public class JSCfgMainGenerator extends CfgMainGenerator {
-	
-	protected String getDefaultValue(Type type) {
-		if (AnnotatedElementHelper.isDefined(type, "js_type", "boolean"))
-			return "false";
-		else if (AnnotatedElementHelper.isDefined(type, "js_type", "int"))
-			return "0";
-		else if (AnnotatedElementHelper.isDefined(type, "js_type", "long"))
-			return "0";
-		else if (AnnotatedElementHelper.isDefined(type, "js_type", "float"))
-			return "0.0";
-		else if (AnnotatedElementHelper.isDefined(type, "js_type", "double"))
-			return "0.0";
-		else if (AnnotatedElementHelper.isDefined(type, "js_type", "byte"))
-			return "0";
-		else if (AnnotatedElementHelper.isDefined(type, "js_type", "short"))
-			return "0";
-		else if (AnnotatedElementHelper.isDefined(type, "js_type", "char"))
-			return "'\u0000'";
-		else
-			return "null";
-	}
 
 	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
 		Section property = section.section("property");
@@ -102,7 +81,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     				if (e!=null)
     					jctx.generateFixedAtInitValue(cfg, i, e, tempbuilder);
     				else
-    					property.append(getDefaultValue(p.getTypeRef().getType()));
+    					property.append(jctx.getDefaultValue(p.getTypeRef().getType()));
     				property.append(tempbuilder.toString());
     				property.append(");");
         		}

@@ -16,9 +16,7 @@
  */
 package org.thingml.compilers.java;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
@@ -30,7 +28,6 @@ import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
-import org.thingml.xtext.thingML.Event;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Function;
@@ -488,59 +485,48 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append("final CompositeState " + state_name + " = ");
 		builder.append("new CompositeState(\"" + c.getName() + "\")");
 		DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(ThingMLHelpers.findContainingThing(c));
-		if (c instanceof CompositeState) {
-			if (((CompositeState) c).getProperties().size() > 0) {
-				builder.append("{\n");
-				for (Property p : ((CompositeState) c).getProperties()) {
-					builder.append(
-							"private "
-									+ JavaHelper.getJavaType(p.getTypeRef().getType(),
-											p.getTypeRef().getCardinality() != null, ctx)
-									+ " " + ctx.getVariableName(p));
-					if (c instanceof Session) {
-						builder.append(" = " + ctx.getVariableName(p) + "_");
-					} else {
-						if (p.getInit() != null) {
-							builder.append(" = ");
-							ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
-						}
-					}
-					builder.append(";\n");
-					builder.append("public "
-							+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " get"
-							+ ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p)
-							+ ";\n}\n\n");
-					// if (p.isChangeable()) {
-					builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
-							+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
-							+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
-							+ ctx.getVariableName(p) + ";\n}\n\n");
-					// }
-				}
-				builder.append("}");
-			}
-		}
 		builder.append(";\n");
 
 		if (c instanceof CompositeState) {
-			for (Region r : ((CompositeState) c).getRegion()) {
+			final CompositeState cs = (CompositeState)c;
+			boolean generateEntry = cs.getEntry() != null || debugProfile.isDebugBehavior();
+			boolean resetProperties = false;
+			resetProperties = !cs.isHistory();
+			generateEntry = generateEntry || resetProperties;
+			
+			for (Region r : cs.getRegion()) {
 				builder.append(state_name + ".add(build" + ThingMLElementHelper.qname(r, "_") + "());\n");
 			}
 
-			if (((CompositeState) c).getEntry() != null || debugProfile.isDebugBehavior()) {
+			if (generateEntry) {
 				builder.append(state_name + ".onEntry(()->{\n");
+				if (resetProperties) {
+					if (!cs.getProperties().isEmpty())
+						builder.append("//reset properties\n");
+					for(Property p : cs.getProperties()) {
+						if (p.isReadonly()) continue;
+						builder.append("this.set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(");
+						if (p.getInit() != null) {
+							ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
+						} else {
+							builder.append(JavaHelper.getDefaultValue(p.getTypeRef().getType()));
+						}
+						builder.append(");\n");
+					}
+				}
+				
 				if (debugProfile.isDebugBehavior()) {
 					builder.append("printDebug(\""
 							+ ctx.traceOnEntry(ThingMLHelpers.findContainingThing(c),
 									ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c))
 							+ "\");\n");
 				}
-				if (((CompositeState) c).getEntry() != null)
-					ctx.getCompiler().getThingActionCompiler().generate(((CompositeState) c).getEntry(), builder, ctx);
+				if (cs.getEntry() != null)
+					ctx.getCompiler().getThingActionCompiler().generate(cs.getEntry(), builder, ctx);
 				builder.append("});\n");
 			}
 
-			if (((CompositeState) c).getExit() != null || debugProfile.isDebugBehavior()) {
+			if (cs.getExit() != null || debugProfile.isDebugBehavior()) {
 				builder.append(state_name + ".onExit(()->{\n");
 				if (debugProfile.isDebugBehavior()) {
 					builder.append(
@@ -549,8 +535,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 											ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c))
 									+ "\");\n");
 				}
-				if (((CompositeState) c).getExit() != null)
-					ctx.getCompiler().getThingActionCompiler().generate(((CompositeState) c).getExit(), builder, ctx);
+				if (cs.getExit() != null)
+					ctx.getCompiler().getThingActionCompiler().generate(cs.getExit(), builder, ctx);
 				builder.append("});\n\n");
 			}
 

@@ -65,18 +65,6 @@ import org.thingml.xtext.validation.TypeChecker;
 
 public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	
-	public void variable(Variable variable, Section section, Context ctx) {	
-		GoContext gctx = (GoContext)ctx;
-		if (variable instanceof LocalVariable)
-			section.append(gctx.getNameFor(variable));
-		else if (variable instanceof Property) {
-			if (gctx.currentThingContext != null) gctx.currentThingContext.instanceUsedInInitialisation = true;
-			section.append(gctx.getCurrentInstanceStateName()).append(".").append(gctx.getNameFor(variable));
-		}
-		else if (variable instanceof Parameter)
-			section.append(gctx.getNameFor(variable));
-	}
-	
 	private void stringify(Expression expression, Section section, Context ctx) {
 		final GoContext gctx = (GoContext) ctx;
 		Section cst = section.section("tostring");
@@ -177,15 +165,17 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	
 	@Override
 	public void generate(Increment action, Section section, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
 		Section line = section.section("increment");
-		variable(action.getVar(), line, ctx);
+		gctx.variable(action.getVar(), line, ctx);
 		line.append("++");
 	}
 	
 	@Override
 	public void generate(Decrement action, Section section, Context ctx) {
+		GoContext gctx = (GoContext)ctx;
 		Section line = section.section("decrement");
-		variable(action.getVar(), line, ctx);
+		gctx.variable(action.getVar(), line, ctx);
 		line.append("--");
 	}
 	
@@ -250,7 +240,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	public void generate(VariableAssignment action, Section section, Context ctx) {
 		GoContext gctx = (GoContext)ctx;
 		Section line = section.section("variableassignment");
-		variable(action.getProperty(), line, ctx);
+		gctx.variable(action.getProperty(), line, ctx);
 		if(action.getIndex() != null) {
 			line.append("[");
 			generate(action.getIndex(), line.section("indexexpression"), ctx);
@@ -320,7 +310,8 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	
 	@Override
 	public void generate(PropertyReference expression, Section section, Context ctx) {
-		variable(expression.getProperty(), section, ctx);
+		GoContext gctx = (GoContext)ctx;
+		gctx.variable(expression.getProperty(), section, ctx);
 	}
 	
 	@Override
@@ -453,7 +444,7 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
     	Section before = forrange.section("for");
     	before.append("for ").append(indexName).append(", ").append(gctx.getNameFor(action.getVariable()));
     	before.append(" := range ");
-    	variable(action.getArray().getProperty(), before.section("array"), ctx);
+    	gctx.variable(action.getArray().getProperty(), before.section("array"), ctx);
     	before.append(" {");
     	generate(action.getAction(), forrange.section("action").lines().indent(), ctx);
     	forrange.append("}");
