@@ -21,6 +21,7 @@ import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSClass;
 import org.thingml.compilers.javascript.JSThingImplCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Thing;
 
 public class NodeJSThingImplCompiler extends JSThingImplCompiler {
@@ -37,7 +38,8 @@ public class NodeJSThingImplCompiler extends JSThingImplCompiler {
 		Section imports = builder.section("imports").lines();
 		if (jctx.getContextAnnotation("hasEnum") != null && jctx.getContextAnnotation("hasEnum").equals("true")) {
 			imports.append("const Enum = require('./enums');");
-		}
+		}		
+		imports.append("const Event = require('./events');");
 		imports.append("const StateJS = require('@steelbreeze/state');");
 		imports.append("const EventEmitter = require('events').EventEmitter;");
 		builder.append("");

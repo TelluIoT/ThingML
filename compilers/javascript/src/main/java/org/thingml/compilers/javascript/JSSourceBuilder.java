@@ -291,7 +291,7 @@ public class JSSourceBuilder extends SourceBuilder {
 		Element guardAnd;
 		StringBuilderSection guardExpression;
 
-		protected StateJSTransition(Section parent, String from) {
+		protected StateJSTransition(Section parent, String event, String from, String to) {
 			super(parent, "transition");
 			this.lines();
 			this.before = this.section("before");
@@ -303,12 +303,18 @@ public class JSSourceBuilder extends SourceBuilder {
 			
 			// First line
 			this.from = new Element(from);
-			this.to = new Element("null");
-			this.before.append(from).append(".to(").append(this.to).append(")");
+			if (to != null) {
+				this.to = new Element(to);
+				this.before.append(from).append(".to(").append(this.to).append(")");
+			} else {
+				this.before.append(from);
+			}
 			
 			this.messageName = new Element();
 			this.messagePort = new Element();
 			this.guardFirstLine = this.before.section("guard");
+			if (event != null)
+				this.guardFirstLine.append(".on(" + event  + ")");
 			this.guardFirstLine.append(".when((").append(this.messageName).append(") => {");
 			
 			this.actionFirstLine = new Element(".effect(() => {");
@@ -323,9 +329,9 @@ public class JSSourceBuilder extends SourceBuilder {
 			guardLine.append("return ");
 			this.guardMessagePortExpression = guardLine.section("messageport");
 			this.guardMessagePortExpression
-					.append(this.messageName).append("._port === '").append(this.messagePort).append("'")
+					.append(this.messageName).append(".port === '").append(this.messagePort).append("'")
 					.append(" && ")
-					.append(this.messageName).append("._msg === '").append(this.messageName).append("'");
+					.append(this.messageName).append(".type === '").append(this.messageName).append("'");
 			this.guardAnd = new Element(" && ");
 			guardLine.append(guardAnd);
 			this.guardExpression = guardLine.stringbuilderSection("expression");
@@ -451,8 +457,8 @@ public class JSSourceBuilder extends SourceBuilder {
 		return state;
 	}
 	
-	public static StateJSTransition stateJSTransition(Section parent, String from) {
-		StateJSTransition transition = new StateJSTransition(parent, from);
+	public static StateJSTransition stateJSTransition(Section parent, String event, String from, String to) {
+		StateJSTransition transition = new StateJSTransition(parent, event, from, to);
 		parent.append(transition);
 		return transition;
 	}

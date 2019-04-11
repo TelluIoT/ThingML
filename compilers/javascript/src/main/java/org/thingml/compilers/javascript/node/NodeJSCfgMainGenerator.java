@@ -21,14 +21,12 @@ import java.util.List;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.builder.SourceBuilder;
-import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSCfgMainGenerator;
+import org.thingml.compilers.javascript.JSContext;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 

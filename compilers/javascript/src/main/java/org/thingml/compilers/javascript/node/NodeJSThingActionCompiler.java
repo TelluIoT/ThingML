@@ -29,22 +29,25 @@ public class NodeJSThingActionCompiler extends JSThingActionCompiler {
 
   @Override
   public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
+	builder.append("((process.stderr && process.stderr.write) || console.log).call(process.stderr, ''");
   	for (Expression msg : action.getMsg()) {
-	    builder.append("((process.stderr && process.stderr.write) || console.log).call(process.stderr, ''+");
+  		builder.append("+");
 	    generate(msg, builder, ctx);
-	    builder.append(");\n");
+	    
   	}
+  	builder.append(");\n");
   	if (action.isLine())
   		builder.append("if (process.stderr) process.stderr.write('\\n');\n");
   }
 
   @Override
   public void generate(PrintAction action, StringBuilder builder, Context ctx) {
+	builder.append("((process.stdout && process.stdout.write) || console.log).call(process.stdout, ''");
   	for (Expression msg : action.getMsg()) {
-        builder.append("((process.stdout && process.stdout.write) || console.log).call(process.stdout, ''+");
-        generate(msg, builder, ctx);
-        builder.append(");\n");
+  		builder.append("+");
+        generate(msg, builder, ctx);        
   	}
+  	builder.append(");\n");
   	if (action.isLine())
   		builder.append("if (process.stdout) process.stdout.write('\\n');\n");
   }

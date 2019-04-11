@@ -21,11 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -33,18 +31,15 @@ import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InternalPort;
-import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.thingML.Type;
 
 public class JSCfgMainGenerator extends CfgMainGenerator {
 
 	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
 		Section property = section.section("property");
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-			property.append("var inst_" + i.getName() + "_" + a.getName() + " = [];");
+			property.append("var inst_" + i.getName() + "_" + a.getName() + " = [];\n");
 		}
 		for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
 			for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
@@ -61,9 +56,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-			property.append("inst_" + i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(a)) + "(");
+			property.append("inst_" + i.getName() + "." + jctx.firstToUpper(jctx.getVariableName(a)) + " = ");
 			property.append("inst_" + i.getName() + "_" + a.getName());
-			property.append(");\n");
+			property.append(";\n");
 		}
 		
         for(Thing t : ThingMLHelpers.allThingFragments(i.getType())) {
@@ -76,14 +71,14 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         	for(Property p : props) {
         		if (p.getTypeRef().getCardinality() == null) {
         			StringBuilder tempbuilder = new StringBuilder();
-    				property.append("inst_" + i.getName() + ".init" + jctx.firstToUpper(jctx.getVariableName(p)) + "(");
+    				property.append("inst_" + i.getName() + "." + jctx.firstToUpper(jctx.getVariableName(p)) + " = ");
     				Expression e = ConfigurationHelper.initExpression(cfg, i, p);
     				if (e!=null)
     					jctx.generateFixedAtInitValue(cfg, i, e, tempbuilder);
     				else
     					property.append(jctx.getDefaultValue(p.getTypeRef().getType()));
     				property.append(tempbuilder.toString());
-    				property.append(");");
+    				property.append(";\n");
         		}
         	}
         }
@@ -100,27 +95,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		instance.append(";");
 		instanceArgs.append("'"+i.getName()+"'")
 		            .append("null");
-
-		/*DebugProfile debugProfile = jctx.getCompiler().getDebugProfiles().get(i.getType());
-		boolean debugInst = false;
-		for (Instance inst : debugProfile.getDebugInstances()) {
-			if (i.getName().equals(inst.getName())) {
-				debugInst = true;
-				break;
-			}
-		}
-		if (debugInst) instanceArgs.append("true");
-		else instanceArgs.append("false");*/
-
-		/*if (useThis) { //FIXME: have a pass on debug traces
-            if (debug || debugProfile.getDebugInstances().contains(i)) {
-                builder.append("this." + i.getName() + "." + i.getType().getName() + "_print_debug(this." + i.getName() + ", '" + ctx.traceInit(i.getType()) + "');\n");
-            }
-        } else {
-            if (debug || debugProfile.getDebugInstances().contains(i)) {
-                builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", '" + ctx.traceInit(i.getType()) + "');\n");
-            }
-        }*/
 		
 		Section instanceProperties = section.section("properties").lines();
 		generatePropertyDecl(i, cfg, instanceProperties, jctx);
@@ -133,24 +107,23 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		}
 	}
 	
-	protected void generateOnEvent(Section section, Message msg, String client, String clientPort, String server, String serverPort) {
+	protected void generateOnEvent(Section section, String client, String clientPort, String server, String serverPort) {
 		Section connector = section.section("connector");
 		
 		connector.append(server).append(".bus.on(")
-		         .append("'").append(serverPort).append("?").append(msg.getName()).append("'")
+		         .append("'").append(serverPort).append("'")
 		         .append(", ");
 		
 		Section inArgs = connector.section("parameters").surroundWith("(", ")", 0).joinWith(", ");
-		for(Parameter pa : msg.getParameters())
-			inArgs.append(pa.getName());
+		inArgs.append("e");
 		
-		connector.append(" => ")
-				 .append(client).append(".receive").append(msg.getName()).append("On").append(clientPort);
+		connector.append(" => {\n")
+				 .append("e.port = '" + clientPort + "';\n")
+				 .append(client).append("._receive");
 		Section outArgs = connector.section("parameters").surroundWith("(", ")", 0).joinWith(", ");
-		for(Parameter pa : msg.getParameters())
-			outArgs.append(pa.getName());
+		outArgs.append("e");
 		
-		connector.append(");");
+		connector.append("\n});");
 	}
 
 	protected void generateConnectors(Configuration cfg, Section section, JSContext jctx) {
@@ -158,35 +131,15 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
             for (InternalPort p : entries.getValue()) {
-                for (Message rec : p.getReceives()) {
-                    for (Message send : p.getSends()) {
-                        if (EcoreUtil.equals(rec, send)) {
-                            generateOnEvent(section, send, "inst_" + i.getName(), p.getName(), "inst_" + i.getName(), p.getName());
-                            break;
-                        }
-                    }
-                }
+            	generateOnEvent(section, "inst_" + i.getName(), p.getName(), "inst_" + i.getName(), p.getName());
             }
         }
 		
 		section.comment("Connecting ports...");
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            for (Message req : c.getRequired().getReceives()) {
-                for (Message prov : c.getProvided().getSends()) {
-                    if (req.getName().equals(prov.getName())) {
-                        generateOnEvent(section, req, "inst_" + c.getCli().getName(), c.getRequired().getName(), "inst_" + c.getSrv().getName(), c.getProvided().getName());
-                        break;
-                    }
-                }
-            }
-            for (Message req : c.getProvided().getReceives()) {
-                for (Message prov : c.getRequired().getSends()) {
-                    if (req.getName().equals(prov.getName())) {
-                        generateOnEvent(section, req, "inst_" + c.getSrv().getName(), c.getProvided().getName(), "inst_" + c.getCli().getName(), c.getRequired().getName());
-                        break;
-                    }
-                }
-            }
+        	//FIXME: we do not always need both directions (if a port only has receives or sends)
+        	generateOnEvent(section, "inst_" + c.getCli().getName(), c.getRequired().getName(), "inst_" + c.getSrv().getName(), c.getProvided().getName());
+        	generateOnEvent(section, "inst_" + c.getSrv().getName(), c.getProvided().getName(), "inst_" + c.getCli().getName(), c.getRequired().getName());
         }		
 	}
 }

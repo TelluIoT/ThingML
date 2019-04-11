@@ -20,7 +20,6 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSThingActionCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.EnumLiteralRef;
-import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.PropertyReference;
@@ -49,43 +48,47 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
     	StringBuilder builder2 = new StringBuilder();
     	StringBuilder builder3 = new StringBuilder();
     	
-    	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-    		for(Expression pa : action.getParameters()) {//FIXME: we might as well systematically store all expressions into const...
-        		if (pa instanceof PropertyReference) {
-        			PropertyReference pr = (PropertyReference)pa;
-        			builder1.append("const " + pr.getProperty().getName() + "_const" + counter + " = ");        			
-        			generate(pa, builder1, ctx);
-        			builder1.append(";\n");
-        		} else if (pa instanceof FunctionCallExpression) {
-        			FunctionCallExpression fc = (FunctionCallExpression)pa;
-        			builder1.append("const " + fc.getFunction().getName() + "_" + Math.abs(fc.getParameters().hashCode()) + "_const" + counter + " = ");
-        			generate(pa, builder1, ctx);
-        			builder1.append(";\n");
-        		}
+    	for(Expression pa : action.getParameters()) {
+    		if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {            
+    			if (pa instanceof PropertyReference) {
+    				PropertyReference pr = (PropertyReference)pa;
+    				builder1.append("const " + pr.getProperty().getName() + "_const" + counter + " = ");        			
+    				generate(pa, builder1, ctx);
+    				builder1.append(";\n");
+    			} else if (pa instanceof FunctionCallExpression) {
+    				FunctionCallExpression fc = (FunctionCallExpression)pa;
+    				builder1.append("const " + fc.getFunction().getName() + "_" + Math.abs(fc.getParameters().hashCode()) + "_const" + counter + " = ");
+    				generate(pa, builder1, ctx);
+    				builder1.append(";\n");
+    			}
         		        		        		        		
-        		builder3.append(", ");
-                if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-                	if (pa instanceof PropertyReference) {
-                		PropertyReference pr = (PropertyReference)pa;
-                		builder3.append(pr.getProperty().getName() + "_const" + counter);
-                	} else if (pa instanceof FunctionCallExpression) {
-                		FunctionCallExpression fc = (FunctionCallExpression)pa;
-                		builder3.append(fc.getFunction().getName() + "_" + Math.abs(fc.getParameters().hashCode()) + "_const" + counter);
-                	} else {
-                		generate(pa, builder3, ctx);
-                	} 
-                }
-                else {
-            		generate(pa, builder3, ctx);
-            	}
-                counter++;
-        	}
+    			builder3.append(", ");
+              	if (pa instanceof PropertyReference) {
+               		PropertyReference pr = (PropertyReference)pa;
+               		builder3.append(pr.getProperty().getName() + "_const" + counter);
+               	} else if (pa instanceof FunctionCallExpression) {
+               		FunctionCallExpression fc = (FunctionCallExpression)pa;
+               		builder3.append(fc.getFunction().getName() + "_" + Math.abs(fc.getParameters().hashCode()) + "_const" + counter);
+               	} else {
+               		generate(pa, builder3, ctx);
+               	} 
+           }
+           else {
+        	   builder3.append(", ");
+        	   generate(pa, builder3, ctx);
+           }
+            counter++;
+        }
+    	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {	
     		builder2.append("setTimeout(() => ");
     	}
     	builder2.append(ctx.getContextAnnotation("thisRef"));
-        builder2.append("bus.emit('" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
-        builder2.append(builder3.toString());
-        builder2.append(")");
+		builder2.append("bus.emit(");
+		builder2.append("'" + action.getPort().getName() + "'");
+		builder2.append(", new " + ctx.firstToUpper(action.getMessage().getName()) + "(");
+		builder2.append("'" + action.getPort().getName() + "'");
+		builder2.append(builder3.toString());
+		builder2.append("))");
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
             builder2.append(", 0)");
     	}

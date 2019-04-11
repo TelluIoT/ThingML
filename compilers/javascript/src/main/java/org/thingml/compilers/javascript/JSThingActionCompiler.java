@@ -112,12 +112,14 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		}
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("bus.emit(");
-		builder.append("'" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
+		builder.append("'" + action.getPort().getName() + "'");
+		builder.append(", new Event." + ctx.firstToUpper(action.getMessage().getName()) + "(");
+		builder.append("'" + action.getPort().getName() + "'");
 		for (Expression pa : action.getParameters()) {
 			builder.append(", ");
 			generate(pa, builder, ctx);
 		}
-		builder.append(")");
+		builder.append("))");
 		if (!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
 			builder.append("})");
 		}
@@ -217,7 +219,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 									+ "_" + pa.getInstance().getName();
 
 							if (ctx.currentInstance.getName().equals(tmp)) {
-								if (pa.getProperty().getName().compareTo(p.getName()) == 0) {
+								if (pa.getProperty().getName().equals(p.getName())) {
 									generate(pa.getInit(), builder, ctx);
 									found = true;
 									break;

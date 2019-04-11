@@ -136,6 +136,7 @@ public class BrowserJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		head.append("<script type=\"application/javascript\" src=\"lib/state.min.js\" target=\"StateJS\"></script>");
 		copyResourceToFile("lib/EventEmitter.min.js", "lib/EventEmitter.min.js", ctx);
 		head.append("<script type=\"application/javascript\" src=\"lib/EventEmitter.min.js\"></script>");
+		head.append("<script type=\"application/javascript\" src=\"events.js\"></script>");
 		for(String h : getHTMLHead(cfg)) {
 			body.append(h);
 		}

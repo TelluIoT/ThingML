@@ -34,6 +34,11 @@ public class BrowserJSCompiler extends JSCompiler {
 			new BrowserJSThingImplCompiler()
 		);
 	}
+	
+	@Override
+	protected void exports(StringBuilder events, String e) {
+		events.append("\n\n");
+	}
 
 	@Override
 	public ThingMLCompiler clone() {

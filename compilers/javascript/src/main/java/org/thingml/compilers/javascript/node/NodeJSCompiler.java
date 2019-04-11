@@ -67,7 +67,7 @@ public class NodeJSCompiler extends JSCompiler {
 
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "RUN npm install @steelbreeze/state@7.2.2\n" +
+        return "RUN npm install @steelbreeze/state@8.0.0\n" +
 						"FROM node:lts-alpine\n" +
 						"COPY --from=0 /node_modules .\n" +
 						"COPY package.json package.json\n" +

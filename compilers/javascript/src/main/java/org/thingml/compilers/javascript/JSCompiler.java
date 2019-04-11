@@ -35,6 +35,8 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
@@ -60,6 +62,37 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
         
         return true;
     }
+	
+	protected void exports(StringBuilder events, String e) {
+		events.append("exports." + e + " = " + e + ";\n\n");
+	}
+	
+	protected void generateEvents(Configuration cfg) {
+		StringBuilder events = ctx.getBuilder("events.js");								
+		for(Message m : ConfigurationHelper.allMessages(cfg)) {			
+			events.append("var " + ctx.firstToUpper(m.getName()) + " = /** @class */ (function () {\n");
+			events.append("  function " + ctx.firstToUpper(m.getName()) + "(port,...params) {\n");
+			events.append("    this.type = '" + m.getName() + "';\n");
+			events.append("    this.port = port;\n");
+			StringBuilder params = new StringBuilder();
+			for(Parameter p : m.getParameters()) {
+				events.append("    this." + p.getName() + " = params[" + m.getParameters().indexOf(p) + "];\n");
+				if (m.getParameters().indexOf(p) > 0)
+					params.append(" + ', ' + ");
+				params.append(p.getName());
+			}
+			events.append("  }\n\n");
+			events.append("  " + ctx.firstToUpper(m.getName()) + ".prototype.is = function (type) {\n");
+			events.append("    return this.type === type;\n");
+			events.append("  };\n\n");
+			events.append("  " + ctx.firstToUpper(m.getName()) + ".prototype.toString = function () {\n");
+			events.append("    return 'event ' + this.type + '?' + this.port + '(' + " + params + " + ')';\n");
+			events.append("  };\n\n");
+			events.append("  return " + ctx.firstToUpper(m.getName()) + ";\n");
+			events.append("}());\n");
+			exports(events, ctx.firstToUpper(m.getName()));
+		}		
+	}
 	
 	abstract protected String getEnumPath(Configuration t, ThingMLModel model, Context ctx);
 	protected void generateEnums(Configuration t, ThingMLModel model, Context ctx) {
@@ -106,6 +139,7 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         processDebug(t); // TODO: What does this actually do??
         generateEnums(t, model, ctx);
+        generateEvents(t);
         for (Thing thing : ConfigurationHelper.allThings(t)) {
             ctx.getCompiler().getThingImplCompiler().generateImplementation(thing, ctx);
         }

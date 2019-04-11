@@ -17,7 +17,6 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.builder.SourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSClass;
@@ -26,10 +25,7 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Function;
-import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 
 public class JSThingApiCompiler extends ThingApiCompiler {
@@ -47,23 +43,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         	for (Parameter p : f.getParameters()) {
         		function.addArgument(ctx.getVariableName(p));
         	}
-        	/*if (debugProfile.getDebugFunctions().contains(f)) {
-	            builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionBegin(thing, f) + "(");
-	            int i = 0;
-	            for (Parameter pa : f.getParameters()) {
-	                if (i > 0)
-	                    builder.append(", ");
-	                builder.append("\" + ");
-	                builder.append(ctx.getVariableName(pa));
-	                builder.append(" + \"");
-	                i++;
-	            }
-	            builder.append(")...\");\n");
-	        }*/
         	ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), function.body().stringbuilder("body"), ctx);
-            /*if (debugProfile.getDebugFunctions().contains(f)) {
-                builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
-            }*/
         }
         
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
@@ -115,7 +95,6 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         		JSFunction receiveFunction = thingClass.addMethod("_receive");
         		receiveFunction.addArgument("msg");
         		Section body = receiveFunction.body();
-        		body.comment("msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}");
         		body.append("if (this.ready) {");
         		Section ifReady = body.section("if").lines().indent();
         		ifReady.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance.evaluate(msg);");
@@ -129,56 +108,11 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         			.append("setTimeout(()=>this._receive(msg),0);")
         			.after("}");
         	}
-        	generatePublicPort(thing, thingClass, jctx);
         } else {
         	JSFunction initFunction = thingClass.addMethod("_init");
     		Section body = initFunction.body();
     		body.comment("no state machine");
-        }
-    	generatePropertyInit(thing, thingClass, jctx);
+        }    	
 	}
 	
-	protected void generatePropertyInit(Thing thing, JSClass thingClass, JSContext jctx) {
-		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			JSFunction receiveFunction = thingClass.addMethod("init" + jctx.firstToUpper(jctx.getVariableName(p)));
-			receiveFunction.addArgument(jctx.getVariableName(p));
-			Section body = receiveFunction.body();
-			body.append("this." + jctx.getVariableName(p) + " = " + jctx.getVariableName(p) + ";");
-		}
-	}
-	
-	protected void generatePublicPort(Thing thing, JSClass thingClass, JSContext jctx) {
-		DebugProfile debugProfile = jctx.getCompiler().getDebugProfiles().get(thing);
-        for (Port p : ThingMLHelpers.allPorts(thing)) {
-            if (p.getReceives().size() > 0) {
-                for (Message m : p.getReceives()) {
-                	JSFunction receiveFunction = thingClass.addMethod("receive" + m.getName() + "On" + p.getName());
-                	for (Parameter pa : m.getParameters())
-                		receiveFunction.addArgument(jctx.protectKeyword(pa.getName()));
-                	Section body = receiveFunction.body();
-                	
-                    final boolean debug = (debugProfile != null) && debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
-                    if (debug) {
-                    	Section print = body.section("printdebug");
-                    	print.append(thing.getName() + "_print_debug(this, \"" + jctx.traceReceiveMessage(thing, p, m) + "(");
-                        int i = 0;
-                        for (Parameter pa : m.getParameters()) {
-                            if (i > 0) print.append(", ");
-                            print.append("\" + " + jctx.protectKeyword(pa.getName()) + " + \"");
-                            i++;
-                        }
-                        print.append(")\");");
-                    }
-                    
-                    Section receive = body.section("receive").append("this._receive(");
-                    Section msgObj = receive.section("message").surroundWith("{", "}").joinWith(", ");
-                    msgObj.append("_port:\"" + p.getName() + "\"");
-                    msgObj.append("_msg:\"" + m.getName() + "\"");
-                    for (Parameter pa : m.getParameters())
-                    	msgObj.append(jctx.protectKeyword(pa.getName()) + ":" + jctx.protectKeyword(pa.getName()));
-                    receive.append(");");
-                }
-            }
-        }
-	}
 }
