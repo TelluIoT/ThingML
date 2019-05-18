@@ -506,6 +506,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 					for(Property p : cs.getProperties()) {
 						if (p.isReadonly()) continue;
 						builder.append("this.set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(");
+						builder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(),
+								p.getTypeRef().getCardinality() != null, ctx) + ")");
 						if (p.getInit() != null) {
 							ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
 						} else {
