@@ -19,7 +19,6 @@ package org.thingml.compilers.registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,9 +31,10 @@ import org.thingml.compilers.c.arduino.ArduinoCompiler;
 import org.thingml.compilers.c.arduinomf.ArduinomfCompiler;
 import org.thingml.compilers.c.posix.PosixCompiler;
 import org.thingml.compilers.c.posixmt.PosixMTCompiler;
-import org.thingml.compilers.cpp.sintefboard.SintefboardCompiler;
 import org.thingml.compilers.c.teensy.TeensyCompiler;
+import org.thingml.compilers.cpp.sintefboard.SintefboardCompiler;
 import org.thingml.compilers.debugGUI.DebugGUICompiler;
+import org.thingml.compilers.java.GraalCompiler;
 import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.browser.BrowserJSCompiler;
 import org.thingml.compilers.javascript.node.NodeJSCompiler;
@@ -75,6 +75,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new TeensyCompiler());
             instance.addCompiler(new SintefboardCompiler());
             instance.addCompiler(new JavaCompiler());
+            instance.addCompiler(new GraalCompiler());
             instance.addCompiler(new BrowserJSCompiler());
             instance.addCompiler(new NodeJSCompiler());
             instance.addCompiler(new ReactJSCompiler());

@@ -34,41 +34,44 @@ import org.thingml.xtext.thingML.Configuration;
  */
 public class JavaCfgBuildCompiler extends CfgBuildCompiler {    
 
+	protected void doGenerate(Configuration cfg, Context ctx, String pomResource) throws Exception {
+		InputStream input = this.getClass().getClassLoader().getResourceAsStream(pomResource);
+        List<String> pomLines = IOUtils.readLines(input, "UTF-8");
+        String pom = "";
+        for (String line : pomLines) {
+            pom += line + "\n";
+        }
+        input.close();
+        pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName());
+
+        String pack = ctx.getContextAnnotation("package");
+        if (pack == null) pack = "org.thingml.generated";
+        pom = pom.replace("<!--PACK-->", pack);
+
+        for (String src : JavaHelper.allSrcFolders(cfg)) {
+        	final File srcFile = new File(src);
+        	if (!srcFile.exists())
+        		throw new FileNotFoundException("@src folder not found: " + srcFile.toString());
+        	FileUtils.copyDirectory(srcFile, new File(ctx.getOutputDirectory(), "src/main/java/"));
+        }
+        
+        for (String dep : JavaHelper.allMavenDep(cfg)) {
+            pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
+        }
+
+        for (String repo : JavaHelper.allMavenRepo(cfg)) {
+            pom = pom.replace("<!--REPO-->", "<!--REPO-->\n" + repo);
+        }
+        
+        PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));
+        w.println(pom);
+        w.close();
+	}
+	
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {
-        //TODO: update POM
         try {
-            InputStream input = this.getClass().getClassLoader().getResourceAsStream("pomtemplates/javapom.xml");
-            List<String> pomLines = IOUtils.readLines(input, "UTF-8");
-            String pom = "";
-            for (String line : pomLines) {
-                pom += line + "\n";
-            }
-            input.close();
-            pom = pom.replace("<!--CONFIGURATIONNAME-->", cfg.getName());
-
-            String pack = ctx.getContextAnnotation("package");
-            if (pack == null) pack = "org.thingml.generated";
-            pom = pom.replace("<!--PACK-->", pack);
-
-            for (String src : JavaHelper.allSrcFolders(cfg)) {
-            	final File srcFile = new File(src);
-            	if (!srcFile.exists())
-            		throw new FileNotFoundException("@src folder not found: " + srcFile.toString());
-            	FileUtils.copyDirectory(srcFile, new File(ctx.getOutputDirectory(), "src/main/java/"));
-            }
-            
-            for (String dep : JavaHelper.allMavenDep(cfg)) {
-                pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
-            }
-
-            for (String repo : JavaHelper.allMavenRepo(cfg)) {
-                pom = pom.replace("<!--REPO-->", "<!--REPO-->\n" + repo);
-            }
-            
-            PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));
-            w.println(pom);
-            w.close();
+            doGenerate(cfg, ctx, "pomtemplates/javapom.xml");
         } catch (Exception e) {
             e.printStackTrace();
         }

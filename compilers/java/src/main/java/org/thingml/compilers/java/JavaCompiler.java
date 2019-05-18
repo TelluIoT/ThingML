@@ -39,7 +39,16 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         connectorCompilers.put("swing", new Java2Swing());
     }
 
-    @Override
+    public JavaCompiler(JavaThingActionCompiler javaThingActionCompiler, JavaThingApiCompiler javaThingApiCompiler,
+			JavaCfgMainGenerator javaCfgMainGenerator, JavaCfgBuildCompiler javaCfgBuildCompiler,
+			JavaThingImplCompiler javaThingImplCompiler) {
+    	super(javaThingActionCompiler, javaThingApiCompiler, javaCfgMainGenerator,
+    			javaCfgBuildCompiler, javaThingImplCompiler);
+        connectorCompilers.clear();
+        connectorCompilers.put("swing", new Java2Swing());
+	}
+
+	@Override
     public ThingMLCompiler clone() {
         return new JavaCompiler();
     }

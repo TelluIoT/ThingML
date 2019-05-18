@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.thingml.generated</groupId>
+	<artifactId><!--CONFIGURATIONNAME--></artifactId>
+	<packaging>jar</packaging>
+	<version>1.0.0</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jasm.version>1.2.0</jasm.version>
+		<!--PROP-->
+	</properties>
+
+	<repositories>
+		<!--Additional repositories-->
+		<!--REPO-->
+	</repositories>
+
+
+	<dependencies>
+
+		<dependency>
+			<groupId>no.sintef</groupId>
+			<artifactId>jasm</artifactId>
+			<version>${jasm.version}</version>
+		</dependency>
+
+		<!--Additional dependencies-->
+		<!--DEP-->
+	</dependencies>
+
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<!--<testSourceDirectory>src/test/java</testSourceDirectory> -->
+		<plugins>
+			<plugin>
+			    <groupId>com.oracle.substratevm</groupId>
+			    <artifactId>native-image-maven-plugin</artifactId>
+			    <version>1.0.0-rc16</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>native-image</goal>
+			            </goals>
+			            <phase>package</phase>
+			        </execution>
+			    </executions>
+			</plugin>		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass><!--PACK-->.Main</mainClass>
+				</configuration>
+			</plugin>
+			<!-- PLUGIN-->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass><!--PACK-->.Main</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<!-- this is used for inheritance merges -->
+						<phase>package</phase>
+						<!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!--ROOT-->
+
+</project>
