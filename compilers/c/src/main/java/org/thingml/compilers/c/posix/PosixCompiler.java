@@ -20,10 +20,12 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CExternalThingEnabledApiCompiler;
-import org.thingml.compilers.c.CExternalThingEnabledImplCompiler;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.compilers.c.posixmt.PosixMTCfgMainGenerator;
+import org.thingml.compilers.c.posixmt.PosixMTThingActionCompiler;
+import org.thingml.compilers.c.posixmt.PosixMTThingApiCompiler;
+import org.thingml.compilers.c.posixmt.PosixMTThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -36,14 +38,24 @@ import org.thingml.xtext.thingML.Thing;
  * Created by ffl on 25.11.14.
  */
 public class PosixCompiler extends OpaqueThingMLCompiler {
+	
+	protected CCompilerContext ctx;
 
     public PosixCompiler() {
-        super(new CThingActionCompilerPosix(), new CExternalThingEnabledApiCompiler(new CThingApiCompiler()),
+        super(new CThingActionCompilerPosix(), new CThingApiCompiler(),
                 new CCfgMainGenerator(), new PosixCCfgBuildCompiler(),
-                new CExternalThingEnabledImplCompiler(new CThingImplCompiler()));
+                new CThingImplCompiler());        
     }
 
-    @Override
+    public PosixCompiler(PosixMTThingActionCompiler posixMTThingActionCompiler,
+			PosixMTThingApiCompiler posixMTThingApiCompiler, PosixMTCfgMainGenerator posixMTCfgMainGenerator,
+			PosixCCfgBuildCompiler posixCCfgBuildCompiler, PosixMTThingImplCompiler posixMTThingImplCompiler) {
+    	super(posixMTThingActionCompiler, posixMTThingApiCompiler,
+    			posixMTCfgMainGenerator, posixCCfgBuildCompiler,
+    			posixMTThingImplCompiler);
+	}
+
+	@Override
     public ThingMLCompiler clone() {
         return new PosixCompiler();
     }
@@ -62,14 +74,17 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         return "Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).";
     }
 
+    protected void setContext(Configuration cfg) {
+    	ctx = new CCompilerContextPosix(this);        
+    }
+    
     @Override
     public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
-
-        CCompilerContext ctx = new CCompilerContextPosix(this);
-        processDebug(cfg);
+    	setContext(cfg);
+    	processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         ctx.setInputDirectory(getInputDirectory());
-        
+                
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
         // GENERATE A MODULE FOR EACH THING
