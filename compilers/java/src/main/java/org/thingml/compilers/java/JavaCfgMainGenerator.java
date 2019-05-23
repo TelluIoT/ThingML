@@ -22,13 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Enumeration;
@@ -199,30 +197,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("public static void main(String args[]) {\n");
         generateInstances(cfg, ctx, builder);
-        final boolean debug = AnnotatedElementHelper.isDefined(cfg, "debug", "true");
-        builder.append("//Init instances (queues, etc)\n");
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            //if (debug || AnnotatedElementHelper.isDefined(i, "debug", "true")) {
-            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
-            boolean debugInst = false;
-            for (Instance inst : debugProfile.getDebugInstances()) {
-                if (i.getName().equals(inst.getName())) {
-                    debugInst = true;
-                    break;
-                }
-            }
-            if (debugInst) {
-                builder.append(ctx.getInstanceName(i) + ".instanceName = \"" + i.getName() + "\";\n");
-                builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
-            }
-            if (debugInst || debug) {
-                //builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
-                builder.append(ctx.getInstanceName(i) + ".printDebug(\"" + ctx.traceInit(i.getType()) + "\");\n");
-            }
-        }
-
-
-
+        
         builder.append("//Network components for external connectors\n");
         builder.append("/*$NETWORK$*/\n");
 

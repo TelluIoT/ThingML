@@ -24,7 +24,6 @@ package org.thingml.compilers.c.posixmt;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -60,7 +59,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
     }
     
     @Override
-    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Definition of the sessions stuct:\n\n");
         CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
         if(!CompositeStateHelper.allContainedSessions(sm).isEmpty()) {
@@ -72,17 +71,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         builder.append("bool active;\n");
         builder.append("bool alive;\n");
         
-        //builder.append("// Variables for the ID of the instance\n");
-        //builder.append("int id;\n");
-        
-        builder.append("// Variables for the ID of the ports of the instance\n");
-        
-        //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
-        if(debugProfile.isActive()) {
-            builder.append("bool debug;\n");
-            builder.append("char * name;\n");
-        }
-        
+        builder.append("// Variables for the ID of the ports of the instance\n"); 
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append("uint16_t id_");
             builder.append(p.getName());

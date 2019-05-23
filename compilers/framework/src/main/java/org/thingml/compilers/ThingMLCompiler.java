@@ -20,22 +20,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResource;
@@ -52,16 +48,8 @@ import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.ThingMLStandaloneSetup;
-import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Function;
-import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -90,9 +78,6 @@ public abstract class ThingMLCompiler {
     private CfgBuildCompiler cfgBuildCompiler;
     private ThingImplCompiler thingImplCompiler;
 
-    //Debug
-    private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
-    private boolean containsDebug = false;
     //we might need several connector compilers has different ports might use different connectors
     protected Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
     private OutputStream messageStream = System.out;
@@ -238,14 +223,6 @@ public abstract class ThingMLCompiler {
         return isOK;
     }
 
-    public Map<Thing, DebugProfile> getDebugProfiles() {
-        return debugProfiles;
-    }
-
-    public boolean containsDebug() {
-        return containsDebug;
-    }
-
     public abstract ThingMLCompiler clone();
 
     /**
@@ -266,124 +243,6 @@ public abstract class ThingMLCompiler {
      */
     public boolean compile(Configuration cfg, String... options) { return compile(cfg, Logger.SYSTEM, options); }
     public abstract boolean compile(Configuration cfg, Logger log, String... options);
-
-    /**
-     * Creates debug profiles
-     * @param cfg
-     */
-    //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
-    @Deprecated
-    public void processDebug(Configuration cfg) {
-        final boolean debugCfg = AnnotatedElementHelper.isDefined(cfg, "debug", "true");
-        this.containsDebug = this.containsDebug || debugCfg;
-
-        Set<Thing> debugThings = new HashSet<>();
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            if (debugCfg) {
-                if (!AnnotatedElementHelper.isDefined(i, "debug", "false")) {
-                    debugThings.add(i.getType());
-                }
-            } else {
-                if (AnnotatedElementHelper.isDefined(i, "debug", "true") || AnnotatedElementHelper.isDefined(i.getType(), "debug", "true")) {
-                    debugThings.add(i.getType());
-                }
-            }
-        }
-
-        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
-            boolean debugBehavior = false;
-            List<Function> debugFunctions = new ArrayList<Function>();
-            List<Property> debugProperties = new ArrayList<>();
-            List<Instance> debugInstances = new ArrayList<>();
-            Map<Port, List<Message>> debugMessages = new HashMap<>();
-
-
-            for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-                if (i.getType().getName().equals(thing.getName())) {
-                    if (debugCfg) {
-                        if (!AnnotatedElementHelper.isDefined(i, "debug", "false")) {
-                            debugInstances.add(i);
-                        }
-                    } else {
-                        if (AnnotatedElementHelper.isDefined(i, "debug", "true") || AnnotatedElementHelper.isDefined(i.getType(), "debug", "true")) {
-                            debugInstances.add(i);
-                        }
-                    }
-                }
-            }
-
-            if (debugThings.contains(thing)) {
-                if (!AnnotatedElementHelper.isDefined(thing, "debug", "false")) {//collect everything not marked with @debug "false"
-                	debugBehavior = thing.getBehaviour() != null && !AnnotatedElementHelper.isDefined(thing.getBehaviour(), "debug", "false");
-                    for (Function f : ThingMLHelpers.allFunctions(thing)) {
-                        if (!AnnotatedElementHelper.isDefined(f, "debug", "false")) {
-                            debugFunctions.add(f);
-                        }
-                    }
-                    for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                        if (!AnnotatedElementHelper.isDefined(p, "debug", "false")) {
-                            debugProperties.add(p);
-                        }
-                    }
-                    for (Port p : ThingMLHelpers.allPorts(thing)) {
-                        List<Message> msg = new LinkedList<Message>();
-                        msg.addAll(p.getReceives());
-                        msg.addAll(p.getSends());
-                        for (Message m : msg) {
-                            if ((!AnnotatedElementHelper.isDefined(p, "debug", "false") && !AnnotatedElementHelper.isDefined(m, "debug", "false")) || AnnotatedElementHelper.isDefined(m, "debug", "true")) {//TODO: check the rules for debugging of messages/ports
-                                List<Message> l = debugMessages.get(p);
-                                if (l == null) {
-                                    l = new ArrayList<>();
-                                    debugMessages.put(p, l);
-                                }
-                                l.add(m);
-                            }
-                        }
-                    }
-                } else {//collect everything marked with @debug "true"
-                	debugBehavior = thing.getBehaviour() != null && AnnotatedElementHelper.isDefined(thing.getBehaviour(), "debug", "true");
-                    for (Function f : ThingMLHelpers.allFunctions(thing)) {
-                        if (AnnotatedElementHelper.isDefined(f, "debug", "true")) {
-                            debugFunctions.add(f);
-                        }
-                    }
-                    for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                        if (AnnotatedElementHelper.isDefined(p, "debug", "true")) {
-                            debugProperties.add(p);
-                        }
-                    }
-                    for (Port p : ThingMLHelpers.allPorts(thing)) {
-                        List<Message> msg = new LinkedList<Message>();
-                        msg.addAll(p.getReceives());
-                        msg.addAll(p.getSends());
-                        for (Message m : msg) {
-                            if ((AnnotatedElementHelper.isDefined(p, "debug", "true") && !AnnotatedElementHelper.isDefined(m, "debug", "false")) || AnnotatedElementHelper.isDefined(m, "debug", "true")) {//TODO: check the rules for debugging of messages/ports
-                                List<Message> l = debugMessages.get(p);
-                                if (l == null) {
-                                    l = new ArrayList<>();
-                                    debugMessages.put(p, l);
-                                }
-                                l.add(m);
-                            }
-                        }
-                    }
-                }
-            }
-            DebugProfile profile = new DebugProfile(thing, debugBehavior, debugFunctions, debugProperties, debugMessages, debugInstances);
-            debugProfiles.put(thing, profile);
-            
-            // The behaviour of a thing may be defines in an included fragment which will also need to have a debug profile attached
-            // TODO: This is not a complete solution. If a fragement is imported in several things only the last will count
-            for (Thing t : ThingHelper.allIncludedThings(thing)) {
-            	
-            		profile = new DebugProfile(t, debugBehavior, debugFunctions, debugProperties, debugMessages, debugInstances);
-                    debugProfiles.put(t, profile);
-            	
-            }
-            
-            this.containsDebug = this.containsDebug || profile.isActive();
-        }
-    }
 
     public void compileConnector(String connector, Configuration cfg, String... options) {
         ctx.setCurrentConfiguration(cfg);

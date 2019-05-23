@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.interfaces.c.ICThingImpEventHandlerStrategy;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -77,24 +76,24 @@ public class CppThingImplCompiler extends CThingImplCompiler {
         }
     }
 
-    protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, CppCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, CppCompilerContext ctx) {
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
         generatePrototypeforThingDirect(func, cppHeaderBuilder, ctx, thing, true);
         cppHeaderBuilder.append(";\n");
-        super.generateCforThingDirect(func, thing, cppHeaderBuilder, ctx, debugProfile);
+        super.generateCforThingDirect(func, thing, cppHeaderBuilder, ctx);
     }
 
-    protected void generateExitActions(Thing thing, StringBuilder builder, CppCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateExitActions(Thing thing, StringBuilder builder, CppCompilerContext ctx) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
         CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
         cppHeaderBuilder.append("// generateExitActions\nvoid " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
         cppHeaderBuilder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-        super.generateExitActions(thing, builder, ctx, debugProfile);
+        super.generateExitActions(thing, builder, ctx);
     }
 
-    protected void generateEventHandlers(Thing thing, StringBuilder builder, CppCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateEventHandlers(Thing thing, StringBuilder builder, CppCompilerContext ctx) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
@@ -110,12 +109,12 @@ public class CppThingImplCompiler extends CThingImplCompiler {
             ctx.appendFormalParametersEmptyHandler(thing, cppHeaderBuilder);
             cppHeaderBuilder.append(";\n");
         }
-        super.generateEventHandlers(thing, cppHeaderBuilder, ctx, debugProfile);
+        super.generateEventHandlers(thing, cppHeaderBuilder, ctx);
         
     }
     
 
-    protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CppCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CppCompilerContext ctx) {
         // NB sdalgard - Incorporated C++ prototypes
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
         cppHeaderBuilder.append("// Observers for outgoing messages:\n");
@@ -156,15 +155,6 @@ public class CppThingImplCompiler extends CThingImplCompiler {
                 builder.append("void " + getCppNameScope() + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append("{\n");
-                // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
-                //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
-                if (debugProfile.getDebugMessages().containsKey(port)) {
-                    if (debugProfile.getDebugMessages().get(port).contains(msg)) {
-                        builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                                + ctx.traceSendMessage(thing, port, msg) + "\\n\");\n");
-                    }
-                }
-
 
                 builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*" + ctx.getSenderName(thing, port, msg) + "_listener)");
                 ctx.appendActualParameters(thing, builder, msg, null);

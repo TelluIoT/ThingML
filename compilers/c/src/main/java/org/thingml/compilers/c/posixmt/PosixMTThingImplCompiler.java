@@ -25,11 +25,9 @@ package org.thingml.compilers.c.posixmt;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.StateContainerHelper;
 import org.thingml.xtext.helpers.StateHelper;
@@ -64,65 +62,39 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("// Declaration of prototypes:\n");
         generatePrivateCPrototypes(thing, builder, ctx);
 
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
-
-        if(debugProfile.isActive()) {
-            builder.append("//Debug fonction\n");
-            builder.append("void " + thing.getName() + "_print_debug(");
-            builder.append("struct " + ctx.getInstanceStructName(thing) + " * _instance");
-            builder.append(", char * str) {\n");
-            
-            builder.append("if(_instance->debug) {\n");
-            
-            if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
-                if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
-                    String stdout = AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next();
-                    builder.append(stdout + ".print(_instance->name);\n");
-                    builder.append(stdout + ".print(str);\n");
-                } else {
-                    builder.append("// PRINT: (" + thing.getName() + ") str");
-                }
-            } else {
-                builder.append("printf(\"%s%s\", _instance->name, str);\n");
-            }
-            
-            builder.append("}\n");
-            builder.append("}\n\n");
-        }
-
-        generateCFunctions(thing, builder, ctx, debugProfile);
+        generateCFunctions(thing, builder, ctx);
 
         builder.append("// On Entry Actions:\n");
-        generateEntryActions(thing, builder, ctx, debugProfile);
+        generateEntryActions(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// On Exit Actions:\n");
-        generateExitActions(thing, builder, ctx, debugProfile);
+        generateExitActions(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// Event Handlers for incoming messages:\n");
-        generateEventHandlers(thing, builder, ctx, debugProfile);
+        generateEventHandlers(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// Observers for outgoing messages:\n");
-        generatePrivateMessageSendingOperations(thing, builder, ctx, debugProfile);
+        generatePrivateMessageSendingOperations(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// Enqueue incoming messages:\n");
-        generateMessageEnqueue(thing, builder, ctx, debugProfile);
+        generateMessageEnqueue(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// Session functions:\n");
-        generateSessionFunctions(thing, builder, ctx, debugProfile);
+        generateSessionFunctions(thing, builder, ctx);
         builder.append("\n");
         
         
         builder.append("// Message Process Queue:\n");
-        generateMessageProcessQueue(thing, builder, ctx, debugProfile);
+        generateMessageProcessQueue(thing, builder, ctx);
         builder.append("\n");
         
         builder.append("// Thing main:\n");
-        generateThingRun(thing, builder, ctx, debugProfile);
+        generateThingRun(thing, builder, ctx);
         builder.append("\n");
         
 
@@ -136,72 +108,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
     }
     
-    /*protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
-
-        if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
-
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
-
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
-
-        // steffend - This is commented out because it is already generated as part of the API
-        //if (isGeneratingCpp()) {
-        //    cppHeaderBuilder.append("// generateEntryActions \nvoid " + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
-        //    cppHeaderBuilder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-        //}
-
-        builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
-        builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
-
-        builder.append("switch(state) {\n");
-
-        
-        for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
-
-            builder.append("case " + ctx.getStateID(cs) + ":{\n");
-            if (debugProfile.isDebugBehavior()) {
-                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                        + ctx.traceOnEntry(thing, sm) + "\\n\");\n");
-            }
-            ArrayList<Region> regions = new ArrayList<Region>();
-            regions.add(cs);
-            regions.addAll(cs.getRegion());
-            // Init state
-            for (Region r : regions) {
-                if (!r.isHistory()) {
-                    builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
-                }
-            }
-            // Execute Entry actions
-            if (cs.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(cs.getEntry(), builder, ctx);
-
-            // Recurse on contained states
-            for (Region r : regions) {
-                builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
-            }
-            builder.append("break;\n}\n");
-        }
-
-
-        
-        for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
-            builder.append("case " + ctx.getStateID(s) + ":{\n");
-            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
-            if (debugProfile.isDebugBehavior()) {
-                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                        + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
-            }
-            if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
-            if(s instanceof FinalState) builder.append("_instance->active = false;\n");
-            builder.append("break;\n}\n");
-        }
-
-        builder.append("default: break;\n");
-        builder.append("}\n");
-        builder.append("}\n");
-    }*/
-    
-    private void generateSessionForks(Thing thing, Session s, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateSessionForks(Thing thing, Session s, StringBuilder builder, PosixMTCompilerContext ctx) {
         builder.append("void fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
         builder.append("struct session_t * new_session;\n");
         builder.append("new_session = malloc(sizeof(struct session_t));\n");
@@ -242,9 +149,9 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("\n");
     }
     
-    private void generateSessionFunctions(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateSessionFunctions(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx) {
         for(Session s : CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
-            generateSessionForks(thing, s, builder, ctx, debugProfile);
+            generateSessionForks(thing, s, builder, ctx);
         }
         if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
             builder.append("void " + thing.getName() + "_terminate(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
@@ -308,7 +215,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         }
     }
 
-    private void generateMessageProcessQueue(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateMessageProcessQueue(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx) {
         
         
         builder.append("int " + thing.getName() + "_processMessageQueue(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n"); // Changed by sdalgard to return int
@@ -432,7 +339,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("}\n");
     }
 
-    private void generateThingRun(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateThingRun(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx) {
         builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
         CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
         
@@ -466,7 +373,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("}\n");
     }
 
-    private void generateMessageEnqueue(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateMessageEnqueue(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx) {
         builder.append("// Message enqueue\n");
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getReceives()) {

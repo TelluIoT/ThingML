@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.interfaces.c.ICThingImpEventHandlerStrategy;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -88,68 +87,31 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         generateCGlobalAnnotation(thing, builder, ctx);
 
         builder.append("// Declaration of prototypes:\n");
-
-        //FIXME: If we need these cpp directives, they should be added in the specific compilers which needs them
-        //builder.append("#ifdef __cplusplus\n");
-        //builder.append("extern \"C\" {\n");
-        //builder.append("#endif\n");
         
         headerPrivateCPrototypes(thing, builder, ctx);
         
-        //builder.append("#ifdef __cplusplus\n");
-        //builder.append("}\n");
-        //builder.append("#endif\n");
-        //builder.append("\n");
-
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
-
-        //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
-        if (debugProfile.isActive()) {
-            builder.append("//Debug fonction\n");
-            builder.append("void " + thing.getName() + "_print_debug(");
-            builder.append("struct " + ctx.getInstanceStructName(thing) + " * _instance");
-            builder.append(", char * str) {\n");
-
-            builder.append("if(_instance->debug) {\n");
-
-            if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
-                if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
-                    String stdout = AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next();
-                    builder.append(stdout + ".print(_instance->name);\n");
-                    builder.append(stdout + ".print(str);\n");
-                } else {
-                    builder.append("// PRINT: (" + thing.getName() + ") str");
-                }
-            } else {
-                builder.append("printf(\"%s%s\", _instance->name, str);\n");
-            }
-
-            builder.append("}\n");
-            builder.append("}\n\n");
-        }
-
-        generateCFunctions(thing, builder, ctx, debugProfile);
+        generateCFunctions(thing, builder, ctx);
 
         builder.append("// Sessions functionss:\n");
-        generateSessionForks(thing, builder, ctx, debugProfile);
+        generateSessionForks(thing, builder, ctx);
         builder.append("\n");
-        generateSessionTerminate(thing, builder, ctx, debugProfile);
+        generateSessionTerminate(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// On Entry Actions:\n");
-        generateEntryActions(thing, builder, ctx, debugProfile);
+        generateEntryActions(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// On Exit Actions:\n");
-        generateExitActions(thing, builder, ctx, debugProfile);
+        generateExitActions(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// Event Handlers for incoming messages:\n");
-        generateEventHandlers(thing, builder, ctx, debugProfile);
+        generateEventHandlers(thing, builder, ctx);
         builder.append("\n");
 
         builder.append("// Observers for outgoing messages:\n");
-        generatePrivateMessageSendingOperations(thing, builder, ctx, debugProfile);
+        generatePrivateMessageSendingOperations(thing, builder, ctx);
         builder.append("\n");
 
         // Get the template and replace the values
@@ -251,28 +213,28 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    protected void generateCFunctions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateCFunctions(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of functions:\n");
         for (Function f : ThingMLHelpers.allFunctions(thing)) {
         	if (!f.isAbstract()) {// Generate only for concrete functions
-                generateCFunction(f, thing, builder, ctx, debugProfile);
+                generateCFunction(f, thing, builder, ctx);
             }
         }
 
         builder.append("\n");
     }
 
-    protected void generateCFunction(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateCFunction(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx) {
         // Test for any special function
 
         if (AnnotatedElementHelper.isDefined(func, "fork_linux_thread", "true") || AnnotatedElementHelper.isDefined(func, "fork_thread", "true")) {
-            generateCforThingLinuxThread(func, thing, builder, ctx, debugProfile);
+            generateCforThingLinuxThread(func, thing, builder, ctx);
         } else { // Use the default function generator
-            generateCforThingDirect(func, thing, builder, ctx, debugProfile);
+            generateCforThingDirect(func, thing, builder, ctx);
         }
     }
 
-    protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         builder.append("// Definition of function " + func.getName() + "\n");
         generatePrototypeforThingDirect(func, builder, ctx, thing, false);
@@ -283,25 +245,14 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             ctx.changeInstanceVarName(nname);
         }
 
-        //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, func)) {
-        if (debugProfile.getDebugFunctions().contains(func)) {
-            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                    + ctx.traceFunctionBegin(thing, func) + "\\n\");\n");
-        }
-
         ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), builder, ctx);
-
-        if (debugProfile.getDebugFunctions().contains(func)) {
-            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                    + ctx.traceFunctionDone(thing, func) + "\\n\");\n");
-        }
 
         ctx.clearInstanceVarName();
 
         builder.append("}\n");
     }
 
-    protected void generateCforThingLinuxThread(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateCforThingLinuxThread(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (func.getTypeRef() != null && func.getTypeRef().getType() != null) {
             System.err.println("WARNING: function with annotation fork_linux_thread must return void");
@@ -313,17 +264,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StringBuilder b_code = new StringBuilder();
 
-        if (debugProfile.getDebugFunctions().contains(func)) {
-            b_code.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                    + ctx.traceFunctionBegin(thing, func) + "\\n\");\n");
-        }
-
         ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), b_code, ctx);
-
-        if (debugProfile.getDebugFunctions().contains(func)) {
-            b_code.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                    + ctx.traceFunctionDone(thing, func) + "\\n\");\n");
-        }
 
         template = template.replace("/*CODE*/", b_code.toString());
 
@@ -362,7 +303,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     }
 
-    protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
@@ -379,10 +320,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
 
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
-            if (debugProfile.isDebugBehavior()) {
-                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                        + ctx.traceOnEntry(thing, sm) + "\\n\");\n");
-            }
             ArrayList<StateContainer> regions = new ArrayList<StateContainer>();
             regions.add(cs);
             regions.addAll(cs.getRegion());
@@ -421,11 +358,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
-            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
-            if (debugProfile.isDebugBehavior()) {
-                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                        + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
-            }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             if(s instanceof FinalState) {
                 builder.append("_instance->active = false;\n");
@@ -439,7 +371,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n");
     }
 
-    protected void generateExitActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateExitActions(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
@@ -468,13 +400,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
-
-
-            if (debugProfile.isDebugBehavior()) {
-                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                        + ctx.traceOnExit(thing, sm, s) + "\\n\");\n");
-            }
-
             builder.append("break;}\n");
         }
 
@@ -483,7 +408,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n");
     }
 
-    protected void generateEventHandlers(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateEventHandlers(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
@@ -493,41 +418,18 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for (Port port : handlers.keySet()) {
             for (Message msg : handlers.get(port).keySet()) {
-                // steffend - This is commented out because it is already generated as part of the API
-                //if (isGeneratingCpp()) {
-                //    cppHeaderBuilder.append("// generateEventHandlers\nvoid " + ctx.getHandlerName(thing, port, msg));
-                //    ctx.appendFormalParameters(thing, cppHeaderBuilder, msg);
-                //    cppHeaderBuilder.append(";\n");
-                //}
-
                 builder.append("void " + getCppNameScope() + ctx.getHandlerName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
                 generateSessionHandlerCalls(thing, port, msg, ctx, builder);
 
-
-                //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
-                if (debugProfile.getDebugMessages().containsKey(port)) {
-                    if (debugProfile.getDebugMessages().get(port).contains(msg)) {
-                        builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                                + ctx.traceReceiveMessage(thing, port, msg) + "\\n\");\n");
-                    }
-                }
-
-                //FIXME: Implement the message debug in the context
-                /*
-                if (ctx.debug_message_receive(msg)) {
-                    builder.append(ctx.print_debug_message("<- " + handler_name(port, msg)) + "\n");
-                }
-                */
-
                 // dispatch the current message to sub-regions
-                dispatchToSubRegions(thing, builder, sm, port, msg, ctx, debugProfile);
-                dispatchToSessions(thing, builder, sm, port, msg, ctx, debugProfile);
+                dispatchToSubRegions(thing, builder, sm, port, msg, ctx);
+                dispatchToSessions(thing, builder, sm, port, msg, ctx);
                 // If the state machine itself has a handler
                 if (StateHelper.canHandle(sm, port, msg)) {
                     // it can only be an internal handler so the last param can be null (in theory)
-                    generateMessageHandlers(thing, sm, port, msg, builder, null, sm, ctx, debugProfile);
+                    generateMessageHandlers(thing, sm, port, msg, builder, null, sm, ctx);
                 }
                 builder.append("}\n");
             }
@@ -546,14 +448,14 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             generateSessionEmptyHandlerCalls(thing, ctx, builder);
 
             // dispatch the current message to sub-regions
-            dispatchEmptyToSubRegions(thing, builder, sm, ctx, debugProfile);
+            dispatchEmptyToSubRegions(thing, builder, sm, ctx);
             builder.append("//begin dispatchEmptyToSession\n");
-            dispatchEmptyToSessions(thing, builder, sm, ctx, debugProfile);
+            dispatchEmptyToSessions(thing, builder, sm, ctx);
             builder.append("//end dispatchEmptyToSession\n");
             // If the state machine itself has a handler
             if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
                 // it can only be an internal handler so the last param can be null (in theory)
-                generateEmptyHandlers(thing, sm, builder, null, sm, ctx, debugProfile);
+                generateEmptyHandlers(thing, sm, builder, null, sm, ctx);
             }
             //New Empty Event Method
             builder.append("return empty_event_consumed;\n");
@@ -562,10 +464,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         for(ICThingImpEventHandlerStrategy strategy : eventHandlerStrategies)
-            strategy.generateEventHandlers(thing, builder, ctx, debugProfile);
+            strategy.generateEventHandlers(thing, builder, ctx);
     }
 
-    protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx) {
 
         for (StateContainer r :CompositeStateHelper.allRegionsFor(cs)) {
             builder.append("//Region " + r.getName() + "\n");
@@ -577,17 +479,17 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 // dispatch to sub-regions if it is a composite
                 if (s instanceof CompositeState) {
-                    dispatchEmptyToSubRegions(thing, builder, (CompositeState) s, ctx, debugProfile);
+                    dispatchEmptyToSubRegions(thing, builder, (CompositeState) s, ctx);
                 }
                 // handle message locally
-                generateEmptyHandlers(thing, s, builder, cs, r, ctx, debugProfile);
+                generateEmptyHandlers(thing, s, builder, cs, r, ctx);
 
                 builder.append("}\n");
             }
         }
     }
 
-    protected void dispatchEmptyToSessions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void dispatchEmptyToSessions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx) {
         //for (Region r : CompositeStateHelper.directSubSessions(cs)) {
         for (Session r : CompositeStateHelper.allContainedSessions(cs)) {
             builder.append("//Session " + r.getName() + "\n");
@@ -599,17 +501,17 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 // dispatch to sub-regions if it is a composite
                 if (s instanceof CompositeState) {
-                    dispatchEmptyToSubRegions(thing, builder, (CompositeState) s, ctx, debugProfile);
+                    dispatchEmptyToSubRegions(thing, builder, (CompositeState) s, ctx);
                 }
                 // handle message locally
-                generateEmptyHandlers(thing, s, builder, cs, r, ctx, debugProfile);
+                generateEmptyHandlers(thing, s, builder, cs, r, ctx);
 
                 builder.append("}\n");
             }
         }
     }
 
-    public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, StateContainer r, CCompilerContext ctx, DebugProfile debugProfile) {
+    public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, StateContainer r, CCompilerContext ctx) {
         boolean first = true;
 
         // Gather all the empty transitions
@@ -624,21 +526,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             if (h instanceof InternalTransition) {
                 InternalTransition it = (InternalTransition) h;
-
-                if (debugProfile.isDebugBehavior()) {
-                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                                + ctx.traceInternal(thing) + "\\n\");\n");
-                }
                 ctx.getCompiler().getThingActionCompiler().generate(it.getAction(), builder, ctx);
                 builder.append("return 1;\n");
             } else if (h instanceof Transition) {
                 Transition et = (Transition) h;
-
-                if (debugProfile.isDebugBehavior()) {
-                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                                + ctx.traceTransition(thing, et) + "\\n\");\n");
-                }
-
                 // Execute the exit actions for current states (starting at the deepest)
                 builder.append(ThingMLElementHelper.qname(ThingMLHelpers.allStateMachines(thing).get(0), "_") + "_OnExit(" + ctx.getStateID((State)et.eContainer()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
@@ -659,7 +550,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     }
 
-    protected void dispatchToSessions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void dispatchToSessions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx) {
         builder.append("//Session list: ");
         for (Session r : CompositeStateHelper.allContainedSessions(cs)) {
             builder.append(r.getName() + " ");
@@ -671,35 +562,22 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
             // for all states of the region, if the state can handle the message and that state is active we forward the message
 
-            /*if (CompositeStateHelper.allContainedSessions(cs).get(0) == r) {
-                builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
-            }*/
-
             ArrayList<State> states = new ArrayList<State>();
             for (State s : r.getSubstate()) if (StateHelper.canHandleIncludingSessions(s, port, msg)) states.add(s);
             for (State s : states) {
                 if (states.get(0) != s) builder.append("else ");
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 if (s instanceof CompositeState) {
-                    dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx, debugProfile);
+                    dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx);
                 }
-                generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx, debugProfile);
+                generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx);
                 builder.append("}\n");
             }
             builder.append("//End Session " + r.getName() + "\n");
         }
-
-        /*if (cs.eContainer() instanceof Region) {
-            builder.append(ctx.getStateVarName((Region) cs.eContainer()) + "_event_consumed = 0 ");
-            for (Region r : CompositeStateHelper.directSubRegions(cs)) {
-                // for all states of the region, if the state can handle the message and that state is active we forward the message
-                builder.append("| " + ctx.getStateVarName(r) + "_event_consumed ");
-            }
-            builder.append(";\n");
-        }*/
     }
 
-    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx) {
 
     	
     	/*
@@ -722,9 +600,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 if (states.get(0) != s) builder.append("else ");
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 if (s instanceof CompositeState) {
-                    dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx, debugProfile);
+                    dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx);
                 }
-                generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx, debugProfile);
+                generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx);
                 builder.append("}\n");
             }
                 builder.append("//End Region " + r.getName() + "\n");
@@ -743,7 +621,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
 
-    protected void generateMessageHandlers(Thing thing, State s, Port port, Message msg, StringBuilder builder, CompositeState cs, StateContainer r, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateMessageHandlers(Thing thing, State s, Port port, Message msg, StringBuilder builder, CompositeState cs, StateContainer r, CCompilerContext ctx) {
 
         boolean first = true;
 
@@ -779,20 +657,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(") {\n");
 
             if (h instanceof InternalTransition) {
-                if (debugProfile.isDebugBehavior()) {
-                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                                + ctx.traceInternal(thing, port, msg) + "\\n\");\n");
-                }
                 InternalTransition it = (InternalTransition) h;
                 ctx.getCompiler().getThingActionCompiler().generate(it.getAction(), builder, ctx);
                 if (r != null) builder.append(ctx.getStateVarName(r) + "_event_consumed = 1;\n");
             } else if (h instanceof Transition) {
-
                 Transition et = (Transition) h;
-                if (debugProfile.isDebugBehavior()) {
-                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                                + ctx.traceTransition(thing, et, port, msg) + "\\n\");\n");
-            }
 
                 // Execute the exit actions for current states (starting at the deepest)
                 builder.append(ThingMLElementHelper.qname(ThingMLHelpers.allStateMachines(thing).get(0), "_") + "_OnExit(" + ctx.getStateID((State)et.eContainer()) + ", " + ctx.getInstanceVarName() + ");\n");
@@ -813,7 +682,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
 
-    protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         // NB sdalgard - Incorporated C++ prototypes
        
 
@@ -850,14 +719,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("void " + getCppNameScope() + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append("{\n");
-                // if (timer_receive_timeout_listener != 0) timer_receive_timeout_listener(timer_id);
-                //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
-                if (debugProfile.getDebugMessages().containsKey(port)) {
-                    if (debugProfile.getDebugMessages().get(port).contains(msg)) {
-                        builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
-                                + ctx.traceSendMessage(thing, port, msg) + "\\n\");\n");
-                    }
-                }
 
                 builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
 
@@ -885,7 +746,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("\n");
     }
 
-    private void generateSessionTerminate(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateSessionTerminate(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         if(StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).size() > 0) {
             builder.append("void " + thing.getName() + "_terminate(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
             for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
@@ -900,7 +761,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    private void generateSessionForks(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateSessionForks(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             builder.append("int " + thing.getName() + "_fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
             builder.append("    struct " + ctx.getInstanceStructName(thing) + " * new_session = NULL;\n");

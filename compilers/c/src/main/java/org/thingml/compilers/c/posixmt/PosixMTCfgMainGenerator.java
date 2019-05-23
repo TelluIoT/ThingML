@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -351,23 +350,6 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
 
             builder.append(ctx.getInstanceVarDecl(inst) + "\n");
             
-            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
-            //if(!(debugProfile==null) && debugProfile.g) {}
-            //if(ctx.containsDebug(cfg, inst.getType())) {
-            boolean debugInst = false;
-            for(Instance i : debugProfile.getDebugInstances()) {
-                if(i.getName().equals(inst.getName())) {
-                    debugInst = true;
-                    break;
-                }
-            }
-            if(debugProfile.isActive()) {
-                //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
-                if(debugInst) {
-                    builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
-                }
-            }
-            
             //Instances Fifo
             builder.append("// Variables for fifo of the instance\n");
             //builder.append("struct instance_fifo " + inst.getName() + "_fifo;\n");
@@ -675,29 +657,6 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
          }
 
         builder.append("\n");
-        
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
-        //if(!(debugProfile==null) && debugProfile.g) {}
-        //if(ctx.containsDebug(cfg, inst.getType())) {
-        boolean debugInst = false;
-        for(Instance i : debugProfile.getDebugInstances()) {
-            if(i.getName().equals(inst.getName())) {
-                debugInst = true;
-                break;
-    }
-        }
-        if(debugProfile.isActive()) {
-            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
-            if(debugInst) {
-                builder.append(ctx.getInstanceVarName(inst) + ".debug = true;\n");
-                builder.append(ctx.getInstanceVarName(inst) + ".name = " + ctx.getInstanceVarName(inst) + "_name;\n");
-                builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
-                        + ctx.traceInit(inst.getType()) + "\\n\");\n");
-            } else {
-                builder.append(ctx.getInstanceVarName(inst) + ".debug = false;\n");
-            }
-        }
-
         return nbConnectorSoFar;
     }
 

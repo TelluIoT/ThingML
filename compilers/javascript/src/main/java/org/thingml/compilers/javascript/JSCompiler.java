@@ -137,7 +137,6 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 	}
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        processDebug(t); // TODO: What does this actually do??
         generateEnums(t, model, ctx);
         generateEvents(t);
         for (Thing thing : ConfigurationHelper.allThings(t)) {

@@ -16,7 +16,6 @@
  */
 package org.thingml.compilers.c.teensy;
 
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.xtext.thingML.Thing;
@@ -33,7 +32,7 @@ public class CThingApiCompilerTeensy extends CThingApiCompiler{
     }
 	
 	@Override
-	protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
-		super.generateInstanceStruct(thing, builder, ctx, debugProfile);
+	protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+		super.generateInstanceStruct(thing, builder, ctx);
 	}
 }

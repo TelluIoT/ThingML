@@ -28,7 +28,6 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -206,22 +205,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             }
         }
-        }
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
-        //if(!(debugProfile==null) && debugProfile.g) {}
-        //if(ctx.containsDebug(cfg, inst.getType())) {
-        boolean debugInst = false;
-            for (Instance i : debugProfile.getDebugInstances()) {
-                if (i.getName().equals(inst.getName())) {
-                debugInst = true;
-                break;
-            }
-        }
-            if (debugProfile.isActive()) {
-            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
-                if (debugInst) {
-                builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
-            }
         }
             
 
@@ -1610,33 +1593,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
          }
 
         builder.append("\n");
-/*
-        // init cep streams variables
-        for (Stream s : CCepHelper.getStreamWithBuffer(inst.getType())) {
-            builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + " = new stream_" + s.getName() + "();\n");
-        }
-*/
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
-        //if(!(debugProfile==null) && debugProfile.g) {}
-        //if(ctx.containsDebug(cfg, inst.getType())) {
-        boolean debugInst = false;
-        for (Instance i : debugProfile.getDebugInstances()) {
-            if (i.getName().equals(inst.getName())) {
-                debugInst = true;
-                break;
-    }
-        }
-        if (debugProfile.isActive()) {
-            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
-            if (debugInst) {
-                builder.append(ctx.getInstanceVarName(inst) + ".debug = true;\n");
-                builder.append(ctx.getInstanceVarName(inst) + ".name = " + ctx.getInstanceVarName(inst) + "_name;\n");
-                builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
-                        + ctx.traceInit(inst.getType()) + "\\n\");\n");
-            } else {
-                builder.append(ctx.getInstanceVarName(inst) + ".debug = false;\n");
-            }
-        }
 
         return nbConnectorSoFar;
     }

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSClass;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSFunction;
@@ -47,7 +46,6 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Transition;
 
 public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
-	DebugProfile debugProfile;
 	
 	protected void generateChildren(Thing thing, Section parent, JSContext jctx) {
 		parent.comment("Children");
@@ -58,23 +56,10 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	@Override
 	public void generateImplementation(Thing thing, Context ctx) {
 		JSContext jctx = (JSContext)ctx;
-		debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
 		
 		JSSourceBuilder builder = jctx.getSourceBuilder(getThingPath(thing, jctx));
 		Section main = createMainSection(thing, builder, jctx);
-		
-		if (debugProfile.isActive()) {
-			Section debug = main.section("debug").lines();
-			debug.comment("Trace function for "+thing.getName());
-			JSFunction printDebug = JSSourceBuilder.jsFunction(debug, "printdebug", "function "+thing.getName()+"_print_debug");
-			printDebug.addArgument("instance").addArgument("msg");
-			printDebug.body()
-				.append("if (instance.debug) {")
-				.section("if").lines().indent()
-				.append("console.log(instance.name + msg +'');")
-				.after("}");
-		}
-		
+			
 		main.append("");
 		main.comment("\n * Definition for type : "+thing.getName()+"\n ");
 		main.append("");
@@ -328,7 +313,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	}
 	
 	protected void generateActionsForState(State s, StateJSState state, Context ctx) {
-		boolean generateEntry = s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState;
+		boolean generateEntry = s.getEntry() != null || s instanceof FinalState;
 		boolean resetProperties = false;
 		if (s instanceof CompositeState) {
 			final CompositeState cs = (CompositeState)s;
@@ -338,9 +323,6 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		
 		if (generateEntry) {
 			StringBuilder builder = state.onEntry();
-			if (debugProfile.isDebugBehavior()) {
-				builder.append("" + ThingMLHelpers.findContainingThing(s).getName() + "_print_debug(this, '" + ctx.traceOnEntry(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "');\n");
-			}
 			if (resetProperties) {
 				if (!s.getProperties().isEmpty())
 					builder.append("//reset properties\n");
@@ -361,11 +343,8 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 				stop(builder);
 			}
 		}
-		if (s.getExit() != null || debugProfile.isDebugBehavior()) {
+		if (s.getExit() != null) {
 			StringBuilder builder = state.onExit();
-			if (debugProfile.isDebugBehavior()) {
-				builder.append("" + ThingMLHelpers.findContainingThing(s).getName() + "_print_debug(this, '" + ctx.traceOnExit(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "');\n");
-			}
 			if (s.getExit() != null)
 				ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
 		}
@@ -387,10 +366,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		
 		if (t.getGuard() != null)
 			ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), transition.guardExpression(), ctx);
-		
-		if (debugProfile.isDebugBehavior())
-			transition.action().append(ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, '" + ctx.traceTransition(ThingMLHelpers.findContainingThing(t), t, p, msg) + "');\n");
-		
+				
 		if (t.getAction() != null)
 			ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), transition.action(), ctx);
 	}
@@ -408,10 +384,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		
 		if (t.getGuard() != null)
 			ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), transition.guardExpression(), ctx);
-		
-		if (debugProfile.isDebugBehavior())
-			transition.action().append(ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, '" + ctx.traceInternal(ThingMLHelpers.findContainingThing(t), p, msg) + "');\n");
-		
+				
 		if (t.getAction() != null)
 			ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), transition.action(), ctx);
 	}

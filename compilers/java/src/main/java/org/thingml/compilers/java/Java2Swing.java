@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
@@ -88,8 +87,6 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
     }
 
     protected void compileType(Thing t, Context ctx, String pack) {
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(t);
-
         if (!AnnotatedElementHelper.hasAnnotation(t, "mock"))
             return;
         final Map<Port, List<Message>> messageToSend = new HashMap<>();

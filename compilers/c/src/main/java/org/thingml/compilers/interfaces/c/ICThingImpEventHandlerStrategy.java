@@ -16,7 +16,6 @@
  */
 package org.thingml.compilers.interfaces.c;
 
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.xtext.thingML.Thing;
 
@@ -25,5 +24,5 @@ import org.thingml.xtext.thingML.Thing;
  */
 public interface ICThingImpEventHandlerStrategy {
 
-    void generateEventHandlers(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile);
+    void generateEventHandlers(Thing thing, StringBuilder builder, CCompilerContext ctx);
 }

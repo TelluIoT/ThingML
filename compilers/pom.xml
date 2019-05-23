@@ -41,7 +41,6 @@
         <module>javascript</module>
         <module>c</module>
         <module>uml</module>
-        <module>debugGUI</module>
         <module>go</module>
         <module>thingmltools</module>
         <module>registry</module>

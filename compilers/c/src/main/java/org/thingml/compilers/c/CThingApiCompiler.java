@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.interfaces.c.ICThingApiIncludesStrategy;
 import org.thingml.compilers.interfaces.c.ICThingApiPublicPrototypeStrategy;
 import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
@@ -31,7 +30,6 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
-import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.StateContainerHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.helpers.ThingHelper;
@@ -80,18 +78,18 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        generateCHeader(thing, (CCompilerContext) ctx, ctx.getCompiler().getDebugProfiles().get(thing));
+        generateCHeader(thing, (CCompilerContext) ctx);
     }
 
     public String getCppNameScope() {
         return "";
     }
 
-    protected void generateCHeader(Thing thing, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateCHeader(Thing thing, CCompilerContext ctx) {
 
         StringBuilder builder = new StringBuilder();
 
-        generateCHeaderCode(thing, ctx, builder, debugProfile);
+        generateCHeaderCode(thing, ctx, builder);
 
         // Get the template and replace the values
         String htemplate = ctx.getThingHeaderTemplate();
@@ -102,7 +100,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".h").append(htemplate);
     }
 
-    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder, DebugProfile debugProfile) {
+    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder) {
 
         builder.append("/*****************************************************************************\n");
         builder.append(" * Headers for type : " + thing.getName() + "\n");
@@ -115,21 +113,11 @@ public class CThingApiCompiler extends ThingApiCompiler {
         generateCHeaderAnnotation(thing, builder, ctx);
 
         // Define the data structure for instances
-        generateInstanceStruct(thing, builder, ctx, debugProfile);
+        generateInstanceStruct(thing, builder, ctx);
 
         // Define the public API
         generatePublicPrototypes(thing, builder, ctx);
         generatePublicMessageSendingOperations(thing, builder, ctx);
-
-//        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
-//            generatePrivateCppPrototypes(thing, builder, ctx);
-//        }
-
-//        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
-//            builder.append("// Observers for outgoing messages:\n");
-//            generatePrivateCppMessageSendingPrototypes(thing, builder, ctx);
-//            builder.append("\n");
-//        }
 
         // This is in the header for now but it should be moved to the implementation
         // when a proper private "initialize_instance" operation will be provided
@@ -165,14 +153,10 @@ public class CThingApiCompiler extends ThingApiCompiler {
         }
     }
 
-    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Definition of the instance struct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
-        if (debugProfile.isActive()) {
-            builder.append("bool debug;\n");
-            builder.append("char * name;\n");
-        }
         //Sessions
         builder.append("\n// Instances of different sessions\n");
         builder.append("bool active;\n");
@@ -243,7 +227,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         }
         //TBD: the code above should be packed into strategies which we should iterate over and execute
         for(ICThingApiStructStrategy strategy : structStrategies)
-            strategy.generateInstanceStruct(thing, builder, ctx, debugProfile);
+            strategy.generateInstanceStruct(thing, builder, ctx);
 
         builder.append("\n};\n");
 

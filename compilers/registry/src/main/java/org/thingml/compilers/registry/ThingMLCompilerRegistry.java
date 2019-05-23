@@ -33,7 +33,6 @@ import org.thingml.compilers.c.posix.PosixCompiler;
 import org.thingml.compilers.c.posixmt.PosixMTCompiler;
 import org.thingml.compilers.c.teensy.TeensyCompiler;
 import org.thingml.compilers.cpp.sintefboard.SintefboardCompiler;
-import org.thingml.compilers.debugGUI.DebugGUICompiler;
 import org.thingml.compilers.java.GraalCompiler;
 import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.browser.BrowserJSCompiler;
@@ -80,7 +79,6 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new NodeJSCompiler());
             instance.addCompiler(new ReactJSCompiler());
             instance.addCompiler(new PlantUMLCompiler());
-            instance.addCompiler(new DebugGUICompiler());
             instance.addCompiler(new GoCompiler());
 
         }

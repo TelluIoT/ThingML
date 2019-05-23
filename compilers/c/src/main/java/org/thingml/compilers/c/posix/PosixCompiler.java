@@ -81,7 +81,6 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
     @Override
     public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
     	setContext(cfg);
-    	processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         ctx.setInputDirectory(getInputDirectory());
                 

@@ -63,7 +63,6 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
 
         CCompilerContext ctx = new CCompilerContextArduino(this);
-        processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
