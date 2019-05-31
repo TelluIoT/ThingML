@@ -153,7 +153,7 @@ public class AnnotationRegistry {
 		final String code_name = "code";
 		final String code_desc = "Sets a code to a given message. Used by serializers to identify messages.";
 		final EClass code_scope[] = {ThingMLPackage.eINSTANCE.getMessage()};
-		final Annotation code_annotation = new Annotation(code_name, code_desc, code_scope);
+		final Annotation code_annotation = new IntegerAnnotation(code_name, code_desc, code_scope, true);
 		annotations.put(code_name, code_annotation);
 		
 		//@sync_send
