@@ -1,0 +1,112 @@
+import "datatypes.thingml" from stl
+
+thing fragment LogMsgs {
+	
+	message log_on()
+	message log_off()
+	
+	/*
+	 * payload[0]: identifies the thing instance as defined in the configuration
+	 * payload[1]: identifies the invoked function
+	 * payload[2]: identified the return type of the function (0x00 for "void")
+	 * payload[3-]: if payload[2]!=0x00, serialized value returned by the function (e.g. 2 bytes for an Int16) 
+	 * params[rest]: serialized values of parameters if any. 
+	 */
+	message function_called(payload : Byte[])
+	
+	/*message property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)
+	
+	message message_sent(inst : String, port_name : String, msg_name : String, params : String)
+	message message_lost(inst : String, port_name : String, msg_name : String, params : String)
+	message message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)*/
+}
+
+/*
+ * Things we want to log needs to include WithLog 
+ */
+thing fragment WithBinaryLog includes LogMsgs {
+	
+	readonly property DEBUG_BIN_ID : Byte
+	
+	required port log @sync_send "true" {
+		sends function_called//, property_changed, message_lost, message_handled, message_sent
+	}
+	
+}
+
+/*
+ * Generic proxy listening to things WithLog and forwarding to 
+ */
+thing fragment Logger includes LogMsgs {
+	
+	readonly property ACTIVATE_ON_STARTUP : Boolean
+	
+	provided port log {
+		receives log_on, log_off, function_called//, property_changed, message_lost, message_handled, message_sent
+	}
+	
+	abstract function log_function_called(payload : Byte[])
+	/*abstract function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+	abstract function log_message_lost(inst : String, port_name : String, msg_name : String, params : String)
+	abstract function log_message_sent(inst : String, port_name : String, msg_name : String, params : String)
+	abstract function log_message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)*/
+		
+	statechart init STARTUP {
+		
+		state STARTUP {
+			
+			transition -> ON
+			guard ACTIVATE_ON_STARTUP
+			
+			transition -> OFF
+			guard not ACTIVATE_ON_STARTUP
+			
+		}
+		
+		state ON {
+			
+			internal event d : log?function_called
+			action log_function_called(d.payload)
+			
+			/*internal event d : log?property_changed
+			action log_property_changed(d.inst, d.prop_name, d.ty, d.old_value, d.new_value)
+			
+			internal event d : log?message_lost
+			action log_message_lost(d.inst, d.port_name, d.msg_name, d.params)
+			
+			internal event d : log?message_sent
+			action log_message_sent(d.inst, d.port_name, d.msg_name, d.params)
+			
+			internal event d : log?message_handled
+			action log_message_handled(d.inst, d.source, d.target, d.port_name, d.msg_name, d.params)*/
+			
+			transition -> OFF
+			event log?log_off
+		}
+		
+		state OFF {
+			transition -> ON
+			event log?log_on
+		}
+		
+	}
+	
+}
+
+thing ConsoleLogger includes Logger @stdout_sync "true" {
+	
+	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
+		println "log: function_called(", inst, ", ", fn_name, ", ", ty, ", ", returns, ", ", params, ")"
+		
+	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
+		println "log: property_changed(", inst, ", ", prop_name, ", ", ty, ", ", old, ", ", new, ")"
+		
+	function log_message_lost(inst : String, port_name : String, msg_name : String, params : String)
+		println "log: message_lost(", inst, ", ", port_name, ", ", msg_name, ", ", params, ")"
+	
+	function log_message_sent(inst : String, port_name : String, msg_name : String, params : String)
+		println "log: message_sent(", inst, ", ", port_name, ", ", msg_name, ", ", params, ")"
+		
+	function log_message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)		
+		println "log: message_handled(", inst, ", ", source, ", ", target, ", ", port_name, ", ", msg_name, ", ", params, ")"
+}

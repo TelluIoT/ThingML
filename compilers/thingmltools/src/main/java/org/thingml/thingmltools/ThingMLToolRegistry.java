@@ -48,7 +48,8 @@ public class ThingMLToolRegistry {
             instance.addTool(new JavaJSONMQTTGenerator());
             instance.addTool(new JavaScriptJSONMQTTGenerator());
             instance.addTool(new GoSONMQTTGenerator());
-            instance.addTool(new MonitorGenerator());
+            instance.addTool(new MonitorGenerator(false));
+            instance.addTool(new MonitorGenerator(true));
         }
 
         return instance;

@@ -48,19 +48,27 @@ import org.thingml.xtext.thingML.TypeRef;
  */
 public class MonitorGenerator extends ThingMLTool {
 
+	private final boolean isBinary;
 
-    public MonitorGenerator() {
+    public MonitorGenerator(boolean isBinary) {
         super();
+        this.isBinary = isBinary;
     }
 
     @Override
     public String getID() {
-        return "monitor";
+    	if (!isBinary)
+    		return "monitor";
+    	else
+    		return "monitor-bin";
     }
 
     @Override
     public String getName() {
-        return "Monitor Generator";
+    	if (!isBinary)
+    		return "Monitor Generator";
+    	else 
+    		return "Binary Monitor Generator";
     }
 
     @Override
@@ -70,7 +78,7 @@ public class MonitorGenerator extends ThingMLTool {
 
     @Override
     public ThingMLTool clone() {
-        return new MonitorGenerator();
+        return new MonitorGenerator(isBinary);
     }
 
     @Override
@@ -98,18 +106,28 @@ public class MonitorGenerator extends ThingMLTool {
     	Type stringType = null;
     	for (Type t : copy.getTypes()) {
             if (t instanceof ObjectType) {
-                if (t.getName().equals("String"))
+                if (!isBinary && t.getName().equals("String")) {
                 	stringType = t;
+                	break;
+                }
+                if (isBinary && t.getName().equals("Byte")) {
+                	stringType = t;
+                	break;
+                }
             }
         }
-    	if (stringType == null) throw new NoSuchElementException("Cannot find String type");
+    	if (stringType == null) throw new NoSuchElementException("Cannot find String/Byte type");
     	
     	final TypeRef stringTypeRef = ThingMLFactory.eINSTANCE.createTypeRef();
     	stringTypeRef.setType(stringType);
         
         Thing logAPI = null;
         for(Thing t : ThingMLHelpers.allThings(copy)) {
-        	if (t.getName().equals("WithLog")) {
+        	if (!isBinary && t.getName().equals("WithLog")) {
+        		logAPI = t;
+        		break;
+        	}
+        	if (isBinary && t.getName().equals("WithBinaryLog")) {
         		logAPI = t;
         		break;
         	}
@@ -161,7 +179,10 @@ public class MonitorGenerator extends ThingMLTool {
         				break;
         			}
         		}
-        		new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
+        		if (!isBinary)
+        			new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
+        		else
+        			new FunctionMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef).monitor();
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
