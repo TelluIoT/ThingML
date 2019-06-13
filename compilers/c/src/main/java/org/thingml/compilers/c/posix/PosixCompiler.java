@@ -16,7 +16,6 @@
  */
 package org.thingml.compilers.c.posix;
 
-import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
@@ -29,7 +28,6 @@ import org.thingml.compilers.c.posixmt.PosixMTThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
@@ -115,26 +113,4 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         return true;
     }
     
-    @Override
-    public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return "debian:stable-slim";
-    }
-    
-    @Override
-    public String getDockerCMD(Configuration cfg, Context ctx) {
-        return "./" + cfg.getName(); 
-    }
-    
-    @Override
-    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*\n");
-        builder.append("COPY . .\n");
-        builder.append("RUN make\n");        
-        if(AnnotatedElementHelper.isDefined(cfg, "c_static_linking", "true")) {
-        	builder.append("FROM scratch\n");
-        	builder.append("COPY --from=0 " + cfg.getName() + " " + cfg.getName());
-        }                        
-        return builder.toString();
-    }
 }

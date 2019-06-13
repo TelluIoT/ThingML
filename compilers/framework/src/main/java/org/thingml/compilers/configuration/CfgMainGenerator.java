@@ -17,9 +17,7 @@
 package org.thingml.compilers.configuration;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
@@ -30,13 +28,5 @@ public class CfgMainGenerator {
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         throw (new UnsupportedOperationException("Configuration are platform-specific."));
     }
-
-    public CfgMainGenerator getPlugableCfgGenerator(Thing thing, Context ctx) {
-        if(ExternalThingPlugin.isExternalThing(thing)) {
-            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPlugin(thing);
-            if(plugin != null)
-                return plugin.getCfgMainGenerator();
-        }
-        return this;
-    }
+    
 }

@@ -56,26 +56,6 @@ public class NodeJSCompiler extends JSCompiler {
 	}
 
 	@Override
-    public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return "node:lts-alpine";
-    }
-
-    @Override
-    public String getDockerCMD(Configuration cfg, Context ctx) {
-        return "node\", \"--expose-gc\", \"main.js"; //Param main.js
-    }
-
-    @Override
-    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "RUN npm install @steelbreeze/state@8.0.0\n" +
-						"FROM node:lts-alpine\n" +
-						"COPY --from=0 /node_modules .\n" +
-						"COPY package.json package.json\n" +
-        		"RUN npm install --production\n" +
-        		"COPY . .\n";
-    }
-
-	@Override
 	protected String getEnumPath(Configuration t, ThingMLModel model, Context ctx) {
 		return "enums.js";
 	}

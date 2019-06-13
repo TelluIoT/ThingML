@@ -38,7 +38,6 @@ import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.browser.BrowserJSCompiler;
 import org.thingml.compilers.javascript.node.NodeJSCompiler;
 import org.thingml.compilers.javascript.react.ReactJSCompiler;
-import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.uml.PlantUMLCompiler;
@@ -57,10 +56,6 @@ public class ThingMLCompilerRegistry {
     private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
     private static Set<SerializationPlugin> loadedSerPlugins;
     private HashMap<String, ThingMLCompiler> compilers = new HashMap<String, ThingMLCompiler>();
-
-    private static ServiceLoader<ExternalThingPlugin> externalThingPlugins = ServiceLoader.load(ExternalThingPlugin.class);
-    private static Set<ExternalThingPlugin> loadedExternalThingPlugins;
-
 
     public static ThingMLCompilerRegistry getInstance() {
 
@@ -95,14 +90,6 @@ public class ThingMLCompilerRegistry {
         while (sit.hasNext()) {
             SerializationPlugin sp = sit.next();
             loadedSerPlugins.add(sp);
-        }
-
-        loadedExternalThingPlugins = new HashSet<>();
-        externalThingPlugins.reload();
-        Iterator<ExternalThingPlugin> exthingit =  externalThingPlugins.iterator();
-        while (exthingit.hasNext()) {
-            ExternalThingPlugin etp = exthingit.next();
-            loadedExternalThingPlugins.add(etp);
         }
 
         return instance;
@@ -161,30 +148,7 @@ public class ThingMLCompilerRegistry {
                     c.addSerializationPlugin(sp);
                 }
             }
-            for(ExternalThingPlugin etp : loadedExternalThingPlugins) {
-                if(etp.getTargetedLanguages().contains(id)) {
-                    c.addExternalThingPlugin(etp);
-                }
-            }
             return c;
-        }
-    }
-
-    public void printExternalThingPluginList() {
-        System.out.println("External Thing Plugin list: ");
-        for (ExternalThingPlugin etp : loadedExternalThingPlugins) {
-            System.out.print("    └╼ " + etp.getPluginID() + " (");
-            boolean first = true;
-            for (String lang : etp.getTargetedLanguages()) {
-                if (first) {
-                    first = false;
-                } else {
-                    System.out.print(", ");
-                }
-                System.out.print(lang);
-            }
-            System.out.println(") handles:");
-            System.out.println("        └╼ " + etp.getSupportedExternalThingTypeID());
         }
     }
 

@@ -19,10 +19,8 @@ package org.thingml.compilers.configuration;
 import java.util.Iterator;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by bmori on 17.12.2014.
@@ -33,33 +31,68 @@ public class CfgBuildCompiler {
     public void generateBuildScript(Configuration cfg, Context ctx) {
         throw (new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
     }
-
-    public CfgBuildCompiler getPlugableCfgBuildCompiler(Thing thing, Context ctx) {
-        if(ExternalThingPlugin.isExternalThing(thing)) {
-            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPlugin(thing);
-            if(plugin != null)
-                return plugin.getCfgBuildCompiler();
-        }
-        return this;
+    
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return null;
+    }
+    
+    public String getDockerPerfExtra(Configuration cfg, Context ctx) {
+        return "";
+    }
+    
+    public String getRunScriptPerfExtra(Configuration cfg, Context ctx) {
+        return "";
+    }
+    
+    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
+    	throw (new UnsupportedOperationException("Run command is platform-specific."));
+    }
+    
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+    	throw (new UnsupportedOperationException("Run command is platform-specific."));
+    }
+    
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        return null;
+    }
+    
+    public void generateRunScript(Configuration cfg, Context ctx) {
+    	StringBuilder runScript = ctx.getBuilder("run.sh");
+        String runScriptTemplate = ctx.getTemplateByID("commontemplates/run.sh");
+        
+        runScriptTemplate = runScriptTemplate.replace("#RUN", getRunScriptRunCommand(cfg, ctx));
+        
+        runScriptTemplate = runScriptTemplate.replace("#EXTRA", getRunScriptPerfExtra(cfg, ctx));
+        
+        runScript.append(runScriptTemplate.replace("\r", ""));
     }
     
     public void generateDockerFile(Configuration cfg, Context ctx) {
         if(AnnotatedElementHelper.hasFlag(cfg, "docker") || AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
-            StringBuilder Dockerfile = ctx.getBuilder("Dockerfile");
-            String dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile");
+            StringBuilder dockerfile = ctx.getBuilder("Dockerfile");
+            String dockerfileTemplate = null;
+            
+            if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+            	dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile.perf");
+            	generateRunScript(cfg, ctx);
+            } else {
+            	dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile");
+            }
             
             String baseImage;
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_base_image")) {
                 baseImage = AnnotatedElementHelper.annotation(cfg, "docker_base_image").iterator().next();
             } else {
-                if(ctx.getCompiler().getDockerBaseImage(cfg, ctx) != null) {
-                    baseImage = ctx.getCompiler().getDockerBaseImage(cfg, ctx);
+                if(getDockerBaseImage(cfg, ctx) != null) {
+                    baseImage = getDockerBaseImage(cfg, ctx);
                 } else {
                     baseImage = "NULL";
                     System.out.println("[WARNING] No docker base image found for compiler " + ctx.getCompiler().getID());
                 }
             }
-            dockerfileTemplate = dockerfileTemplate.replace("#BASE_IMAGE", baseImage);            
+            dockerfileTemplate = dockerfileTemplate.replace("#BASE_IMAGE", baseImage);
+            
+            dockerfileTemplate = dockerfileTemplate.replace("#PERF_EXTRA", getDockerPerfExtra(cfg, ctx));
             
             String expose;
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_expose")) {
@@ -88,8 +121,8 @@ public class CfgBuildCompiler {
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_cmd")) {
                 cmd = AnnotatedElementHelper.annotation(cfg, "docker_cmd").iterator().next();
             } else {
-                if(ctx.getCompiler().getDockerCMD(cfg, ctx) != null) {
-                    cmd = ctx.getCompiler().getDockerCMD(cfg, ctx);
+                if(getDockerCMD(cfg, ctx) != null) {
+                    cmd = getDockerCMD(cfg, ctx);
                 } else {
                     cmd = "NULL";
                     System.out.println("[WARNING] No docker command found for compiler " + ctx.getCompiler().getID());
@@ -98,8 +131,8 @@ public class CfgBuildCompiler {
             dockerfileTemplate = dockerfileTemplate.replace("#CMD", cmd);
             
             String cfgPath;
-            if(ctx.getCompiler().getDockerCMD(cfg, ctx) != null) {
-                cfgPath = ctx.getCompiler().getDockerCfgRunPath(cfg, ctx);
+            if(getDockerCMD(cfg, ctx) != null) {
+                cfgPath = getDockerCfgRunPath(cfg, ctx);
             } else {
                 cfgPath = "NULL";
                 System.out.println("[WARNING] No docker configuration runnable path found for compiler " + ctx.getCompiler().getID());
@@ -117,7 +150,7 @@ public class CfgBuildCompiler {
             }
             dockerfileTemplate = dockerfileTemplate.replace("#PARAMETERS", param);
             
-            Dockerfile.append(dockerfileTemplate);
+            dockerfile.append(dockerfileTemplate);
             
         }
     }

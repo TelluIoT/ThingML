@@ -104,23 +104,4 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         return true;
     }
 
-    @Override
-    public String getDockerBaseImage(Configuration cfg, Context ctx) {
-    	return "maven:alpine";
-    }
-
-    @Override
-    public String getDockerCMD(Configuration cfg, Context ctx) {
-        return "java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar";
-    }
-
-    @Override
-    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "RUN cd /root && wget https://github.com/TelluIoT/ThingML/releases/download/1.0.0/mvn_repo_generated.tar.gz\n" +
-        		"RUN cd /root && tar -xzf mvn_repo_generated.tar.gz\n" +
-        		"COPY . .\n" +
-        		"RUN mvn install\n" +
-        		"FROM openjdk:jre-alpine\n" +
-        		"COPY --from=0 /target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar .\n";
-    }
 }

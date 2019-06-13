@@ -38,6 +38,34 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
     public void generateBuildScript(Configuration cfg, Context ctx) {
         generateLinuxMakefile(cfg, (CCompilerContext) ctx);
     }
+    
+    @Override
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return "debian:stable-slim";
+    }
+    
+    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
+    	return "./" + cfg.getName() + " &\n"
+    			+ "PID=$!\n";
+    }
+    
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "./" + cfg.getName(); 
+    }
+    
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*\n");
+        builder.append("COPY . .\n");
+        builder.append("RUN make\n");        
+        if(AnnotatedElementHelper.isDefined(cfg, "c_static_linking", "true") && !AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+        	builder.append("FROM scratch\n");
+        	builder.append("COPY --from=0 " + cfg.getName() + " " + cfg.getName());
+        }                        
+        return builder.toString();
+    }
 
     protected String getSourceFileName(Thing thing) {
         return thing.getName() + ".c ";
@@ -102,9 +130,8 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
 
         // Add the modules for the Things
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            PosixCCfgBuildCompiler plugable = (PosixCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
-            srcs.append(plugable.getSourceFileName(t));
-            objs.append(plugable.getObjectFileName(t));
+        	srcs.append(getSourceFileName(t));
+            objs.append(getObjectFileName(t));
             // Add any additional modules from the annotations
             includeExternalModules(t, srcs, objs, ctx);
         }
@@ -118,11 +145,6 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
       
 
         String libs = "";
-        for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            PosixCCfgBuildCompiler plugable = (PosixCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
-            libs += plugable.getThirdPartyLibraries(t);
-        }
-
         for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {

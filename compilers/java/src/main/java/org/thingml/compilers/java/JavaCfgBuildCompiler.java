@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 
 /**
@@ -77,4 +78,59 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
         }
     }
 
+    @Override
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+    	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+    		return "maven:3-jdk-11";
+    	} else {
+    		return "maven:alpine";
+    	}
+    }
+
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar";
+    }
+
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        String command = "RUN cd /root && wget https://github.com/TelluIoT/ThingML/releases/download/1.0.0/mvn_repo_generated.tar.gz\n" +
+        		"RUN cd /root && tar -xzf mvn_repo_generated.tar.gz\n" +
+        		"COPY . .\n" +
+        		"RUN mvn install\n";
+        if (!AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+        	command += "FROM openjdk:jre-alpine\n" +
+        		"COPY --from=0 /target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar .\n";
+        }        
+        return command;
+    }
+    
+    public String getDockerPerfExtra(Configuration cfg, Context ctx) {
+        return "RUN cd /root && wget https://github.com/jvm-profiling-tools/perf-map-agent/archive/master.zip && unzip master.zip && rm -f master.zip && \\\n" + 
+        		"    cd /root/perf-map-agent-master && \\\n" + 
+        		"    sed -i '/find_package(Java REQUIRED)/Q' CMakeLists.txt && \\\n" + 
+        		"    export PATH=$JAVA_HOME/bin:$PATH && cmake . && make && \\\n" + 
+        		"    cd src/java && javac -d ../../out *.java && cd ../../out && jar -cvfe libperfagent.jar net.virtualvoid.perf.AttachOnce net/virtualvoid/perf && \\\n" + 
+        		"    cd /root/perf-map-agent-master && \\\n" + 
+        		"    cp out/libperfmap.so /libperfmap.so && cp out/libperfagent.jar /libperfagent.jar && \\\n" + 
+        		"    rm -rf /root/perf-map-agent-master\n" + 
+        		"\n" + 
+        		"RUN cd /root && wget https://github.com/dcapwell/lightweight-java-profiler/archive/master.zip && unzip master.zip && rm -f master.zip && \\\n" + 
+        		"    cd /root/lightweight-java-profiler-master && \\\n" + 
+        		"    make && \\\n" + 
+        		"    cp /root/lightweight-java-profiler-master/build-64/liblagent.so /liblagent.so && \\\n" + 
+        		"    rm -rf /root/lightweight-java-profiler-master";
+    }
+    
+    public String getRunScriptPerfExtra(Configuration cfg, Context ctx) {
+        return "cp /tmp/perf*.map /data/perf-$PID.map\n"
+        		+ "cp traces.txt /data/traces.txt\n";
+    }
+    
+    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
+    	return "java -XX:+PreserveFramePointer -agentpath:/liblagent.so -jar /target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar &\n"
+    			+ "PID=$!\n"
+    			+ "java -jar /libperfagent.jar $PID &\n";
+    }
+    
 }

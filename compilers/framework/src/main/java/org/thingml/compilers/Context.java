@@ -17,15 +17,11 @@
 package org.thingml.compilers;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +34,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.builder.SourceBuilder;
 //import org.fusesource.jansi.Ansi;
-import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
@@ -54,7 +49,6 @@ import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.State;
@@ -594,18 +588,6 @@ public class Context {
             }
         }
 
-        List<Thing> things = ExternalThingPlugin.getAllExternalThings(ConfigurationHelper.allThings(cfg));
-        Set<ExternalThingPlugin> externalPluginLibs = new HashSet<ExternalThingPlugin>();
-        for(Thing thing : things) {
-            ExternalThingPlugin etp = this.getCompiler().getExternalThingPlugin(thing);
-            if(etp != null) {
-                List<PlatformAnnotation> annotations = thing.getAnnotations();//AnnotatedElementHelper.allIncludedAnnotations(thing);
-                etp.addExternalThingAnnotations(new HashSet<PlatformAnnotation>(annotations));
-                externalPluginLibs.add(etp);
-            }
-        }
-        for(ExternalThingPlugin etp : externalPluginLibs)
-            etp.generateExternalLibrary(cfg, this);
     }
 
     public SerializationPlugin getSerializationPlugin(Protocol p) throws UnsupportedEncodingException {

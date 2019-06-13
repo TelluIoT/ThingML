@@ -39,33 +39,6 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
 		
         //GENERATE THE MAKEFILE
         String mtemplate = ctx.getTemplateByID("ctemplates/Teensy_Makefile");
-        //mtemplate = mtemplate.replace("/*NAME*/", "src/" + cfg.getName() + ".cpp src/runtime.cpp");
-        
-        /*
-  
-        StringBuilder srcs = new StringBuilder();
-        for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            TeensyCCfgBuildCompiler plugable = (TeensyCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
-            srcs.append(plugable.getSourceFileName(t));
-        }
-        */
-/*
-        String libs = "";
-
-        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries")) {
-            String[] strs = s.split(" ");
-            for (int i = 0; i < strs.length; i++) {
-                libs += "-l " + strs[i].trim() + " ";
-            }
-        }
-        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries_rep")) {
-            String[] strs = s.split(" ");
-            for (int i = 0; i < strs.length; i++) {
-                libs += "-L " + strs[i].trim() + " ";
-            }
-        }
-        libs = libs.trim();
-*/
         
         if(AnnotatedElementHelper.hasAnnotation(cfg, "teensy_platform")){
         	String platform = AnnotatedElementHelper.annotation(cfg, "teensy_platform").get(0);

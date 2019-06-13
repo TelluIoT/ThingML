@@ -38,7 +38,6 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.thing.NewThingActionCompiler;
@@ -51,7 +50,6 @@ import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Protocol;
-import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.validation.Checker;
 
@@ -70,7 +68,6 @@ public abstract class ThingMLCompiler {
     public Checker checker = new Checker();
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
     Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
-    Map<String, ExternalThingPlugin> externalThingPlugingPerExternalThing = new HashMap<>();
     private ThingActionCompiler thingActionCompiler;
     private NewThingActionCompiler newThingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
@@ -378,34 +375,6 @@ public abstract class ThingMLCompiler {
         }
     }
 
-    public void addExternalThingPlugin(ExternalThingPlugin etp) {
-        String externalThingTypeId = etp.getSupportedExternalThingTypeID();
-        ExternalThingPlugin externalPlugin = externalThingPlugingPerExternalThing.get(externalThingTypeId);
-        if(externalPlugin != null && !externalPlugin.equals(etp)) {
-            System.out.println("[ERROR] Two different plugins ("+ etp.getPluginID() +", "+ externalPlugin.getPluginID() +") to generate the same type of external thing: " +externalThingTypeId);
-            return;
-        }
-        externalThingPlugingPerExternalThing.put(externalThingTypeId, etp);
-    }
-
-    public ExternalThingPlugin getExternalThingPlugin(Thing thing) {
-        String externalThingTypeId = ExternalThingPlugin.calculateExternalThingTypeID(thing);
-        ExternalThingPlugin plugin = externalThingPlugingPerExternalThing.get(externalThingTypeId);
-        if(plugin == null) {
-            System.out.println("[ERROR] No plugin found for external thing: " + thing.getName() + " of type \"" + externalThingTypeId + "\"");
-            return null;
-        }
-        return plugin;
-    }
-
-    public Boolean isExternalThing(Thing thing) {
-        return ExternalThingPlugin.isExternalThing(thing);
-    }
-
-    public Set<ExternalThingPlugin> getExternalThingPlugins() {
-        return new HashSet<ExternalThingPlugin>(externalThingPlugingPerExternalThing.values());
-    }
-
     public void addSerializationPlugin(SerializationPlugin sp) {
         if (!serializationPlugins.containsKey(sp.getPluginID())) {
             serializationPlugins.put(sp.getPluginID(), sp);
@@ -433,16 +402,5 @@ public abstract class ThingMLCompiler {
         return null;
     }
     
-    public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return null;
-    }
-    public String getDockerCMD(Configuration cfg, Context ctx) {
-        return null;
-    }
-    
-    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return null;
-    }
-
 
 }

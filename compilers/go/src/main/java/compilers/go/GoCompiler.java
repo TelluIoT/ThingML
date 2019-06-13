@@ -20,10 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.builder.Section;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -44,7 +41,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		super(new GoThingActionCompiler(),
 			  new GoThingApiCompiler(),
 			  new GoCfgMainGenerator(),
-			  new CfgBuildCompiler(),
+			  new GoCfgBuildCompiler(),
 			  new GoThingImplCompiler());
 	}
 
@@ -144,25 +141,4 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		return true;
 	}
 
-	@Override
-    public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return "golang:alpine";
-    }
-
-    @Override
-    public String getDockerCMD(Configuration cfg, Context ctx) {
-        return "/" + cfg.getName();
-    }
-
-    @Override
-    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-        return "RUN mkdir -p /go/src/" + cfg.getName() + "\n" +
-        		"WORKDIR /go/src/" + cfg.getName() + "\n" +
-        		"RUN apk add --no-cache build-base git\n" +
-        		"RUN go get github.com/SINTEF-9012/gosm\n" +
-        		"COPY . .\n" +
-        		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go\n" +
-        		"FROM scratch\n" +
-        		"COPY --from=0 /go/src/" + cfg.getName() + "/" + cfg.getName() + " /" + cfg.getName() + "\n";
-    }
 }

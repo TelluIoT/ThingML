@@ -135,8 +135,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     protected  void generateCleanupOnTerminate(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         EList<Instance> instances = cfg.getInstances();
         for(Instance instance : instances) {
-            CCfgMainGenerator cfgconfig = (CCfgMainGenerator) getPlugableCfgGenerator(instance.getType(), ctx);
-            cfgconfig.generateCleanupOnTerminateInstance(instance, cfg, builder, ctx);
+            generateCleanupOnTerminateInstance(instance, cfg, builder, ctx);
         }
     }
 
@@ -1014,8 +1013,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                     for (Map.Entry<Instance, Port> myReceiver : SenderList.get(mySender)) {
                         //generate handle call to dispatch the message send to a receiver
-                        CCfgMainGenerator cfggen = (CCfgMainGenerator) getPlugableCfgGenerator(myReceiver.getKey().getType(), ctx);
-                        cfggen.generateMessageHandleCallToDispatcherMessage(myReceiver, m, builder, ctx);
+                        generateMessageHandleCallToDispatcherMessage(myReceiver, m, builder, ctx);
                     }
                     builder.append("\n}\n");
                 }
@@ -1550,8 +1548,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
 
         // Init simple properties
-        CCfgMainGenerator cfggen = (CCfgMainGenerator) getPlugableCfgGenerator(inst.getType(), ctx);
-        cfggen.generateInitializationSimpleProperties(inst, cfg, builder, ctx);
+        generateInitializationSimpleProperties(inst, cfg, builder, ctx);
 
 
         for (Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {
