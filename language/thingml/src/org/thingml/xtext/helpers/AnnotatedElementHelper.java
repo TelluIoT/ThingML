@@ -66,6 +66,8 @@ public class AnnotatedElementHelper {
     public static boolean isDefined(AnnotatedElement self, String annotation, String value) {
         for (PlatformAnnotation a : self.getAnnotations()) {
             if (a.getName().equals(annotation)) {
+            	if (a.getValue() == null)
+            		continue;
                 if (value.equals(cleanAnnotation(a.getValue())))
                     return true;
             }
