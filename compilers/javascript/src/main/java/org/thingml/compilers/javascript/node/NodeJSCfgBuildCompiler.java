@@ -80,7 +80,7 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
     }
 
     public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
-    	return "node --expose-gc main.js &\n"
+    	return "node --interpreted-frames-native-stack --perf-basic-prof-only-functions --expose-gc main.js &\n"
     			+ "PID=$!\n";
     }
 	
