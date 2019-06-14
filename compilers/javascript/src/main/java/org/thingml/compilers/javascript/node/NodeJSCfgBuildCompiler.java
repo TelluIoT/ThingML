@@ -91,6 +91,10 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+    	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+    		return "COPY . .\n" +
+    		"RUN npm install --production\n";
+    	}
         return "RUN npm install @steelbreeze/state@8.0.0\n" +
 						"FROM node:lts-alpine\n" +
 						"COPY --from=0 /node_modules .\n" +
