@@ -182,7 +182,7 @@ pthread_mutex_t Timer_mut;`
 
 {
 	readonly property NB_SOFT_TIMERS : UInt16 = `NB_SOFT_TIMERS` as UInt16
-	readonly property SOFT_TIMER_PERIOD : UInt16 = 4
+	readonly property SOFT_TIMER_PERIOD : UInt16 = 50
 	
 	
 	function time_ms() : UInt32 do
@@ -207,16 +207,20 @@ pthread_mutex_t Timer_mut;`
         select(0, NULL, NULL, NULL, &tv);`
 	end
 	
-	function start_soft_timer_process()
-	@fork_linux_thread "true"
-	do
+	function initialize() do
 		`pthread_mutex_init(&Timer_mut, NULL);
 	    uint8_t i;
 	    for (i = 0; i < `&NB_SOFT_TIMERS&`; i++) {
 	        Timer_timeouts[i] = 0;
 	        Timer_wraps[i] = 0;
-	    }
-	    Timer_prev = `&time_ms()&`;`
+	    }`
+	    start_soft_timer_process()
+	end
+	
+	function start_soft_timer_process()
+	@fork_linux_thread "true"
+	do
+		`Timer_prev = `&time_ms()&`;`
 		while (true) do
 			sleep_ms(SOFT_TIMER_PERIOD)
             `pthread_mutex_lock(&Timer_mut);
@@ -301,7 +305,7 @@ pthread_mutex_t Timer_mut;`
 thing TimerArduino includes Timer
 @stl 
 @c_header `
-#define NB_SOFT_TIMERS 16
+#define NB_SOFT_TIMERS 32
 `
 
 @c_global `uint32_t Timer_timeouts[NB_SOFT_TIMERS];
