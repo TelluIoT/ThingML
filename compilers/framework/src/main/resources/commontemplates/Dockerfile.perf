@@ -17,6 +17,9 @@
 
 FROM #BASE_IMAGE
 
+#Sampling rate of the profiler in Hz (or per s)
+ENV PROFILER_FREQ=250 
+
 #PERF
 RUN apt-get update && apt-get install -y build-essential cmake wget unzip flex bison && rm -rf /var/lib/apt/lists/*
 #PERF_EXTRA

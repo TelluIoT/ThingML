@@ -3,7 +3,7 @@
 #RUN
 
 #perf record
-perf record -e cpu-clock -F 99 -p $PID -a -g -o /data/perf.data &
+perf record -e cpu-clock -F $PROFILER_FREQ -p $PID -a -g -o /data/perf.data &
 
 wait
 

@@ -116,7 +116,8 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
         		"    rm -rf /root/perf-map-agent-master\n" + 
         		"\n" + 
         		"RUN cd /root && wget https://github.com/dcapwell/lightweight-java-profiler/archive/master.zip && unzip master.zip && rm -f master.zip && \\\n" + 
-        		"    cd /root/lightweight-java-profiler-master && \\\n" + 
+        		"    cd /root/lightweight-java-profiler-master && \\\n" +
+        		"    sed -i \"s/static const int kNumInterrupts = 100;/static const int kNumInterrupts = $PROFILER_FREQ;/\" src/globals.h && \\\n" +
         		"    make && \\\n" + 
         		"    cp /root/lightweight-java-profiler-master/build-64/liblagent.so /liblagent.so && \\\n" + 
         		"    rm -rf /root/lightweight-java-profiler-master";
