@@ -41,12 +41,10 @@ public class GraalCfgBuildCompiler extends JavaCfgBuildCompiler {
     
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
+    	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"./app";
+    	}
         return "./app";
-    }
-    
-    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
-    	return "./app &\n"
-    			+ "PID=$!\n";
     }
 
     @Override
@@ -75,19 +73,15 @@ public class GraalCfgBuildCompiler extends JavaCfgBuildCompiler {
         		"    rm mvn_repo_generated.tar.gz && " + 
         		"    mvn install && mv target/org.thingml.generated.main /app && rm -rf target\n" + 
         		"#FROM scratch\n";
-        if(!AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-        	command += "FROM debian:stretch-slim\n" + 
+        
+        command += "FROM debian:stretch-slim\n" + 
         		"COPY --from=0 app /app\n";
+        
+        if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+           	command += "RUN apt-get update && apt-get install -y strace && rm -rf /var/lib/apt/lists/*\\n";
         }
+        
         return command;
     }
     
-    public String getDockerPerfExtra(Configuration cfg, Context ctx) {
-        return "";
-    }
-    
-    public String getRunScriptPerfExtra(Configuration cfg, Context ctx) {
-        return "";
-    }
-
 }

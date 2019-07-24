@@ -44,20 +44,22 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         return "debian:stable-slim";
     }
     
-    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
-    	return "./" + cfg.getName() + " &\n"
-    			+ "PID=$!\n";
-    }
-    
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
+    	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"./" + cfg.getName(); 	
+    	}
         return "./" + cfg.getName(); 
     }
     
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
         StringBuilder builder = new StringBuilder();
-        builder.append("RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*\n");
+        if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+        	builder.append("RUN apt-get update && apt-get install -y build-essential strace && rm -rf /var/lib/apt/lists/*\n");
+        } else {
+        	builder.append("RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*\n");
+        }
         builder.append("COPY . .\n");
         builder.append("RUN make\n");        
         if(AnnotatedElementHelper.isDefined(cfg, "c_static_linking", "true") && !AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {

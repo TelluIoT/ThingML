@@ -36,18 +36,6 @@ public class CfgBuildCompiler {
         return null;
     }
     
-    public String getDockerPerfExtra(Configuration cfg, Context ctx) {
-        return "";
-    }
-    
-    public String getRunScriptPerfExtra(Configuration cfg, Context ctx) {
-        return "";
-    }
-    
-    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
-    	throw (new UnsupportedOperationException("Run command is platform-specific."));
-    }
-    
     public String getDockerCMD(Configuration cfg, Context ctx) {
     	throw (new UnsupportedOperationException("Run command is platform-specific."));
     }
@@ -55,29 +43,13 @@ public class CfgBuildCompiler {
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
         return null;
     }
-    
-    public void generateRunScript(Configuration cfg, Context ctx) {
-    	StringBuilder runScript = ctx.getBuilder("run.sh");
-        String runScriptTemplate = ctx.getTemplateByID("commontemplates/run.sh");
         
-        runScriptTemplate = runScriptTemplate.replace("#RUN", getRunScriptRunCommand(cfg, ctx));
-        
-        runScriptTemplate = runScriptTemplate.replace("#EXTRA", getRunScriptPerfExtra(cfg, ctx));
-        
-        runScript.append(runScriptTemplate.replace("\r", ""));
-    }
-    
     public void generateDockerFile(Configuration cfg, Context ctx) {
         if(AnnotatedElementHelper.hasFlag(cfg, "docker") || AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
             StringBuilder dockerfile = ctx.getBuilder("Dockerfile");
             String dockerfileTemplate = null;
             
-            if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-            	dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile.perf");
-            	generateRunScript(cfg, ctx);
-            } else {
-            	dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile");
-            }
+           	dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile");
             
             String baseImage;
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_base_image")) {
@@ -91,8 +63,6 @@ public class CfgBuildCompiler {
                 }
             }
             dockerfileTemplate = dockerfileTemplate.replace("#BASE_IMAGE", baseImage);
-            
-            dockerfileTemplate = dockerfileTemplate.replace("#PERF_EXTRA", getDockerPerfExtra(cfg, ctx));
             
             String expose;
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_expose")) {

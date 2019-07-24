@@ -25,36 +25,27 @@ public class GoCfgBuildCompiler extends CfgBuildCompiler {
 
 	@Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
-		if(AnnotatedElementHelper.isDefined(cfg, "docker", "perf"))
-			return "golang:latest";
         return "golang:alpine";
     }
 
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
+    	if(AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"./" + cfg.getName(); 	
+    	}
         return "/" + cfg.getName();
-    }
-
-    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
-    	return "./" + cfg.getName() + " &\n"
-    			+ "PID=$!\n";
     }
     
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-    	String command = "";    	        		
-    	if(!AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-        	command += "RUN apk add --no-cache build-base git\n" +
+    	String command = "RUN apk add --no-cache build-base git " + ((AnnotatedElementHelper.isDefined(cfg, "docker", "perf"))?"strace":"") + "\n" +
             		"RUN go get github.com/SINTEF-9012/gosm\n" +        			
             		"COPY . .\n" +
-            		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go && copy " + cfg.getName() + " /" + cfg.getName() + "\n" +
-            		"FROM scratch\n" +
+            		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go && cp " + cfg.getName() + " /" + cfg.getName() + "\n";
+        
+        if(!AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+    		command += "FROM scratch\n" +
         			"COPY --from=0 /" + cfg.getName() + " /" + cfg.getName() + "\n";
-    	} else {
-    		command += "RUN apt-get update && apt-get install -y build-essential git && rm -rf /var/lib/apt/lists/*\n" +
-            		"RUN go get github.com/SINTEF-9012/gosm\n" +        			
-            		"COPY . .\n" +
-            		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go\n";
     	}
     	return command;
     }

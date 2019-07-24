@@ -73,33 +73,22 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	}
 	
 	@Override
-    public String getDockerBaseImage(Configuration cfg, Context ctx) {
-		if(!AnnotatedElementHelper.isDefined(cfg, "docker", "perf"))
-			return "node:lts-alpine";
-		return "node:lts";
-    }
-
-    public String getRunScriptRunCommand(Configuration cfg, Context ctx) {
-    	return "node --interpreted-frames-native-stack --perf-basic-prof-only-functions --expose-gc main.js &\n"
-    			+ "PID=$!\n";
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {		
+		return "node:lts-alpine";
     }
 	
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
+    	if(AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"node\", \"--expose-gc\", \"main.js"; //Param main.js
+    	}
         return "node\", \"--expose-gc\", \"main.js"; //Param main.js
     }
 
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-    	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-    		return "COPY . .\n" +
-    		"RUN npm install --production\n";
-    	}
-        return "RUN npm install @steelbreeze/state@8.0.0\n" +
-						"FROM node:lts-alpine\n" +
-						"COPY --from=0 /node_modules .\n" +
-						"COPY package.json package.json\n" +
-        		"RUN npm install --production\n" +
-        		"COPY . .\n";
+    	return "COPY . .\n" +
+    	"RUN npm install --production\n" +
+    	((AnnotatedElementHelper.isDefined(cfg, "docker", "perf"))?"RUN apk add --no-cache strace":"") + "\n";
     }	
 }
