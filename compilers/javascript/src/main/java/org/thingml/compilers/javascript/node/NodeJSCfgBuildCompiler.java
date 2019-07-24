@@ -80,7 +80,7 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
     	if(AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"node\", \"--expose-gc\", \"main.js"; //Param main.js
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"-c\", \"-Scalls\", \"node\", \"--expose-gc\", \"main.js"; //Param main.js
     	}
         return "node\", \"--expose-gc\", \"main.js"; //Param main.js
     }

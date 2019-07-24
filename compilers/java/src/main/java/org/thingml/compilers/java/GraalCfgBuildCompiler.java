@@ -42,7 +42,7 @@ public class GraalCfgBuildCompiler extends JavaCfgBuildCompiler {
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
     	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"./app";
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"-c\", \"-Scalls\", \"./app";
     	}
         return "./app";
     }

@@ -31,7 +31,7 @@ public class GoCfgBuildCompiler extends CfgBuildCompiler {
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
     	if(AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"./" + cfg.getName(); 	
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"-c\", \"-Scalls\", \"./" + cfg.getName(); 	
     	}
         return "/" + cfg.getName();
     }

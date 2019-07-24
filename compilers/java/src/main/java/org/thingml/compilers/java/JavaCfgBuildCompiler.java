@@ -86,7 +86,7 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
     @Override
     public String getDockerCMD(Configuration cfg, Context ctx) {
     	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar";
+    		return "strace\", \"-o\", \"/data/strace.log\", \"-f\", \"-c\", \"-Scalls\", \"java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar";
     	}
         return "java\", \"-jar\", \"" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar";
     }
