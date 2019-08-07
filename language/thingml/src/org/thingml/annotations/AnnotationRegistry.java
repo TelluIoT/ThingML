@@ -146,6 +146,20 @@ public class AnnotationRegistry {
 		final EClass fork_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
 		final Annotation fork_annotation = new Annotation(fork_name, fork_desc, fork_scope);
 		annotations.put(fork_name, fork_annotation);
+		
+		//@arduino_stdout
+		final String astd_name = "arduino_stdout";
+		final String astd_desc = "Specifies the stdout device e.g. Serial";
+		final EClass astd_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final Annotation astd_annotation = new Annotation(astd_name, astd_desc, astd_scope);
+		annotations.put(astd_name, astd_annotation);
+		
+		//@arduino_stdout_baudrate
+		final String astdbaud_name = "arduino_stdout_baudrate";
+		final String astdbaud_desc = "Specifies the baudrate for the (Serial) stdout device e.g. 9600";
+		final EClass astdbaud_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final Annotation astdbaud_annotation = new Annotation(astdbaud_name, astdbaud_desc, astdbaud_scope);
+		annotations.put(astdbaud_name, astdbaud_annotation);
 
 		/** MESSAGES AND PORTS **/
 		
@@ -188,6 +202,13 @@ public class AnnotationRegistry {
 		final EClass c_scope[] = {ThingMLPackage.eINSTANCE.getType()};
 		final Annotation c_annotation = new Annotation(c_name, c_desc, c_scope);
 		annotations.put(c_name, c_annotation);
+		
+		//@c_type
+		final String a_name = "arduino_type";
+		final String a_desc = "Specifies the concrete Arduino type (if different from the c_type) of a ThingML-defined type.";
+		final EClass a_scope[] = {ThingMLPackage.eINSTANCE.getType()};
+		final Annotation a_annotation = new Annotation(a_name, a_desc, a_scope);
+		annotations.put(a_name, a_annotation);
 		
 		//@go_type
 		final String go_name = "go_type";

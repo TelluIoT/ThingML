@@ -19,6 +19,7 @@ package org.thingml.compilers.c.arduino;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingActionCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.PrintAction;
@@ -28,6 +29,15 @@ import org.thingml.xtext.thingML.PrintAction;
  */
 public class CThingActionCompilerArduino extends CThingActionCompiler {
 
+	@Override
+    public void generate(CastExpression exp, StringBuilder builder, Context ctx) {
+		if (AnnotatedElementHelper.isDefined(exp.getType(), "arduino_type", "String")) {
+			builder.append("String(");
+			generate(exp.getTerm(), builder, ctx);
+			builder.append(")");
+		}
+	}
+	
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();

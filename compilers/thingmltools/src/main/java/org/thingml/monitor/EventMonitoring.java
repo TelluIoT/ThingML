@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
@@ -108,6 +109,7 @@ public class EventMonitoring implements MonitoringAspect {
 	
 	private void logSentMessages(Thing root) {
 		for(SendAction s : ActionHelper.getAllActions(root, SendAction.class)) {
+			if (AnnotatedElementHelper.isDefined(s.getPort(), "monitor", "not") || AnnotatedElementHelper.isDefined(s.getPort(), "monitor", "not")) continue;
 			
 			final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
 	    	if (s.eContainingFeature().getUpperBound() == -1) {//Collection
@@ -208,6 +210,8 @@ public class EventMonitoring implements MonitoringAspect {
 		for(Map<Message, List<Handler>> e : handlers.values()) {
 			for(List<Handler> l : e.values()) {
 				for(Handler h : l) {
+					if (h.getEvent() != null && (AnnotatedElementHelper.isDefined(((ReceiveMessage)h.getEvent()).getPort(), "monitor", "not") || AnnotatedElementHelper.isDefined(((ReceiveMessage)h.getEvent()).getPort(), "monitor", "not"))) continue;
+					
 					final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
 					final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 					
@@ -297,6 +301,8 @@ public class EventMonitoring implements MonitoringAspect {
 	private void catchLostMessages(CompositeState root) {
 		for(Port p : thing.getPorts()) {
 			for(Message m : p.getReceives()) {
+				if (AnnotatedElementHelper.isDefined(p, "monitor", "not") || AnnotatedElementHelper.isDefined(m, "monitor", "not")) continue;
+				
 				Expression guard = ThingMLFactory.eINSTANCE.createBooleanLiteral();
 				((BooleanLiteral) guard).setBoolValue(true);
 				for(Handler h : root.getInternal()) {

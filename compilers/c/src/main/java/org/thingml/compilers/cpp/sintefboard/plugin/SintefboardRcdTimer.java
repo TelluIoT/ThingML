@@ -96,7 +96,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
                 StringBuilder eco_instance = new StringBuilder();
                 eco_instance.append("//Connector");
                 Port p = eco.getPort();  
-                if(AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
+                /*if(AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
                     if(!p.getReceives().isEmpty()) {
                     //if(!p.getSends().isEmpty()) {
                         eco_instance.append("// Pointer to receiver list\n");
@@ -116,7 +116,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
                         eco_instance.append(p.getName());
                         eco_instance.append("_handlers;\n");
                     }
-                }
+                }*/
                 ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
                 ctx.getBuilder(eco.getInst().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);

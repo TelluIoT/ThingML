@@ -173,7 +173,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append(p.getName());
             builder.append(";\n");
 
-            if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "c_dyn_connectors")) {
+            /*if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "c_dyn_connectors")) {
                 if (!p.getSends().isEmpty()) {
                     builder.append("// Pointer to receiver list\n");
                     builder.append("struct Msg_Handler ** ");
@@ -192,7 +192,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
                     builder.append(p.getName());
                     builder.append("_handlers;\n");
                 }
-            }
+            }*/
         }
 
 

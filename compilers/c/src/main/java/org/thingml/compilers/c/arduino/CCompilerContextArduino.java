@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
@@ -29,6 +30,7 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by ffl on 11.06.15.
@@ -47,6 +49,14 @@ public class CCompilerContextArduino extends CCompilerContext {
         return 256;
     }
 
+    @Override
+    public String getCType(Type t) {    	
+        if (AnnotatedElementHelper.hasAnnotation(t, "arduino_type")) {
+            return AnnotatedElementHelper.annotation(t, "arduino_type").get(0);
+        } 
+        return super.getCType(t);
+    }
+    
     @Override
     public void writeGeneratedCodeToFiles() {
 

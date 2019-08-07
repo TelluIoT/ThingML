@@ -145,7 +145,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         String typedefs_template = ctx.getCommonHeaderTemplate();
         StringBuilder b = new StringBuilder();
 
-        if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
+        /*if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
         b.append("//Port message handler structure\n"
                 + "typedef struct Msg_Handler {\n" +
         "	int nb_msg;\n" +
@@ -153,7 +153,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         "	void ** msg_handler;\n" +
 	"	void * instance;\n" +
         "};\n\n");
-        }
+        }*/
 
         generateTypedefs(cfg, b, ctx);
         typedefs_template = typedefs_template.replace("/*TYPEDEFS*/", b.toString());

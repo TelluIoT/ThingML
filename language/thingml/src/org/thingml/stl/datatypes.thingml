@@ -115,6 +115,7 @@ datatype Double<8>
 object String
 	@serializable
 	@c_type "char *"
+	@arduino_type "String"
 	@java_type "String"
     @js_type "String"
     @go_type "string";
