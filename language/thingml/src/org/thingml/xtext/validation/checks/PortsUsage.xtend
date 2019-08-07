@@ -1,19 +1,17 @@
 package org.thingml.xtext.validation.checks
 
 import org.eclipse.xtext.validation.Check
-import org.thingml.xtext.helpers.ConfigurationHelper
 import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.thingML.Connector
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.RequiredPort
 import org.thingml.xtext.thingML.ThingMLPackage
-import org.thingml.xtext.validation.Tarjan
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 
 class PortsUsage extends ThingMLValidatorCheck {
 	
-	@Check(NORMAL)
+	/* @Check(NORMAL)
 	def checkAutotransitionCycles(Configuration cfg) {
 		val t = new Tarjan(cfg, ConfigurationHelper.allInstances(cfg));
         val cycles = t.findStronglyConnectedComponents();				
@@ -25,7 +23,7 @@ class PortsUsage extends ThingMLValidatorCheck {
 				]
 			}
 		]
-	}
+	}*/
 	
 	@Check(FAST)
 	def checkDanglingPorts(Configuration cfg) {
