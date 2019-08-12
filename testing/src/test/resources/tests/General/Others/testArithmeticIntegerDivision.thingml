@@ -1,0 +1,43 @@
+import "../../thingml.thingml"
+
+thing TestArithmetic includes Test
+@test "x # pppppp"
+{
+
+  statechart TestPropertyPing init INIT {
+    	state INIT {
+    		transition -> STOP
+			  event m : Test?In
+			  guard m.c == 'x'
+			  action do
+          if ((3/2) == 1) TestOut('p')//Integer division if LHS and RHS are integer
+          else TestOut('f')
+
+          if ((3.0/2) == 1.5) TestOut('p')//Real division otherwise
+          else TestOut('f')
+
+          if ((3/2.0) == 1.5) TestOut('p')//Real division otherwise
+          else TestOut('f')
+
+          var a : Int16 = 3
+          var b : Int16 = 2
+          if ((a/b) == 1) TestOut('p')//Integer division if LHS and RHS are integer
+          else TestOut('f')
+
+          var a2 : Int16 = 3
+          var b2 : Float = 2
+          if ((a2/b2) == 1.5) TestOut('p')//Real division otherwise
+          else TestOut('f')
+
+          var a3 : Float = 3
+          var b3 : Int16 = 2
+          if ((a3/b3) == 1.5) TestOut('p')//Real division otherwise
+          else TestOut('f')
+        end
+    	}
+
+	  	state STOP {
+			  on entry TestDone()
+		  }
+  }
+}

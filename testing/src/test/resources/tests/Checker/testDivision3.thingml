@@ -1,0 +1,7 @@
+import "datatypes.thingml" from stl
+
+thing fragment T {
+	function h() do
+		var c : Integer = 2/3.0
+	end
+}

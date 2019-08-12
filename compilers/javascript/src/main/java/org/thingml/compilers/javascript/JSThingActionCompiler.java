@@ -67,7 +67,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(DivExpression expression, StringBuilder builder, Context ctx) {
 		final Type lhsType = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getLhs()));
-		if (Types.INTEGER_TYPE.equals(lhsType)) {// integer division if LHS is integer
+		final Type rhsType = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getRhs()));
+		if (Types.INTEGER_TYPE.equals(lhsType) && Types.INTEGER_TYPE.equals(rhsType)) {// integer division if LHS and RHS are both integer (as in Java)
 			builder.append("Math.trunc(");
 			generate(expression.getLhs(), builder, ctx);
 			builder.append(" / ");

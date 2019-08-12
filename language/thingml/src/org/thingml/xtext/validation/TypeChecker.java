@@ -141,7 +141,10 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     }
 
     private Type caseBinaryNumericalOperator(Type t1, Type t2) {
-    	//TODO: BYTE_TYPE
+        if (t1.equals(Types.BYTE_TYPE) && t2.equals(Types.BYTE_TYPE))
+        	return Types.BYTE_TYPE;
+        if (TyperHelper.isA(t1, Types.INTEGER_TYPE) && TyperHelper.isA(t2, Types.INTEGER_TYPE))
+        	return Types.INTEGER_TYPE;
         if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
             return Types.ANY_TYPE;
         if ((!t1.equals(Types.INTEGER_TYPE) && !t1.equals(Types.REAL_TYPE)) || (!t2.equals(Types.INTEGER_TYPE) && !t2.equals(Types.REAL_TYPE))) {
@@ -189,12 +192,7 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     public Type caseModExpression(ModExpression object) {
         Type t1 = computeTypeOf(object.getLhs());
         Type t2 = computeTypeOf(object.getRhs());
-        //TODO: BYTE_TYPE
-        if (t1.equals(Types.INTEGER_TYPE) && t2.equals(Types.INTEGER_TYPE))
-            return Types.INTEGER_TYPE;
-        if (TyperHelper.isA(t1, Types.INTEGER_TYPE) && TyperHelper.isA(t2, Types.INTEGER_TYPE))
-            return Types.ANY_TYPE;
-        return Types.ERROR_TYPE;
+        return caseBinaryNumericalOperator(t1, t2);
     }
 
     private Type caseComparison(Type t1, Type t2) {
