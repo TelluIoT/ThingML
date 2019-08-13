@@ -205,7 +205,9 @@
     </repositories>
 
     <modules>
-        <module>language/thingml.target</module>
+        <module>utilities</module>
+
+		<module>language/thingml.target</module>
         <module>language/thingml</module>
 
         <module>compilers</module>
