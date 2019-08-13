@@ -59,9 +59,9 @@ public class GraalCfgBuildCompiler extends JavaCfgBuildCompiler {
         		"    curl http://mirror.nbtelecom.com.br/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz -o /tmp/maven.tar.gz && " + 
         		"    tar -zxvf /tmp/maven.tar.gz -C /tmp && " + 
         		"    mv /tmp/apache-maven-3.6.0 /opt/apache-maven && " + 
-        		"    curl -L https://github.com/oracle/graal/releases/download/vm-1.0.0-rc16/graalvm-ce-1.0.0-rc16-linux-amd64.tar.gz -o /tmp/graalvm.tar.gz && " + 
+        		"    curl -L https://github.com/oracle/graal/releases/download/vm-19.1.1/graalvm-ce-linux-amd64-19.1.1.tar.gz -o /tmp/graalvm.tar.gz && " + 
         		"    tar -zxvf /tmp/graalvm.tar.gz -C /tmp && " + 
-        		"    mv /tmp/graalvm-ce-1.0.0-rc16 /opt/graalvm && " + 
+        		"    mv /tmp/graalvm-ce-19.1.1 /opt/graalvm && " + 
         		"    echo \"JavaArgs = -Xmn512k\" >> $NATIVE_IMAGE_CONFIG_FILE && " + 
         		"    echo \"Args = -H:Kind=EXECUTABLE\" >> $NATIVE_IMAGE_CONFIG_FILE && " + 
         		"    mkdir -p /root/.native-image && " + 

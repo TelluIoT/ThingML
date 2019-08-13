@@ -40,7 +40,7 @@
 			<plugin>
 			    <groupId>com.oracle.substratevm</groupId>
 			    <artifactId>native-image-maven-plugin</artifactId>
-			    <version>1.0.0-rc16</version>
+			    <version>19.1.1</version>
 			    <executions>
 			        <execution>
 			            <goals>
