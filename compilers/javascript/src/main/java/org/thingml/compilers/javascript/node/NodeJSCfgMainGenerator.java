@@ -31,23 +31,7 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
-	/*@Override
-	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
-		super.generatePropertyDecl(i, cfg, section, jctx);
-		
-		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
-			for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: use allUsedProperties when fixed
-				if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
-					section.append(i.getName() + "_" + prop.getName() + " = nconf.get('" + i.getName() + ":" + prop.getName() + "')? nconf.get('" + i.getName() + ":" + prop.getName() + "') : " + i.getName() + "_" + prop.getName() + ";");
-					section.append("nconf.set('" + i.getName() + ":" + prop.getName() + "', " + i.getName() + "_" + prop.getName() + ");");
-				}
-			}
-		}
-		
-		//Generate a hook for other configuration plugins to redefine values for properties		
-		section.append("/*$CONFIGURATION " + i.getName() + "$*//*");
-	}*/
-	
+
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		SourceBuilder builder = ctx.getSourceBuilder("main.js");
@@ -68,7 +52,6 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
 		
 		
 		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
-			// FIXME: What is going on here?
 			builder.append("const nconf = require('nconf');");
 			builder.append("const fs = require('fs');");
 			builder.append("nconf.argv().env().file({ file: 'config.json' });");
@@ -91,12 +74,15 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
 		
 		Section connectors = main.section("connectors").lines();
         generateConnectors(cfg, connectors, jctx);
+        Section instanceProperties = main.section("properties").lines();		
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+        	generatePropertyDecl(i, cfg, instanceProperties, jctx);
+        }
         main.append("/*$PLUGINS_CONNECTORS$*/");
         
         
         
         if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
-        	// FIXME: What is going on here?
 			main.append("nconf.save(function (err) {");
         	main.append("fs.readFile('config.json', function (err, data) {");
         	main.append("console.dir(JSON.parse(data.toString()))");

@@ -38,6 +38,8 @@ import org.thingml.xtext.thingML.Thing;
 public class JSCfgMainGenerator extends CfgMainGenerator {
 
 	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
+		final String thisref = jctx.getContextAnnotation("thisref");
+		jctx.addContextAnnotation("thisRef", "inst_" + i.getName() + ".");
 		Section property = section.section("property");
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
 			property.append("var inst_" + i.getName() + "_" + a.getName() + " = [];\n");
@@ -83,6 +85,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         		}
         	}
         }
+        if (thisref!=null)
+        	jctx.addContextAnnotation("thisref", thisref);
 	}
 
 	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {
@@ -97,8 +101,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		instanceArgs.append("'"+i.getName()+"'")
 		            .append("null");
 		
-		Section instanceProperties = section.section("properties").lines();
-		generatePropertyDecl(i, cfg, instanceProperties, jctx);
 		
 	}
 

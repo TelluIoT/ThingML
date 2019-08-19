@@ -58,6 +58,11 @@ public class BrowserJSCfgMainGenerator extends JSCfgMainGenerator {
 			
 			generateConnectors(cfg, body, jctx);
 			body.append("");
+	        
+			Section instanceProperties = body.section("properties").lines();		
+	        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+	        	generatePropertyDecl(i, cfg, instanceProperties, jctx);
+	        }
 			
 			List<Instance> instances = ConfigurationHelper.orderInstanceInit(cfg);
 	        Instance inst;

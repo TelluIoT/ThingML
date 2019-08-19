@@ -248,10 +248,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-		if (ctx.currentInstance != null)
-			builder.append(ctx.currentInstance.getName() + ".");
-		else
-			builder.append(ctx.getContextAnnotation("thisRef"));
+		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append(expression.getFunction().getName() + "(");
 		int i = 0;
 		for (Expression p : expression.getParameters()) {
