@@ -173,7 +173,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         generate(expression.getArray(), builder, ctx);
         builder.append("[");
         generate(expression.getIndex(), builder, ctx);
-        builder.append("]\n");
+        builder.append("]");
     }
 
     @Override

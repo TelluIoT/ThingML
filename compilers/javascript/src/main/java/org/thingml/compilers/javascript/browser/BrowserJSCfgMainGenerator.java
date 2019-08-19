@@ -31,6 +31,15 @@ import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public class BrowserJSCfgMainGenerator extends JSCfgMainGenerator {
+	
+	protected String setImmediateStart() {
+		return "setTimeout(() => {";
+	}
+	
+	protected String setImmediateStop() {
+		return "}, 0);";
+	}
+	
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		JSContext jctx = (JSContext)ctx;

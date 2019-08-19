@@ -20,7 +20,6 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
@@ -108,9 +107,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(SendAction action, StringBuilder builder, Context ctx) {
-		if (!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-			builder.append("setImmediate(() => {");
-		}
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("bus.emit(");
 		builder.append("'" + action.getPort().getName() + "'");
@@ -121,9 +117,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 			generate(pa, builder, ctx);
 		}
 		builder.append("))");
-		if (!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
-			builder.append("})");
-		}
 		builder.append(";\n");
 	}
 

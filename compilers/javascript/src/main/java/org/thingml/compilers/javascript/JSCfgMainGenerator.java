@@ -24,6 +24,7 @@ import java.util.Map;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -107,7 +108,15 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		}
 	}
 	
-	protected void generateOnEvent(Section section, String client, String clientPort, String server, String serverPort) {
+	protected String setImmediateStart() {
+		return "setImmediate(() => {";
+	}
+	
+	protected String setImmediateStop() {
+		return "});";
+	}
+	
+	protected void generateOnEvent(Section section, String client, String clientPort, String server, String serverPort, boolean sync) {
 		Section connector = section.section("connector");
 		
 		connector.append(server).append(".bus.on(")
@@ -117,11 +126,17 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		Section inArgs = connector.section("parameters").surroundWith("(", ")", 0).joinWith(", ");
 		inArgs.append("e");
 		
-		connector.append(" => {\n")
-				 .append("e.port = '" + clientPort + "';\n")
+		connector.append(" => {\n");
+		if (!sync) {
+			connector.append(setImmediateStart() + "\n");
+		}
+		connector.append("e.port = '" + clientPort + "';\n")
 				 .append(client).append("._receive");
 		Section outArgs = connector.section("parameters").surroundWith("(", ")", 0).joinWith(", ");
 		outArgs.append("e");
+		
+		if (!sync)
+			connector.append("\n" + setImmediateStop() + "\n");
 		
 		connector.append("\n});");
 	}
@@ -131,15 +146,17 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
             for (InternalPort p : entries.getValue()) {
-            	generateOnEvent(section, "inst_" + i.getName(), p.getName(), "inst_" + i.getName(), p.getName());
+            	generateOnEvent(section, "inst_" + i.getName(), p.getName(), "inst_" + i.getName(), p.getName(), false);
             }
         }
 		
 		section.comment("Connecting ports...");
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-        	//FIXME: we do not always need both directions (if a port only has receives or sends)
-        	generateOnEvent(section, "inst_" + c.getCli().getName(), c.getRequired().getName(), "inst_" + c.getSrv().getName(), c.getProvided().getName());
-        	generateOnEvent(section, "inst_" + c.getSrv().getName(), c.getProvided().getName(), "inst_" + c.getCli().getName(), c.getRequired().getName());
+        	boolean sync = AnnotatedElementHelper.hasFlag(c.getProvided(), "sync_send") || AnnotatedElementHelper.hasFlag(c.getRequired(), "sync_send");
+        	if (!c.getProvided().getSends().isEmpty() && !c.getRequired().getReceives().isEmpty())
+        		generateOnEvent(section, "inst_" + c.getCli().getName(), c.getRequired().getName(), "inst_" + c.getSrv().getName(), c.getProvided().getName(), sync);
+        	if (!c.getRequired().getSends().isEmpty() && !c.getProvided().getReceives().isEmpty())
+        		generateOnEvent(section, "inst_" + c.getSrv().getName(), c.getProvided().getName(), "inst_" + c.getCli().getName(), c.getRequired().getName(), sync);
         }		
 	}
 }

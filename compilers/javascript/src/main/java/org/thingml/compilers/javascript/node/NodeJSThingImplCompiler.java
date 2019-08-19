@@ -21,7 +21,6 @@ import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSClass;
 import org.thingml.compilers.javascript.JSThingImplCompiler;
-import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Thing;
 
 public class NodeJSThingImplCompiler extends JSThingImplCompiler {
