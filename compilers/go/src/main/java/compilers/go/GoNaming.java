@@ -143,10 +143,6 @@ public class GoNaming {
 	/* -- Naming strategy -- */
 	private ThingMLSwitch<Name> namingStrategy = new ThingMLSwitch<Name>() {
 		
-		/*public Name caseEnumeration(Enumeration object) {
-			return singleName("Enum"+object.getName());
-		};*/
-		
 		public Name caseEnumerationLiteral(EnumerationLiteral object) {
 			return appendToParentName(object.eContainer(), object.getName());
 		};
@@ -163,8 +159,13 @@ public class GoNaming {
 		public Name caseType(Type object) {
 			if (AnnotatedElementHelper.hasAnnotation(object, "go_type"))
 				return singleName(AnnotatedElementHelper.firstAnnotation(object, "go_type"));
-			else
-				return singleName("interface{}");
+			if (object instanceof Enumeration) {
+				final Enumeration e = (Enumeration) object;
+				if (e.getTypeRef()!=null && e.getTypeRef().getType()!=null) {
+					return caseType(e.getTypeRef().getType());
+				}
+			}
+			return singleName("interface{}");
 		};
 		
 		public Name caseTypeRef(TypeRef object) {
