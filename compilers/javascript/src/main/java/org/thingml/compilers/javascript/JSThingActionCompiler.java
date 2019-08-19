@@ -129,17 +129,17 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		for (Property prop : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(session))) {
 			//if(prop.eContainer() instanceof Thing) {
 				if (prop.getTypeRef().isIsArray() || prop.getTypeRef().getCardinality() != null) {
-					builder.append(session.getName() + ".init" + ctx.firstToUpper(ctx.getVariableName(prop)) + "(" + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var.slice(0));\n");
+					builder.append(session.getName() + "." + ctx.firstToUpper(ctx.getVariableName(prop)) + " = " + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var.slice(0);\n");
 				} else {
-					builder.append(session.getName() + ".init" + ctx.firstToUpper(ctx.getVariableName(prop)) + "(" + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var);\n");
+					builder.append(session.getName() + "." + ctx.firstToUpper(ctx.getVariableName(prop)) + " = " + ctx.getContextAnnotation("thisRef") + ThingMLElementHelper.qname(prop, "_") + "_var;\n");
 				}
 			//}
 		}
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("forks.push(" + session.getName() + ");\n");
-		builder.append("setImmediate(() => {\n");
+		builder.append(((JSCfgMainGenerator)ctx.getCompiler().getMainCompiler()).setImmediateStart() + "\n");
 		builder.append(session.getName() + "._init();\n");
-		builder.append("});\n");
+		builder.append(((JSCfgMainGenerator)ctx.getCompiler().getMainCompiler()).setImmediateStop() + "\n");
 	}
 
 	@Override
