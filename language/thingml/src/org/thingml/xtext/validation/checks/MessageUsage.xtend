@@ -90,23 +90,23 @@ class MessageUsage extends ThingMLValidatorCheck {
 		// Check that the parameters are properly typed
 		msg.parameters.forEach [ p, i |
 			val e = params.get(i);
-			val expected = TyperHelper.getBroadType(p.getTypeRef().getType());
+			val expected = TyperHelper.getBroadType(p.getTypeRef());
 			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) {
-				if (actual.equals(Types.ERROR_TYPE)) {
-					val m = "Message "+msg.name+" is sent with an erroneous parameter. Expected "+expected.name+", sent with "+TyperHelper.getBroadType(actual).name
+				if (actual.equals(Types.ERROR_TYPEREF)) {
+					val m = "Message "+msg.name+" is sent with an erroneous parameter. Expected "+Types.toString(expected)+", sent with "+Types.toString(TyperHelper.getBroadType(actual))
 					if (parent instanceof EList)
 						error(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "type")
 					else
 						error(m, send.eContainer, send.eContainingFeature, "type")
-				} else if (actual.equals(Types.ANY_TYPE)) {
+				} else if (actual.equals(Types.ANY_TYPEREF)) {
 					val m = "Message "+msg.name+" is sent with a parameter which cannot be typed. Consider using a cast (<exp> as <type>)."
 					if (parent instanceof EList)
 						warning(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "type-cast", p.getTypeRef().getType().name)
 					else
 						warning(m, send.eContainer, send.eContainingFeature, "type-cast", p.getTypeRef().getType().name)
 				} else if (!TyperHelper.isA(actual, expected)) {
-					val m = "Message "+msg.name+" is sent with an erroneous parameter. Expected "+expected.name+", sent with "+TyperHelper.getBroadType(actual).name
+					val m = "Message "+msg.name+" is sent with an erroneous parameter. Expected "+Types.toString(expected)+", sent with "+Types.toString(TyperHelper.getBroadType(actual))
 					if (parent instanceof EList)
 						error(m, send.eContainer, send.eContainingFeature, (parent as EList).indexOf(send), "type")
 					else

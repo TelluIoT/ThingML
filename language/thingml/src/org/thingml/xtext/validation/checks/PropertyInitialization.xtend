@@ -17,11 +17,14 @@ import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.ThingMLPackage
-import org.thingml.xtext.thingML.TypeRef
 import org.thingml.xtext.thingML.UnaryMinus
 import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.thingml.xtext.thingML.CastExpression
+import org.thingml.xtext.thingML.Expression
+import org.thingml.xtext.thingML.IntegerLiteral
 
 class PropertyInitialization extends ThingMLValidatorCheck {
 	
@@ -56,17 +59,17 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
 			return;//no need to check more until this is fixed
 		}
-		val pt = TyperHelper.getBroadType(pa.property.typeRef.type)
-		val vt = TypeChecker.computeTypeOf(pa.init)
+		val pt = Types.getTypeRef(TyperHelper.getBroadType(pa.property.typeRef), false)
+		val vt = Types.getTypeRef(TypeChecker.computeTypeOf(pa.init), false)
 		if(!TyperHelper.isA(vt, pt)) {
-			val msg = "Wrong type. Expected " + pt.name + ". Found " + vt.name
+			val msg = "Wrong type. Expected " + Types.toString(pt) + ". Found " + Types.toString(vt)
 			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
 		}
 		if (pa.index !== null) {
 			val indexT = TypeChecker.computeTypeOf(pa.index)
-			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPE)) {
-			val msg = "Index must be an integer. Found " + indexT.name
-			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))				
+			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPEREF)) {
+				val msg = "Index must be an integer. Found " + Types.toString(indexT)
+				error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))				
 			}
 		}
 	}
@@ -83,16 +86,16 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))
 			return;//no need to check more until this is fixed
 		}
-		val pt = TyperHelper.getBroadType(pa.property.typeRef.type)
-		val vt = TypeChecker.computeTypeOf(pa.init)
+		val pt = Types.getTypeRef(TyperHelper.getBroadType(pa.property.typeRef), false)
+		val vt = Types.getTypeRef(TypeChecker.computeTypeOf(pa.init), false)
 		if(!TyperHelper.isA(vt, pt)) {
-			val msg = "Wrong type. Expected " + pt.name + ". Found " + vt.name
+			val msg = "Wrong type. Expected " + Types.toString(pt) + ". Found " + Types.toString(vt)
 			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))
 		}
 		if (pa.index !== null) {
 			val indexT = TypeChecker.computeTypeOf(pa.index)
-			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPE)) {
-			val msg = "Index must be an integer. Found " + indexT.name
+			if(!TyperHelper.isA(indexT, Types.INTEGER_TYPEREF)) {
+			val msg = "Index must be an integer. Found " + Types.toString(indexT)
 			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))				
 			}
 		}
@@ -130,9 +133,9 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 					val msg = "Array cardinality must be an integer literal or a read-only property/variable. Variable " + prop.name + " is not read-only."
 					error(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name)
 				}
-				val actualType = TyperHelper.getBroadType(prop.getTypeRef().getType());
-				if (!TyperHelper.isA(actualType, Types.INTEGER_TYPE)) {
-					val msg = "Array cardinality must resolve to Integer. Property/Variable " + prop.name + " is " + actualType.name + "."
+				val actualType = TyperHelper.getBroadType(prop.getTypeRef());
+				if (!TyperHelper.isA(actualType, Types.INTEGER_TYPEREF)) {
+					val msg = "Array cardinality must resolve to Integer. Property/Variable " + prop.name + " is " + Types.toString(actualType) + "."
 					error(msg, p, ThingMLPackage.eINSTANCE.namedElement_Name)
 				}
 			}
@@ -149,8 +152,8 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			e.literals.forEach[l, i |
 				if (l.init !== null) {
 					val litType = TypeChecker.computeTypeOf(l.init)
-					if(!TyperHelper.isA(litType, e.typeRef.type)) {
-						val msg = "Literal " + l.name + " must be of type " + TyperHelper.getBroadType(e.typeRef.type).name + ". Found " + TyperHelper.getBroadType(litType).name
+					if(!TyperHelper.isA(litType, e.typeRef)) {
+						val msg = "Literal " + l.name + " must be of type " + TyperHelper.getBroadType(e.typeRef).type.name + ". Found " + Types.toString(TyperHelper.getBroadType(litType))
 						error(msg, e, ThingMLPackage.eINSTANCE.enumeration_Literals, i)				
 					}				
 				}
@@ -158,48 +161,31 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 		}
 	}	
 	
+	def boolean isLiteralOrReadOnly(Expression e) {
+		if (e instanceof Literal) {return true;}
+		else if (e instanceof PropertyReference) {
+			val pr = e as PropertyReference
+			if (pr.property instanceof Property) {return (pr.property as Property).readonly;}
+			else if (pr.property instanceof LocalVariable) {return (pr.property as LocalVariable).readonly;}
+		}
+		else if (e instanceof UnaryMinus) {
+			val um = e as UnaryMinus
+			return isLiteralOrReadOnly(um.term)
+		}
+		else if (e instanceof CastExpression) {
+			val cast = e as CastExpression
+			return isLiteralOrReadOnly(cast.term)	
+		}
+		return false
+	}
+	
 	@Check(FAST)
 	def checkArrayInit(ArrayInit ai) {
 		ai.values.forEach[e, i |
-			var ok = false;
-			if (e instanceof Literal) {ok = true;}
-			else if (e instanceof PropertyReference) {
-				val pr = e as PropertyReference
-				if (pr.property instanceof Property) {ok = (pr.property as Property).readonly;}
-				else if (pr.property instanceof LocalVariable) {ok = (pr.property as LocalVariable).readonly;}
-			} else if (e instanceof UnaryMinus) {
-				val um = e as UnaryMinus
-				if (um.term instanceof Literal) {ok = true;}
-				else if (um.term instanceof PropertyReference) {
-					val pr = um.term as PropertyReference
-					if (pr.property instanceof Property) {ok = (pr.property as Property).readonly;}
-					else if (pr.property instanceof LocalVariable) {ok = (pr.property as LocalVariable).readonly;}
-				}
-			}
-			if (!ok) {
-				val msg = "Arrays can only be initialized with literals or references to read-only properties."
+			if (!isLiteralOrReadOnly(e)) {
+				val msg = "Arrays can only be initialized with (cast to) literals or references to read-only properties."
 				error(msg, ai, ThingMLPackage.eINSTANCE.arrayInit_Values, i)
-			} else {//right type of expression, let's check the type
-				val et = TypeChecker.computeTypeOf(e)
-				val container = ai.eContainer();
-				var TypeRef typeref = null
-				if (container instanceof Variable) {
-					val v = container as Variable
-					typeref = v.typeRef					
-				}
-				else if (container instanceof PropertyAssign) {
-					val pa = container as PropertyAssign
-					typeref = pa.property.typeRef
-				} else if (container instanceof ConfigPropertyAssign) {
-					val pa = container as ConfigPropertyAssign
-					typeref = pa.property.typeRef					
-				}
-				val t = TyperHelper.getBroadType(typeref.getType());
-				if(!TyperHelper.isA(et, t)) {
-					val msg = "Wrong type. Expected " + t.name + ". Found " + et.name
-					error(msg, ai, ThingMLPackage.eINSTANCE.arrayInit_Values, i)
-				}
-			}
+			} 
 		]
 	}
 }

@@ -257,6 +257,13 @@ public class AnnotationRegistry {
 		final EClass stdout_sync_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration(), ThingMLPackage.eINSTANCE.getThing()};
 		final Annotation stdout_sync_annotation = new Annotation(stdout_sync_name, stdout_sync_desc, stdout_sync_scope);
 		annotations.put(stdout_sync_name, stdout_sync_annotation);
+		
+		final String checker_fail_name = "checker_should_fail";
+		final String checker_fail_desc = "Used in the Checker tests. Specifies whether or not the checker should fail.";
+		final EClass checker_fail_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation checker_fail_annotation = new Annotation(checker_fail_name, checker_fail_desc, checker_fail_scope);
+		annotations.put(checker_fail_name, checker_fail_annotation);
+		
 	}
 	
 	public static String toMD() {

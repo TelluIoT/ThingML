@@ -48,6 +48,7 @@ import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.VariableAssignment;
 import org.thingml.xtext.validation.TypeChecker;
 
@@ -65,9 +66,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	 */
 	@Override
 	public void generate(DivExpression expression, StringBuilder builder, Context ctx) {
-		final Type lhsType = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getLhs()));
-		final Type rhsType = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getRhs()));
-		if (Types.INTEGER_TYPE.equals(lhsType) && Types.INTEGER_TYPE.equals(rhsType)) {// integer division if LHS and RHS are both integer (as in Java)
+		final TypeRef lhsType = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getLhs()));
+		final TypeRef rhsType = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getRhs()));
+		if (Types.INTEGER_TYPEREF.equals(lhsType) && Types.INTEGER_TYPEREF.equals(rhsType)) {// integer division if LHS and RHS are both integer (as in Java)
 			builder.append("Math.trunc(");
 			generate(expression.getLhs(), builder, ctx);
 			builder.append(" / ");

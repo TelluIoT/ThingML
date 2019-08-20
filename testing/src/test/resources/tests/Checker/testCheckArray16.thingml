@@ -1,0 +1,8 @@
+import "datatypes.thingml" from stl
+
+thing TestArrays includes Test
+@checker_should_fail "false"
+{
+	//This should work as integers are reals
+	property array : Double [ 6 ] = { -1 , 1 , -1.5 , 1.5 , 2 , -2 }
+}

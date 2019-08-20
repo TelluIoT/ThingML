@@ -17,15 +17,15 @@ class ControlStructures extends ThingMLValidatorCheck {
 	
 	def checkActionExpression(Action a, Expression e) {
 		val actual = TypeChecker.computeTypeOf(e)
-		if (actual.equals(Types.BOOLEAN_TYPE)) return;
+		if (actual.equals(Types.BOOLEAN_TYPEREF)) return;
 		val t = ThingMLHelpers.findContainingThing(a);
-		if (!AnnotatedElementHelper.isDefined(t, "ignore", "type-warning") && actual.equals(Types.ANY_TYPE)) {
+		if (!AnnotatedElementHelper.isDefined(t, "ignore", "type-warning") && actual.equals(Types.ANY_TYPEREF)) {
 			if (ThingMLHelpers.getAllExpressions(e, typeof(ExternExpression)).size > 0)
 				warning("Condition involving extern expressions cannot be typed as Boolean. Consider using a cast, or use @ignore \"type-warning\" on the containing thing.", a, e.eContainingFeature, "type")
 			else
 				warning("Condition cannot be typed as Boolean. Consider using a cast, or use @ignore \"type-warning\" on the containing thing.", a, e.eContainingFeature, "type-cast", "Boolean")
 		} else {
-			error("Condition is not a Boolean ("+TyperHelper.getBroadType(actual).name+")", a, e.eContainingFeature, "type")
+			error("Condition is not a Boolean ("+TyperHelper.getBroadType(actual).type.name+")", a, e.eContainingFeature, "type")
 		}
 	}
 	

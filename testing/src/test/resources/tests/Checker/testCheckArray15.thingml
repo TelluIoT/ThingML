@@ -1,0 +1,8 @@
+import "datatypes.thingml" from stl
+
+thing TestArray10 {
+	function g() do
+		readonly var v : Integer[2] = {0, 1}
+		v[0] = 1 //cannot re-assign readonly var
+	end
+}

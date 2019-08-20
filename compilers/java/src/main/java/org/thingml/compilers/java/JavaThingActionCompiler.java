@@ -90,9 +90,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
-		final Type leftType = TypeChecker.computeTypeOf(expression.getLhs());
-		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());		
-		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE) && TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
+		final TypeRef leftType = TypeChecker.computeTypeOf(expression.getLhs());
+		final TypeRef rightType = TypeChecker.computeTypeOf(expression.getRhs());		
+		if (TyperHelper.isA(leftType, Types.OBJECT_TYPEREF) && TyperHelper.isA(rightType, Types.OBJECT_TYPEREF)) {
 			if (expression.getLhs() instanceof ExternExpression) {
 				final ExternExpression extL = (ExternExpression) expression.getLhs();				
 				if (extL.getExpression().trim().equals("null")) {// we check for null pointer, should use ==
@@ -118,9 +118,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) { 
-		final Type leftType = TypeChecker.computeTypeOf(expression.getLhs());
-		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());		
-		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE) || TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
+		final TypeRef leftType = TypeChecker.computeTypeOf(expression.getLhs());
+		final TypeRef rightType = TypeChecker.computeTypeOf(expression.getRhs());		
+		if (TyperHelper.isA(leftType, Types.OBJECT_TYPEREF) || TyperHelper.isA(rightType, Types.OBJECT_TYPEREF)) {
 			if (expression.getLhs() instanceof ExternExpression) {
 				final ExternExpression extL = (ExternExpression) expression.getLhs();
 				if (extL.getExpression().trim().equals("null")) {// we check for null pointer, should use ==

@@ -1,0 +1,7 @@
+import "datatypes.thingml" from stl
+
+thing TestArrayInitSize
+@checker_should_fail "false"
+{
+	property v : Integer[2] = {0, 1}
+}

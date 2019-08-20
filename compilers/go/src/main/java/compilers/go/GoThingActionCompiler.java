@@ -68,18 +68,18 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 	private void stringify(Expression expression, Section section, Context ctx) {
 		final GoContext gctx = (GoContext) ctx;
 		Section cst = section.section("tostring");
-		final Type t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression));
-		if (t == Types.STRING_TYPE) {
+		final TypeRef t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression));
+		if (t == Types.STRING_TYPEREF) {
 			generate(expression, cst.section("expression").surroundWith("(", ")"), ctx);
-		} else if (t == Types.INTEGER_TYPE || t == Types.BYTE_TYPE) {
+		} else if (t == Types.INTEGER_TYPEREF || t == Types.BYTE_TYPEREF) {
 			cst.append("fmt.Sprintf(\"%d\", int64(");				
 			generate(expression, cst.section("expression"), ctx);
 			cst.append("))");
-		} else if (t == Types.BOOLEAN_TYPE) {
+		} else if (t == Types.BOOLEAN_TYPEREF) {
 			cst.append("fmt.Sprintf(\"%t\", ");				
 			generate(expression, cst.section("expression"), ctx);
 			cst.append(")");
-		} else if (t == Types.REAL_TYPE) {
+		} else if (t == Types.REAL_TYPEREF) {
 			cst.append("fmt.Sprintf(\"%f\", float64(");				
 			generate(expression, cst.section("expression"), ctx);
 			cst.append("))");
@@ -456,18 +456,18 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		Section cst = section.section("cast");
 		if (expression.isIsArray())
 			cst.append("[]");
-		final Type cast = TyperHelper.getBroadType(expression.getType());
-		if (cast == Types.STRING_TYPE) {
-			final Type t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getTerm()));
-			if (t == Types.INTEGER_TYPE || t == Types.BYTE_TYPE) {
+		final TypeRef cast = TypeChecker.computeTypeOf(expression);
+		if (cast == Types.STRING_TYPEREF) {
+			final TypeRef t = TyperHelper.getBroadType(TypeChecker.computeTypeOf(expression.getTerm()));
+			if (t == Types.INTEGER_TYPEREF || t == Types.BYTE_TYPEREF) {
 				cst.append("fmt.Sprintf(\"%d\", int64(");				
 				generate(expression.getTerm(), cst.section("expression"), ctx);
 				cst.append("))");
-			} else if (t == Types.BOOLEAN_TYPE) {
+			} else if (t == Types.BOOLEAN_TYPEREF) {
 				cst.append("fmt.Sprintf(\"%t\", ");				
 				generate(expression.getTerm(), cst.section("expression"), ctx);
 				cst.append(")");
-			} else if (t == Types.REAL_TYPE) {
+			} else if (t == Types.REAL_TYPEREF) {
 				cst.append("fmt.Sprintf(\"%f\", float64(");				
 				generate(expression.getTerm(), cst.section("expression"), ctx);
 				cst.append("))");

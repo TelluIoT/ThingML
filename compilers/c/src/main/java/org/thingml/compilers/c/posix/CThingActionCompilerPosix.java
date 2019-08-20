@@ -32,7 +32,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
 
 		for (Expression msg : action.getMsg()) {
-		Type actual = TypeChecker.computeTypeOf(msg);
+		Type actual = TypeChecker.computeTypeOf(msg).getType();
 		final StringBuilder b = new StringBuilder();
 		generate(msg, b, ctx);
 		if (actual != null) {
@@ -59,7 +59,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 	@Override
 	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
 		for (Expression msg : action.getMsg()) {
-			Type actual = TypeChecker.computeTypeOf(msg);
+			Type actual = TypeChecker.computeTypeOf(msg).getType();
 			final StringBuilder b = new StringBuilder();
 			generate(msg, b, ctx);
 			if (actual != null) {

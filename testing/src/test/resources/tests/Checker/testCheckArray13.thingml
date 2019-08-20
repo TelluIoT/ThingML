@@ -1,0 +1,5 @@
+import "datatypes.thingml" from stl
+
+thing TestArraySize {
+	property v : Integer[2] = {0, 1, 2} //wrong size
+}

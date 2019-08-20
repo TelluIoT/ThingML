@@ -14,26 +14,20 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-/**
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.thingml.xtext.validation;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
@@ -60,252 +54,293 @@ import org.thingml.xtext.thingML.OrExpression;
 import org.thingml.xtext.thingML.PlusExpression;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TimesExpression;
-import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.UnaryMinus;
 import org.thingml.xtext.thingML.util.ThingMLSwitch;
 
 
-public class TypeChecker extends ThingMLSwitch<Type> {
+public class TypeChecker extends ThingMLSwitch<TypeRef> {
 	
 	public static TypeChecker INSTANCE = new TypeChecker();
 	
-    public static Type computeTypeOf(Expression exp) {
-        Type result = null;
+    public static TypeRef computeTypeOf(Expression exp) {
+        TypeRef result = null;
         if (exp == null) {
-            return Types.ANY_TYPE;
+            return Types.ANY_TYPEREF;
         }
         result = INSTANCE.doSwitch(exp);
         if (result == null) {
             System.out.println("TODO: Type checking for " + exp.getClass().getName());
-            return Types.ANY_TYPE;
+            return Types.ANY_TYPEREF;
         }
         return result;
     }
     
     @Override
-	public Type caseExpressionGroup(ExpressionGroup object) {
+	public TypeRef caseExpressionGroup(ExpressionGroup object) {
         return TyperHelper.getBroadType(computeTypeOf(object.getTerm()));
 	}
 
       
     @Override
-	public Type caseCastExpression(CastExpression object) {
-        return TyperHelper.getBroadType(object.getType());
+	public TypeRef caseCastExpression(CastExpression object) {
+    	final TypeRef tr = ThingMLFactory.eINSTANCE.createTypeRef();
+    	tr.setType(object.getType());
+        return TyperHelper.getBroadType(tr);
 	}
 
 	@Override
-    public Type caseExternExpression(ExternExpression object) {
-        return Types.ANY_TYPE;
+    public TypeRef caseExternExpression(ExternExpression object) {
+        return Types.ANY_TYPEREF;
     }
 	
 	@Override
-	public Type caseByteLiteral(ByteLiteral object) {
-		return Types.BYTE_TYPE;
+	public TypeRef caseByteLiteral(ByteLiteral object) {
+		return Types.BYTE_TYPEREF;
 	}
 	
 	@Override
-	public Type caseCharLiteral(CharLiteral object) {
-		return Types.BYTE_TYPE;
+	public TypeRef caseCharLiteral(CharLiteral object) {
+		return Types.BYTE_TYPEREF;
 	}
 
     @Override
-    public Type caseIntegerLiteral(IntegerLiteral object) {
-        return Types.INTEGER_TYPE;
+    public TypeRef caseIntegerLiteral(IntegerLiteral object) {
+        return Types.INTEGER_TYPEREF;
     }
 
     @Override
-    public Type caseBooleanLiteral(BooleanLiteral object) {
-        return Types.BOOLEAN_TYPE;
+    public TypeRef caseBooleanLiteral(BooleanLiteral object) {
+        return Types.BOOLEAN_TYPEREF;
     }
 
     @Override
-    public Type caseStringLiteral(StringLiteral object) {
-        return Types.STRING_TYPE;
+    public TypeRef caseStringLiteral(StringLiteral object) {
+        return Types.STRING_TYPEREF;
     }
 
     @Override
-    public Type caseDoubleLiteral(DoubleLiteral object) {
-        return Types.REAL_TYPE;
+    public TypeRef caseDoubleLiteral(DoubleLiteral object) {
+        return Types.REAL_TYPEREF;
     }
 
     @Override
-    public Type caseUnaryMinus(UnaryMinus object) {
-        Type t = computeTypeOf(object.getTerm());
-        if (t.equals(Types.ANY_TYPE))
-            return Types.ANY_TYPE;
-        if (!t.equals(Types.BYTE_TYPE) && !t.equals(Types.INTEGER_TYPE) && !t.equals(Types.REAL_TYPE)) {
-            return Types.ERROR_TYPE;
+    public TypeRef caseUnaryMinus(UnaryMinus object) {
+        TypeRef t = computeTypeOf(object.getTerm());
+        if (t.equals(Types.ANY_TYPEREF))
+            return Types.ANY_TYPEREF;
+        if (!t.equals(Types.BYTE_TYPEREF) && !t.equals(Types.INTEGER_TYPEREF) && !t.equals(Types.REAL_TYPEREF)) {
+            return Types.ERROR_TYPEREF;
         }
         return t;
     }
 
-    private Type caseBinaryNumericalOperator(Type t1, Type t2) {
-        if (t1.equals(Types.BYTE_TYPE) && t2.equals(Types.BYTE_TYPE))
-        	return Types.BYTE_TYPE;
-        if (TyperHelper.isA(t1, Types.INTEGER_TYPE) && TyperHelper.isA(t2, Types.INTEGER_TYPE))
-        	return Types.INTEGER_TYPE;
-        if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
-            return Types.ANY_TYPE;
-        if ((!t1.equals(Types.INTEGER_TYPE) && !t1.equals(Types.REAL_TYPE)) || (!t2.equals(Types.INTEGER_TYPE) && !t2.equals(Types.REAL_TYPE))) {
-            return Types.ERROR_TYPE;
+    private TypeRef caseBinaryNumericalOperator(TypeRef t1, TypeRef t2) {
+        if (t1.equals(Types.BYTE_TYPEREF) && t2.equals(Types.BYTE_TYPEREF))
+        	return Types.BYTE_TYPEREF;
+        if (TyperHelper.isA(t1, Types.INTEGER_TYPEREF) && TyperHelper.isA(t2, Types.INTEGER_TYPEREF))
+        	return Types.INTEGER_TYPEREF;
+        if (t1.equals(Types.ANY_TYPEREF) || t2.equals(Types.ANY_TYPEREF))
+            return Types.ANY_TYPEREF;
+        if ((!t1.equals(Types.INTEGER_TYPEREF) && !t1.equals(Types.REAL_TYPEREF)) || (!t2.equals(Types.INTEGER_TYPEREF) && !t2.equals(Types.REAL_TYPEREF))) {
+            return Types.ERROR_TYPEREF;
         }
-        if (!TyperHelper.getBroadType(t1).getName().equals(TyperHelper.getBroadType(t2).getName())) //One Integer and one Real
-            return Types.REAL_TYPE;
+        if (!(TyperHelper.getBroadType(t1) == TyperHelper.getBroadType(t2))) //One Integer and one Real
+            return Types.REAL_TYPEREF;
         return t1;
     }
 
     @Override
-    public Type casePlusExpression(PlusExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef casePlusExpression(PlusExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         //This is to support string concatenation with +, which is somehow supported in ThingML, at least in Java and JS...
         //TODO: Decide if we should use + or a dedicated concatenation operator like ..
-        if (t1.equals(Types.STRING_TYPE) && !t2.equals(Types.ERROR_TYPE) || t2.equals(Types.STRING_TYPE) && !t2.equals(Types.ERROR_TYPE)) {
-        	return Types.STRING_TYPE;
+        if (t1.equals(Types.STRING_TYPEREF) && !t2.equals(Types.ERROR_TYPEREF) || t2.equals(Types.STRING_TYPEREF) && !t2.equals(Types.ERROR_TYPEREF)) {
+        	return Types.STRING_TYPEREF;
         }
         return caseBinaryNumericalOperator(t1, t2);
     }
 
     @Override
-    public Type caseMinusExpression(MinusExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseMinusExpression(MinusExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseBinaryNumericalOperator(t1, t2);
     }
 
     @Override
-    public Type caseTimesExpression(TimesExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseTimesExpression(TimesExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseBinaryNumericalOperator(t1, t2);
     }
 
     @Override
-    public Type caseDivExpression(DivExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseDivExpression(DivExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseBinaryNumericalOperator(t1, t2);
     }
 
     @Override
-    public Type caseModExpression(ModExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseModExpression(ModExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseBinaryNumericalOperator(t1, t2);
     }
 
-    private Type caseComparison(Type t1, Type t2) {
+    private TypeRef caseComparison(TypeRef t1, TypeRef t2) {
     	if (TyperHelper.isA(t1, t2) || TyperHelper.isA(t2, t1))
-    		return Types.BOOLEAN_TYPE;
-    	return Types.ERROR_TYPE;
+    		return Types.BOOLEAN_TYPEREF;
+    	return Types.ERROR_TYPEREF;
     }
 
     @Override
-    public Type caseEqualsExpression(EqualsExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseEqualsExpression(EqualsExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseComparison(t1, t2);
     }
     
     @Override
-    public Type caseNotEqualsExpression(NotEqualsExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseNotEqualsExpression(NotEqualsExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseComparison(t1, t2);
     }    
 
     @Override
-    public Type caseGreaterExpression(GreaterExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseGreaterExpression(GreaterExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseComparison(t1, t2);
     }
 
     @Override
-    public Type caseGreaterOrEqualExpression(GreaterOrEqualExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseGreaterOrEqualExpression(GreaterOrEqualExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseComparison(t1, t2);
     }
 
     @Override
-    public Type caseLowerExpression(LowerExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseLowerExpression(LowerExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseComparison(t1, t2);
     }
 
     @Override
-    public Type caseLowerOrEqualExpression(LowerOrEqualExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseLowerOrEqualExpression(LowerOrEqualExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseComparison(t1, t2);
     }
 
     //Boolean
-    private Type caseBooleanOperator(Type t1, Type t2) {
-    	if (t1.equals(Types.BOOLEAN_TYPE) && t2.equals(Types.BOOLEAN_TYPE))
-    		return Types.BOOLEAN_TYPE;
-    	if (TyperHelper.isA(t1, Types.BOOLEAN_TYPE) && TyperHelper.isA(t2, Types.BOOLEAN_TYPE))    	
-            return Types.ANY_TYPE;        
-        return Types.ERROR_TYPE;        
+    private TypeRef caseBooleanOperator(TypeRef t1, TypeRef t2) {
+    	if (t1.equals(Types.BOOLEAN_TYPEREF) && t2.equals(Types.BOOLEAN_TYPEREF))
+    		return Types.BOOLEAN_TYPEREF;
+    	if (TyperHelper.isA(t1, Types.BOOLEAN_TYPEREF) && TyperHelper.isA(t2, Types.BOOLEAN_TYPEREF))    	
+            return Types.ANY_TYPEREF;        
+        return Types.ERROR_TYPEREF;        
     }
 
     @Override
-    public Type caseAndExpression(AndExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseAndExpression(AndExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseBooleanOperator(t1, t2);
     }
 
     @Override
-    public Type caseOrExpression(OrExpression object) {
-        Type t1 = computeTypeOf(object.getLhs());
-        Type t2 = computeTypeOf(object.getRhs());
+    public TypeRef caseOrExpression(OrExpression object) {
+        TypeRef t1 = computeTypeOf(object.getLhs());
+        TypeRef t2 = computeTypeOf(object.getRhs());
         return caseBooleanOperator(t1, t2);
     }
 
     @Override
-    public Type caseNotExpression(NotExpression object) {
-        Type t = computeTypeOf(object.getTerm());
-        if (t.equals(Types.BOOLEAN_TYPE))
-            return Types.BOOLEAN_TYPE;        
-        if (TyperHelper.isA(t, Types.BOOLEAN_TYPE))
-            return Types.ANY_TYPE;        
-        return Types.ERROR_TYPE;
+    public TypeRef caseNotExpression(NotExpression object) {
+        TypeRef t = computeTypeOf(object.getTerm());
+        if (t.equals(Types.BOOLEAN_TYPEREF))
+            return Types.BOOLEAN_TYPEREF;        
+        if (TyperHelper.isA(t, Types.BOOLEAN_TYPEREF))
+            return Types.ANY_TYPEREF;        
+        return Types.ERROR_TYPEREF;
     }
     //End Boolean
 
     @Override
-    public Type casePropertyReference(PropertyReference object) {
-        return TyperHelper.getBroadType(object.getProperty().getTypeRef().getType());
+    public TypeRef casePropertyReference(PropertyReference object) {
+        return TyperHelper.getBroadType(object.getProperty().getTypeRef());
     }
     
     
     @Override
-	public Type caseEventReference(EventReference object) {
-    	return TyperHelper.getBroadType(object.getParameter().getTypeRef().getType());
+	public TypeRef caseEventReference(EventReference object) {
+    	return TyperHelper.getBroadType(object.getParameter().getTypeRef());
 	}
     
     @Override
-	public Type caseEnumLiteralRef(EnumLiteralRef object) {
-    	//return TyperHelper.getBroadType(object.getEnum());
-    	return object.getEnum();
+	public TypeRef caseEnumLiteralRef(EnumLiteralRef object) {
+    	//return TyperHelper.getBroadType(object.getEnum().getTypeRef());
+    	if (object.getEnum().getTypeRef() != null)
+    		return object.getEnum().getTypeRef();
+    	return Types.ANY_TYPEREF;
 	}    
 
     @Override
-    public Type caseFunctionCallExpression(FunctionCallExpression object) {
+    public TypeRef caseFunctionCallExpression(FunctionCallExpression object) {
         if (object.getFunction().getTypeRef() == null || object.getFunction().getTypeRef().getType() == null)
-            return Types.VOID_TYPE;
-        return TyperHelper.getBroadType(object.getFunction().getTypeRef().getType());
+            return Types.VOID_TYPEREF;
+        return TyperHelper.getBroadType(object.getFunction().getTypeRef());
     }
 
     @Override
-    public Type caseArrayIndex(ArrayIndex object) {
-        Type t = computeTypeOf(object.getIndex());
-        if (TyperHelper.isA(t, Types.INTEGER_TYPE))
-            return computeTypeOf(object.getArray());
-        return Types.ERROR_TYPE;
+    public TypeRef caseArrayIndex(ArrayIndex object) {
+        TypeRef t = computeTypeOf(object.getIndex());
+        if (TyperHelper.isA(t, Types.INTEGER_TYPEREF)) {
+            return Types.getTypeRef(computeTypeOf(object.getArray()), false);
+        }
+        return Types.ERROR_TYPEREF;
     }
+    
+    @Override
+    public TypeRef caseArrayInit(ArrayInit object) {
+    	final Map<String, TypeRef> types = new HashMap<String, TypeRef>();
+    	for(Expression e : object.getValues()) {
+    		final TypeRef tr = computeTypeOf(e);
+    		if (tr.isIsArray()) return Types.ERROR_TYPEREF;
+    		types.put(tr.getType().getName(), tr);
+    	}
+    	if (types.size() > 1) {
+    		if (types.containsValue(Types.ANY_TYPEREF)) {
+    			return Types.ANY_TYPEREF;
+    		}
+    		if (types.containsValue(Types.REAL_TYPEREF) 
+    				&& !types.containsValue(Types.BOOLEAN_TYPEREF) 
+    				&& !types.containsValue(Types.CHARACTER_TYPEREF)
+    				&& !types.containsValue(Types.OBJECT_TYPEREF)
+    				&& !types.containsValue(Types.STRING_TYPEREF)
+    				&& !types.containsValue(Types.VOID_TYPEREF)
+    			) return Types.REAL_TYPEREF;
+    		if (types.containsValue(Types.INTEGER_TYPEREF) 
+    				&& !types.containsValue(Types.BOOLEAN_TYPEREF) 
+    				&& !types.containsValue(Types.CHARACTER_TYPEREF)
+    				&& !types.containsValue(Types.OBJECT_TYPEREF)
+    				&& !types.containsValue(Types.STRING_TYPEREF)
+    				&& !types.containsValue(Types.VOID_TYPEREF)
+    			) return Types.INTEGER_TYPEREF;
+    		return Types.ERROR_TYPEREF;
+    	}
+    	
+    	if (types.size() == 0 || types.size() > 1)
+    		return Types.ERROR_TYPEREF;
+    	return Types.getTypeRef(types.values().iterator().next(), true);
+    }
+    
 }

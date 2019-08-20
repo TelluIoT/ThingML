@@ -1,0 +1,9 @@
+import "datatypes.thingml" from stl
+
+thing TestArray7 {
+	function g() do
+		var v : Integer[2]
+		v[0] = 0
+		v[1] = v //v is integer array and cannot be assigned to v[1], which is an integer
+	end
+}

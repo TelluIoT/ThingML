@@ -21,6 +21,7 @@ import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 
 /**
  * Created by ffl on 10.05.2016.
@@ -35,73 +36,75 @@ public class TyperHelper {
 		return false;
 	}
 
-	private static Type getType(String ty) {
+	private static TypeRef getType(String ty, boolean isArray) {
         if (ty.equals("Byte"))
-        	return Types.BYTE_TYPE;
+        	return Types.getTypeRef(Types.BYTE_TYPEREF, isArray);
         else if (ty.equals("Integer"))
-            return Types.INTEGER_TYPE;
+            return Types.getTypeRef(Types.INTEGER_TYPEREF, isArray);
         else if (ty.equals("Real"))
-            return Types.REAL_TYPE;
+            return Types.getTypeRef(Types.REAL_TYPEREF, isArray);
         else if (ty.equals("Boolean"))
-            return Types.BOOLEAN_TYPE;
+            return Types.getTypeRef(Types.BOOLEAN_TYPEREF, isArray);
         else if (ty.equals("Character"))
-            return Types.CHARACTER_TYPE;
+            return Types.getTypeRef(Types.CHARACTER_TYPEREF, isArray);
         else if (ty.equals("String"))
-            return Types.STRING_TYPE;
+            return Types.getTypeRef(Types.STRING_TYPEREF, isArray);
         else if (ty.equals("Object"))
-            return Types.OBJECT_TYPE;
+            return Types.getTypeRef(Types.OBJECT_TYPEREF, isArray);
         else if (ty.equals("Error"))
-            return Types.ERROR_TYPE;
+            return Types.getTypeRef(Types.ERROR_TYPEREF, isArray);
         else if (ty.equals("Void"))
-            return Types.VOID_TYPE;
+            return Types.getTypeRef(Types.VOID_TYPEREF, isArray);
         else
-            return Types.ANY_TYPE;
+            return Types.getTypeRef(Types.ANY_TYPEREF, isArray);
 	}
 	
-    public static Type getBroadType(Type self) {
-    	if (self instanceof ObjectType) {
-    		if (self.getName().equals("String"))
-    			return Types.STRING_TYPE;
-            return Types.OBJECT_TYPE;
+    public static TypeRef getBroadType(TypeRef self) {
+    	if (self.getType() instanceof ObjectType) {
+    		if (self.getType().getName().equals("String"))
+    			return Types.getTypeRef(Types.STRING_TYPEREF, self.isIsArray());
+            return Types.getTypeRef(Types.OBJECT_TYPEREF, self.isIsArray());
         }
     	if (self instanceof Enumeration) {
     		final Enumeration e = (Enumeration)self;
     		if (e.getTypeRef() != null && e.getTypeRef().getType() != null) {
-    			return getBroadType(e.getTypeRef().getType());
+    			return getBroadType(e.getTypeRef());
     		}
     		return self;
     	}
-        if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
-            final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
-            return getType(ty);
+        if (AnnotatedElementHelper.hasAnnotation(self.getType(), "type_checker")) {
+            final String ty = AnnotatedElementHelper.annotation(self.getType(), "type_checker").get(0);
+            return getType(ty, self.isIsArray());
         } 
-        return Types.ANY_TYPE;
+        return Types.getTypeRef(Types.ANY_TYPEREF, self.isIsArray());
     }
 
-    public static boolean isA(Type self, Type t) {
+    public static boolean isA(TypeRef self, TypeRef t) {
+    	if (self.isIsArray() ^ t.isIsArray()) return false;
+    	
     	self = getBroadType(self);
     	t = getBroadType(t);
         if (self == t) // T is a T
             return true;
-        if (t == Types.STRING_TYPE) //Anything is (can be casted to) a String //That is a workaround so that we can use + to concatenate vars in a String (since we do not have a str concat in ThingML, but + is widely used)
+        if (t == Types.STRING_TYPEREF) //Anything is (can be casted to) a String //That is a workaround so that we can use + to concatenate vars in a String (since we do not have a str concat in ThingML, but + is widely used)
     		return true;
-    	if (t == Types.OBJECT_TYPE) //Only String, Object and Any are Object
-    		return self == Types.ANY_TYPE || self == Types.OBJECT_TYPE || self == Types.STRING_TYPE; 
-        if (self == Types.ANY_TYPE)//Any is anything
-            return t != Types.ERROR_TYPE;
-        if (t == Types.ANY_TYPE)//anything is an Any
-            return /*self != Types.OBJECT_TYPE &&*/ self != Types.ERROR_TYPE;
-        if (self == Types.BYTE_TYPE && t == Types.INTEGER_TYPE) //a Byte is an Integer
+    	if (t == Types.OBJECT_TYPEREF) //Only String, Object and Any are Object
+    		return self == Types.ANY_TYPEREF || self == Types.OBJECT_TYPEREF || self == Types.STRING_TYPEREF; 
+        if (self == Types.ANY_TYPEREF)//Any is anything
+            return t != Types.ERROR_TYPEREF;
+        if (t == Types.ANY_TYPEREF)//anything is an Any
+            return /*self != Types.OBJECT_TYPE &&*/ self != Types.ERROR_TYPEREF;
+        if (self == Types.BYTE_TYPEREF && t == Types.INTEGER_TYPEREF) //a Byte is an Integer
         	return true;
-        if ((self == Types.INTEGER_TYPE || self == Types.BYTE_TYPE) && t == Types.REAL_TYPE) //an Integer or a Byte is a Real
+        if ((self == Types.INTEGER_TYPEREF || self == Types.BYTE_TYPEREF) && t == Types.REAL_TYPEREF) //an Integer or a Byte is a Real
             return true;
     	if (self instanceof Enumeration) {
     		if (((Enumeration) self).getTypeRef() != null) {
-    			return isA(((Enumeration) self).getTypeRef().getType(), t);
+    			return isA(((Enumeration) self).getTypeRef(), t);
     		}
-    		if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
-    			final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
-    			final Type typ = getType(ty); 
+    		if (AnnotatedElementHelper.hasAnnotation(self.getType(), "type_checker")) {
+    			final String ty = AnnotatedElementHelper.annotation(self.getType(), "type_checker").get(0);
+    			final TypeRef typ = getType(ty, self.isIsArray()); 
     			return isA(typ, t);
     		}
     	}

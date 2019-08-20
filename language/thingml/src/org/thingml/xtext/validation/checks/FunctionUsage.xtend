@@ -184,8 +184,8 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			if (f.body instanceof ReturnAction || (f.body instanceof ConditionalAction && returns(f.body)))
 				return;
 			if (!returns(f.body)) {
-				val actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
-				val msg = "Function " + f.name + " must return " + actualType.name + ". Found no return action."				
+				val actualType = TyperHelper.getBroadType(f.getTypeRef());
+				val msg = "Function " + f.name + " must return " + Types.toString(actualType) + ". Found no return action."				
 				error(msg, f, ThingMLPackage.eINSTANCE.namedElement_Name, "missing-return", f.name)
 				return;
 			}
@@ -198,23 +198,23 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			// Checks return type
 			if (f.typeRef !== null && f.typeRef.type !== null) { // non-void function
 				ActionHelper.getAllActions(f, ReturnAction).forEach [ ra |
-					val actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
+					val actualType = TyperHelper.getBroadType(f.getTypeRef());
 					val returnType = TypeChecker.computeTypeOf(ra.getExp());
 					val parent = ra.eContainer.eGet(ra.eContainingFeature)
-					if (returnType.equals(Types.ERROR_TYPE)) {
-						val msg = "Function "+f.name+" should return "+actualType.name+". Found "+returnType.name+"."
+					if (returnType.equals(Types.ERROR_TYPEREF)) {
+						val msg = "Function "+f.name+" should return "+Types.toString(actualType)+". Found "+Types.toString(returnType)+"."
 						if (parent instanceof EList)
 							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "type")
 						else
 							error(msg, ra.eContainer, ra.eContainingFeature ,"type")
-					} else if (returnType.equals(Types.ANY_TYPE)) {
-						val msg = "Function "+f.name+" should return "+actualType.name+". Found a value/expression that cannot be typed. Consider using a cast (<exp> as <type>)."
+					} else if (returnType.equals(Types.ANY_TYPEREF)) {
+						val msg = "Function "+f.name+" should return "+Types.toString(actualType)+". Found a value/expression that cannot be typed. Consider using a cast (<exp> as <type>)."
 						if (parent instanceof EList)
 							warning(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "type-cast", f.getTypeRef().getType().name)
 						else
 							warning(msg, ra.eContainer, ra.eContainingFeature, "type-cast", f.getTypeRef().getType().name)
 					} else if (!TyperHelper.isA(returnType, actualType)) {
-						val msg = "Function "+f.name+" should return "+actualType.name+". Found "+returnType.name+"."
+						val msg = "Function "+f.name+" should return "+Types.toString(actualType)+". Found "+Types.toString(returnType)+"."
 						if (parent instanceof EList)
 							error(msg, ra.eContainer, ra.eContainingFeature, (parent as EList).indexOf(ra), "type")
 						else
@@ -253,23 +253,23 @@ class FunctionUsage extends ThingMLValidatorCheck {
 		// Check that the parameters are properly typed
 		function.parameters.forEach [ p, i |
 			val e = params.get(i);
-			val expected = TyperHelper.getBroadType(p.getTypeRef().getType());
+			val expected = TyperHelper.getBroadType(p.getTypeRef());
 			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) {
-				if (actual.equals(Types.ERROR_TYPE)) {
-					val msg = "Function "+function.name+" is called with an erroneous parameter. Expected "+expected.name+", called with "+TyperHelper.getBroadType(actual).name;
+				if (actual.equals(Types.ERROR_TYPEREF)) {
+					val msg = "Function "+function.name+" is called with an erroneous parameter. Expected "+Types.toString(expected)+", called with "+Types.toString(TyperHelper.getBroadType(actual));
 					if (parent instanceof EList)
 						error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
 						error(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-type")
-				} else if (!ignore && actual.equals(Types.ANY_TYPE)) {
+				} else if (!ignore && actual.equals(Types.ANY_TYPEREF)) {
 					val msg = "Function "+function.name+" is called with a parameter which cannot be typed. Consider using a cast (<exp> as <type>), or using @ignore \"type-warning\"."
 					if (parent instanceof EList)
 						warning(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
 						warning(msg, o.eContainer, o.eContainingFeature ,"function-call-wrong-parameter-type")
 				} else if (!TyperHelper.isA(actual, expected)) {
-					val msg = "Function "+function.name+" is called with an erroneous parameter. Expected "+expected.name+", called with "+TyperHelper.getBroadType(actual).name;
+					val msg = "Function "+function.name+" is called with an erroneous parameter. Expected "+Types.toString(expected)+", called with "+Types.toString(TyperHelper.getBroadType(actual));
 					if (parent instanceof EList)
 						error(msg, o.eContainer, o.eContainingFeature, (parent as EList).indexOf(o) ,"function-call-wrong-parameter-type")
 					else
