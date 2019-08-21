@@ -74,9 +74,9 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
                 builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
-                StringBuilder tempBuilder = new StringBuilder();
-                generate(action.getIndex(), tempBuilder, ctx);
-                builder.append("[" + tempBuilder.toString() + "]");
+                StringBuilder tempBuilder = new StringBuilder();                
+                generate(action.getIndex(), tempBuilder, ctx);                
+                builder.append("[" + castArrayIndex(tempBuilder.toString()) + "]");
                 builder.append(" = ");
                 cast(action.getProperty().getTypeRef().getType(), false, action.getExpression(), builder, ctx);
                 //generateMainAndInit(action.getExpression(), builder, ctx);
@@ -93,6 +93,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         }
     }
 
+    protected String castArrayIndex(String builder) {
+    	return builder;
+    }
+    
     public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
         generate(exp, builder, ctx);
     }
@@ -172,7 +176,9 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(ArrayIndex expression, StringBuilder builder, Context ctx) {
         generate(expression.getArray(), builder, ctx);
         builder.append("[");
-        generate(expression.getIndex(), builder, ctx);
+        final StringBuilder tempBuilder = new StringBuilder();
+        generate(expression.getIndex(), tempBuilder, ctx);        
+        builder.append(castArrayIndex(tempBuilder.toString()));
         builder.append("]");
     }
 

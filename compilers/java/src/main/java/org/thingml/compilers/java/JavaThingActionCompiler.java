@@ -252,9 +252,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			builder.append(";\n");
 		} else {
 			if (action.getTypeRef().getCardinality() != null) {
-				builder.append(" = new " + JavaHelper.getJavaType(action.getTypeRef().getType(), false, ctx) + "[");
+				builder.append(" = new " + JavaHelper.getJavaType(action.getTypeRef().getType(), false, ctx) + "[(int)(");
 				generate(action.getTypeRef().getCardinality(), builder, ctx);
-				builder.append("];");
+				builder.append(")];");
 			} else {
 				if (action.getTypeRef().getType() instanceof PrimitiveType) {
 					builder.append(" = " + JavaHelper.getDefaultValue(action.getTypeRef().getType()) + ";");
@@ -373,6 +373,11 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			i++;
 		}
 		builder.append(")");
+	}
+	
+	@Override
+	protected String castArrayIndex(String builder) {
+		return "(int)(" + builder + ")";
 	}
 
 	@Override
