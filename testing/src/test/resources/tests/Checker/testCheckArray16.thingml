@@ -1,6 +1,6 @@
 import "datatypes.thingml" from stl
 
-thing TestArrays includes Test
+thing TestArrays
 @checker_should_fail "false"
 {
 	//This should work as integers are reals
