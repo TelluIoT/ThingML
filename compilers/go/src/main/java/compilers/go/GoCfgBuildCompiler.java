@@ -25,7 +25,7 @@ public class GoCfgBuildCompiler extends CfgBuildCompiler {
 
 	@Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {
-        return "golang:alpine";
+        return "golang:buster";
     }
 
     @Override
@@ -37,11 +37,24 @@ public class GoCfgBuildCompiler extends CfgBuildCompiler {
     }
     
     @Override
-    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
-    	String command = "RUN apk add --no-cache build-base git " + ((AnnotatedElementHelper.isDefined(cfg, "docker", "perf"))?"strace":"") + "\n" +
-            		"RUN go get github.com/SINTEF-9012/gosm\n" +        			
-            		"COPY . .\n" +
-            		"RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go && cp " + cfg.getName() + " /" + cfg.getName() + "\n";
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {    	
+    	String command = "RUN apt-get update && apt-get install -y git "; 
+    	if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf"))
+    		command += "strace ";
+    	if (AnnotatedElementHelper.isDefined(cfg, "go_compiler", "gccgo"))
+    		command += "gccgo-go ";
+    	command += "&& rm -rf /var/lib/apt/lists/* ";    	    	
+    	if (AnnotatedElementHelper.isDefined(cfg, "go_compiler", "gccgo"))
+    		command += "&& cp /usr/bin/gccgo-8 /usr/bin/gccgo";
+    	command += "\n";
+    			
+        command += "RUN go get github.com/SINTEF-9012/gosm\n" +        			
+            	   "COPY . .\n";
+            	   
+        if (AnnotatedElementHelper.isDefined(cfg, "go_compiler", "gccgo"))
+        	command += "RUN CGO_ENABLED=1 GOOS=linux go build -compiler gccgo -gccgoflags \"-static -O2\" -o " + cfg.getName() + " -a *.go && cp " + cfg.getName() + " /" + cfg.getName() + "\n";
+        else
+        	command += "RUN go build -ldflags \"-linkmode external -extldflags -static\" -o " + cfg.getName() + " -a *.go && cp " + cfg.getName() + " /" + cfg.getName() + "\n";
         
         if(!AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
     		command += "FROM scratch\n" +

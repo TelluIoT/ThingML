@@ -38,6 +38,18 @@ public class AnnotationRegistry {
 		final Annotation compiler_annotation = new Annotation(compiler_name, compiler_desc, compiler_scope);
 		annotations.put(compiler_name, compiler_annotation);
 		
+		final String c_compiler_name = "c_compiler";
+		final String c_compiler_desc = "Specifies an alternative compiler to be used to compile the generated C code e.g. clang";
+		final EClass c_compiler_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation c_compiler_annotation = new Annotation(c_compiler_name, c_compiler_desc, c_compiler_scope);
+		annotations.put(c_compiler_name, c_compiler_annotation);
+		
+		final String go_compiler_name = "go_compiler";
+		final String go_compiler_desc = "Specifies an alternative compiler to be used to compile the generated Go code e.g. gccgo";
+		final EClass go_compiler_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation go_compiler_annotation = new Annotation(go_compiler_name, go_compiler_desc, go_compiler_scope);
+		annotations.put(go_compiler_name, go_compiler_annotation);
+		
 		/** MONITORING **/
 		//@monitor
 		final String monitor_name = "monitor";

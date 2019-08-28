@@ -55,11 +55,14 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
         StringBuilder builder = new StringBuilder();
+        builder.append("RUN apt-get update && apt-get install -y build-essential ");
         if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-        	builder.append("RUN apt-get update && apt-get install -y build-essential strace && rm -rf /var/lib/apt/lists/*\n");
-        } else {
-        	builder.append("RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*\n");
+        	builder.append("strace ");
         }
+        if (AnnotatedElementHelper.isDefined(cfg, "c_compiler", "clang")) {
+        	builder.append("clang ");
+        }
+        builder.append("&& rm -rf /var/lib/apt/lists/*\n");
         builder.append("COPY . .\n");
         builder.append("RUN make\n");        
         if(AnnotatedElementHelper.isDefined(cfg, "c_static_linking", "true") && !AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
