@@ -97,12 +97,12 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
         		"RUN cd /root && tar -xzf mvn_repo_generated.tar.gz\n" +
         		"COPY . .\n" +
         		"RUN mvn install\n";
-        
-        command += "FROM openjdk:jre-alpine\n" +
-        		"COPY --from=0 /target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar .\n";
+                
+        command += "FROM " + AnnotatedElementHelper.annotationOrElse(cfg, "docker_jre", "adoptopenjdk:11-jre-hotspot") + "\n";                
+        command +=	"COPY --from=0 /target/" + cfg.getName() + "-1.0.0-jar-with-dependencies.jar .\n";
         
         if (AnnotatedElementHelper.isDefined(cfg, "docker", "perf")) {
-           	command += "RUN apk add --no-cache strace\n";
+           	command += "RUN apt-get update && apt-get install -y strace && rm -rf /var/lib/apt/lists/*\n";
         }
         	
         return command;
