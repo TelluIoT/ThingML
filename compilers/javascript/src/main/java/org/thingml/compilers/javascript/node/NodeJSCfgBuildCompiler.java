@@ -74,7 +74,12 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	
 	@Override
     public String getDockerBaseImage(Configuration cfg, Context ctx) {		
-		return "node:lts-alpine";
+		if (AnnotatedElementHelper.isDefined(cfg, "docker_js", "chakra"))
+			return "debian\n"
+					+ "RUN apt-get update && apt-get install -y curl build-essential strace && rm -rf /var/lib/apt/lists/*\n"
+					+ "RUN curl -O -J -L https://github.com/nodejs/node-chakracore/releases/download/node-chakracore-v10.13.0/node-v10.13.0-linux-x64.tar.gz && tar -zvxf node-v10.13.0-linux-x64.tar.gz --strip-components=1 --directory / && rm node-v10.13.0-linux-x64.tar.gz\n";
+		return "node:lts-alpine\n"
+				+ "RUN apk add --no-cache strace\n";
     }
 	
     @Override
@@ -88,7 +93,6 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
     @Override
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
     	return "COPY . .\n" +
-    	"RUN npm install --production\n" +
-    	((AnnotatedElementHelper.isDefined(cfg, "docker", "perf"))?"RUN apk add --no-cache strace":"") + "\n";
+    	"RUN npm install --production\n";    	
     }	
 }

@@ -67,6 +67,20 @@ public class AnnotationRegistry {
 		final Annotation docker_annotation = new Annotation(docker_name, docker_desc, docker_scope);
 		annotations.put(docker_name, docker_annotation);
 		
+		//@docker_jre
+		final String docker_jre_name = "docker_jre";
+		final String docker_jre_desc = "Alternative JRE to be used in the docker image";
+		final EClass docker_jre_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation docker_jre_annotation = new Annotation(docker_jre_name, docker_jre_desc, docker_jre_scope);
+		annotations.put(docker_jre_name, docker_jre_annotation);
+		
+		//@docker_js
+		final String docker_js_name = "docker_js";
+		final String docker_js_desc = "Alternative JS engine to be used in the docker image e.g. chakra";
+		final EClass docker_js_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation docker_js_annotation = new Annotation(docker_js_name, docker_js_desc, docker_js_scope);
+		annotations.put(docker_js_name, docker_js_annotation);
+		
 		/** DEPS AND EXTERNS **/
 		//@maven_dep
 		final String maven_name = "maven_dep";
