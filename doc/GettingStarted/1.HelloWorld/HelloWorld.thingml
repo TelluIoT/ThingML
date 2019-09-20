@@ -1,0 +1,45 @@
+/**
+This is the ThingML hello world example!
+It basically prints Hello World! and then Bye.
+You can see that this thing is Platform-Independent: we are not using any C, Java or JavaScript code here.
+*/
+thing HelloThing {
+
+	statechart HelloWorld init Greetings {
+
+		state Greetings {
+
+			transition -> Bye
+			action do
+		        print "Hello World!\n"
+      		end
+		}
+
+
+		state Bye {
+			on entry print "Bye.\n"
+
+		}
+	}
+}
+
+/**
+TODO: compile and run this configuration for the different platforms: C/Linux, Java, JavaScript, Go and Arduino (if you have one)
+Right-click on this file (in the Project Explorer on the left) and try:
+HEADS / ThingML -> java
+HEADS / ThingML -> nodejs
+HEADS / ThingML -> posix
+HEADS / ThingML -> arduino
+HEADS / ThingML -> go
+
+Note: if you do not have all those languages on your computer, you can use Docker
+to build the generated Dockerfile and run it
+**/
+configuration HelloCfg
+@docker
+@arduino_stdout "Serial"
+{
+
+	instance my_instance: HelloThing
+
+}

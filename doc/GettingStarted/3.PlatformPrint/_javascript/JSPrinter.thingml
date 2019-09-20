@@ -1,0 +1,21 @@
+import "../HelloWorldCustomPrint.thingml"
+
+thing JSPrint includes AbstractPrint
+{
+	function init_print() do /*nothing special to do here*/ end
+	
+	function custom_print(s : String) do
+		`console.log(` & s & `);`
+	end
+}
+
+//Merge the generic thing with the C Print
+thing JSHelloThing includes HelloThing, JSPrint {}
+
+
+//TODO: Compile and run for the nodejs platform
+configuration CustomPrintJS
+@docker
+{
+	instance printer : JSHelloThing
+}

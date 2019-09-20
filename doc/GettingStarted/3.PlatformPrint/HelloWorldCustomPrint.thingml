@@ -1,0 +1,34 @@
+import "datatypes.thingml" from stl
+
+/**
+This is the ThingML hello world example, revisited!
+This time, we'll assume ThingML does not provide a print action.
+We'll have to provide platform-specific implementation of this action
+*/
+
+thing fragment AbstractPrint {
+	abstract function init_print()
+	abstract function custom_print(s : String) //let's define an abstract custom_print...
+}
+
+thing fragment HelloThing includes AbstractPrint {//...which we can use in a thing
+
+	statechart HelloWorld init Greetings {
+
+		on entry init_print()
+
+		state Greetings {
+
+			transition -> Bye
+			action do
+		        custom_print("Hello World!\n")
+      		end
+		}
+
+
+		state Bye {
+			on entry custom_print("Bye.\n")
+
+		}
+	}
+}

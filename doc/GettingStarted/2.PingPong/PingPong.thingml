@@ -1,0 +1,96 @@
+/**
+We have seen in 1_helloWorld how to make a simple thing.
+Now it is time to design two things that communicate together, locally: this is the ping pong sample!
+*/
+
+/**
+First, define the messages that make sense for this ping pong application...
+Obviously, one ping and one pong message
+*/
+thing fragment PingPongMsgs {
+	message ping();
+	message pong();
+}
+
+/**
+Now we implement a basic ping server. It will sends back a pong message whenever it receives a ping message
+*/
+thing PingServer includes PingPongMsgs {
+
+	provided port ping_service {
+		sends pong
+		receives ping
+	}
+
+	statechart PongServerMachine init Active {
+
+        on entry print "Ping Server Started!\n"
+
+		state Active {
+			
+			internal event ping_service?ping
+			action ping_service!pong()
+			
+		}
+	}
+}
+
+/**
+Now we implement a ping client. 
+It will first (in the Ping state) sends a ping message and wait for a pong message
+When the pong message is received, we will go to the Pong state, acknoledging (print) that we have received the pong
+Finally, we will go the Stop state and print Bye.
+*/
+thing PingClient includes PingPongMsgs {
+
+	required port ping_service {
+		receives pong
+		sends ping
+	}
+	
+	statechart PingClientMachine init Ping {
+	
+	on entry print "Ping Client Started!\n"
+	
+		state Ping {
+			
+			on entry do
+				print "Send Ping..." 
+				ping_service!ping()
+			end
+				
+			
+			transition PONG -> Pong 
+			event ping_service?pong
+			
+		}
+		
+		state Pong {
+			on entry print "Got pong!\n"
+			
+			transition -> Stop
+			
+		}
+		
+		state Stop {
+			on entry print "Bye.\n"
+		}
+		
+	}
+	
+}
+
+/**
+Again, that simple ping pong application is fully platform-independent.
+TODO: compile and run this configuration for the different platforms: C/Linux, Java, JavaScript and Arduino (if you have one)
+*/
+configuration PingPongCfg 
+@docker
+@arduino_stdout "Serial"
+{
+
+	instance client: PingClient
+	instance server: PingServer
+	connector client.ping_service => server.ping_service
+
+}

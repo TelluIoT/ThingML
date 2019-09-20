@@ -1,0 +1,21 @@
+import "../HelloWorldCustomPrint.thingml"
+
+thing CPrint includes AbstractPrint
+{
+	function init_print() do /*nothing special to do here*/ end
+	
+	function custom_print(s : String) do
+		`fprintf(stdout, ` & s & `);`
+	end
+}
+
+//Merge the generic thing with the C Print
+thing CHelloThing includes HelloThing, CPrint {}
+
+
+//TODO: Compile and run for the C platform
+configuration CustomPrintC 
+@docker
+{
+	instance printer : CHelloThing
+}

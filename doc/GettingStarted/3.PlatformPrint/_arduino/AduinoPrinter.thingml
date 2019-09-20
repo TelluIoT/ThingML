@@ -1,0 +1,23 @@
+import "../HelloWorldCustomPrint.thingml"
+
+thing ArduinoPrint includes AbstractPrint
+{
+	function init_print() do 
+		`Serial.begin(9600);`
+	end
+	
+	function custom_print(s : String) do
+		`Serial.print(` & s & `);`
+	end
+}
+
+//Merge the generic thing with the C Print
+thing ArduinoHelloThing includes HelloThing, ArduinoPrint {}
+
+
+//TODO: Compile and run for the arduino platform
+configuration CustomPrintArduino 
+@arduino_stdout "Serial" //set stdout to the serial port
+{
+	instance printer : ArduinoHelloThing
+}
