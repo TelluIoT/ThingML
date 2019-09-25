@@ -107,11 +107,11 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
 		
 	end
 	
-	function mosquitto_subscribe_callback() 
-		@c_prototype "void mosquitto_subscribe_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int msgid, int qos_count, const int * granted_qos)"
+	function mosquitto_subscription_callback() 
+		@c_prototype "void mosquitto_subscription_callback(struct mosquitto *mosq, struct PosixMQTTAdapter_Instance *_thing_instance, int msgid, int qos_count, const int * granted_qos)"
 	 	@c_instance_var_name "_thing_instance" // populated by mosquitto
 	do
-		//print "mosquitto_subscribe_callback\n"
+		//print "mosquitto_subscription_callback\n"
 	end
 	
 	function mosquitto_unsubscribe_callback() 
@@ -152,7 +152,7 @@ thing PosixMQTTAdapter includes AbstractMQTTAdapter
     	`mosquitto_disconnect_callback_set(`&client&`, mosquitto_disconnect_callback);`
     	`mosquitto_publish_callback_set(`&client&`, mosquitto_publish_callback);`
     	`mosquitto_message_callback_set(`&client&`, mosquitto_message_callback);`
-    	`mosquitto_subscribe_callback_set(`&client&`, mosquitto_subscribe_callback);`
+    	`mosquitto_subscribe_callback_set(`&client&`, mosquitto_subscription_callback);`
     	`mosquitto_unsubscribe_callback_set(`&client&`, mosquitto_unsubscribe_callback);`
     	`mosquitto_log_callback_set(`&client&`, mosquitto_log_callback);`
     	
