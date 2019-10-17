@@ -127,7 +127,7 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
             while (!orderedInstances.isEmpty()) {
                 inst = orderedInstances.get(0);
                 orderedInstances.remove(inst);
-                instancesBlock.append(inst.getName() + ",");         
+                instancesBlock.append(inst.getName() + ": inst_"+inst.getName() + ",");         
             }
             returnBlock.append("}");
             packageReturn.append("};");
