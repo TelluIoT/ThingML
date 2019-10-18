@@ -92,6 +92,7 @@ public class TypeChecker extends ThingMLSwitch<TypeRef> {
     		final IntegerLiteral il = ThingMLFactory.eINSTANCE.createIntegerLiteral();
     		il.setIntValue(0);
     		tr.setCardinality(il);
+    		tr.setIsArray(true);
     	}
         return TyperHelper.getBroadType(tr);
 	}

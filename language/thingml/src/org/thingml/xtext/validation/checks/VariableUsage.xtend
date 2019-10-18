@@ -15,7 +15,7 @@ import org.thingml.xtext.thingML.ArrayInit
 import org.thingml.xtext.thingML.CastExpression
 import org.thingml.xtext.thingML.Expression
 import org.thingml.xtext.thingML.ForAction
-import org.thingml.xtext.thingML.Literal
+import org.thingml.xtext.thingML.IntegerLiteral
 import org.thingml.xtext.thingML.LocalVariable
 import org.thingml.xtext.thingML.Property
 import org.thingml.xtext.thingML.PropertyReference
@@ -26,7 +26,6 @@ import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
-import org.thingml.xtext.thingML.IntegerLiteral
 
 class VariableUsage extends ThingMLValidatorCheck {
 	
@@ -154,10 +153,10 @@ class VariableUsage extends ThingMLValidatorCheck {
 						error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")
 					}
 				}
-				/*else if (!(i instanceof ArrayInit) && !(i instanceof PropertyReference)) {
+				else if (!actual.isArray) {
 					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false)
 					error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")										
-				}*/
+				}
 				else if (i instanceof PropertyReference) {
 					val pr = i as PropertyReference 
 					if (pr.property.typeRef.cardinality === null) {
@@ -177,7 +176,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.property_Init)
 		if (v.typeRef.cardinality !== null) {
 			if (v.init !== null) {
-				val actual = TypeChecker.computeTypeOf(v.init)				
+				val actual = TypeChecker.computeTypeOf(v.init)												
 				val i = v.init
 				if (i instanceof ArrayInit && actual.equals(Types.ERROR_TYPEREF)) {
 					val msg = "Array initializer {...} contains errors. Check that all values have the type " + Types.getTypeRef(expected, false)
@@ -190,11 +189,11 @@ class VariableUsage extends ThingMLValidatorCheck {
 						val msg = "Array initializer {...} of size " + ai.values.size + " is affected to array of size " + lit.intValue
 						error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")
 					}
-				}
-				/*else if (!(i instanceof ArrayInit) && !(i instanceof PropertyReference)) {
+				}							
+				else if (!actual.isArray) {				
 					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false)
 					error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")										
-				}*/
+				}
 				else if (i instanceof PropertyReference) {
 					val pr = i as PropertyReference 
 					if (pr.property.typeRef.cardinality === null) {

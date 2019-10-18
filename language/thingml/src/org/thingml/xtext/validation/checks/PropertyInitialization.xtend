@@ -6,9 +6,11 @@ import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.constraints.Types
 import org.thingml.xtext.helpers.TyperHelper
 import org.thingml.xtext.thingML.ArrayInit
+import org.thingml.xtext.thingML.CastExpression
 import org.thingml.xtext.thingML.ConfigPropertyAssign
 import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.thingML.Enumeration
+import org.thingml.xtext.thingML.Expression
 import org.thingml.xtext.thingML.Literal
 import org.thingml.xtext.thingML.LocalVariable
 import org.thingml.xtext.thingML.Property
@@ -21,10 +23,6 @@ import org.thingml.xtext.thingML.UnaryMinus
 import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.thingml.xtext.thingML.CastExpression
-import org.thingml.xtext.thingML.Expression
-import org.thingml.xtext.thingML.IntegerLiteral
 
 class PropertyInitialization extends ThingMLValidatorCheck {
 	
@@ -48,12 +46,15 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 	}
 	
 	@Check(FAST) 
-	def checkPropertyAssign(PropertyAssign pa) {
-		/*if (pa.property.typeRef.isIsArray && !(pa.index !== null || pa.init instanceof ArrayInit)) {
-			val msg = "Property " + pa.property.name + " is an array, and can only be assigned with an array initialiser, or indexed set statements.";
-			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
-			return;//no need to check more until this is fixed
-		}*/
+	def checkPropertyAssign(PropertyAssign pa) {		
+		if (pa.property.typeRef.isIsArray) {
+			val tr = TyperHelper.getBroadType(TypeChecker.computeTypeOf(pa.init))			
+			if ((pa.index === null) && !tr.isArray) {
+				val msg = "Property " + pa.property.name + " is an array, and can only be assigned with an array initialiser, or indexed set statements.";
+				error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
+				return;//no need to check more until this is fixed
+			}
+		}
 		if (!pa.property.typeRef.isIsArray && pa.index !== null) {
 			val msg = "Property " + pa.property.name + " is not an array."
 			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
@@ -76,7 +77,8 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 	
 	@Check(FAST) 
 	def checkPropertyAssign(ConfigPropertyAssign pa) {
-		if (pa.property.typeRef.isIsArray && !(pa.index !== null || pa.init instanceof ArrayInit)) {
+		val tr = TyperHelper.getBroadType(TypeChecker.computeTypeOf(pa.init))
+		if (pa.property.typeRef.isIsArray && (pa.index === null && !tr.isIsArray)) {
 			val msg = "Property " + pa.property.name + " is an array, and can only be assigned with an array initialiser, or indexed set statements.";
 			error(msg, (pa.eContainer as Configuration), ThingMLPackage.eINSTANCE.configuration_Propassigns, (pa.eContainer as Configuration).propassigns.indexOf(pa))
 			return;//no need to check more until this is fixed
