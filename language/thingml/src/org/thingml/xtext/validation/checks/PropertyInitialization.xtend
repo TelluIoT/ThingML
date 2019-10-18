@@ -49,11 +49,11 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 	
 	@Check(FAST) 
 	def checkPropertyAssign(PropertyAssign pa) {
-		if (pa.property.typeRef.isIsArray && !(pa.index !== null || pa.init instanceof ArrayInit)) {
+		/*if (pa.property.typeRef.isIsArray && !(pa.index !== null || pa.init instanceof ArrayInit)) {
 			val msg = "Property " + pa.property.name + " is an array, and can only be assigned with an array initialiser, or indexed set statements.";
 			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))
 			return;//no need to check more until this is fixed
-		}
+		}*/
 		if (!pa.property.typeRef.isIsArray && pa.index !== null) {
 			val msg = "Property " + pa.property.name + " is not an array."
 			error(msg, (pa.eContainer as Thing), ThingMLPackage.eINSTANCE.thing_Assign, (pa.eContainer as Thing).assign.indexOf(pa))

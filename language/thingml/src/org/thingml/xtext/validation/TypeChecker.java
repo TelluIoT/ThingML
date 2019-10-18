@@ -88,6 +88,11 @@ public class TypeChecker extends ThingMLSwitch<TypeRef> {
 	public TypeRef caseCastExpression(CastExpression object) {
     	final TypeRef tr = ThingMLFactory.eINSTANCE.createTypeRef();
     	tr.setType(object.getType());
+    	if (object.isIsArray()) {
+    		final IntegerLiteral il = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+    		il.setIntValue(0);
+    		tr.setCardinality(il);
+    	}
         return TyperHelper.getBroadType(tr);
 	}
 

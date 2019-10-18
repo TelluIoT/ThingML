@@ -154,10 +154,10 @@ class VariableUsage extends ThingMLValidatorCheck {
 						error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")
 					}
 				}
-				else if (!(i instanceof ArrayInit) && !(i instanceof PropertyReference)) {
+				/*else if (!(i instanceof ArrayInit) && !(i instanceof PropertyReference)) {
 					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false)
 					error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")										
-				}
+				}*/
 				else if (i instanceof PropertyReference) {
 					val pr = i as PropertyReference 
 					if (pr.property.typeRef.cardinality === null) {
@@ -191,10 +191,10 @@ class VariableUsage extends ThingMLValidatorCheck {
 						error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")
 					}
 				}
-				else if (!(i instanceof ArrayInit) && !(i instanceof PropertyReference)) {
+				/*else if (!(i instanceof ArrayInit) && !(i instanceof PropertyReference)) {
 					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false)
 					error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")										
-				}
+				}*/
 				else if (i instanceof PropertyReference) {
 					val pr = i as PropertyReference 
 					if (pr.property.typeRef.cardinality === null) {
