@@ -596,6 +596,7 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
+    // FIXME: This method does not handle arrays. The size will be incorrect if the message has any array parameters
     public int getMessageSerializationSize(Message m) {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance
@@ -604,7 +605,8 @@ public abstract class CCompilerContext extends Context {
         }
         return result;
     }
-
+    
+    // FIXME: This method does not handle arrays. The size will be incorrect if the message has any array parameters
     public int getIgnoredParameterSerializationSize(Message m) {
         int result = 0; 
         for (Parameter p : m.getParameters()) {
@@ -614,7 +616,7 @@ public abstract class CCompilerContext extends Context {
         }
         return result;
     }
-
+    
     public String getMessageSerializationSizeString(Message m) {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance
@@ -623,15 +625,21 @@ public abstract class CCompilerContext extends Context {
             if(p.getTypeRef().isIsArray()) {
                 StringBuilder cardBuilder = new StringBuilder();
                 getCompiler().getThingActionCompiler().generate(p.getTypeRef().getCardinality(), cardBuilder, this);
-                res += "(" + cardBuilder + " * " + getCByteSize(p.getTypeRef().getType(), 0) + ")";
+                if (p.getTypeRef().getType() instanceof ObjectType)
+                	res += " + (" + cardBuilder + " * sizeof(void *))";
+                else res += " + (" + cardBuilder + " * " + getCByteSize(p.getTypeRef().getType(), 0) + ")";
             } else {
-                result += this.getCByteSize(p.getTypeRef().getType(), 0);
+            	
+            	if (p.getTypeRef().getType() instanceof ObjectType) res += " + sizeof(void *)";
+            	else result += this.getCByteSize(p.getTypeRef().getType(), 0);
+            	
+                
             }
         }
         if(res.compareTo("") == 0)
             return "" + result;
         else
-            return "(" +result + " + " + res +")";
+            return "(" +result + res +")";
     }
 
     // FUNCTIONS FOR TYPES
@@ -673,7 +681,7 @@ public abstract class CCompilerContext extends Context {
         return t instanceof ObjectType;
 
         }
-
+/*
     public boolean hasByteBuffer(Type t) {
         return AnnotatedElementHelper.hasAnnotation(t, "c_byte_buffer");
     }
@@ -686,13 +694,21 @@ public abstract class CCompilerContext extends Context {
             return t.getName() + "_buf";
         }
     }
-
+*/
     public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
         long i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {
-            // This should not happen and should be checked before.
-            throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
+        	
+        	if (getCType(t).equals("char *") && !pt.getTypeRef().isIsArray()) { // This is a null terminated String.
+        		builder.append("// Enqueue the pointer to a dynamically allocated copy of the String\n");
+        		builder.append("char * _"+ variable +"_strcpy = _malloc_string_copy("+variable+");\n");
+        		builder.append("_fifo_enqueue_ptr(_"+ variable +"_strcpy);\n\n");
+        	}
+        	else {
+                // This should not happen and should be checked before.
+                throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
+        	}
         } else {
             if(pt.getTypeRef().isIsArray()) {
                 
@@ -730,8 +746,8 @@ public abstract class CCompilerContext extends Context {
                     builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + j + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
                     j = j+1;
-                    		
-        }
+                    
+                }
             }
         }
     }

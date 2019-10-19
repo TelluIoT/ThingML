@@ -15,20 +15,18 @@ extern "C" {
 
 typedef unsigned char byte;
 
-/* Queuing of pointers (size is different depending of the platform)*/
-
-#define PTR_MAX_SIZE 8  // Code generator should adjust this
-
 typedef union {
-   uint8_t buffer[PTR_MAX_SIZE];
-   void* pointer;
+   uint8_t bytebuffer[sizeof(void *)];
+   void* ptr;
 } ptr_union_t;
 
-/*
+
 void _fifo_enqueue_ptr(void * ptr);
-void * _fifo_dequeue_ptr();
-static_assert(sizeof(void*) <= PTR_MAX_SIZE*sizeof(uint8_t));
-*/
+char * _malloc_string_copy(char * str);
+void _free_string_copy(char * str);
+
+//static_assert(sizeof(void*) <= PTR_MAX_SIZE*sizeof(uint8_t));
+
 
 
 /* Adds and instance to the runtime and returns its id */
