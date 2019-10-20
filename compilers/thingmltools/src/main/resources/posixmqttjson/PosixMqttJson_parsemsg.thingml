@@ -1,5 +1,6 @@
 		if (`strcmp(`&msg_name&`, "/*MSG_NAME*/") == 0`) do
 
+		var ___result : Boolean = false
 /*VARDEF*/
 						
 			// Check for parse errors
@@ -27,7 +28,6 @@
 				// We should have an attribute: type == 3 size == 1
 				if (`tokens[`&__parse_i&`].type` != 3 or `tokens[`&__parse_i&`].size` != 1) do
 					error "JSON ERROR: unexpected token parsing parameters for /*MSG_NAME*/ message\n"
-					return false
 				end
 				
 /*PARSEPARAMS*/				

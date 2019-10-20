@@ -1,0 +1,17 @@
+				if ( (`(tokens[`&__parse_i&`].end - tokens[`&__parse_i&`].start) == /*PARAMNAME_LENGTH*/`) and (`strncmp(`&payload&` + tokens[`&__parse_i&`].start , "/*PARAMNAME*/", tokens[`&__parse_i&`].end - tokens[`&__parse_i&`].start)` == 0)) do
+					// check the type of the parameter
+					if (`tokens[`&__parse_i+1&`].type` != 3 or `tokens[`&__parse_i+1&`].size` != 0) do
+						error "JSON ERROR: invalid parameters type/value for /*PARAMNAME*/ in /*MSG_NAME*/ message\n"
+					end
+					else do
+						/*PARAMNAME*/ = `malloc(tokens[`& __parse_i+1 &`].end - tokens[`& __parse_i+1 &`].start + 1)`
+						if (/*PARAMNAME*/ == `NULL`) do
+							error "FATAL: Unable to allocate memory while deserializing JSON message. Exiting."
+							`exit(-1);`
+						end
+						`strncpy ( `&/*PARAMNAME*/&`, `&payload&` + tokens[`& __parse_i+1 &`].start, tokens[`& __parse_i+1 &`].end - tokens[`& __parse_i+1 &`].start );`
+						``&/*PARAMNAME*/&`[tokens[`& __parse_i+1 &`].end - tokens[`& __parse_i+1 &`].start] = 0;` // NULL termination of the String
+						_found_/*PARAMNAME*/ = true
+					end
+				end
+				else

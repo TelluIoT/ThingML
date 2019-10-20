@@ -2,8 +2,9 @@
 					// check the type of the parameter
 					if (`tokens[`&__parse_i+1&`].type` != 4 or `tokens[`&__parse_i+1&`].size` != 0) do
 						error "JSON ERROR: invalid parameters type/value for /*PARAMNAME*/ in /*MSG_NAME*/ message\n"
-						return false
 					end
-					/*PARSEPARAM_STATEMENT*/
+					else do
+						/*PARSEPARAM_STATEMENT*/
+					end
 				end
 				else

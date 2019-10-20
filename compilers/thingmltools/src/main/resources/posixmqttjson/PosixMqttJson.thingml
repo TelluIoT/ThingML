@@ -58,7 +58,7 @@ thing /*THING_NAME*/ includes /*THING_INCLUDES*/
 	
 /*PARSEMSG*/
 		do
-			print "Received an unhandled message\n"
+			//print "Received an unhandled message\n"
 		end
 		
 		return false

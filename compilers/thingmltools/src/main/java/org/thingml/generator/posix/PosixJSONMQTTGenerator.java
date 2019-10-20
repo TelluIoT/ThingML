@@ -126,12 +126,23 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	
     	b.append("\t\tinternal event e:"+p.getName() + "?" + m.getName() + " action do\n");
     	int json_maxsize = 2;
+    	String dyn_size = "";
     	for (Parameter param : m.getParameters()) {
     		json_maxsize += param.getName().length() + 5;
     		json_maxsize += getMaximumSerializedParameterValueLength(param) + 2;
+    		dyn_size += computeParameterValueLength(param);
     	}
     	
-    	b.append("\t\t\t`char payload["+json_maxsize+"];`\n");
+//    	b.append("\t\t\t``\n");
+    	
+    	b.append("\t\t\t`size_t maxlength = "+ json_maxsize + dyn_size +";`\n");
+    	b.append("\t\t\t`char * payload = malloc(maxlength);`\n");
+    	b.append("\t\t\t`if(payload == NULL) {`\n");
+    	b.append("\t\t\t\t`printf(\"FATAL: ThingML runtime failed to allocate memory serializing message to JSON. Exiting.\");`\n");
+    	b.append("\t\t\t\t`exit(-1);`\n");
+    	b.append("\t\t\t`}`\n");
+    	
+    	
     	b.append("\t\t\t`uint16_t index = 0;`\n");
     	b.append("\t\t\t`int result = 0;`\n");
     	b.append("\t\t\t`payload[index++] = '{';`\n");
@@ -145,6 +156,8 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     	b.append("\t\t\t`payload[index++] = 0;`\n");
     	
     	b.append("\t\t\tpublish_message(\""+m.getName()+"\", `payload` as String, `strlen(payload)` as Integer)\n");
+    	
+    	b.append("\t\t\t`free(payload);`\n");
     	
     	b.append("\t\tend\n\n");
     	
@@ -198,27 +211,40 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
     		forwardmsg.append(param.getName()); 
     	}
     	forwardmsg.append(")\n");
-    	forwardmsg.append("\t\t\t\treturn true\n");
+    	
+    	
+    	
+    	forwardmsg.append("\t\t\t\t___result = true\n");
     	
     	
     	if (!m.getParameters().isEmpty()) {
     		forwardmsg.append("\t\t\tend\n");
     		forwardmsg.append("\t\t\telse do\n");
     		forwardmsg.append("\t\t\t\terror \"JSON ERROR: Dropping message "+m.getName()+" because of missing parameters\\n\"\n");
-    		forwardmsg.append("\t\t\t\treturn false\n");
     		forwardmsg.append("\t\t\tend\n");
     	}
+    	
+    	// Free memory which was allocated to store String parameters
+    	for (Parameter param : m.getParameters()) {
+    		if (getCType(param.getTypeRef().getType()).contains("*")) {
+    			forwardmsg.append("\t\t\tif (");forwardmsg.append(param.getName());forwardmsg.append(" != `NULL`) `free(`&"+param.getName()+"&`);\n`");
+    		}
+    	}
+    	
+    	
+    	forwardmsg.append("\t\t\treturn ___result\n");
     	
     	template = template.replace("/*FWMSG*/", forwardmsg.toString());
     	
     	b.append(template.trim());
+    	
     }
     
     public void generate_parsing_param(Port p, Message m, Parameter param, StringBuilder builder) {
     	
     	//String template = "// UNSUPORTED PARAMERTER TYPE FOR /*PARAMNAME*/ (" + getCType(param.getTypeRef().getType()) + ")\n";
     	
-    	String template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam.thingml");
+    	String template;
     	
     	
         switch (getCType(param.getTypeRef().getType())) {
@@ -237,12 +263,17 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
         case "unsigned int":
         case "unsigned long int":
         case "long long":
+        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_primitive.thingml");
         	template = template.replace("/*PARSEPARAM_STATEMENT*/", getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_integer.thingml"));
             break;
         case "float":
         case "double":
+        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_primitive.thingml");
         	template = template.replace("/*PARSEPARAM_STATEMENT*/", getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_double.thingml"));
             break;
+        case "char *":
+        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_string.thingml");
+        	break;
         case "bool":
         case "boolean":
         case "char":
@@ -252,6 +283,7 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
         case "time_t":
         // All other unsupported types
         default:
+        	template = getTemplateByID("posixmqttjson/PosixMqttJson_parseparam_primitive.thingml");
         	template = template.replace("/*PARSEPARAM_STATEMENT*/", "error \"JSON ERROR: Cannot parse parameter "+param.getName()+" of type "+ getCType(param.getTypeRef().getType()) + " (type is not supported)\\n\" ");
             break;
         }
@@ -263,6 +295,14 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
 
     }
     
+    protected String computeParameterValueLength(Parameter p) {
+    	switch (getCType(p.getTypeRef().getType())) {
+    	case "char *":
+    		return " + strlen(`&e."+p.getName()+"&`)";
+    	default:
+    		return "";
+    	}
+    }
     
     protected int getMaximumSerializedParameterValueLength(Parameter p) {
     	
@@ -324,9 +364,10 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
             case "time_t":
                 // ISO8601 format, 24 characters + surrounding ""
                 return 26;
+            case "char *":
+                return 2; // for the quotes around the String
             default:
-                System.err.println("[ERROR] Serialization of type " + getCType(p.getTypeRef().getType()) + " is not implemented in PosixJSONSerializerPlugin!");
-                return 4; // We will print 'null' for un-serializable parameters;
+                return 0; // Will not be serialized or the size has to be dynamically calculated
         }
     }
     
@@ -391,6 +432,10 @@ public class PosixJSONMQTTGenerator extends ThingMLTool {
                 builder.append("\t\t\t`if (result >= 0) { index += result; } else { return; }`\n");
                 serialized = true;
                 break;
+            case "char *":	// This is a null terminated String. Space should have been allocated
+                builder.append("\t\t\t`if (`&e."+p.getName()+"&`) { result = sprintf(&"+bufferName+"[index],\"\\\"%.*s\\\"\", "+maxLength+"-index, `&e."+p.getName()+"&`); }`\n");
+                builder.append("\t\t\t`if (result >= 0) { index += result; } else { return; }`\n");
+                serialized = true;
             // All other unsupported types
             default:
                 break;
