@@ -161,15 +161,20 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateCGlobalAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        //TODO sdalgard - Check if C++ rework is needed
-        if (AnnotatedElementHelper.hasAnnotation(thing, "c_global")) {
-            builder.append("\n// BEGIN: Code from the c_global annotation " + thing.getName());
-            for (String code : AnnotatedElementHelper.annotation(thing, "c_global")) {
-                builder.append("\n");
-                builder.append(code);
+        
+        // c_global annotations from the thing and included fragments
+        for (Thing t : ThingMLHelpers.allThingFragments(thing)) {
+        	if (AnnotatedElementHelper.hasAnnotation(t, "c_global")) {
+                builder.append("\n// BEGIN: Code from the c_global annotation " + t.getName());
+                for (String code : AnnotatedElementHelper.annotation(t, "c_global")) {
+                    builder.append("\n");
+                    builder.append(code);
+                }
+                builder.append("\n// END: Code from the c_global annotation " + t.getName() + "\n\n");
             }
-            builder.append("\n// END: Code from the c_global annotation " + thing.getName() + "\n\n");
         }
+        
+        
     }
 
     protected void generateStateMachineOnExitCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
