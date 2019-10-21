@@ -1,0 +1,11 @@
+datatype DT<1>
+@type_checker "Integer";
+
+thing TestCheckStateMachine
+{
+	readonly property p : DT[1] = `[]` //needs to be explicitly cast to an array
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {}
+    }
+}
