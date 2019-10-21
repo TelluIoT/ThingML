@@ -32,7 +32,7 @@ import org.thingml.testing.tests.general.GeneralTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class CheckerTests extends ThingMLTestProvider {
-	private static String[] compilers = ThingMLTestCase.selectedCompilers();
+	private static String[] compilers = new String[] {ThingMLTestCase.selectedCompilers()[0]}; //just run the checker tests on one compiler
 	
 	@Override
 	public String[] getCompilers() { return compilers; }
