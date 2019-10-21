@@ -65,9 +65,9 @@ public class ThingMLTestRunner extends Runner {
 		}
 		
 		// Find the timeout to use during testing
-		int timeout = 30;
+		int timeout = 90;
 		try {
-			timeout = Integer.parseUnsignedInt(System.getProperty("timeout", "30"));
+			timeout = Integer.parseUnsignedInt(System.getProperty("timeout", "90"));
 		} catch (NumberFormatException e) {}
 		
 		// There seems to be a bug where the first task submitted is not actually executed?
