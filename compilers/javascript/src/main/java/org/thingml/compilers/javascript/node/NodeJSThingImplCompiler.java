@@ -16,12 +16,16 @@
  */
 package org.thingml.compilers.javascript.node;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSClass;
 import org.thingml.compilers.javascript.JSThingImplCompiler;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLPackage;
+
+import com.google.common.collect.Lists;
 
 public class NodeJSThingImplCompiler extends JSThingImplCompiler {
 
@@ -35,7 +39,9 @@ public class NodeJSThingImplCompiler extends JSThingImplCompiler {
 		builder.append("'use strict';").append("");
 
 		Section imports = builder.section("imports").lines();
-		if (jctx.getContextAnnotation("hasEnum") != null && jctx.getContextAnnotation("hasEnum").equals("true")) {
+		
+		final Object literal = EcoreUtil.getObjectByType(Lists.newArrayList(thing.eAllContents()), ThingMLPackage.eINSTANCE.getEnumLiteralRef());
+		if (literal != null) {
 			imports.append("const Enum = require('./enums');");
 		}		
 		imports.append("const Event = require('./events');");
