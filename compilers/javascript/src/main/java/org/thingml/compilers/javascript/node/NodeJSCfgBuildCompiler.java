@@ -37,7 +37,7 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		JsonObject pkg = Json.parse(json).asObject();
 		
 		String nameKebabCase = cfg.getName().replaceAll("([a-z0-9])([A-Z])", "$1-$2").toLowerCase();
-		pkg.set("name", nameKebabCase);
+		pkg.set("name", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_name", nameKebabCase));
 		
 		pkg.set("description", AnnotatedElementHelper.annotationOrElse(
 				cfg, "nodejs_package_description", nameKebabCase +" configuration generated from ThingML"));
@@ -45,6 +45,13 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		pkg.set("version", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_version", "1.0.0"));
 		pkg.set("license", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_license", "Apache-2.0"));
 		pkg.set("repository", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_repository", ""));
+		pkg.set("private", !AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_private", "true").equals("false"));
+		
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "nodejs_package_publish_config_registry")) {
+			JsonObject publishConfig = new JsonObject();
+			publishConfig.set("registry", AnnotatedElementHelper.firstAnnotation(cfg, "nodejs_package_publish_config_registry"));
+			pkg.set("publishConfig", publishConfig);
+		}
 		
 		JsonObject author = pkg.get("author").asObject();
 		author.set("name", AnnotatedElementHelper.annotationOrElse(cfg, "nodejs_package_author_name", ""));
