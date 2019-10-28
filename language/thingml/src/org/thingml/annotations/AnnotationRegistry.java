@@ -290,6 +290,66 @@ public class AnnotationRegistry {
 		final Annotation checker_fail_annotation = new Annotation(checker_fail_name, checker_fail_desc, checker_fail_scope);
 		annotations.put(checker_fail_name, checker_fail_annotation);
 		
+		/** NodeJs Package **/
+		annotations.put("nodejs_package", new Annotation(
+			"nodejs_package",
+			"If present, the configuration is compiled as a NodeJS NPM package",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_name", new Annotation(
+			"nodejs_package_name",
+			"NPM Package name override. Defaults to the project name in kebab-case.",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_description", new Annotation(
+			"nodejs_package_description",
+			"NPM Package description",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_author_name", new Annotation(
+			"nodejs_package_author_name",
+			"NPM Package author's name",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_author_email", new Annotation(
+			"nodejs_package_author_email",
+			"NPM Package author's email",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_license", new Annotation(
+			"nodejs_package_license",
+			"NPM Package license",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_version", new Annotation(
+			"nodejs_package_version",
+			"NPM Package's version. 1.0.0 by default. Should use semantic versioning.",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_repository", new Annotation(
+			"nodejs_package_repository",
+			"NPM Package's repository.",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_private", new Annotation(
+			"nodejs_package_private",
+			"Is the package private and can't be published. Defaults to true.",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		annotations.put("nodejs_package_publish_config_registry", new Annotation(
+			"nodejs_package_publish_config_registry",
+			"Optional registry to publish NPM packages on other registries.",
+			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
 	}
 	
 	public static String toMD() {
