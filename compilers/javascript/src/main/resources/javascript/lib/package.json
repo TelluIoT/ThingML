@@ -3,14 +3,11 @@
   "version": "<VERSION>",
   "description": "<DESCRIPTION>",
   "main": "main.js",
-  "private": true,
   "dependencies": {
-    "@steelbreeze/state": "8.1.1"
+    "@steelbreeze/state": "8.1.2"
   },
-  "devDependencies": {
-  },
-  "scripts": {
-  },
+  "devDependencies": {},
+  "scripts": {},
   "repository": "<REPOSITORY>",
   "author": {
     "name": "<AUTHOR_NAME>",
