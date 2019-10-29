@@ -1,0 +1,39 @@
+import "../../thingml.thingml"
+
+//Test for #294
+thing TestMessage1 includes Test
+@test "1 # I"
+{
+	message m1();
+
+	optional required port pout {
+		sends m1
+	}
+	statechart Chart init Init {
+		state Init {
+			on entry do
+				TestOut('I')
+			end
+
+			internal event e : Test?In
+			action TestDone() 
+		}
+	}
+}
+
+thing TestMessage2 includes Test {
+	message m1(); //it should be possible for another thing to define another message m1
+
+	optional required port pout {
+		sends m1
+	}
+	
+	statechart Chart init Init {
+		state Init {}
+	}
+}
+
+configuration conf {
+	instance test : TestMessage1
+	instance test2 : TestMessage2
+}
