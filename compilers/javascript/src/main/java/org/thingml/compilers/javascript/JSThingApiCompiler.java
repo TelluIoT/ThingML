@@ -73,6 +73,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                 if(ThingHelper.hasSession(thing))
                 	body.append("this.forks = [];");
                 body.append("this.ready = false;");
+                body.append("this.stopped = true;");
                 if (ThingMLHelpers.allStateMachines(thing).get(0).getExit() != null)
                     ctx.getCompiler().getThingActionCompiler().generate(ThingMLHelpers.allStateMachines(thing).get(0).getExit(), body.stringbuilder("onexit"), ctx);
         	}
@@ -103,9 +104,9 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         			       .section("foreach").lines().indent()
         			       .append("fork._receive(msg);")
         			       .after("});");
-        		body.append("} else {")
+        		body.append("} else if (!this.stopped) {")
         			.section("else").lines().indent()
-        			.append("setTimeout(()=>this._receive(msg),0);")
+        			.append("setTimeout(()=>this._receive(msg),4);")
         			.after("}");
         	}
         } else {
