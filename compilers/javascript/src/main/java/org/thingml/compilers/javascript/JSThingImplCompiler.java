@@ -354,15 +354,18 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	protected void generateTransition(Transition t, Message msg, Port p, Section section, Context ctx) {
 		StateJSTransition transition;
 		if (p != null && msg != null) {//empty transition
-			transition = JSSourceBuilder.stateJSTransition(section, "Event."+ctx.firstToUpper(msg.getName()), ThingMLElementHelper.qname((State)t.eContainer(), "_"), ThingMLElementHelper.qname(t.getTarget(), "_"));
+			String actionClassName = ctx.firstToUpper(msg.getName())+'_'+ctx.firstToUpper(ThingMLHelpers.findContainingThing(msg).getName());
+			transition = JSSourceBuilder.stateJSTransition(section, "Event."+actionClassName, ThingMLElementHelper.qname((State)t.eContainer(), "_"), ThingMLElementHelper.qname(t.getTarget(), "_"));
 		} else {
 			transition = JSSourceBuilder.stateJSTransition(section, null, ThingMLElementHelper.qname((State)t.eContainer(), "_"), ThingMLElementHelper.qname(t.getTarget(), "_"));
 		}
 		
 		transition.setTo(ThingMLElementHelper.qname(t.getTarget(), "_"));
 		
-		if (t.getEvent() != null)
-			transition.setMessage(msg.getName()).setPort(p.getName());
+		if (t.getEvent() != null) {
+			String type = msg.getName()+'_'+ThingMLHelpers.findContainingThing(msg).getName();
+			transition.setMessage(type).setPort(p.getName());
+		}
 		
 		if (t.getGuard() != null)
 			ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), transition.guardExpression(), ctx);

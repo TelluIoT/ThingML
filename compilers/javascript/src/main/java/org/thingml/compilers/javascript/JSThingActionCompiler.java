@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Property;
@@ -111,7 +112,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 		builder.append(ctx.getContextAnnotation("thisRef"));
 		builder.append("bus.emit(");
 		builder.append("'" + action.getPort().getName() + "'");
-		builder.append(", new Event." + ctx.firstToUpper(action.getMessage().getName()) + "(");
+		Message m = action.getMessage();
+		String actionClassName = ctx.firstToUpper(m.getName())+'_'+ctx.firstToUpper(ThingMLHelpers.findContainingThing(m).getName());
+		builder.append(", new Event." + actionClassName + "(");
 		builder.append("'" + action.getPort().getName() + "'");
 		for (Expression pa : action.getParameters()) {
 			builder.append(", ");
