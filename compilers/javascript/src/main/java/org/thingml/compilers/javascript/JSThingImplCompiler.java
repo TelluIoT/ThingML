@@ -363,8 +363,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		transition.setTo(ThingMLElementHelper.qname(t.getTarget(), "_"));
 		
 		if (t.getEvent() != null) {
-			String type = msg.getName()+'_'+ThingMLHelpers.findContainingThing(msg).getName();
-			transition.setMessage(type).setPort(p.getName());
+			transition.setMessage(msg.getName()).setPort(p.getName());
 		}
 		
 		if (t.getGuard() != null)

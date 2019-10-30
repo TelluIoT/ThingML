@@ -71,7 +71,7 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 		StringBuilder events = ctx.getBuilder("events.js");								
 		for(Message m : ConfigurationHelper.allMessages(cfg)) {
 			String className = ctx.firstToUpper(m.getName())+'_'+ctx.firstToUpper(ThingMLHelpers.findContainingThing(m).getName());
-			String type = m.getName()+'_'+ThingMLHelpers.findContainingThing(m).getName();
+			String type = m.getName();
 			events.append("var " + className + " = /** @class */ (function () {\n");
 			events.append("  function " + className + "(port,...params) {\n");
 			events.append("    this.type = '" + type + "';\n");
