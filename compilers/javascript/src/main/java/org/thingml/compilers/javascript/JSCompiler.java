@@ -69,10 +69,12 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 	
 	protected void generateEvents(Configuration cfg) {
 		StringBuilder events = ctx.getBuilder("events.js");								
-		for(Message m : ConfigurationHelper.allMessages(cfg)) {			
-			events.append("var " + ctx.firstToUpper(m.getName()) + " = /** @class */ (function () {\n");
-			events.append("  function " + ctx.firstToUpper(m.getName()) + "(port,...params) {\n");
-			events.append("    this.type = '" + m.getName() + "';\n");
+		for(Message m : ConfigurationHelper.allMessages(cfg)) {
+			String className = ctx.firstToUpper(m.getName())+'_'+ctx.firstToUpper(ThingMLHelpers.findContainingThing(m).getName());
+			String type = m.getName();
+			events.append("var " + className + " = /** @class */ (function () {\n");
+			events.append("  function " + className + "(port,...params) {\n");
+			events.append("    this.type = '" + type + "';\n");
 			events.append("    this.port = port;\n");
 			StringBuilder params = new StringBuilder();
 			for(Parameter p : m.getParameters()) {
@@ -82,15 +84,15 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 				params.append(p.getName());
 			}
 			events.append("  }\n\n");
-			events.append("  " + ctx.firstToUpper(m.getName()) + ".prototype.is = function (type) {\n");
+			events.append("  " + className + ".prototype.is = function (type) {\n");
 			events.append("    return this.type === type;\n");
 			events.append("  };\n\n");
-			events.append("  " + ctx.firstToUpper(m.getName()) + ".prototype.toString = function () {\n");
+			events.append("  " + className + ".prototype.toString = function () {\n");
 			events.append("    return 'event ' + this.type + '?' + this.port + '(' + " + params + " + ')';\n");
 			events.append("  };\n\n");
-			events.append("  return " + ctx.firstToUpper(m.getName()) + ";\n");
+			events.append("  return " + className + ";\n");
 			events.append("}());\n");
-			exports(events, ctx.firstToUpper(m.getName()));
+			exports(events, className);
 		}		
 	}
 	

@@ -18,8 +18,10 @@ package org.thingml.compilers.javascript.browser;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSThingActionCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.SendAction;
 
 /**
@@ -53,7 +55,9 @@ public class BrowserThingActionCompiler extends JSThingActionCompiler {
     	builder2.append(ctx.getContextAnnotation("thisRef"));
 		builder2.append("bus.emit(");
 		builder2.append("'" + action.getPort().getName() + "'");
-		builder2.append(", new " + ctx.firstToUpper(action.getMessage().getName()) + "(");
+		Message m = action.getMessage();
+		String actionClassName = ctx.firstToUpper(m.getName())+'_'+ctx.firstToUpper(ThingMLHelpers.findContainingThing(m).getName());
+		builder2.append(", new " + actionClassName + "(");
 		builder2.append("'" + action.getPort().getName() + "'");
 		builder2.append(builder3.toString());
 		builder2.append("))");
