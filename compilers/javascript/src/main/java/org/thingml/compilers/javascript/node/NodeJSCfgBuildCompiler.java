@@ -59,6 +59,10 @@ public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 		
 		JsonValue deps = pkg.get("dependencies");
 		
+		if (AnnotatedElementHelper.hasFlag(cfg, "use_fifo")) {
+        	deps.asObject().add("p-fifo", "^1.0.0");
+        }
+		
 		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
         	deps.asObject().add("nconf", "^0.8.4");
         }

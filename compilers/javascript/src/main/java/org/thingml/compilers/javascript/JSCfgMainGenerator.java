@@ -27,12 +27,15 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InternalPort;
+import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.Thing;
 
 public class JSCfgMainGenerator extends CfgMainGenerator {
@@ -98,6 +101,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		        .append(jctx.firstToUpper(i.getType().getName()));
 		Section instanceArgs = instance.section("arguments").surroundWith("(", ")").joinWith(", ");
 		instance.append(";");
+		
+		if (AnnotatedElementHelper.hasFlag(cfg, "use_fifo")) {
+			instanceArgs.append("fifo");	
+		}
+		
 		instanceArgs.append("'"+i.getName()+"'")
 		            .append("null");
 		
@@ -105,6 +113,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 	}
 
 	protected void generateInstances(Configuration cfg, Section section, JSContext jctx) {
+		if (AnnotatedElementHelper.hasFlag(cfg, "use_fifo")) {
+			section.append("const Fifo = require('p-fifo');\n");
+			section.append("const fifo = new Fifo();\n");
+			section.append("var terminated = false;\n");
+		}
+		
 		for (Instance i : ConfigurationHelper.allInstances(cfg)) {
 			generateInstance(i, cfg, section, jctx);
 		}
@@ -142,8 +156,45 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		
 		connector.append("\n});");
 	}
+	
+	protected void generateConnectorsFIFO(Configuration cfg, Section section, JSContext jctx) {
+		section.comment("Reading from the FIFO or awaiting for new message");
+		
+		Section connector = section.section("connector").lines().indent();		
+		connector.append("async function dispatch() {");
+		connector.append("while(!terminated) {");
+		Section whileNotTerminated = connector.section("while").lines().indent();
+		whileNotTerminated.append("const msg = await fifo.shift();");
+		whileNotTerminated.append("switch(msg.from) {");
+		
+		Section caseFrom = whileNotTerminated.section("case-from").lines().indent();
+		for (Instance i : cfg.getInstances()) {
+			caseFrom.append("case '" + i.getName() + "':");
+            caseFrom.append("switch(msg.port) {");
+            for(Port p : ThingMLHelpers.allPorts(i.getType())) {
+            	final List<AbstractMap.SimpleImmutableEntry<Instance, Port>> dispatch = ConfigurationHelper.allMessageDispatch(cfg, i, p);
+            	for(AbstractMap.SimpleImmutableEntry<Instance, Port> e : dispatch) {
+            		caseFrom.append("case '" + p.getName() + "':");
+            		caseFrom.append("  msg.port = '" + e.getValue().getName() + "';");
+            		caseFrom.append("  inst_" + e.getKey().getName() + "._receive(msg);");
+            		caseFrom.append("break;");
+            	}
+            }
+            caseFrom.append("default: break;");
+            caseFrom.append("}");
+		}
+				
+		whileNotTerminated.append("default:	break;");
+		whileNotTerminated.append("}");
+		connector.append("}\n}\n\n");
+	}
 
 	protected void generateConnectors(Configuration cfg, Section section, JSContext jctx) {
+		if (AnnotatedElementHelper.hasFlag(cfg, "use_fifo")) {
+			generateConnectorsFIFO(cfg, section, jctx);
+			return;
+		}
+		
 		section.comment("Connecting internal ports...");
 		for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();

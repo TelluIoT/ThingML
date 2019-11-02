@@ -41,7 +41,9 @@ public class NodeJSThingImplCompiler extends JSThingImplCompiler {
 		Section imports = builder.section("imports").lines();
 		
 		imports.append("const StateJS = require('@steelbreeze/state');");
-		imports.append("const EventEmitter = require('events').EventEmitter;");
+		if (!jctx.hasContextAnnotation("use_fifo")) {
+			imports.append("const EventEmitter = require('events').EventEmitter;");
+		}
 
 		final Object literal = EcoreUtil.getObjectByType(Lists.newArrayList(thing.eAllContents()), ThingMLPackage.eINSTANCE.getEnumLiteralRef());
 		if (literal != null) {

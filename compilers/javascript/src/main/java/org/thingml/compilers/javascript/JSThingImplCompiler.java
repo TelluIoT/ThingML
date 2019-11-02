@@ -69,17 +69,24 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 		/* ----- Build constructor ----- */
 		JSFunction constructor = thingClass.constructor();
 		constructor.enable();
+		if (ctx.hasContextAnnotation("use_fifo", "true")) {
+			constructor.addArgument("fifo");
+		}
 		constructor.addArgument("name");
 		constructor.addArgument("root");
 		{
 			Section body = constructor.body();
+			if (ctx.hasContextAnnotation("use_fifo", "true")) {
+				body.append("this.fifo = fifo;");
+			} else {
+				body.append("this.bus = (root === null)? new EventEmitter() : this.root.bus;");
+			}
 			
 			// Common constructor body
 			body.append("this.name = name;")
 				.append("this.root = (root === null)? this : root;")
 				//.append("this.debug = debug;")
-				.append("this.ready = false;")
-				.append("this.bus = (root === null)? new EventEmitter() : this.root.bus;")
+				.append("this.ready = false;")				
 				.append("");
 			
 			// Session forks

@@ -81,8 +81,10 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         		JSFunction deleteFunction = thingClass.addMethod("_delete");
         		Section body = deleteFunction.body();
         		body.append("this._statemachine = null;")
-        			.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;")
-        			.append("this.bus.removeAllListeners();");
+        			.append("this._" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;");
+        		if (!ctx.hasContextAnnotation("use_fifo")) {
+        			body.append("this.bus.removeAllListeners();");
+        		}
         	}
         	/* ----- Public API for third parties ----- */
         	{

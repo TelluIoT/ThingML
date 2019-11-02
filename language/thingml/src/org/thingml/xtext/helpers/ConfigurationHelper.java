@@ -330,6 +330,27 @@ public class ConfigurationHelper {
 			assigns.add(new AbstractMap.SimpleImmutableEntry<Expression, Expression>(index, init));
 		}
 	}
+	
+	public static List<AbstractMap.SimpleImmutableEntry<Instance, Port>> allMessageDispatch(Configuration self, Instance i, Port p) {
+		final List<AbstractMap.SimpleImmutableEntry<Instance, Port>> result = new ArrayList<>();
+		for(Connector c : allConnectors(self)) {
+			if(EcoreUtil.equals(c.getCli(), i) && EcoreUtil.equals(c.getRequired(), p)) {
+				final AbstractMap.SimpleImmutableEntry<Instance, Port> e = new AbstractMap.SimpleImmutableEntry<>(c.getSrv(), c.getProvided());
+				result.add(e);
+			}					
+			else if (EcoreUtil.equals(c.getSrv(), i) && EcoreUtil.equals(c.getProvided(), p)) {
+				final AbstractMap.SimpleImmutableEntry<Instance, Port> e = new AbstractMap.SimpleImmutableEntry<>(c.getCli(), c.getRequired());
+				result.add(e);				
+			}
+		}
+		
+		if (p instanceof InternalPort) {
+			final AbstractMap.SimpleImmutableEntry<Instance, Port> e = new AbstractMap.SimpleImmutableEntry<>(i, p);
+			result.add(e);
+		}
+		
+		return result;
+	}
 
 	/**
      Returns the set of destination for messages sent through the port p

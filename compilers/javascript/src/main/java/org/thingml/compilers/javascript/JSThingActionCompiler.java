@@ -109,18 +109,29 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(SendAction action, StringBuilder builder, Context ctx) {
-		builder.append(ctx.getContextAnnotation("thisRef"));
-		builder.append("bus.emit(");
-		builder.append("'" + action.getPort().getName() + "'");
 		Message m = action.getMessage();
 		String actionClassName = ctx.firstToUpper(m.getName())+'_'+ctx.firstToUpper(ThingMLHelpers.findContainingThing(m).getName());
-		builder.append(", new Event." + actionClassName + "(");
+
+		if (ctx.hasContextAnnotation("use_fifo", "true")) {
+			builder.append("this.fifo.push(");
+		} else {				
+			builder.append(ctx.getContextAnnotation("thisRef"));
+			builder.append("bus.emit(");
+			builder.append("'" + action.getPort().getName() + "'");
+
+			builder.append(", ");						
+		}
+
+		builder.append("new Event." + actionClassName + "(");
+		builder.append("this.name, ");
 		builder.append("'" + action.getPort().getName() + "'");
 		for (Expression pa : action.getParameters()) {
 			builder.append(", ");
 			generate(pa, builder, ctx);
 		}
-		builder.append("))");
+		builder.append(")");
+		
+		builder.append(")");
 		builder.append(";\n");
 	}
 

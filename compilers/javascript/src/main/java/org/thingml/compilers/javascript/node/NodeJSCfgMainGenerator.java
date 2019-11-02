@@ -98,12 +98,17 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
             main.append("inst_" + inst.getName() + "._init();");
         }
         main.append("/*$PLUGINS_END$*/");
+        if (AnnotatedElementHelper.hasFlag(cfg, "use_fifo")) {
+        	main.append("dispatch();");
+        }
         main.append("");
         
         
         main.append("function terminate() {");
         Section terminate = main.section("terminate").lines().indent();
-
+        if (AnnotatedElementHelper.hasFlag(cfg, "use_fifo")) {
+        	terminate.append("terminated = true;");
+        }
         orderedInstances = ConfigurationHelper.orderInstanceInit(cfg);
         while (!orderedInstances.isEmpty()) {
             inst = orderedInstances.get(0);

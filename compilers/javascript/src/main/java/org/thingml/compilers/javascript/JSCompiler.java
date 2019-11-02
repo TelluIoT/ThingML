@@ -52,6 +52,9 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 	@Override
     public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
         ctx.addContextAnnotation("thisRef", "this.");
+        if (AnnotatedElementHelper.hasFlag(cfg, "use_fifo")) {
+        	ctx.addContextAnnotation("use_fifo", "true");	
+        }
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
@@ -73,9 +76,10 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 			String className = ctx.firstToUpper(m.getName())+'_'+ctx.firstToUpper(ThingMLHelpers.findContainingThing(m).getName());
 			String type = m.getName();
 			events.append("var " + className + " = /** @class */ (function () {\n");
-			events.append("  function " + className + "(port,...params) {\n");
+			events.append("  function " + className + "(from, port,...params) {\n");
 			events.append("    this.type = '" + type + "';\n");
 			events.append("    this.port = port;\n");
+			events.append("    this.from = from;\n");
 			StringBuilder params = new StringBuilder();
 			for(Parameter p : m.getParameters()) {
 				events.append("    this." + p.getName() + " = params[" + m.getParameters().indexOf(p) + "];\n");
