@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.thingml.compilers.ThingMLGenerator;
 import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.thingML.ThingMLModel;
 
@@ -36,7 +37,7 @@ import org.thingml.xtext.thingML.ThingMLModel;
  *
  * @author sintef
  */
-public abstract class ThingMLTool {
+public abstract class ThingMLTool implements ThingMLGenerator {
     public File outDir;
     public File inDir;
     public File src;
@@ -88,7 +89,8 @@ public abstract class ThingMLTool {
         inDir = inputDirectory.getAbsoluteFile();
     }
 
-    public abstract void generateThingMLFrom(ThingMLModel model);
+    
+    public abstract boolean compile(ThingMLModel model, String... options);
 
     public void writeGeneratedCodeToFiles() {
         for (Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {

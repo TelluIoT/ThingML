@@ -61,7 +61,7 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
     }
 
     @Override
-    public void generateThingMLFrom(ThingMLModel model) {
+    public boolean compile(ThingMLModel model, String... options) {
         System.out.println("[javascriptmqttjson] Processing Model " + model.eResource().getURI().toString() + "\n");
         
         setOutputDirectory(new File(model.eResource().getURI().path()).getParentFile());
@@ -79,6 +79,7 @@ public class JavaScriptJSONMQTTGenerator extends ThingMLTool {
         }
         System.out.println("[javascriptmqttjson] Done. (Model " + model.eResource().getURI().toString() + ")\n");
         writeGeneratedCodeToFiles();
+        return true;
     }
     
     public void generateAdapterFor(ThingMLModel model, Thing t, Port p) {

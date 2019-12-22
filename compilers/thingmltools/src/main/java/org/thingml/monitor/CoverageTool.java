@@ -60,7 +60,7 @@ public class CoverageTool extends ThingMLTool {
     }
 
     @Override
-    public void generateThingMLFrom(ThingMLModel model) {
+    public boolean compile(ThingMLModel model, String... options) {
     	model = ThingMLHelpers.flattenModel(model);
     	
         long actions = 0, expressions = 0, others = 0;
@@ -88,6 +88,8 @@ public class CoverageTool extends ThingMLTool {
         System.out.println("|\tExpressions: " + expressions + " expressions covering " + expressionTypes.size() + " meta-classes." );
         System.out.println("|\tOthers: " + others + " other objects covering " + otherTypes.size() + " meta-classes." );
         System.out.println("------------");
+        
+        return true;
     }
     
 }

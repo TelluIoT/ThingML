@@ -82,7 +82,7 @@ public class MonitorGenerator extends ThingMLTool {
     }
 
     @Override
-    public void generateThingMLFrom(ThingMLModel model) {
+    public boolean compile(ThingMLModel model, String... options) {
     	ThingMLModel copy = model;//ThingMLHelpers.flattenModel(model);
     	    			
         System.out.println("Generate ThingML from model");
@@ -205,7 +205,7 @@ public class MonitorGenerator extends ThingMLTool {
         	e.printStackTrace();
         	System.exit(1);
         }
-        
+        return true;
     }
     
     //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc

@@ -59,7 +59,7 @@ public class TestConfigurationGenerator extends ThingMLTool {
     }
 
     @Override
-    public void generateThingMLFrom(ThingMLModel model) {
+    public boolean compile(ThingMLModel model, String... options) {
         System.out.println("Generate ThingML from model");
         for (Thing t : ThingMLHelpers.allThings(model)) {
             int i = 0;
@@ -79,6 +79,7 @@ public class TestConfigurationGenerator extends ThingMLTool {
         }
 
         writeGeneratedCodeToFiles();
+        return true;
     }
 
     public void generateTester(StringBuilder builder, Thing t, String in, String out) {

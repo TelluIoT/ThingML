@@ -439,7 +439,7 @@
   <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
      <menu
            icon="icons/heads.png"
-           label="HEADS / ThingML">
+           label="ThingML - Compile to">
         <visibleWhen
               checkEnabled="true">
            <with
@@ -466,6 +466,39 @@
      </menu>
   </menuContribution>
 </extension>
+
+   <extension point="org.eclipse.ui.menus">
+  <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+     <menu
+           icon="icons/heads.png"
+           label="ThingML - Tools">
+        <visibleWhen
+              checkEnabled="true">
+           <with
+                 variable="activeMenuSelection">
+              <iterate>
+                 <adapt
+                       type="org.eclipse.core.resources.IFile">
+                    <test
+                          property="org.eclipse.core.resources.name"
+                          value="*.thingml">
+                    </test>
+                 </adapt>
+              </iterate>
+           </with>
+        </visibleWhen>
+        <command
+              commandId="thingml.showconsole"
+              style="push">
+        </command>
+        <dynamic
+              class="org.thingml.eclipse.ui.commands.DynamicToolsMenu"
+              id="org.thingml.eclipse.ui.dynamictoolmenu">
+        </dynamic>
+     </menu>
+  </menuContribution>
+</extension>
+
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -479,6 +512,19 @@
          </commandParameter>
       </command>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.thingml.eclipse.ui.commands.ModifyThingFile"
+            id="thingml.tool"
+            name="tool">
+         <commandParameter
+               id="org.thingml.eclipse.ui.commandParameterToolName"
+               name="tool"
+               optional="false">
+         </commandParameter>
+      </command>
+   </extension>   
  
 	<!-- ThingML Perspective -->
 	<extension point="org.eclipse.ui.perspectives">

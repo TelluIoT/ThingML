@@ -197,7 +197,7 @@ public class Main {
                 thingmlTool.options = main.tooloptions;
                 System.out.println("Generating code for input model. ");
                 thingmlTool.setSourceFile(input);
-                thingmlTool.generateThingMLFrom(input_model);
+                thingmlTool.compile(input_model);
                 logo();
             }
 

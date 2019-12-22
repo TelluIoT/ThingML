@@ -16,8 +16,10 @@
  */
 package org.thingml.thingmltools;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.thingml.generator.go.GoSONMQTTGenerator;
@@ -60,9 +62,15 @@ public class ThingMLToolRegistry {
     public Set<String> getToolIds() {
         return tools.keySet();
     }
+    
+    private static int sortById(ThingMLTool o1, ThingMLTool o2) {    	
+    	return o1.getID().compareTo(o2.getID());
+    }
 
     public Collection<ThingMLTool> getToolPrototypes() {
-        return tools.values();
+    	final List<ThingMLTool> c = new ArrayList<ThingMLTool>(tools.values());
+    	c.sort(ThingMLToolRegistry::sortById);
+        return c;
     }
 
     public void addTool(ThingMLTool t) {

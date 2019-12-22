@@ -56,7 +56,7 @@ import org.thingml.xtext.validation.Checker;
 /**
  * Created by ffl on 23.11.14.
  */
-public abstract class ThingMLCompiler {
+public abstract class ThingMLCompiler implements ThingMLGenerator {
 
     
     //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
@@ -238,6 +238,14 @@ public abstract class ThingMLCompiler {
      * Entry point of the compiler
      * ************************************************************
      */
+	@Override
+	public boolean compile(ThingMLModel model, String... options) {
+		boolean status = true;
+		for(Configuration cfg : model.getConfigs()) {
+			status = status & compile(cfg, Logger.SYSTEM, options);
+		}
+		return status;
+	}
     public boolean compile(Configuration cfg, String... options) { return compile(cfg, Logger.SYSTEM, options); }
     public abstract boolean compile(Configuration cfg, Logger log, String... options);
 
