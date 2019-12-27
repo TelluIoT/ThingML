@@ -22,6 +22,7 @@
 package org.thingml.generator.go;
 
 import java.io.File;
+import java.io.OutputStream;
 
 import org.thingml.thingmltools.ThingMLTool;
 import org.thingml.xtext.constraints.ThingMLHelpers;

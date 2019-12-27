@@ -23,6 +23,7 @@ package org.thingml.thingmltools;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -38,6 +39,8 @@ import org.thingml.xtext.thingML.ThingMLModel;
  * @author sintef
  */
 public abstract class ThingMLTool implements ThingMLGenerator {
+    private OutputStream messageStream = System.out;
+    private OutputStream errorStream = System.err;
     public File outDir;
     public File inDir;
     public File src;
@@ -129,6 +132,22 @@ public abstract class ThingMLTool implements ThingMLGenerator {
             System.err.println("Problem while dumping the code");
             ex.printStackTrace();
         }
+    }
+    
+    public OutputStream getErrorStream() {
+        return errorStream;
+    }
+
+    public void setErrorStream(OutputStream errorStream) {
+        this.errorStream = errorStream;
+    }
+
+    public OutputStream getMessageStream() {
+        return messageStream;
+    }
+
+    public void setMessageStream(OutputStream messageStream) {
+        this.messageStream = messageStream;
     }
 
 }

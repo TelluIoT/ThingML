@@ -16,6 +16,9 @@
  */
 package org.thingml.compilers;
 
+import java.io.File;
+import java.io.OutputStream;
+
 import org.thingml.xtext.thingML.ThingMLModel;
 
 public interface ThingMLGenerator {
@@ -40,5 +43,16 @@ public interface ThingMLGenerator {
      * ************************************************************
      */
     boolean compile(ThingMLModel model, String... options);
-	
+    
+    OutputStream getErrorStream();
+    void setErrorStream(OutputStream errorStream);
+
+    OutputStream getMessageStream();
+    void setMessageStream(OutputStream messageStream);
+
+    File getOutputDirectory();
+    void setOutputDirectory(File outDir);
+  
+    File getInputDirectory();
+    void setInputDirectory(File inDir);	
 }

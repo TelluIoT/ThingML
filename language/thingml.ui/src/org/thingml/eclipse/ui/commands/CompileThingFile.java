@@ -36,10 +36,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.xtext.validation.Issue;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.ThingMLGenerator;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.eclipse.ui.ThingMLConsole;
+import org.thingml.thingmltools.ThingMLToolRegistry;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -52,7 +54,7 @@ public class CompileThingFile implements IHandler {
 	private static Set<NetworkPlugin> loadedPlugins;
 	private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
 	private static Set<SerializationPlugin> loadedSerPlugins;
-	
+
 	private Checker checker = new Checker();
 
 	//IPreferenceStore store = Activator.getDefault().getPreferenceStore();
@@ -97,23 +99,40 @@ public class CompileThingFile implements IHandler {
 		ThingMLConsole.getInstance().printDebug("\n\n********************************************************************************\n");
 		try {
 			// Fetch the compiler to be used
-			String compilerName = event.getParameter("org.thingml.eclipse.ui.commandParameterCompilerName").toString();
+			boolean isCompiler = true; //if not, it is a tool
+			ThingMLGenerator compiler = null;
+			String compilerName = null;
 			String subCompiler = null;
-			if (compilerName.contains("/")) {
-				subCompiler = compilerName.split("/")[1];
-				compilerName = compilerName.split("/")[0];
+	
+			if ("compile".equals(event.getCommand().getName())) {
+				compilerName = event.getParameter("org.thingml.eclipse.ui.commandParameterCompilerName").toString();
+				if (compilerName.contains("/")) {
+					subCompiler = compilerName.split("/")[1];
+					compilerName = compilerName.split("/")[0];
+				}
+				compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
+			} else if ("tool".equals(event.getCommand().getName())) {
+				isCompiler = false;
+				compilerName = event.getParameter("org.thingml.eclipse.ui.commandParameterToolName").toString();
+				compiler = ThingMLToolRegistry.getInstance().createToolInstanceByName(compilerName);
 			}
-
-			ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
-			for(NetworkPlugin np : loadedPlugins) {
-				for(String lang : np.getTargetedLanguages())
-					if(lang.compareTo(compiler.getID()) == 0) {
-						compiler.addNetworkPlugin(np);
+			
+			if (compiler == null) {
+				ThingMLConsole.getInstance().printError("Cannot find compiler/tool... Aborting!");
+				throw new ExecutionException("Cannot find compiler/tool... Aborting!");
+			}
+			
+			if (isCompiler) {
+				for(NetworkPlugin np : loadedPlugins) {
+					for(String lang : np.getTargetedLanguages())
+						if(lang.compareTo(compiler.getID()) == 0) {
+							((ThingMLCompiler)compiler).addNetworkPlugin(np);
+						}
+				}
+				for(SerializationPlugin sp : loadedSerPlugins) {
+					if(sp.getTargetedLanguages().contains(compiler.getID())) {
+						((ThingMLCompiler)compiler).addSerializationPlugin(sp);
 					}
-			}
-			for(SerializationPlugin sp : loadedSerPlugins) {
-				if(sp.getTargetedLanguages().contains(compiler.getID())) {
-					compiler.addSerializationPlugin(sp);
 				}
 			}
 			/*
@@ -124,7 +143,7 @@ public class CompileThingFile implements IHandler {
             	ThingMLPrettyPrinter.USE_ELLIPSIS_FOR_PARAMS = store.getBoolean(PreferenceConstants.UML_ELLIPSIS);
             }
 			 */
-			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\"[" + new Date() + "] (Platform: " + compiler.getID() + ")\n");
+			ThingMLConsole.getInstance().printMessage("Compiling with \"" + compiler.getName() + "\"[" + new Date() + "] (Platform: " + compiler.getID() + ")\n");
 
 			// Fetch the input model to be used
 			java.io.File f = null;
@@ -156,7 +175,7 @@ public class CompileThingFile implements IHandler {
 				f = target_file.getLocation().toFile();
 			}
 
-			ThingMLConsole.getInstance().printDebug("Selected input file: " + f.getName() + " (" + f.getAbsolutePath() + ")\n");
+			ThingMLConsole.getInstance().printMessage("Selected input file: " + f.getName() + " (" + f.getAbsolutePath() + ")\n");
 
 			ThingMLModel model = ThingMLCompiler.loadModel(f);
 			if (model == null) {
@@ -192,7 +211,7 @@ public class CompileThingFile implements IHandler {
 			java.io.File thingmlgen_folder = new java.io.File(project_folder, "thingml-gen");
 
 			if (!thingmlgen_folder.exists()) {
-				ThingMLConsole.getInstance().printDebug("Creating thingml-gen folder in " + project_folder.getAbsolutePath()  + "\n");
+				ThingMLConsole.getInstance().printMessage("Creating thingml-gen folder in " + project_folder.getAbsolutePath()  + "\n");
 				thingmlgen_folder.mkdir();
 			}
 
@@ -212,64 +231,80 @@ public class CompileThingFile implements IHandler {
 			String[] options = new String[1];
 			options[0] = pack;
 
-			// Compile all the configuration
-			for ( Configuration cfg :  toCompile ) {
-				java.io.File cfg_folder = new java.io.File(platform_folder, cfg.getName());
+			if (!isCompiler) {
+				ThingMLConsole.getInstance().printMessage("Applying tool " + compilerName);
+				compiler = ThingMLToolRegistry.getInstance().createToolInstanceByName(compilerName);
+				java.io.File cfg_folder = new java.io.File(platform_folder, "monitor");
 				java.io.File in_folder = f.getAbsoluteFile().getParentFile();
-				if (cfg_folder.exists()) {
-					ThingMLConsole.getInstance().printDebug("Cleaning folder " + cfg_folder.getAbsolutePath() + "\n");
-					ThingMLConsole.getInstance().emptyFolder(cfg_folder);
-				} else {
-					ThingMLConsole.getInstance().printDebug("Creating folder " + cfg_folder.getAbsolutePath() + "\n");
-					cfg_folder.mkdir();
-				}
-				compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 				compiler.setOutputDirectory(cfg_folder);
 				compiler.setInputDirectory(in_folder);
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
+				compiler.compile(model);
+				ThingMLConsole.getInstance().printMessage("Done!");
+			} else {
 
-				ThingMLConsole.getInstance().printMessage("Checking configuration...\n");
-				final long startChecker = System.currentTimeMillis();
-				final boolean isValid = checker.validateConfiguration(cfg);
-				ThingMLConsole.getInstance().printMessage("Checking configuration... Done! Took " + (System.currentTimeMillis() - startChecker) + " ms.\n");
-				
-				if (isValid) {
-					String location = "";
-					for (Issue error : checker.getWarnings()) {
-						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
-							ThingMLConsole.getInstance().printWarn("Warnings(s) in " + error.getUriToProblem().toFileString() + "\n");
-							location = error.getUriToProblem().toFileString();
-						}
-						ThingMLConsole.getInstance().printWarn("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
+				// Compile all the configuration
+				for ( Configuration cfg :  toCompile ) {
+					java.io.File cfg_folder = new java.io.File(platform_folder, cfg.getName());
+					java.io.File in_folder = f.getAbsoluteFile().getParentFile();
+					if (cfg_folder.exists()) {
+						ThingMLConsole.getInstance().printDebug("Cleaning folder " + cfg_folder.getAbsolutePath() + "\n");
+						ThingMLConsole.getInstance().emptyFolder(cfg_folder);
+					} else {
+						ThingMLConsole.getInstance().printDebug("Creating folder " + cfg_folder.getAbsolutePath() + "\n");
+						cfg_folder.mkdir();
 					}
-					location = "";
-					for (Issue error : checker.getInfos()) {
-						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
-							ThingMLConsole.getInstance().printMessage("Infos(s) in " + error.getUriToProblem().toFileString() + "\n");
-							location = error.getUriToProblem().toFileString();
+					compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
+					compiler.setOutputDirectory(cfg_folder);
+					compiler.setInputDirectory(in_folder);
+					compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
+					compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
+
+					ThingMLConsole.getInstance().printMessage("Checking configuration...\n");
+					final long startChecker = System.currentTimeMillis();
+					final boolean isValid = checker.validateConfiguration(cfg);
+					ThingMLConsole.getInstance().printMessage("Checking configuration... Done! Took " + (System.currentTimeMillis() - startChecker) + " ms.\n");
+
+					if (isValid) {
+						String location = "";
+						for (Issue error : checker.getWarnings()) {
+							if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
+								ThingMLConsole.getInstance().printWarn("Warnings(s) in " + error.getUriToProblem().toFileString() + "\n");
+								location = error.getUriToProblem().toFileString();
+							}
+							ThingMLConsole.getInstance().printWarn("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
 						}
-						ThingMLConsole.getInstance().printMessage("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
-					}
-					final long start = System.currentTimeMillis();
-					compiler.compile(cfg, options);
-					if(subCompiler != null) {
-						ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
-						compiler.compileConnector(subCompiler, cfg);
-					}
-					ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.\n");
-				} else {
-					ThingMLConsole.getInstance().printError("Configuration " + cfg.getName() + " could not be compiled because of errors [" + new Date() + "].\n");
-					String location = "";
-					for (Issue error : checker.getErrors()) {
-						if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
-							ThingMLConsole.getInstance().printError("Error(s) in " + error.getUriToProblem().toFileString() + "\n");
-							location = error.getUriToProblem().toFileString();
+						location = "";
+						for (Issue error : checker.getInfos()) {
+							if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
+								ThingMLConsole.getInstance().printMessage("Infos(s) in " + error.getUriToProblem().toFileString() + "\n");
+								location = error.getUriToProblem().toFileString();
+							}
+							ThingMLConsole.getInstance().printMessage("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
 						}
-						ThingMLConsole.getInstance().printError("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
+						final long start = System.currentTimeMillis();
+						((ThingMLCompiler)compiler).compile(cfg, options);
+						if(isCompiler && subCompiler != null) {
+							ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
+							((ThingMLCompiler)compiler).compileConnector(subCompiler, cfg);
+						}
+						ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.\n");
+					} else {
+						ThingMLConsole.getInstance().printError("Configuration " + cfg.getName() + " could not be compiled because of errors [" + new Date() + "].\n");
+						String location = "";
+						for (Issue error : checker.getErrors()) {
+							if (error.getUriToProblem()!=null && error.getUriToProblem().toFileString()!=null && !location.equals(error.getUriToProblem().toFileString())) {
+								ThingMLConsole.getInstance().printError("Error(s) in " + error.getUriToProblem().toFileString() + "\n");
+								location = error.getUriToProblem().toFileString();
+							}
+							ThingMLConsole.getInstance().printError("\t[line " + error.getLineNumber() + "]: " + error.getMessage() + "\n");
+						}
 					}
 				}
 			}
+
+
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
 			ThingMLConsole.getInstance().printError("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:\n");

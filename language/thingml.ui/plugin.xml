@@ -515,6 +515,19 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
+            defaultHandler="org.thingml.eclipse.ui.commands.CompileThingFile"
+            id="thingml.tool"
+            name="tool">
+         <commandParameter
+               id="org.thingml.eclipse.ui.commandParameterToolName"
+               name="tool"
+               optional="false">
+         </commandParameter>
+      </command>
+   </extension>   
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
             defaultHandler="org.thingml.eclipse.ui.commands.ModifyThingFile"
             id="thingml.tool"
             name="tool">
