@@ -49,7 +49,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 	public boolean FACTORIZE_TRANSITIONS = true;
 	public boolean COMPACT = true;
 
-	private static Map<String, List<NamedElement>> names = new HashMap<String, List<NamedElement>>();
+	private Map<String, List<NamedElement>> names = new HashMap<String, List<NamedElement>>();
 
 	private String getName(NamedElement s) {
 		final String name = (s.getName()!=null)?s.getName():"default";
