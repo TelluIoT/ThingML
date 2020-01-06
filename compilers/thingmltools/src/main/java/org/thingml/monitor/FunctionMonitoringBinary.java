@@ -23,20 +23,24 @@ import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 public class FunctionMonitoringBinary implements MonitoringAspect {
 		
@@ -45,13 +49,17 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 	final Port monitoringPort;
 	final Message onFunctionCalled;
 	final TypeRef byteTypeRef;
+	final Property max;
+	final Property array;
 	
-	public FunctionMonitoringBinary(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef byteTypeRef) {
+	public FunctionMonitoringBinary(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef byteTypeRef, Property max, Property array) {
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
 		this.onFunctionCalled = msg;
 		this.byteTypeRef = byteTypeRef;
+		this.max = max;
+		this.array = array;
 	}
 	
 	protected int funcSize(Function f) {
@@ -65,28 +73,95 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		return size;
 	}
 	
-	protected void setArray(LocalVariable va, Function f) {
-		//TODO: set all values except serialized return value
+	protected int setArray(Function f, ReturnAction ra, ActionBlock block) {
+		final VariableAssignment pa1 = ThingMLFactory.eINSTANCE.createVariableAssignment();
+		pa1.setProperty(array);
+		final IntegerLiteral e1 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		e1.setIntValue(1);
+		pa1.setIndex(e1);
+		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(f, "id").get(0)));
+		pa1.setExpression(id);
+		block.getActions().add(0, pa1);
+		
+		if (ra != null) {
+			//TODO
+		} else {
+			final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
+			pa2.setProperty(array);
+			final IntegerLiteral e2 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+			e2.setIntValue(2);
+			pa2.setIndex(e2);
+			final ByteLiteral id2 = ThingMLFactory.eINSTANCE.createByteLiteral();
+			id2.setByteValue((byte)0);
+			pa2.setExpression(id2);
+			block.getActions().add(1, pa2);
+		}
+		
+		int index = 3;
+		int blockIndex = 2;
+		for(Parameter param : f.getParameters()) {
+			final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
+			//if (size == 1) {
+				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
+				pa.setProperty(array);
+				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+				e.setIntValue(index);
+				pa.setIndex(e);
+				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+				pr.setProperty(param);				
+				pa.setExpression(pr);
+				block.getActions().add(blockIndex, pa);
+			/*} else {
+				//TODO: bit shifts and masks
+			}*/
+			index += size;
+			blockIndex++;
+		}
+		return blockIndex;
 	}
 
 	@Override
 	public void monitor() {  
 		
-    	for(Function f : thing.getFunctions()) {//FIXME: need one array per function
+		if (!AnnotatedElementHelper.hasAnnotation(thing, "id")) {
+			final PlatformAnnotation a = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+			a.setName("id");
+			a.setValue(String.valueOf(ByteHelper.thingID()));
+			thing.getAnnotations().add(a);
+		}
+		
+		int maxSize = 3;
+    	for(Function f : thing.getFunctions()) {
     		if (f.isAbstract()) continue;
     		if (AnnotatedElementHelper.isDefined(f, "monitor", "not")) continue;
     		
-    		//Create the byte array containing log info for that function
-    		final LocalVariable va = ThingMLFactory.eINSTANCE.createLocalVariable();
-    		va.setReadonly(true);
-    		va.setName(f.getName() + "_log");
-    		final TypeRef tr = EcoreUtil.copy(byteTypeRef);
-    		final IntegerLiteral il = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-    		il.setIntValue(funcSize(f));
-    		tr.setCardinality(il);
-    		va.setTypeRef(byteTypeRef);
+    		if (!AnnotatedElementHelper.hasAnnotation(f, "id")) {
+    			final PlatformAnnotation a = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+    			a.setName("id");
+    			a.setValue(String.valueOf(ByteHelper.functionID()));
+    			f.getAnnotations().add(a);
+    		}
     		
-    		    		        	
+    		int fSize = funcSize(f);
+    		if (fSize > maxSize) {
+    			maxSize = fSize;
+    		}
+    	}
+    	
+    	//Setup the byte array containing log info for functions
+		final IntegerLiteral il = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		il.setIntValue(maxSize);
+		final PropertyAssign pa = ThingMLFactory.eINSTANCE.createPropertyAssign();
+		pa.setProperty(max);
+		pa.setInit(il);
+		thing.getAssign().add(pa);
+    		
+    		
+    	for(Function f : thing.getFunctions()) {
+    		if (f.isAbstract()) continue;
+    		if (AnnotatedElementHelper.isDefined(f, "monitor", "not")) continue;
+    		
         	//Send monitoring message before each return statement (or as the first statement in the function)
         	if (f.getTypeRef() == null) {
         		ActionBlock block;
@@ -95,12 +170,12 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
         		} else {
         			block = ThingMLFactory.eINSTANCE.createActionBlock();
         			block.getActions().add(f.getBody());
+        			f.setBody(block);
         		}
-   
-        		block.getActions().add(0, va);
-        		setArray(va, f);
-        		final Action send = buildSendAction(f, va);        		
-        		block.getActions().add(0, send);
+           		
+        		int index = setArray(f, null, block);
+        		final Action send = buildSendAction(f);        		
+        		block.getActions().add(index, send);
         	} else {
         		for(ReturnAction ra : ActionHelper.getAllActions(f, ReturnAction.class)) {
         			ActionBlock block;
@@ -131,12 +206,28 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
         			final PropertyReference ref_var = ThingMLFactory.eINSTANCE.createPropertyReference();
                 	ref_var.setProperty(var_return);
                 	ra.setExp(ref_var);
-        			block.getActions().add(block.getActions().indexOf(ra), var_return);
+        			
         				        			     			
             		
-                	setArray(va, f);
-                	//TODO: Set serialized return value into array 
-        			final Action send = buildSendAction(f, va);        		
+                	int index = setArray(f, ra, block);                	
+        			block.getActions().add(block.getActions().indexOf(ra), var_return);
+        			index++;
+        			//TODO: Set serialized return value into array
+                	final long size = ((PrimitiveType)var_return.getTypeRef().getType()).getByteSize();
+        			//if (size == 1) {
+        				final VariableAssignment va = ThingMLFactory.eINSTANCE.createVariableAssignment();
+        				va.setProperty(array);
+        				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+        				e.setIntValue(maxSize-1);
+        				va.setIndex(e);
+        				va.setExpression(EcoreUtil.copy(ref_var));
+        				block.getActions().add(block.getActions().indexOf(ra), va);
+        			/*} else {
+        				//TODO: bit shifts and masks
+        			}*/
+        			
+        			
+        			final Action send = buildSendAction(f);        		
             		block.getActions().add(block.getActions().indexOf(ra), send);    		            		
         		}
         		
@@ -145,72 +236,14 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
     }
 
 
-	private Action buildSendAction(Function f, LocalVariable va) {
+	private Action buildSendAction(Function f) {
 		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 		send.setMessage(onFunctionCalled);
 		send.setPort(monitoringPort);
 		final PropertyReference va_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-		va_ref.setProperty(va);
+		va_ref.setProperty(array);
 		send.getParameters().add(va_ref);
 		return send;
-		
-		//TODO: refactor code below into setArray method
-		/*final StringLiteral name_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-		name_exp.setStringValue(f.getName());        	
-		send.getParameters().add(name_exp);
-		if (f.getTypeRef() == null) {
-			send.getParameters().add(EcoreUtil.copy(void_));
-			send.getParameters().add(EcoreUtil.copy(empty));
-		} else {
-			final StringLiteral type_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-    		type_exp.setStringValue(f.getTypeRef().getType().getName());
-			send.getParameters().add(type_exp);
-			send.getParameters().add(ref_var);
-		}
-		
-		if (f.getParameters().isEmpty()) {
-			send.getParameters().add(EcoreUtil.copy(empty));
-			return send;
-		} else {//FIXME: this will only work for target languages where we can + strings (all except posix/arduino as of now)
-			final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
-			lv.setName("params");
-			lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
-			lv.setReadonly(true);
-			Expression init = EcoreUtil.copy(empty);
-			final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
-    		block.getActions().add(lv);
-			for(Parameter param : f.getParameters()) {
-				final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
-				final ExpressionGroup group_name = ThingMLFactory.eINSTANCE.createExpressionGroup();
-				final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
-				final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();
-				final PlusExpression plus_name = ThingMLFactory.eINSTANCE.createPlusExpression();
-				final StringLiteral name = ThingMLFactory.eINSTANCE.createStringLiteral();
-				name.setStringValue(param.getName() + "=");
-				final CastExpression asString = ThingMLFactory.eINSTANCE.createCastExpression();
-				final PropertyReference r_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-				r_ref.setProperty(param);
-				asString.setTerm(r_ref);
-				asString.setType(stringTypeRef.getType());
-				plus_comma.setLhs(asString);
-				plus_comma.setRhs(EcoreUtil.copy(comma));
-				group.setTerm(plus_comma);
-				plus_name.setLhs(name);
-				plus_name.setRhs(group);
-				group_name.setTerm(plus_name);
-				concat.setLhs(init);
-				concat.setRhs(group_name);
-				init = concat;
-			}
-			lv.setInit(init);
-			block.getActions().add(lv);
-		
-			final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-			lv_ref.setProperty(lv);
-			send.getParameters().add(lv_ref);      		    	
-    		block.getActions().add(send);
-    		return block;
-		}*/
 	}
 	
 }

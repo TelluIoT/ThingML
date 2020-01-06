@@ -89,7 +89,10 @@ public class MonitorGenerator extends ThingMLTool {
         
         Import log_import = ThingMLFactory.eINSTANCE.createImport();
         log_import.setFrom("stl");
-        log_import.setImportURI("log.thingml");
+        if (!isBinary)
+        	log_import.setImportURI("log.thingml");
+        else
+        	log_import.setImportURI("logbinary.thingml");
         copy.getImports().add(log_import);
 
         copy = ThingMLHelpers.flattenModel(copy);
@@ -105,15 +108,13 @@ public class MonitorGenerator extends ThingMLTool {
         
     	Type stringType = null;
     	for (Type t : copy.getTypes()) {
-            if (t instanceof ObjectType) {
-                if (!isBinary && t.getName().equals("String")) {
-                	stringType = t;
-                	break;
-                }
-                if (isBinary && t.getName().equals("Byte")) {
-                	stringType = t;
-                	break;
-                }
+            if (!isBinary && t.getName().equals("String")) {
+              	stringType = t;
+               	break;
+            }
+            else if (isBinary && t.getName().equals("Byte")) {
+                stringType = t;
+                break;
             }
         }
     	if (stringType == null) throw new NoSuchElementException("Cannot find String/Byte type");
@@ -168,6 +169,9 @@ public class MonitorGenerator extends ThingMLTool {
         				break;
         			}
         		}
+        		if (msg_lost == null) throw new NoSuchElementException("Cannot find message_lost message");
+        		if (msg_handled == null) throw new NoSuchElementException("Cannot find message_handled message");
+        		if (msg_sent == null) throw new NoSuchElementException("Cannot find message_sent message");
         		new EventMonitoring(t, id, monitoringPort, msg_lost, msg_handled, msg_sent, stringTypeRef).monitor();
         	}
         	
@@ -179,10 +183,21 @@ public class MonitorGenerator extends ThingMLTool {
         				break;
         			}
         		}
+        		if (msg == null) throw new NoSuchElementException("Cannot find function_called message");
         		if (!isBinary)
         			new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
-        		else
-        			new FunctionMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef).monitor();
+        		else {
+        			Property max = null;
+        			Property array = null;
+        			for(Property p : logAPI.getProperties()) {
+        				if (p.getName().equals("FUNCTION_MAX_SIZE")) {
+        					max = p;
+        				} else if (p.getName().equals("FUNCTION_LOGS")) {
+        					array = p;
+        				} 
+        			}        			
+        			new FunctionMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef, max, array).monitor();
+        		}
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
@@ -193,6 +208,7 @@ public class MonitorGenerator extends ThingMLTool {
         				break;
         			}
         		}
+        		if (msg == null) throw new NoSuchElementException("Cannot find property_changed message");
         		new PropertyMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
         	}        	
         }
