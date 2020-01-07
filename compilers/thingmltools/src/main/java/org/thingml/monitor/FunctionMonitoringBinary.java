@@ -73,16 +73,20 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		return size;
 	}
 	
-	protected int setArray(Function f, ReturnAction ra, ActionBlock block) {
+	protected ActionBlock setArray(Function f, ReturnAction ra) {
+		final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
+		int blockIndex = 0;
+		int index = 1;
+		
 		final VariableAssignment pa1 = ThingMLFactory.eINSTANCE.createVariableAssignment();
 		pa1.setProperty(array);
 		final IntegerLiteral e1 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		e1.setIntValue(1);
+		e1.setIntValue(index++);
 		pa1.setIndex(e1);
 		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
 		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(f, "id").get(0)));
 		pa1.setExpression(id);
-		block.getActions().add(0, pa1);
+		block.getActions().add(blockIndex++, pa1);
 		
 		if (ra != null) {
 			//TODO
@@ -90,35 +94,31 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 			final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
 			pa2.setProperty(array);
 			final IntegerLiteral e2 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-			e2.setIntValue(2);
+			e2.setIntValue(index++);
 			pa2.setIndex(e2);
 			final ByteLiteral id2 = ThingMLFactory.eINSTANCE.createByteLiteral();
 			id2.setByteValue((byte)0);
 			pa2.setExpression(id2);
-			block.getActions().add(1, pa2);
-		}
+			block.getActions().add(blockIndex++, pa2);
+		}		
 		
-		int index = 3;
-		int blockIndex = 2;
 		for(Parameter param : f.getParameters()) {
 			final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
 			//if (size == 1) {
 				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
 				pa.setProperty(array);
 				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-				e.setIntValue(index);
+				e.setIntValue(index++);
 				pa.setIndex(e);
 				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
 				pr.setProperty(param);				
 				pa.setExpression(pr);
-				block.getActions().add(blockIndex, pa);
+				block.getActions().add(blockIndex++, pa);
 			/*} else {
 				//TODO: bit shifts and masks
 			}*/
-			index += size;
-			blockIndex++;
 		}
-		return blockIndex;
+		return block;
 	}
 
 	@Override
@@ -173,9 +173,10 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
         			f.setBody(block);
         		}
            		
-        		int index = setArray(f, null, block);
+        		final ActionBlock b = setArray(f, null);
         		final Action send = buildSendAction(f);        		
-        		block.getActions().add(index, send);
+        		b.getActions().add(send);
+        		block.getActions().add(b);
         	} else {
         		for(ReturnAction ra : ActionHelper.getAllActions(f, ReturnAction.class)) {
         			ActionBlock block;
@@ -206,12 +207,10 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
         			final PropertyReference ref_var = ThingMLFactory.eINSTANCE.createPropertyReference();
                 	ref_var.setProperty(var_return);
                 	ra.setExp(ref_var);
-        			
+                	block.getActions().add(block.getActions().indexOf(ra), var_return);
         				        			     			
             		
-                	int index = setArray(f, ra, block);                	
-        			block.getActions().add(block.getActions().indexOf(ra), var_return);
-        			index++;
+                	final ActionBlock b = setArray(f, ra);        			        			
         			//TODO: Set serialized return value into array
                 	final long size = ((PrimitiveType)var_return.getTypeRef().getType()).getByteSize();
         			//if (size == 1) {
@@ -221,10 +220,12 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
         				e.setIntValue(maxSize-1);
         				va.setIndex(e);
         				va.setExpression(EcoreUtil.copy(ref_var));
-        				block.getActions().add(block.getActions().indexOf(ra), va);
+        				b.getActions().add(va);
         			/*} else {
         				//TODO: bit shifts and masks
         			}*/
+        			
+        			block.getActions().add(block.getActions().indexOf(ra), b);
         			
         			
         			final Action send = buildSendAction(f);        		
