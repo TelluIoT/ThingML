@@ -28,9 +28,18 @@ thing fragment WithBinaryLog includes LogMsgs {
 	
 	readonly property DEBUG_BIN_ID : Byte
 	readonly property FUNCTION_MAX_SIZE : Integer
-	property FUNCTION_LOGS : Byte[FUNCTION_MAX_SIZE]
+	//property FUNCTION_LOGS : Byte[FUNCTION_MAX_SIZE]
 		//set FUNCTION_LOGS[0] = DEBUG_BIN_ID
 	
+	function resetFunction() : Byte[FUNCTION_MAX_SIZE] do
+		var a : Byte[FUNCTION_MAX_SIZE]
+		var i : Integer = 0
+		while(i<FUNCTION_MAX_SIZE) do
+			a[i] = 0
+			i++
+		end
+		return a
+	end
 	
 	required port log @sync_send "true" {
 		sends function_called//, property_changed, message_lost, message_handled, message_sent

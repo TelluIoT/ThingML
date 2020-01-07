@@ -188,15 +188,15 @@ public class MonitorGenerator extends ThingMLTool {
         			new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
         		else {
         			Property max = null;
-        			Property array = null;
+        			//Property array = null;
         			for(Property p : logAPI.getProperties()) {
         				if (p.getName().equals("FUNCTION_MAX_SIZE")) {
         					max = p;
-        				} else if (p.getName().equals("FUNCTION_LOGS")) {
+        				}/* else if (p.getName().equals("FUNCTION_LOGS")) {
         					array = p;
-        				} 
+        				}*/ 
         			}        			
-        			new FunctionMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef, max, array).monitor();
+        			new FunctionMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef, max/*, array*/).monitor();
         		}
         	}
         	
