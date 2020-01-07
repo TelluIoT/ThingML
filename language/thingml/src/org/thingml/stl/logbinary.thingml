@@ -29,7 +29,7 @@ thing fragment WithBinaryLog includes LogMsgs {
 	readonly property DEBUG_BIN_ID : Byte
 	readonly property FUNCTION_MAX_SIZE : Integer
 	property FUNCTION_LOGS : Byte[FUNCTION_MAX_SIZE]
-		set FUNCTION_LOGS[0] = DEBUG_BIN_ID
+		//set FUNCTION_LOGS[0] = DEBUG_BIN_ID
 	
 	
 	required port log @sync_send "true" {
