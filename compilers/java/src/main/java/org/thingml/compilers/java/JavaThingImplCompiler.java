@@ -86,7 +86,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		for (Parameter p : m.getParameters()) {
 			String cast;
 			if (p.getTypeRef().isIsArray() || p.getTypeRef().getCardinality() != null) {
-				cast = JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, ctx);
+				cast = JavaHelper.getJavaType(p.getTypeRef().getType(), true, ctx);
 			} else {
 				if (JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, ctx)
 						.equals("int"))
