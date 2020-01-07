@@ -16,6 +16,14 @@
  */
 package org.thingml.monitor;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.CastExpression;
+import org.thingml.xtext.thingML.ExpressionGroup;
+import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.ThingMLFactory;
+
 public class ByteHelper {
 
 	private static byte thingID = 0;

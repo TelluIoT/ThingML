@@ -19,11 +19,17 @@ package org.thingml.monitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.ByteLiteral;
+import org.thingml.xtext.thingML.CastExpression;
+import org.thingml.xtext.thingML.ConditionalAction;
+import org.thingml.xtext.thingML.ExpressionGroup;
+import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
@@ -37,6 +43,7 @@ import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TypeRef;
@@ -89,7 +96,16 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		block.getActions().add(blockIndex++, pa1);
 		
 		if (ra != null) {
-			//TODO
+			//TODO: Assign on byte code to each datatype (instead of just using 0 for void and 1 for not void...)
+			final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
+			pa2.setProperty(array);
+			final IntegerLiteral e2 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+			e2.setIntValue(index++);
+			pa2.setIndex(e2);
+			final ByteLiteral id2 = ThingMLFactory.eINSTANCE.createByteLiteral();
+			id2.setByteValue((byte)1);
+			pa2.setExpression(id2);
+			block.getActions().add(blockIndex++, pa2);
 		} else {
 			final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
 			pa2.setProperty(array);
@@ -104,19 +120,76 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		
 		for(Parameter param : f.getParameters()) {
 			final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
-			//if (size == 1) {
-				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
-				pa.setProperty(array);
-				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-				e.setIntValue(index++);
-				pa.setIndex(e);
-				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
-				pr.setProperty(param);				
-				pa.setExpression(pr);
-				block.getActions().add(blockIndex++, pa);
-			/*} else {
-				//TODO: bit shifts and masks
-			}*/
+			if (size == 1) {
+				final TypeRef tr = TyperHelper.getBroadType(param.getTypeRef());
+				if (tr == Types.BOOLEAN_TYPEREF) {
+					final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+					final IntegerLiteral l = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					l.setIntValue(0);
+					lv.setTypeRef(byteTypeRef);
+					lv.setInit(l);
+					lv.setName(param.getName() + "_byte");
+					final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
+					final IntegerLiteral l2 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					l2.setIntValue(1);
+					pa.setProperty(lv);
+					pa.setExpression(l2);
+					final ConditionalAction c = ThingMLFactory.eINSTANCE.createConditionalAction();
+					final PropertyReference r = ThingMLFactory.eINSTANCE.createPropertyReference();
+					r.setProperty(param);
+					c.setCondition(r);
+					c.setAction(pa);
+					block.getActions().add(blockIndex++, lv);
+					block.getActions().add(blockIndex++, c);
+					
+					final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
+					pa2.setProperty(array);
+					final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					e.setIntValue(index++);
+					pa2.setIndex(e);
+					final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+					pr.setProperty(lv);				
+					pa2.setExpression(pr);
+					block.getActions().add(blockIndex++, pa2);
+				} else {				
+					final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
+					pa.setProperty(array);
+					final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					e.setIntValue(index++);
+					pa.setIndex(e);
+					final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+					pr.setProperty(param);				
+					pa.setExpression(pr);
+					block.getActions().add(blockIndex++, pa);
+				}
+			} else {
+				for (int j = 0; j < size; j++) {
+					final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
+					pa.setProperty(array);
+					final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					e.setIntValue(index++);
+					pa.setIndex(e);
+					final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+					pr.setProperty(param);				
+					
+					
+					
+					final CastExpression cast = ThingMLFactory.eINSTANCE.createCastExpression();
+					cast.setType(byteTypeRef.getType());
+					final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();	                			
+					final ExternExpression expr = ThingMLFactory.eINSTANCE.createExternExpression();
+					expr.setExpression("((");
+					expr.getSegments().add(EcoreUtil.copy(pr));
+					final ExternExpression bitshift = ThingMLFactory.eINSTANCE.createExternExpression();
+					bitshift.setExpression(" >> "+8*(size-1-j)+") & 0xFF)");
+					expr.getSegments().add(bitshift);
+					group.setTerm(expr);
+					cast.setTerm(group);
+					
+					pa.setExpression(cast);
+					block.getActions().add(blockIndex++, pa);
+				}
+			}
 		}
 		return block;
 	}

@@ -45,6 +45,8 @@ thing fragment Logger includes LogMsgs {
 	
 	readonly property ACTIVATE_ON_STARTUP : Boolean
 	
+	readonly property FUNCTION_MAX_SIZE : Integer
+	
 	provided port log {
 		receives log_on, log_off, function_called//, property_changed, message_lost, message_handled, message_sent
 	}
@@ -99,8 +101,14 @@ thing fragment Logger includes LogMsgs {
 
 thing ConsoleLogger includes Logger @stdout_sync "true" {
 	
-	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
-		println "log: function_called(", inst, ", ", fn_name, ", ", ty, ", ", returns, ", ", params, ")"
+	function log_function_called(payload : Byte[FUNCTION_MAX_SIZE]) do		
+		print "log: function_called("
+		for(v : Byte in payload) do
+			print v, ","
+		end
+		println ")"
+		end
+		
 		
 	function log_property_changed(inst : String, prop_name : String, ty : String, old : String, new : String)
 		println "log: property_changed(", inst, ", ", prop_name, ", ", ty, ", ", old, ", ", new, ")"
