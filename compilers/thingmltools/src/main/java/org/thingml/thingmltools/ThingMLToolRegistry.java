@@ -26,6 +26,7 @@ import org.thingml.generator.go.GoSONMQTTGenerator;
 import org.thingml.generator.java.JavaJSONMQTTGenerator;
 import org.thingml.generator.javascript.JavaScriptJSONMQTTGenerator;
 import org.thingml.generator.posix.PosixJSONMQTTGenerator;
+import org.thingml.monitor.BinaryMonitorGenerator;
 import org.thingml.monitor.CoverageTool;
 import org.thingml.monitor.MonitorGenerator;
 /**
@@ -51,8 +52,8 @@ public class ThingMLToolRegistry {
             instance.addTool(new JavaJSONMQTTGenerator());
             instance.addTool(new JavaScriptJSONMQTTGenerator());
             instance.addTool(new GoSONMQTTGenerator());
-            instance.addTool(new MonitorGenerator(false));
-            instance.addTool(new MonitorGenerator(true));
+            instance.addTool(new MonitorGenerator());
+            instance.addTool(new BinaryMonitorGenerator());
             instance.addTool(new CoverageTool());
         }
 

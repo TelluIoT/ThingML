@@ -31,7 +31,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 	
 	@Check(FAST)
 	def checkFor(ForAction fa) {
-		if (fa.array.property.typeRef.cardinality === null) {
+		if (!fa.array.property.typeRef.isArray /*fa.array.property.typeRef.cardinality === null*/) {
 			val msg = "Cannot iterate over " + fa.array.property.name + ". This is not an array."
 			error(msg, fa, ThingMLPackage.eINSTANCE.forAction_Array)
 			return;

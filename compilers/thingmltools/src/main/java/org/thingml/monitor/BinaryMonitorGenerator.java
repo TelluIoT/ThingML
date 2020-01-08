@@ -36,20 +36,20 @@ import org.thingml.xtext.thingML.TypeRef;
  *
  * @author Brice Morin
  */
-public class MonitorGenerator extends ThingMLTool {
+public class BinaryMonitorGenerator extends ThingMLTool {
 
-	public MonitorGenerator() {
+    public BinaryMonitorGenerator() {
         super();
     }
 
     @Override
     public String getID() {
-    	return "monitor";    	
+   		return "monitor-bin";
     }
 
     @Override
-    public String getName() {    	
-    	return "Monitor Generator";    	
+    public String getName() {
+   		return "Binary Monitor Generator";
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MonitorGenerator extends ThingMLTool {
 
     @Override
     public ThingMLTool clone() {
-        return new MonitorGenerator();
+        return new BinaryMonitorGenerator();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class MonitorGenerator extends ThingMLTool {
         
         Import log_import = ThingMLFactory.eINSTANCE.createImport();
         log_import.setFrom("stl");
-        log_import.setImportURI("log.thingml");        
+       	log_import.setImportURI("logbinary.thingml");
         copy.getImports().add(log_import);
 
         copy = ThingMLHelpers.flattenModel(copy);
@@ -86,10 +86,10 @@ public class MonitorGenerator extends ThingMLTool {
         
     	Type stringType = null;
     	for (Type t : copy.getTypes()) {
-            if (t.getName().equals("String")) {
-              	stringType = t;
-               	break;
-            }            
+            if (t.getName().equals("Byte")) {
+                stringType = t;
+                break;
+            }
         }
     	if (stringType == null) throw new NoSuchElementException("Cannot find String/Byte type");
     	
@@ -98,7 +98,7 @@ public class MonitorGenerator extends ThingMLTool {
         
         Thing logAPI = null;
         for(Thing t : ThingMLHelpers.allThings(copy)) {
-        	if (t.getName().equals("WithLog")) {
+        	if (t.getName().equals("WithBinaryLog")) {
         		logAPI = t;
         		break;
         	}
@@ -107,6 +107,14 @@ public class MonitorGenerator extends ThingMLTool {
                 
         final Property id = logAPI.getProperties().get(0);
     	final RequiredPort monitoringPort = (RequiredPort) logAPI.getPorts().get(0);
+    	Message msg = null;
+		for (Message m : monitoringPort.getSends()) {
+			if (m.getName().equals("log")) {
+				msg = m;
+				break;
+			}
+		}
+		if (msg == null) throw new NoSuchElementException("Cannot find log message");
     	        
         for (Thing t : ThingMLHelpers.allThings(copy)) {
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "not")) continue;
@@ -114,59 +122,20 @@ public class MonitorGenerator extends ThingMLTool {
         	
         	//FIXME: do not include it if it has already been included manually
         	t.getIncludes().add(logAPI);
-        	
+        	        	
+        	        	
         	//////////////////////////////////////////
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "events")) {
-        		Message msg_lost = null;
-        		for (Message m : monitoringPort.getSends()) {
-        			if (m.getName().equals("message_lost")) {
-        				msg_lost = m;
-        				break;
-        			}
-        		}
-        		Message msg_handled = null;
-        		for (Message m : monitoringPort.getSends()) {
-        			if (m.getName().equals("message_handled")) {
-        				msg_handled = m;
-        				break;
-        			}
-        		}        		
-        		Message msg_sent = null;
-        		for (Message m : monitoringPort.getSends()) {
-        			if (m.getName().equals("message_sent")) {
-        				msg_sent = m;
-        				break;
-        			}
-        		}
-        		if (msg_lost == null) throw new NoSuchElementException("Cannot find message_lost message");
-        		if (msg_handled == null) throw new NoSuchElementException("Cannot find message_handled message");
-        		if (msg_sent == null) throw new NoSuchElementException("Cannot find message_sent message");
-        		new EventMonitoring(t, id, monitoringPort, msg_lost, msg_handled, msg_sent, stringTypeRef).monitor();
+        		//new EventMonitoring(t, id, monitoringPort, stringTypeRef).monitor();
         	}
         	
-        	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {
-        		Message msg = null;
-        		for (Message m : monitoringPort.getSends()) {
-        			if (m.getName().equals("function_called")) {
-        				msg = m;
-        				break;
-        			}
-        		}
-        		if (msg == null) throw new NoSuchElementException("Cannot find function_called message");
-        		new FunctionMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();        	
+        	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {        		  			
+        		new FunctionMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef).monitor();
         	}
         	
-        	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {
-        		Message msg = null;
-        		for (Message m : monitoringPort.getSends()) {
-        			if (m.getName().equals("property_changed")) {
-        				msg = m;
-        				break;
-        			}
-        		}
-        		if (msg == null) throw new NoSuchElementException("Cannot find property_changed message");
-        		new PropertyMonitoring(t, id, monitoringPort, msg, stringTypeRef).monitor();
+        	if (AnnotatedElementHelper.isDefined(t, "monitor", "properties")) {        		
+        		new PropertyMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef).monitor();
         	}        	
         }
         

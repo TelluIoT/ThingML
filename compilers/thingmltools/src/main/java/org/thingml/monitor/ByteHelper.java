@@ -16,28 +16,170 @@
  */
 package org.thingml.monitor;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResource;
+import org.thingml.xtext.ThingMLStandaloneSetup;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.CastExpression;
+import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
-import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.Variable;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 public class ByteHelper {
 
 	private static byte thingID = 0;
 	private static byte functionID = 0;
 	private static byte messageID = 0;
+	private static byte varID = 0;
 	
 	public static byte thingID() {return thingID++;} 
 	public static byte functionID() {return functionID++;}
 	public static byte messageID() {return messageID++;}
+	public static byte varID() {return varID++;}
 	
 	public static void reset() {
 		thingID = 0;
 		functionID = 0;
 		messageID = 0;
+		varID = 0;
 	}
 	
+	public static Function getNewLog(Thing thing) {
+		for (Function f : ThingMLHelpers.allFunctions(thing)) {
+			if (f.getName().equals("newLog")) {
+				return f;
+			}
+		}
+		return null;
+	}
+	
+    //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc
+    public static void save(ThingMLModel model, String location) throws IOException {
+    	ThingMLStandaloneSetup.doSetup();    	
+    	if (!model.getImports().isEmpty())
+    		throw new Error("Only models without imports can be saved with this method. Use the 'flattenModel' method first.");
+    	
+        ResourceSet rs = new ResourceSetImpl();
+        Resource res = rs.createResource(URI.createFileURI(location));
+
+        res.getContents().add(model);
+        EcoreUtil.resolveAll(res);
+        
+        SaveOptions opt = SaveOptions.newBuilder().format().noValidation().getOptions();
+        res.save(opt.toOptionsMap());
+    }
+
+    //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc
+    public static ThingMLModel load(File file) throws IOException {
+    	ThingMLStandaloneSetup.doSetup();    	
+        ResourceSet rs = new ResourceSetImpl();
+        URI xmiuri = URI.createFileURI(file.getAbsolutePath());
+        Resource model = rs.createResource(xmiuri);
+        XtextResource resource = (XtextResource) model;        
+        model.load(null);
+        EcoreUtil.resolveAll(model);
+        ThingMLModel m = (ThingMLModel) model.getContents().get(0);
+        return m;        
+    }
+	
+	public static void serializeParam(TypeRef byteTypeRef, Variable param, ActionBlock block, int blockIndex, int index, Variable array) {
+		final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
+		if (size == 1) {
+			final TypeRef tr = TyperHelper.getBroadType(param.getTypeRef());
+			if (tr == Types.BOOLEAN_TYPEREF) {
+				final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
+				final IntegerLiteral l = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+				l.setIntValue(0);
+				lv.setTypeRef(EcoreUtil.copy(byteTypeRef));
+				lv.setInit(l);
+				lv.setName(param.getName() + "_byte");
+				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
+				final IntegerLiteral l2 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+				l2.setIntValue(1);
+				pa.setProperty(lv);
+				pa.setExpression(l2);
+				final ConditionalAction c = ThingMLFactory.eINSTANCE.createConditionalAction();
+				final PropertyReference r = ThingMLFactory.eINSTANCE.createPropertyReference();
+				r.setProperty(param);
+				c.setCondition(r);
+				c.setAction(pa);
+				block.getActions().add(blockIndex++, lv);
+				block.getActions().add(blockIndex++, c);
+				
+				final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
+				pa2.setProperty(array);
+				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+				e.setIntValue(index++);
+				pa2.setIndex(e);
+				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+				pr.setProperty(lv);				
+				pa2.setExpression(pr);
+				block.getActions().add(blockIndex++, pa2);
+			} else {	
+				final CastExpression c = ThingMLFactory.eINSTANCE.createCastExpression();
+				c.setType(byteTypeRef.getType());
+				
+				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
+				pa.setProperty(array);
+				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+				e.setIntValue(index++);
+				pa.setIndex(e);
+				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+				pr.setProperty(param);								
+				c.setTerm(pr);
+				pa.setExpression(c);
+				block.getActions().add(blockIndex++, pa);
+			}
+		} else {
+			for (int j = 0; j < size; j++) {
+				final CastExpression c = ThingMLFactory.eINSTANCE.createCastExpression();
+				c.setType(byteTypeRef.getType());
+				
+				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
+				pa.setProperty(array);
+				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+				e.setIntValue(index++);
+				pa.setIndex(e);
+				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+				pr.setProperty(param);														
+				
+				final CastExpression cast = ThingMLFactory.eINSTANCE.createCastExpression();
+				cast.setType(byteTypeRef.getType());
+				final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();	                			
+				final ExternExpression expr = ThingMLFactory.eINSTANCE.createExternExpression();
+				expr.setExpression("((");
+				expr.getSegments().add(EcoreUtil.copy(pr));
+				final ExternExpression bitshift = ThingMLFactory.eINSTANCE.createExternExpression();
+				bitshift.setExpression(" >> "+8*(size-1-j)+") & 0xFF)");
+				expr.getSegments().add(bitshift);
+				group.setTerm(expr);
+				cast.setTerm(group);
+				
+				pa.setExpression(cast);
+				block.getActions().add(blockIndex++, pa);
+			}
+		}
+	}	
 }

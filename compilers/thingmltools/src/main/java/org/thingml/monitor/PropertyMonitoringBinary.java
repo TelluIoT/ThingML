@@ -23,13 +23,20 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.Decrement;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.Increment;
+import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.PlusExpression;
 import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.SendAction;
@@ -37,29 +44,38 @@ import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
-public class PropertyMonitoring implements MonitoringAspect {
+public class PropertyMonitoringBinary implements MonitoringAspect {
 	
 	final Thing thing;
 	final Property id;
 	final Port monitoringPort;
 	final Message msg;
-	final TypeRef stringTypeRef;
+	final TypeRef byteTypeRef;
+	final Function reset;
 	
 	private int counter = 0;
 	
 	final StringLiteral empty;
 
-	public PropertyMonitoring(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef stringTypeRef) {
+	public PropertyMonitoringBinary(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef byteTypeRef) {
+		this.reset = ByteHelper.getNewLog(thing);
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
 		this.msg = msg;
-		this.stringTypeRef = stringTypeRef;
+		this.byteTypeRef = byteTypeRef;
 		
 		empty = ThingMLFactory.eINSTANCE.createStringLiteral();
 		empty.setStringValue("");
+	}
+	
+	protected int varSize(Variable v) {
+		int size = 3; //b[0]=0 (log property), b[1]=instance, b[2]=function
+		size += 2*((PrimitiveType)v.getTypeRef().getType()).getByteSize();		
+		return size;
 	}
 	
 	@Override
@@ -67,6 +83,13 @@ public class PropertyMonitoring implements MonitoringAspect {
 		for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
 			if (AnnotatedElementHelper.isDefined(p, "monitoring", "not")) continue;
 			if (p.getTypeRef().getCardinality() != null) continue;//FIXME: handle arrays
+			
+			if (!AnnotatedElementHelper.hasAnnotation(p, "id")) {
+    			final PlatformAnnotation a = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+    			a.setName("id");
+    			a.setValue(String.valueOf(ByteHelper.varID()));
+    			p.getAnnotations().add(a);
+    		}
 			
 			for(Increment assign : ActionHelper.getAllActions(thing, Increment.class)) {
 				if (!(assign.getVar() == p)) continue;
@@ -100,17 +123,11 @@ public class PropertyMonitoring implements MonitoringAspect {
 		//before
 		final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
 		lv.setName("old_" + p.getName() + "_" + counter);
-		lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
+		lv.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
 		lv.setReadonly(true);
 		final PropertyReference ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-		ref.setProperty(p);
-		final CastExpression asString = ThingMLFactory.eINSTANCE.createCastExpression();
-		asString.setTerm(ref);
-		asString.setType(stringTypeRef.getType());
-		final PlusExpression plus = ThingMLFactory.eINSTANCE.createPlusExpression();
-		plus.setLhs(EcoreUtil.copy(empty));
-		plus.setRhs(asString);
-		lv.setInit(plus);
+		ref.setProperty(p);		
+		lv.setInit(ref);
 		block.getActions().add(lv);
 		
 		block.getActions().add(assign);
@@ -118,37 +135,70 @@ public class PropertyMonitoring implements MonitoringAspect {
 		//after
 		final LocalVariable lv2 = ThingMLFactory.eINSTANCE.createLocalVariable();
 		lv2.setName("new_" + p.getName() + "_" + counter);
-		lv2.setTypeRef(EcoreUtil.copy(stringTypeRef));
+		lv2.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
 		lv2.setReadonly(true);
 		final PropertyReference ref2 = ThingMLFactory.eINSTANCE.createPropertyReference();
 		ref2.setProperty(p);
-		final CastExpression asString2 = ThingMLFactory.eINSTANCE.createCastExpression();
-		asString2.setTerm(ref2);
-		asString2.setType(stringTypeRef.getType());
-		final PlusExpression plus2 = ThingMLFactory.eINSTANCE.createPlusExpression();
-		plus2.setLhs(EcoreUtil.copy(empty));
-		plus2.setRhs(asString2);
-		lv2.setInit(plus2);
-		block.getActions().add(lv2);
+		lv2.setInit(ref2);
+		block.getActions().add(lv2);		
+		
+		final int varSize = varSize(p);
+		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
+		final FunctionCallExpression reset = ThingMLFactory.eINSTANCE.createFunctionCallExpression();
+		reset.setFunction(this.reset);
+		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		s.setIntValue(varSize);
+		reset.getParameters().add(s);
+		
+		final LocalVariable array = ThingMLFactory.eINSTANCE.createLocalVariable();
+		array.setName(p.getName() + "_log_" + counter);
+		final TypeRef byteArray = EcoreUtil.copy(byteTypeRef);
+		byteArray.setIsArray(true);
+		byteArray.setCardinality(EcoreUtil.copy(s));
+		array.setTypeRef(byteArray);
+		array.setInit(reset);
+		block.getActions().add(array);
+		
+		final VariableAssignment pa_ = ThingMLFactory.eINSTANCE.createVariableAssignment();
+		pa_.setProperty(array);
+		final IntegerLiteral e_ = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		e_.setIntValue(0);
+		pa_.setIndex(e_);
+		final ByteLiteral id_ = ThingMLFactory.eINSTANCE.createByteLiteral();
+		id_.setByteValue((byte)1);
+		pa_.setExpression(id_);
+		block.getActions().add(block.getActions().size(), pa_);
+		
+		final VariableAssignment pa0 = ThingMLFactory.eINSTANCE.createVariableAssignment();
+		pa0.setProperty(array);
+		final PropertyReference pr0 = ThingMLFactory.eINSTANCE.createPropertyReference();
+		pr0.setProperty(id);
+		final IntegerLiteral e0 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		e0.setIntValue(1);
+		pa0.setIndex(e0);
+		pa0.setExpression(pr0);
+		block.getActions().add(block.getActions().size(), pa0);
+		
+		final VariableAssignment pa1 = ThingMLFactory.eINSTANCE.createVariableAssignment();
+		pa1.setProperty(array);
+		final IntegerLiteral e1 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		e1.setIntValue(2);
+		pa1.setIndex(e1);
+		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(p, "id").get(0)));
+		pa1.setExpression(id);
+		block.getActions().add(block.getActions().size(), pa1);
+		
+		ByteHelper.serializeParam(byteTypeRef, lv, block, block.getActions().size(), 3, array);
+		ByteHelper.serializeParam(byteTypeRef, lv2, block, block.getActions().size(), (int)(3+size), array);				
 		
 		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 		send.setMessage(msg);
 		send.setPort(monitoringPort);
-		final PropertyReference id_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-		id_ref.setProperty(id);
-		send.getParameters().add(id_ref);
-		final StringLiteral name_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-		name_exp.setStringValue(p.getName());        	
-		send.getParameters().add(name_exp);
-		final StringLiteral type_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-		type_exp.setStringValue(p.getTypeRef().getType().getName());        	
-		send.getParameters().add(type_exp);
-		final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-		lv_ref.setProperty(lv);
-		send.getParameters().add(lv_ref);
-		final PropertyReference lv2_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-		lv2_ref.setProperty(lv2);
-		send.getParameters().add(lv2_ref);
+		
+		final PropertyReference array_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
+		array_ref.setProperty(array);
+		send.getParameters().add(array_ref);
 		block.getActions().add(send);
 		
 		counter++;
