@@ -269,7 +269,7 @@ public class CThingActionCompiler extends CommonThingActionCompiler {
 		String var = ctx.getVariableName(fa.getVariable());
 		String varT = context.getCType(fa.getVariable().getTypeRef().getType());
 		String size = ctx.getVariableName(fa.getArray().getProperty()) + "_size";
-		if (fa.getArray().getProperty() instanceof LocalVariable)
+		if (fa.getArray().getProperty() instanceof LocalVariable || fa.getArray().getProperty().getTypeRef().getCardinality() == null)
 			size = "sizeof(" + ctx.getVariableName(fa.getArray().getProperty()) + ")/sizeof(" + varT + ")";
 		builder.append("for(" + indexT + " " + index + " = 0; " + index + " < " + size + "; " + index + "++){\n");
 		builder.append(varT + " " + var + " = " + ctx.getVariableName(fa.getArray().getProperty()) + "[" + index + "];\n");
