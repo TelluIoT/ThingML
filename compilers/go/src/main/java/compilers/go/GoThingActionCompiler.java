@@ -72,14 +72,17 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 		if (t == Types.STRING_TYPEREF) {
 			generate(expression, cst.section("expression").surroundWith("(", ")"), ctx);
 		} else if (t == Types.INTEGER_TYPEREF || t == Types.BYTE_TYPEREF) {
+			gctx.currentThingContext.addImports("fmt");
 			cst.append("fmt.Sprintf(\"%d\", int64(");				
 			generate(expression, cst.section("expression"), ctx);
 			cst.append("))");
 		} else if (t == Types.BOOLEAN_TYPEREF) {
+			gctx.currentThingContext.addImports("fmt");
 			cst.append("fmt.Sprintf(\"%t\", ");				
 			generate(expression, cst.section("expression"), ctx);
 			cst.append(")");
 		} else if (t == Types.REAL_TYPEREF) {
+			gctx.currentThingContext.addImports("fmt");
 			cst.append("fmt.Sprintf(\"%f\", float64(");				
 			generate(expression, cst.section("expression"), ctx);
 			cst.append("))");
