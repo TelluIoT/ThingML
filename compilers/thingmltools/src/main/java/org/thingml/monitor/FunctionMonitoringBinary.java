@@ -23,6 +23,7 @@ import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallExpression;
@@ -167,19 +168,21 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
     		}
     		
     		int fSize = funcSize(f);
-    		final FunctionCallExpression reset = ThingMLFactory.eINSTANCE.createFunctionCallExpression();
-    		reset.setFunction(this.reset);
+    		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
+    		for(int i = 0; i < fSize; i++) {
+    			final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+        		s.setIntValue(0);
+        		arrayInit.getValues().add(s);
+    		}    		
     		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
     		s.setIntValue(fSize);
-    		reset.getParameters().add(s);
-    		
     		final LocalVariable array = ThingMLFactory.eINSTANCE.createLocalVariable();
     		array.setName(f.getName() + "_log");
     		final TypeRef byteArray = EcoreUtil.copy(byteTypeRef);
     		byteArray.setIsArray(true);
-    		byteArray.setCardinality(EcoreUtil.copy(s));
+    		byteArray.setCardinality(s);
     		array.setTypeRef(byteArray);
-    		array.setInit(reset);
+    		array.setInit(arrayInit);
     		
     		ActionBlock block = null;
     		if (f.getBody() instanceof ActionBlock) {

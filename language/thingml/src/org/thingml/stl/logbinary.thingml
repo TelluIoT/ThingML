@@ -13,18 +13,7 @@ thing fragment LogMsgs {
 thing fragment WithBinaryLog includes LogMsgs {
 	
 	readonly property DEBUG_BIN_ID : Byte
-	
-	function newLog(size : Integer) : Byte[] do
-		readonly var s : Integer = size
-		var a : Byte[s]
-		var i : Integer = 0
-		while(i<s) do
-			a[i] = 0
-			i++
-		end
-		return a
-	end
-	
+		
 	required port log @sync_send "true" {
 		sends log
 	}

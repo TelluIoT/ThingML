@@ -23,6 +23,7 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.Decrement;
@@ -144,19 +145,22 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		
 		final int varSize = varSize(p);
 		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
-		final FunctionCallExpression reset = ThingMLFactory.eINSTANCE.createFunctionCallExpression();
-		reset.setFunction(this.reset);
+		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
+		for(int i = 0; i < varSize; i++) {
+			final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+    		s.setIntValue(0);
+    		arrayInit.getValues().add(s);
+		}
+		
 		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
 		s.setIntValue(varSize);
-		reset.getParameters().add(s);
-		
 		final LocalVariable array = ThingMLFactory.eINSTANCE.createLocalVariable();
 		array.setName(p.getName() + "_log_" + counter);
 		final TypeRef byteArray = EcoreUtil.copy(byteTypeRef);
 		byteArray.setIsArray(true);
-		byteArray.setCardinality(EcoreUtil.copy(s));
+		byteArray.setCardinality(s);
 		array.setTypeRef(byteArray);
-		array.setInit(reset);
+		array.setInit(arrayInit);
 		block.getActions().add(array);
 		
 		final VariableAssignment pa_ = ThingMLFactory.eINSTANCE.createVariableAssignment();
