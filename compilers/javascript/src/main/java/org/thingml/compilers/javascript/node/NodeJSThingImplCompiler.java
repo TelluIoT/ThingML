@@ -45,10 +45,10 @@ public class NodeJSThingImplCompiler extends JSThingImplCompiler {
 			imports.append("const EventEmitter = require('events').EventEmitter;");
 		}
 
-		final Object literal = EcoreUtil.getObjectByType(Lists.newArrayList(thing.eAllContents()), ThingMLPackage.eINSTANCE.getEnumLiteralRef());
-		if (literal != null) {
+		//final Object literal = EcoreUtil.getObjectByType(Lists.newArrayList(thing.eAllContents()), ThingMLPackage.eINSTANCE.getEnumLiteralRef());
+		//if (literal != null) {//FIXME: this does not seem to work...
 			imports.append("const Enum = require('./enums');");
-		}		
+		//}		
 		imports.append("const Event = require('./events');");
 		builder.append("");
 

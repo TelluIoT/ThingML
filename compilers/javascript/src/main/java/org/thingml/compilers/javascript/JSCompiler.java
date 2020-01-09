@@ -108,7 +108,7 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
             if (ty instanceof Enumeration)
             	enums.add((Enumeration)ty);
 		
-		if (!enums.isEmpty()) {
+		//if (!enums.isEmpty()) {
 			ctx.addContextAnnotation("hasEnum", "true");
 			SourceBuilder builder = ctx.getSourceBuilder(getEnumPath(t, model, ctx));
 			
@@ -139,7 +139,7 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 				sec.append("exports."+e.getName()+"_ENUM = "+e.getName()+"_ENUM;");
 				sec.append("");
 			}
-		}
+		//}
 	}
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {

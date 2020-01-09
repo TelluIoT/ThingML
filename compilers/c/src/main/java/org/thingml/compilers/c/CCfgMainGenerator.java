@@ -318,8 +318,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
 
     protected void generateTypedefs(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-
-        for (Type t : ThingMLHelpers.allUsedSimpleTypes(ThingMLHelpers.findContainingModel(cfg))) {
+        for (Type t : ThingMLHelpers.allSimpleTypes(ThingMLHelpers.findContainingModel(cfg))) {
             if (t instanceof Enumeration) {
                 builder.append("// Definition of Enumeration  " + t.getName() + "\n");
                 for (EnumerationLiteral l : ((Enumeration) t).getLiterals()) {
@@ -328,7 +327,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append("\n");
             }
         }
-
     }
 
     // TODO Jakob made this public, should it not be used externally?

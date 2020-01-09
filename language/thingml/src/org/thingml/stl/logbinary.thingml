@@ -1,5 +1,13 @@
 import "datatypes.thingml" from stl
 
+enumeration LogType as Byte {
+	function_called = 0
+	property_changed = 1
+	message_lost = 2
+	message_sent = 3
+	message_handled = 4
+}
+
 thing fragment LogMsgs {	
 	message log_on()
 	message log_off()
@@ -26,6 +34,7 @@ thing fragment WithBinaryLog includes LogMsgs {
 thing fragment Logger includes LogMsgs {
 	
 	readonly property ACTIVATE_ON_STARTUP : Boolean
+	readonly property HAS_SIGNED_BYTE : Boolean
 	
 	provided port log {
 		receives log_on, log_off, log
@@ -67,21 +76,24 @@ thing ConsoleLogger includes Logger @stdout_sync "true" {
 	
 	function do_log(payload : Byte[], size : UInt8) do
 		readonly var log_type : Byte = payload[0]
-		if (log_type == 0) print "log: function_called("
-		else if (log_type == 1) print "log: property_changed("
-		else if (log_type == 2) print "log: message_lost("
-		else if (log_type == 3) print "log: message_sent("
-		else if (log_type == 4) print "log: message_handled("
-		else print "log: unknown("		
+		if (log_type == LogType:function_called)       print "log: function_called  ["
+		else if (log_type == LogType:property_changed) print "log: property_changed ["
+		else if (log_type == LogType:message_lost)     print "log: message_lost     ["
+		else if (log_type == LogType:message_sent)     print "log: message_sent     ["
+		else if (log_type == LogType:message_handled)  print "log: message_handled  ["
+		else                                           print "log: unknown          ["		
 		
 		var i : UInt8 = 0
 		while(i<size) do
 			readonly var v : Byte = payload[i] 
-			print v, ","
+			if (HAS_SIGNED_BYTE)
+				print (``& v & ` & 0xFF`) as UInt8, ","
+			else
+				print v, ","
 			i++
 		end
 		
-		println ")"
+		println "]"
 	end
 	
 }

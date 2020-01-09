@@ -33,9 +33,10 @@ import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ConditionalAction;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
-import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.PrimitiveType;
@@ -43,6 +44,7 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
@@ -66,13 +68,19 @@ public class ByteHelper {
 		varID = 0;
 	}
 	
-	public static Function getNewLog(Thing thing) {
-		for (Function f : ThingMLHelpers.allFunctions(thing)) {
-			if (f.getName().equals("newLog")) {
-				return f;
+	public static EnumerationLiteral getLogLiteral(Thing thing, String name) {
+		EnumerationLiteral result = null;
+		for(Type t : ThingMLHelpers.findContainingModel(thing).getTypes()) {
+			if (t instanceof Enumeration && t.getName().equals("LogType")) {
+				for(EnumerationLiteral l : ((Enumeration)t).getLiterals()) {
+					if (l.getName().equals(name)) {
+						result = l;
+						break;
+					}
+				}				
 			}
 		}
-		return null;
+		return result;
 	}
 	
     //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc

@@ -27,6 +27,9 @@ import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.Decrement;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.Increment;
@@ -55,14 +58,14 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 	final Port monitoringPort;
 	final Message msg;
 	final TypeRef byteTypeRef;
-	final Function reset;
+	final EnumerationLiteral lit;
 	
 	private int counter = 0;
 	
 	final StringLiteral empty;
 
 	public PropertyMonitoringBinary(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef byteTypeRef) {
-		this.reset = ByteHelper.getNewLog(thing);
+		this.lit = ByteHelper.getLogLiteral(thing, "property_changed");
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
@@ -82,7 +85,7 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 	@Override
 	public void monitor() {
 		for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			if (AnnotatedElementHelper.isDefined(p, "monitoring", "not")) continue;
+			if (AnnotatedElementHelper.isDefined(p, "monitor", "not")) continue;
 			if (p.getTypeRef().getCardinality() != null) continue;//FIXME: handle arrays
 			
 			if (!AnnotatedElementHelper.hasAnnotation(p, "id")) {
@@ -168,8 +171,9 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		final IntegerLiteral e_ = ThingMLFactory.eINSTANCE.createIntegerLiteral();
 		e_.setIntValue(0);
 		pa_.setIndex(e_);
-		final ByteLiteral id_ = ThingMLFactory.eINSTANCE.createByteLiteral();
-		id_.setByteValue((byte)1);
+		final EnumLiteralRef id_ = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
+		id_.setLiteral(lit);
+		id_.setEnum((Enumeration)lit.eContainer());
 		pa_.setExpression(id_);
 		block.getActions().add(block.getActions().size(), pa_);
 		

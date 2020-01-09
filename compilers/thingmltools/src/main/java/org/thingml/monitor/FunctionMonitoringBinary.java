@@ -25,6 +25,9 @@ import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ByteLiteral;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.IntegerLiteral;
@@ -51,10 +54,10 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 	final Port monitoringPort;
 	final Message onFunctionCalled;
 	final TypeRef byteTypeRef;
-	final Function reset;
+	final EnumerationLiteral lit;
 	
 	public FunctionMonitoringBinary(Thing thing, Property id, Port monitoringPort, Message msg, TypeRef byteTypeRef) {
-		this.reset = ByteHelper.getNewLog(thing);
+		lit = ByteHelper.getLogLiteral(thing, "function_called");
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
@@ -89,8 +92,9 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		final IntegerLiteral e_ = ThingMLFactory.eINSTANCE.createIntegerLiteral();
 		e_.setIntValue(index++);
 		pa_.setIndex(e_);
-		final ByteLiteral id_ = ThingMLFactory.eINSTANCE.createByteLiteral();
-		id_.setByteValue((byte)0);
+		final EnumLiteralRef id_ = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
+		id_.setLiteral(lit);
+		id_.setEnum((Enumeration)lit.eContainer());
 		pa_.setExpression(id_);
 		block.getActions().add(blockIndex++, pa_);
 		

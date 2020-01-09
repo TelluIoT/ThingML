@@ -65,7 +65,7 @@ public class PropertyMonitoring implements MonitoringAspect {
 	@Override
 	public void monitor() {
 		for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			if (AnnotatedElementHelper.isDefined(p, "monitoring", "not")) continue;
+			if (AnnotatedElementHelper.isDefined(p, "monitor", "not")) continue;
 			if (p.getTypeRef().getCardinality() != null) continue;//FIXME: handle arrays
 			
 			for(Increment assign : ActionHelper.getAllActions(thing, Increment.class)) {
