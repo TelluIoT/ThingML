@@ -35,6 +35,8 @@ public class CThingActionCompilerArduino extends CThingActionCompiler {
 			builder.append("String(");
 			generate(exp.getTerm(), builder, ctx);
 			builder.append(")");
+		} else {
+			generate(exp.getTerm(), builder, ctx);
 		}
 	}
 	

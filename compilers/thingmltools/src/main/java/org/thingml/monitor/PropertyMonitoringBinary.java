@@ -204,6 +204,9 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		array_ref.setProperty(array);
 		send.getParameters().add(array_ref);
 		block.getActions().add(send);
+		final IntegerLiteral si = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		si.setIntValue(varSize);
+		send.getParameters().add(si);
 		
 		counter++;
 	}

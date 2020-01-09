@@ -4,7 +4,7 @@ thing fragment LogMsgs {
 	message log_on()
 	message log_off()
 	
-	message log(payload : Byte[]) //payload[0]: 0=function, 1=variables, 2-4=events	
+	message log(payload : Byte[], size : UInt8) //payload[0]: 0=function, 1=variables, 2-4=events	
 }
 
 /*
@@ -31,7 +31,7 @@ thing fragment Logger includes LogMsgs {
 		receives log_on, log_off, log
 	}
 	
-	abstract function do_log(payload : Byte[])
+	abstract function do_log(payload : Byte[], size : UInt8)
 		
 	statechart init STARTUP {
 		
@@ -48,7 +48,7 @@ thing fragment Logger includes LogMsgs {
 		state ON {
 			
 			internal event d : log?log
-			action do_log(d.payload)
+			action do_log(d.payload, d.size)
 						
 			transition -> OFF
 			event log?log_off
@@ -65,7 +65,7 @@ thing fragment Logger includes LogMsgs {
 
 thing ConsoleLogger includes Logger @stdout_sync "true" {
 	
-	function do_log(payload : Byte[]) do
+	function do_log(payload : Byte[], size : UInt8) do
 		readonly var log_type : Byte = payload[0]
 		if (log_type == 0) print "log: function_called("
 		else if (log_type == 1) print "log: property_changed("
@@ -73,9 +73,14 @@ thing ConsoleLogger includes Logger @stdout_sync "true" {
 		else if (log_type == 3) print "log: message_sent("
 		else if (log_type == 4) print "log: message_handled("
 		else print "log: unknown("		
-		for(v : Byte in payload) do
+		
+		var i : UInt8 = 0
+		while(i<size) do
+			readonly var v : Byte = payload[i] 
 			print v, ","
+			i++
 		end
+		
 		println ")"
 	end
 	

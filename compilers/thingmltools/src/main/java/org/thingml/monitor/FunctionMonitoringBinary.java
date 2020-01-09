@@ -200,12 +200,13 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
     		if (AnnotatedElementHelper.isDefined(f, "monitor", "not")) continue;
     		
     		final LocalVariable array = (LocalVariable)((ActionBlock)f.getBody()).getActions().get(0);
+    		int fSize = funcSize(f);
     		
     		//Send monitoring message before each return statement (or as the first statement in the function)
         	if (f.getTypeRef() == null) {
         		ActionBlock block = (ActionBlock)f.getBody();
         		final ActionBlock b = setArray(f, null);
-        		final Action send = buildSendAction(f);        		
+        		final Action send = buildSendAction(f, fSize);        		
         		b.getActions().add(send);
         		block.getActions().add(b);
         	} else {
@@ -240,14 +241,14 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
                 	ra.setExp(ref_var);
                 	block.getActions().add(block.getActions().indexOf(ra), var_return);
         				        			     			
-            		int fSize = funcSize(f);
+            		
                 	
                 	final ActionBlock b = setArray(f, ra);
                 	final long size = ((PrimitiveType)var_return.getTypeRef().getType()).getByteSize();
                 	serializeParam(ref_var, b, b.getActions().size()-1, (int)(fSize-size), array);                	        			
         			block.getActions().add(block.getActions().indexOf(ra), b);
         			        			
-        			final Action send = buildSendAction(f);        		
+        			final Action send = buildSendAction(f, fSize);        		
             		block.getActions().add(block.getActions().indexOf(ra), send);    		            		
         		}
         		
@@ -256,7 +257,7 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
     }
 
 
-	private Action buildSendAction(Function f) {
+	private Action buildSendAction(Function f, int size) {
 		final LocalVariable array = (LocalVariable)((ActionBlock)f.getBody()).getActions().get(0);
 		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 		send.setMessage(onFunctionCalled);
@@ -264,6 +265,9 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		final PropertyReference va_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 		va_ref.setProperty(array);
 		send.getParameters().add(va_ref);
+		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		s.setIntValue(size);
+		send.getParameters().add(s);
 		return send;
 	}
 	
