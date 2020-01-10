@@ -23,22 +23,15 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
-import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ByteLiteral;
-import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
-import org.thingml.xtext.thingML.Function;
-import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PlatformAnnotation;
-import org.thingml.xtext.thingML.PlusExpression;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
@@ -86,14 +79,7 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 	public void monitor() {
 		for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
 			if (AnnotatedElementHelper.isDefined(p, "monitor", "not")) continue;
-			if (p.getTypeRef().getCardinality() != null) continue;//FIXME: handle arrays
-			
-			if (!AnnotatedElementHelper.hasAnnotation(p, "id")) {
-    			final PlatformAnnotation a = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-    			a.setName("id");
-    			a.setValue(String.valueOf(ByteHelper.varID()));
-    			p.getAnnotations().add(a);
-    		}
+			if (p.getTypeRef().getCardinality() != null) continue;//FIXME: handle arrays			
 			
 			for(Increment assign : ActionHelper.getAllActions(thing, Increment.class)) {
 				if (!(assign.getVar() == p)) continue;
@@ -147,54 +133,24 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		block.getActions().add(lv2);		
 		
 		final int varSize = varSize(p);
-		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
-		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
-		for(int i = 0; i < varSize; i++) {
-			final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-    		s.setIntValue(0);
-    		arrayInit.getValues().add(s);
-		}
-		
-		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		s.setIntValue(varSize);
-		final LocalVariable array = ThingMLFactory.eINSTANCE.createLocalVariable();
-		array.setName(p.getName() + "_log_" + counter);
-		final TypeRef byteArray = EcoreUtil.copy(byteTypeRef);
-		byteArray.setIsArray(true);
-		byteArray.setCardinality(s);
-		array.setTypeRef(byteArray);
-		array.setInit(arrayInit);
+		final LocalVariable array = ByteHelper.arrayInit(varSize, p.getName() + "_log_" + counter, EcoreUtil.copy(byteTypeRef));
+		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();		
 		block.getActions().add(array);
 		
-		final VariableAssignment pa_ = ThingMLFactory.eINSTANCE.createVariableAssignment();
-		pa_.setProperty(array);
-		final IntegerLiteral e_ = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		e_.setIntValue(0);
-		pa_.setIndex(e_);
 		final EnumLiteralRef id_ = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
 		id_.setLiteral(lit);
 		id_.setEnum((Enumeration)lit.eContainer());
-		pa_.setExpression(id_);
+		final VariableAssignment pa_ = ByteHelper.insertAt(array, 0, id_);		
 		block.getActions().add(block.getActions().size(), pa_);
 		
-		final VariableAssignment pa0 = ThingMLFactory.eINSTANCE.createVariableAssignment();
-		pa0.setProperty(array);
 		final PropertyReference pr0 = ThingMLFactory.eINSTANCE.createPropertyReference();
 		pr0.setProperty(id);
-		final IntegerLiteral e0 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		e0.setIntValue(1);
-		pa0.setIndex(e0);
-		pa0.setExpression(pr0);
+		final VariableAssignment pa0 = ByteHelper.insertAt(array, 1, pr0);		
 		block.getActions().add(block.getActions().size(), pa0);
 		
-		final VariableAssignment pa1 = ThingMLFactory.eINSTANCE.createVariableAssignment();
-		pa1.setProperty(array);
-		final IntegerLiteral e1 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		e1.setIntValue(2);
-		pa1.setIndex(e1);
 		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
 		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(p, "id").get(0)));
-		pa1.setExpression(id);
+		final VariableAssignment pa1 = ByteHelper.insertAt(array, 2, id);
 		block.getActions().add(block.getActions().size(), pa1);
 		
 		ByteHelper.serializeParam(byteTypeRef, lv, block, block.getActions().size(), 3, array);

@@ -23,18 +23,15 @@ import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
-import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Function;
-import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
@@ -87,57 +84,31 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		int blockIndex = 0;
 		int index = 0;					
 		
-		final VariableAssignment pa_ = ThingMLFactory.eINSTANCE.createVariableAssignment();
-		pa_.setProperty(array);
-		final IntegerLiteral e_ = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		e_.setIntValue(index++);
-		pa_.setIndex(e_);
 		final EnumLiteralRef id_ = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
 		id_.setLiteral(lit);
 		id_.setEnum((Enumeration)lit.eContainer());
-		pa_.setExpression(id_);
+		final VariableAssignment pa_ = ByteHelper.insertAt(array, index++, id_);
 		block.getActions().add(blockIndex++, pa_);
 		
-		final VariableAssignment pa0 = ThingMLFactory.eINSTANCE.createVariableAssignment();
-		pa0.setProperty(array);
 		final PropertyReference pr0 = ThingMLFactory.eINSTANCE.createPropertyReference();
 		pr0.setProperty(id);
-		final IntegerLiteral e0 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		e0.setIntValue(index++);
-		pa0.setIndex(e0);
-		pa0.setExpression(pr0);
+		final VariableAssignment pa0 = ByteHelper.insertAt(array, index++, pr0);
 		block.getActions().add(blockIndex++, pa0);
 		
-		final VariableAssignment pa1 = ThingMLFactory.eINSTANCE.createVariableAssignment();
-		pa1.setProperty(array);
-		final IntegerLiteral e1 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-		e1.setIntValue(index++);
-		pa1.setIndex(e1);
 		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
-		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(f, "id").get(0)));
-		pa1.setExpression(id);
+		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(f, "id").get(0)));		
+		final VariableAssignment pa1 = ByteHelper.insertAt(array, index++, id);
 		block.getActions().add(blockIndex++, pa1);
 		
 		if (ra != null) {
-			//TODO: Assign on byte code to each datatype (instead of just using 0 for void and 1 for not void...)
-			final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
-			pa2.setProperty(array);
-			final IntegerLiteral e2 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-			e2.setIntValue(index++);
-			pa2.setIndex(e2);
 			final ByteLiteral id2 = ThingMLFactory.eINSTANCE.createByteLiteral();
-			id2.setByteValue((byte)1);
-			pa2.setExpression(id2);
+			id2.setByteValue(Byte.valueOf(AnnotatedElementHelper.firstAnnotation(f.getTypeRef().getType(), "id")));
+			final VariableAssignment pa2 = ByteHelper.insertAt(array, index++, id2);			
 			block.getActions().add(blockIndex++, pa2);
 		} else {
-			final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
-			pa2.setProperty(array);
-			final IntegerLiteral e2 = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-			e2.setIntValue(index++);
-			pa2.setIndex(e2);
 			final ByteLiteral id2 = ThingMLFactory.eINSTANCE.createByteLiteral();
-			id2.setByteValue((byte)0);
-			pa2.setExpression(id2);
+			id2.setByteValue((byte)0);			
+			final VariableAssignment pa2 = ByteHelper.insertAt(array, index++, id2);
 			block.getActions().add(blockIndex++, pa2);
 		}		
 		
@@ -152,41 +123,13 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 
 	@Override
 	public void monitor() {  
-		
-		if (!AnnotatedElementHelper.hasAnnotation(thing, "id")) {
-			final PlatformAnnotation a = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-			a.setName("id");
-			a.setValue(String.valueOf(ByteHelper.thingID()));
-			thing.getAnnotations().add(a);
-		}
-		
+				
     	for(Function f : thing.getFunctions()) {
     		if (f.isAbstract()) continue;
     		if (AnnotatedElementHelper.isDefined(f, "monitor", "not")) continue;    		    		
-    		    		
-    		if (!AnnotatedElementHelper.hasAnnotation(f, "id")) {
-    			final PlatformAnnotation a = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-    			a.setName("id");
-    			a.setValue(String.valueOf(ByteHelper.functionID()));
-    			f.getAnnotations().add(a);
-    		}
     		
     		int fSize = funcSize(f);
-    		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
-    		for(int i = 0; i < fSize; i++) {
-    			final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-        		s.setIntValue(0);
-        		arrayInit.getValues().add(s);
-    		}    		
-    		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-    		s.setIntValue(fSize);
-    		final LocalVariable array = ThingMLFactory.eINSTANCE.createLocalVariable();
-    		array.setName(f.getName() + "_log");
-    		final TypeRef byteArray = EcoreUtil.copy(byteTypeRef);
-    		byteArray.setIsArray(true);
-    		byteArray.setCardinality(s);
-    		array.setTypeRef(byteArray);
-    		array.setInit(arrayInit);
+    		final LocalVariable array = ByteHelper.arrayInit(fSize, f.getName() + "_log", EcoreUtil.copy(byteTypeRef));
     		
     		ActionBlock block = null;
     		if (f.getBody() instanceof ActionBlock) {
@@ -243,9 +186,7 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
         			final PropertyReference ref_var = ThingMLFactory.eINSTANCE.createPropertyReference();
                 	ref_var.setProperty(var_return);
                 	ra.setExp(ref_var);
-                	block.getActions().add(block.getActions().indexOf(ra), var_return);
-        				        			     			
-            		
+                	block.getActions().add(block.getActions().indexOf(ra), var_return);            		
                 	
                 	final ActionBlock b = setArray(f, ra);
                 	final long size = ((PrimitiveType)var_return.getTypeRef().getType()).getByteSize();
@@ -259,7 +200,6 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
         	}
     	}
     }
-
 
 	private Action buildSendAction(Function f, int size) {
 		final LocalVariable array = (LocalVariable)((ActionBlock)f.getBody()).getActions().get(0);

@@ -31,10 +31,12 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.ArrayInit;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.IntegerLiteral;
@@ -54,18 +56,24 @@ public class ByteHelper {
 	private static byte thingID = 0;
 	private static byte functionID = 0;
 	private static byte messageID = 0;
+	private static byte portID = 0;
 	private static byte varID = 0;
+	private static byte datatypeID = 1; //0 is for void e.g. for functions that return nothing
 	
 	public static byte thingID() {return thingID++;} 
 	public static byte functionID() {return functionID++;}
 	public static byte messageID() {return messageID++;}
+	public static byte portID() {return portID++;}
 	public static byte varID() {return varID++;}
+	public static byte datatypeID() {return datatypeID++;}
 	
 	public static void reset() {
 		thingID = 0;
 		functionID = 0;
 		messageID = 0;
 		varID = 0;
+		portID = 0;
+		datatypeID = 1;
 	}
 	
 	public static EnumerationLiteral getLogLiteral(Thing thing, String name) {
@@ -81,6 +89,35 @@ public class ByteHelper {
 			}
 		}
 		return result;
+	}
+	
+	public static VariableAssignment insertAt(Variable array, int index, Expression e) {
+		final VariableAssignment pa_ = ThingMLFactory.eINSTANCE.createVariableAssignment();
+		pa_.setProperty(array);
+		final IntegerLiteral e_ = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		e_.setIntValue(index);
+		pa_.setIndex(e_);
+		pa_.setExpression(e);
+		return pa_;
+	}
+	
+	public static LocalVariable arrayInit(int size, String name, TypeRef t) {
+		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
+		for(int i = 0; i < size; i++) {
+			final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+    		s.setIntValue(0);
+    		arrayInit.getValues().add(s);
+		}    		
+		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+		s.setIntValue(size);
+		final LocalVariable array = ThingMLFactory.eINSTANCE.createLocalVariable();
+		array.setName(name);
+		final TypeRef byteArray = EcoreUtil.copy(t);
+		byteArray.setIsArray(true);
+		byteArray.setCardinality(s);
+		array.setTypeRef(byteArray);
+		array.setInit(arrayInit);
+		return array;
 	}
 	
     //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc
@@ -135,44 +172,24 @@ public class ByteHelper {
 				c.setAction(pa);
 				block.getActions().add(blockIndex++, lv);
 				block.getActions().add(blockIndex++, c);
-				
-				final VariableAssignment pa2 = ThingMLFactory.eINSTANCE.createVariableAssignment();
-				pa2.setProperty(array);
-				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-				e.setIntValue(index++);
-				pa2.setIndex(e);
+								
 				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
 				pr.setProperty(lv);				
-				pa2.setExpression(pr);
+				final VariableAssignment pa2 = insertAt(array, index++, pr);				
 				block.getActions().add(blockIndex++, pa2);
 			} else {	
 				final CastExpression c = ThingMLFactory.eINSTANCE.createCastExpression();
 				c.setType(byteTypeRef.getType());
-				
-				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
-				pa.setProperty(array);
-				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-				e.setIntValue(index++);
-				pa.setIndex(e);
 				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
 				pr.setProperty(param);								
-				c.setTerm(pr);
-				pa.setExpression(c);
+				c.setTerm(pr);								
+				final VariableAssignment pa = insertAt(array, index++, c);		
 				block.getActions().add(blockIndex++, pa);
 			}
 		} else {
 			for (int j = 0; j < size; j++) {
-				final CastExpression c = ThingMLFactory.eINSTANCE.createCastExpression();
-				c.setType(byteTypeRef.getType());
-				
-				final VariableAssignment pa = ThingMLFactory.eINSTANCE.createVariableAssignment();
-				pa.setProperty(array);
-				final IntegerLiteral e = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-				e.setIntValue(index++);
-				pa.setIndex(e);
 				final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
-				pr.setProperty(param);														
-				
+				pr.setProperty(param);																		
 				final CastExpression cast = ThingMLFactory.eINSTANCE.createCastExpression();
 				cast.setType(byteTypeRef.getType());
 				final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();	                			
@@ -183,9 +200,8 @@ public class ByteHelper {
 				bitshift.setExpression(" >> "+8*(size-1-j)+") & 0xFF)");
 				expr.getSegments().add(bitshift);
 				group.setTerm(expr);
-				cast.setTerm(group);
-				
-				pa.setExpression(cast);
+				cast.setTerm(group);								
+				final VariableAssignment pa = insertAt(array, index++, cast);		
 				block.getActions().add(blockIndex++, pa);
 			}
 		}
