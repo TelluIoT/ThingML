@@ -33,6 +33,7 @@ import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.RequiredPort;
+import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -143,6 +144,12 @@ public class BinaryMonitorGenerator extends ThingMLTool {
     			ma.setName("id");
     			ma.setValue(Byte.toString(ByteHelper.datatypeID()));
     			t.getAnnotations().add(ma);
+    		} else if (o instanceof State) {
+    			final State s = (State) o;    			
+    			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
+    			ma.setName("id");
+    			ma.setValue(Byte.toString(ByteHelper.stateID()));
+    			s.getAnnotations().add(ma);
     		} 
     	}
     	

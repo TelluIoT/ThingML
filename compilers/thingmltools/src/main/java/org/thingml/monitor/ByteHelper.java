@@ -55,10 +55,11 @@ public class ByteHelper {
 
 	private static byte thingID = 0;
 	private static byte functionID = 0;
-	private static byte messageID = 0;
-	private static byte portID = 0;
+	private static byte messageID = 1;   //0 is for empty event (auto-transition)
+	private static byte portID = 1;      //0 is for empty event (auto-transition)
 	private static byte varID = 0;
-	private static byte datatypeID = 1; //0 is for void e.g. for functions that return nothing
+	private static byte datatypeID = 1;  //0 is for void e.g. for functions that return nothing
+	private static byte stateID = 0;
 	
 	public static byte thingID() {return thingID++;} 
 	public static byte functionID() {return functionID++;}
@@ -66,14 +67,16 @@ public class ByteHelper {
 	public static byte portID() {return portID++;}
 	public static byte varID() {return varID++;}
 	public static byte datatypeID() {return datatypeID++;}
+	public static byte stateID() {return stateID++;}
 	
 	public static void reset() {
 		thingID = 0;
 		functionID = 0;
-		messageID = 0;
+		messageID = 1;
 		varID = 0;
-		portID = 0;
+		portID = 1;
 		datatypeID = 1;
+		stateID = 0;
 	}
 	
 	public static EnumerationLiteral getLogLiteral(Thing thing, String name) {

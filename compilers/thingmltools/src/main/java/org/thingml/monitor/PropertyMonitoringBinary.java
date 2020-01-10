@@ -137,24 +137,27 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();		
 		block.getActions().add(array);
 		
+		int index = 0;
+		
 		final EnumLiteralRef id_ = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
 		id_.setLiteral(lit);
 		id_.setEnum((Enumeration)lit.eContainer());
-		final VariableAssignment pa_ = ByteHelper.insertAt(array, 0, id_);		
+		final VariableAssignment pa_ = ByteHelper.insertAt(array, index++, id_);		
 		block.getActions().add(block.getActions().size(), pa_);
 		
 		final PropertyReference pr0 = ThingMLFactory.eINSTANCE.createPropertyReference();
 		pr0.setProperty(id);
-		final VariableAssignment pa0 = ByteHelper.insertAt(array, 1, pr0);		
+		final VariableAssignment pa0 = ByteHelper.insertAt(array, index++, pr0);		
 		block.getActions().add(block.getActions().size(), pa0);
 		
 		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
 		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(p, "id").get(0)));
-		final VariableAssignment pa1 = ByteHelper.insertAt(array, 2, id);
+		final VariableAssignment pa1 = ByteHelper.insertAt(array, index++, id);
 		block.getActions().add(block.getActions().size(), pa1);
 		
-		ByteHelper.serializeParam(byteTypeRef, lv, block, block.getActions().size(), 3, array);
-		ByteHelper.serializeParam(byteTypeRef, lv2, block, block.getActions().size(), (int)(3+size), array);				
+		ByteHelper.serializeParam(byteTypeRef, lv, block, block.getActions().size(), index, array);
+		index += size;
+		ByteHelper.serializeParam(byteTypeRef, lv2, block, block.getActions().size(), index, array);				
 		
 		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 		send.setMessage(msg);
