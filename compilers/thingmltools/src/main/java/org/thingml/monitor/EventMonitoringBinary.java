@@ -295,7 +295,7 @@ public class EventMonitoringBinary implements MonitoringAspect {
 	 * Adds handler in the top state machine for all events.
 	 * This will catch all events that are not handled at a lower level
 	 */
-	private void catchLostMessages(CompositeState root) {/*
+	private void catchLostMessages(CompositeState root) {
 		for(Port p : thing.getPorts()) {
 			for(Message m : p.getReceives()) {
 				if (AnnotatedElementHelper.isDefined(p, "monitor", "not") || AnnotatedElementHelper.isDefined(m, "monitor", "not")) continue;
@@ -347,67 +347,70 @@ public class EventMonitoringBinary implements MonitoringAspect {
 						ref.setParameter(newParam);
 					}
 					
-					final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
+					final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
+					final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();					
 					send.setPort(monitoringPort);
-					send.setMessage(lost_msg);
-										
+					send.setMessage(log_msg);
+					
+					final int size = messageSize(m);
+					final String name = m.getName() + "lost_log_" + counter++;
+					
+					final LocalVariable array = ByteHelper.arrayInit(size, name, EcoreUtil.copy(byteTypeRef));
+					block.getActions().add(array);
+					final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+					pr.setProperty(array);
+					send.getParameters().add(pr);
+					final IntegerLiteral is = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+					is.setIntValue(size);
+					send.getParameters().add(is);
+					
+					int index = 0;
+					final EnumerationLiteral lit = ByteHelper.getLogLiteral(thing, "message_lost");
+					final EnumLiteralRef litRef = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
+					litRef.setLiteral(lit);
+					litRef.setEnum((Enumeration)lit.eContainer());
+					final VariableAssignment va = ByteHelper.insertAt(array, index++, litRef);
+					block.getActions().add(va);
+					
 					final PropertyReference id_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
 					id_ref.setProperty(id);
-					send.getParameters().add(id_ref);
-					final StringLiteral port_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-					port_exp.setStringValue(p.getName());        	
-					send.getParameters().add(port_exp);
-					final StringLiteral m_exp = ThingMLFactory.eINSTANCE.createStringLiteral();
-					m_exp.setStringValue(m.getName());        	
-					send.getParameters().add(m_exp);
+					final VariableAssignment va0 = ByteHelper.insertAt(array, index++, id_ref);
+					block.getActions().add(va0);
 					
-					final ActionBlock block = ThingMLFactory.eINSTANCE.createActionBlock();
-					if (m.getParameters().size() > 0) {
-						final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
-						lv.setName("params");
-						lv.setTypeRef(EcoreUtil.copy(stringTypeRef));
-						lv.setReadonly(true);
-						Expression init = EcoreUtil.copy(empty);							
-						for(Parameter param : rm.getMessage().getParameters()) {
-							final PlusExpression concat = ThingMLFactory.eINSTANCE.createPlusExpression();	
-							final ExpressionGroup group_name = ThingMLFactory.eINSTANCE.createExpressionGroup();
-							final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();
-							final PlusExpression plus_comma = ThingMLFactory.eINSTANCE.createPlusExpression();
-							final PlusExpression plus_name = ThingMLFactory.eINSTANCE.createPlusExpression();
-							final StringLiteral name = ThingMLFactory.eINSTANCE.createStringLiteral();
-							name.setStringValue(param.getName() + "=");
-							final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
-							r_ref.setParameter(param);
-							r_ref.setReceiveMsg(rm);
-							final CastExpression asString = ThingMLFactory.eINSTANCE.createCastExpression();
-							asString.setTerm(r_ref);
-							asString.setType(stringTypeRef.getType());
-							plus_comma.setLhs(asString);
-							plus_comma.setRhs(EcoreUtil.copy(comma));
-							group.setTerm(plus_comma);
-							plus_name.setLhs(name);
-							plus_name.setRhs(group);
-							group_name.setTerm(plus_name);
-							concat.setLhs(init);
-							concat.setRhs(group_name);
-							init = concat;
-						}
-						lv.setInit(init);
-						block.getActions().add(lv);
-						final PropertyReference lv_ref = ThingMLFactory.eINSTANCE.createPropertyReference();
-						lv_ref.setProperty(lv);
-						send.getParameters().add(lv_ref);  
-					} else {
-						send.getParameters().add(EcoreUtil.copy(empty));
+					final byte portID = getPortID(p);
+					final byte msgID = getMessageID(m);
+					
+					final ByteLiteral port_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
+					port_exp.setByteValue(portID);
+					final VariableAssignment va1 = ByteHelper.insertAt(array, index++, port_exp);
+					block.getActions().add(va1);
+								
+					final ByteLiteral m_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
+					m_exp.setByteValue(msgID);
+					final VariableAssignment va2 = ByteHelper.insertAt(array, index++, m_exp);
+					block.getActions().add(va2);										
+											
+					for(Parameter param : rm.getMessage().getParameters()) {
+						final EventReference r_ref = ThingMLFactory.eINSTANCE.createEventReference();
+						r_ref.setParameter(param);
+						r_ref.setReceiveMsg(rm);
+						final LocalVariable var = ThingMLFactory.eINSTANCE.createLocalVariable();
+						var.setName("ref_" + param.getName() + counter++);
+						var.setInit(r_ref);
+						var.setReadonly(true);
+						var.setTypeRef(EcoreUtil.copy(param.getTypeRef()));
+						block.getActions().add(var);
+						ByteHelper.serializeParam(byteTypeRef, var, block, block.getActions().size(), index, array);
+						final long s = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
+						index += s;
 					}
-		    		
-		    		
+							    		
 		    		block.getActions().add(send);					
 					it.setAction(block);										
 					root.getInternal().add(it);
 				}
 			}
-		}*/
+		}
 	}
 	
 }
