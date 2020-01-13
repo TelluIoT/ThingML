@@ -169,8 +169,6 @@ public class CThingActionCompiler extends CommonThingActionCompiler {
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         CCompilerContext nctx = (CCompilerContext) ctx;
         if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
-        	if (expression.getProperty() instanceof Parameter && expression.getProperty().getTypeRef().isIsArray())
-        		builder.append("&");
             builder.append(expression.getProperty().getName());
         } else if (expression.getProperty() instanceof Property) {
             if (!ctx.getAtInitTimeLock()) {
@@ -274,7 +272,7 @@ public class CThingActionCompiler extends CommonThingActionCompiler {
 		if (fa.getArray().getProperty() instanceof LocalVariable || fa.getArray().getProperty().getTypeRef().getCardinality() == null)
 			size = "sizeof(" + ctx.getVariableName(fa.getArray().getProperty()) + ")/sizeof(" + varT + ")";
 		builder.append("for(" + indexT + " " + index + " = 0; " + index + " < " + size + "; " + index + "++){\n");
-		builder.append(varT + " " + var + " = " + ((fa.getArray().getProperty() instanceof Parameter)?"&":"") +ctx.getVariableName(fa.getArray().getProperty()) + "[" + index + "];\n");
+		builder.append(varT + " " + var + " = " +ctx.getVariableName(fa.getArray().getProperty()) + "[" + index + "];\n");
 		generate(fa.getAction(), builder, ctx);
 		builder.append("}\n");		
 	}

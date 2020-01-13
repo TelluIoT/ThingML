@@ -622,15 +622,15 @@ public abstract class CCompilerContext extends Context {
         result += 2; // to store the id of the source instance
         String res = "";
         for (Parameter p : m.getParameters()) {
-            if(p.getTypeRef().isIsArray()) {
+            if(p.getTypeRef().isIsArray() && p.getTypeRef().getCardinality() != null) {
                 StringBuilder cardBuilder = new StringBuilder();
                 getCompiler().getThingActionCompiler().generate(p.getTypeRef().getCardinality(), cardBuilder, this);
                 if (p.getTypeRef().getType() instanceof ObjectType)
                 	res += " + (" + cardBuilder + " * sizeof(void *))";
                 else res += " + (" + cardBuilder + " * " + getCByteSize(p.getTypeRef().getType(), 0) + ")";
-            } else {
-            	
+            } else {            	
             	if (p.getTypeRef().getType() instanceof ObjectType) res += " + sizeof(void *)";
+            	else if (p.getTypeRef().isIsArray() && p.getTypeRef().getCardinality() == null) res += " + sizeof(" + getCType(p.getTypeRef().getType()) + " *)";
             	else result += this.getCByteSize(p.getTypeRef().getType(), 0);
             	
                 
@@ -698,8 +698,7 @@ public abstract class CCompilerContext extends Context {
     public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
         long i = getCByteSize(t, 0);
         String v = variable;
-        if (isPointer(t)) {
-        	
+        if (isPointer(t)) {        	
         	if (getCType(t).equals("char *") && !pt.getTypeRef().isIsArray()) { // This is a null terminated String.
         		builder.append("// Enqueue the pointer to a dynamically allocated copy of the String\n");
         		builder.append("char * _"+ variable +"_strcpy = _malloc_string_copy("+variable+");\n");
@@ -710,7 +709,7 @@ public abstract class CCompilerContext extends Context {
                 throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         	}
         } else {
-            if(pt.getTypeRef().isIsArray()) {
+            if(pt.getTypeRef().isIsArray() && pt.getTypeRef().getCardinality() != null) {
                 
                 StringBuilder cardBuilder = new StringBuilder();
                 getCompiler().getThingActionCompiler().generate(pt.getTypeRef().getCardinality(), cardBuilder, this);
