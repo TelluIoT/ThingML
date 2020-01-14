@@ -98,7 +98,7 @@ public class CCompilerContextArduino extends CCompilerContext {
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {
         ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
 
-        // FIXME: Extract the arduino specific part bellow
+        // FIXME: Extract the arduino specific part below
 
         Thing arduino_scheduler = null;
         for (Thing t : ThingMLHelpers.allThings(model)) {

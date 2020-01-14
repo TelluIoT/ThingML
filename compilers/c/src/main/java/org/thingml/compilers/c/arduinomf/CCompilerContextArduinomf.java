@@ -63,7 +63,7 @@ public class CCompilerContextArduinomf extends CCompilerContextArduino {
         }
 
         for (String f : modules) {
-        	writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + f + "pp","#include \"" +f.substring(0,f.length() - 1)   +"h\"\n"+ generatedCode.get(f).toString());
+        	writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + f + "pp","#include \"thingml_typedefs.h\"\n#include \"" +f.substring(0,f.length() - 1)   +"h\"\n"+ generatedCode.get(f).toString());
             pde.append(generatedCode.get(f).toString());
         }
 

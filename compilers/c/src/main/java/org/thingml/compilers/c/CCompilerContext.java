@@ -465,7 +465,7 @@ public abstract class CCompilerContext extends Context {
         String ret = "";
         for (Parameter p : m.getParameters()) {
             ret += "_" + getCType(p.getTypeRef().getType());
-            if (p.getTypeRef().getCardinality() != null) ret+= "_ptr";
+            if (p.getTypeRef().isIsArray()) ret+= "_ptr";
         }
         return(ret);
     }
@@ -528,7 +528,7 @@ public abstract class CCompilerContext extends Context {
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
             builder.append(getCType(p.getTypeRef().getType()));
-            if (p.getTypeRef().getCardinality() != null) builder.append("*");
+            if (p.getTypeRef().isIsArray()) builder.append("*");
             builder.append(" param_" + p.getName());
         }
         builder.append(")");
@@ -551,7 +551,7 @@ public abstract class CCompilerContext extends Context {
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
             builder.append(getCType(p.getTypeRef().getType()));
-            if (p.getTypeRef().getCardinality() != null) builder.append("*");
+            if (p.getTypeRef().isIsArray()) builder.append("*");
             builder.append(" " + p.getName());
         }
         builder.append(")");
@@ -560,7 +560,7 @@ public abstract class CCompilerContext extends Context {
     public void appendFormalParameterDeclarations(StringBuilder builder, Message m) {
         for (Parameter p : m.getParameters()) {
             builder.append(getCType(p.getTypeRef().getType()));
-            if (p.getTypeRef().getCardinality() != null) builder.append("*");
+            if (p.getTypeRef().isIsArray()) builder.append("*");
             builder.append(" " + p.getName());
             builder.append(";\n");
         }
@@ -591,7 +591,7 @@ public abstract class CCompilerContext extends Context {
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
             builder.append(getCType(p.getTypeRef().getType()));
-            if (p.getTypeRef().getCardinality() != null) builder.append("*");
+            if (p.getTypeRef().isIsArray()) builder.append("*");
         }
         builder.append(")");
     }

@@ -18,6 +18,8 @@ package org.thingml.compilers.c.arduinomf;
 
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Thing;
 
 /**
@@ -31,6 +33,14 @@ public class CThingApiCompilerArduinomf extends CThingApiCompiler {
         builder.append("// generateEventHandlers2\nint " + ctx.getEmptyHandlerName(thing));
         ctx.appendFormalParametersEmptyHandler(thing, builder);
         builder.append(";\n");
+        
+        for (Function f : thing.getFunctions()) {
+        	if (AnnotatedElementHelper.isDefined(f, "scheduler_polling", "true")) { 
+        		builder.append("void f_" + thing.getName() + "_" + f.getName() + "(struct " + thing.getName() + "_Instance *_instance);\n");
+        		break;
+        	}
+        }
+        
         super.generatePublicPrototypes(thing, builder, ctx);
     }
 
