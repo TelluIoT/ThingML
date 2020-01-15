@@ -260,7 +260,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             builder.append("uint8_t mbufi_" + m.getName() + " = 2;\n");
 
             for (Parameter pt : m.getParameters()) {
-                if(pt.getTypeRef().isIsArray()) {
+                if(pt.getTypeRef().isIsArray() && pt.getTypeRef().getCardinality() != null) {
                     StringBuilder cardBuilder = new StringBuilder();
                     ctx.getCompiler().getThingActionCompiler().generate(pt.getTypeRef().getCardinality(), cardBuilder, ctx);
                     String v = m.getName() + "_" + pt.getName();
