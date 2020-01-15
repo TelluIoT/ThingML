@@ -681,22 +681,9 @@ public abstract class CCompilerContext extends Context {
         return t instanceof ObjectType;
 
         }
-/*
-    public boolean hasByteBuffer(Type t) {
-        return AnnotatedElementHelper.hasAnnotation(t, "c_byte_buffer");
-    }
 
-    public String byteBufferName(Type t) {
-        if (AnnotatedElementHelper.hasAnnotation(t, "c_byte_buffer")) {
-            return AnnotatedElementHelper.annotation(t, "c_byte_buffer").iterator().next();
-        } else {
-            System.err.println("Warning: Missing annotation c_byte_buffer for type " + t.getName() + ", using " + t.getName() + "_buf as as the buffer name.");
-            return t.getName() + "_buf";
-        }
-    }
-*/
-    public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
-        long i = getCByteSize(t, 0);
+    public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt, String fifo) {
+    	long i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {        	
         	if (getCType(t).equals("char *") && !pt.getTypeRef().isIsArray()) { // This is a null terminated String.
@@ -726,7 +713,7 @@ public abstract class CCompilerContext extends Context {
 
                 builder.append("int16_t u_" + variable + "_index = " + getCByteSize(t, 0) + " * (" + cardBuilder + ") - 1;\n");
                 builder.append("while (u_" + variable + "_index >= 0) {\n");
-                builder.append("    _fifo_enqueue(u_" + variable + ".bytebuffer[u_" + variable + "_index] & 0xFF );\n");
+                builder.append("    _fifo_enqueue(" + fifo + "u_" + variable + ".bytebuffer[u_" + variable + "_index] & 0xFF );\n");
                 builder.append("    u_" + variable + "_index--;\n");
                 builder.append("}\n");
             } else {
@@ -742,13 +729,17 @@ public abstract class CCompilerContext extends Context {
                     //if (i == 0) 
                     //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                     
-                    builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + j + "] & 0xFF );\n");
+                    builder.append("_fifo_enqueue("+ fifo + "u_" + variable + ".bytebuffer[" + j + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
                     j = j+1;
                     
                 }
             }
         }
+    }
+    
+    public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
+    	bytesToSerialize(t, builder, variable, pt, "");
     }
 
     public int generateSerializationForForwarder(Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
