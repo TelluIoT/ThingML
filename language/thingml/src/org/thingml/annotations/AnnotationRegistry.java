@@ -38,6 +38,12 @@ public class AnnotationRegistry {
 		final Annotation compiler_annotation = new Annotation(compiler_name, compiler_desc, compiler_scope);
 		annotations.put(compiler_name, compiler_annotation);
 		
+		final String stl_name = "stl";
+		final String stl_desc = "Specifies that a type comes from the Standard ThingML Library";
+		final EClass stl_scope[] = {ThingMLPackage.eINSTANCE.getType()};
+		final Annotation stl_annotation = new Annotation(stl_name, stl_desc, stl_scope);
+		annotations.put(stl_name, stl_annotation);
+		
 		final String c_compiler_name = "c_compiler";
 		final String c_compiler_desc = "Specifies an alternative compiler to be used to compile the generated C code e.g. clang";
 		final EClass c_compiler_scope[] = {ThingMLPackage.eINSTANCE.getConfiguration()};
@@ -176,14 +182,14 @@ public class AnnotationRegistry {
 		//@arduino_stdout
 		final String astd_name = "arduino_stdout";
 		final String astd_desc = "Specifies the stdout device e.g. Serial";
-		final EClass astd_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final EClass astd_scope[] = {ThingMLPackage.eINSTANCE.getFunction(),ThingMLPackage.eINSTANCE.getConfiguration()};
 		final Annotation astd_annotation = new Annotation(astd_name, astd_desc, astd_scope);
 		annotations.put(astd_name, astd_annotation);
 		
 		//@arduino_stdout_baudrate
 		final String astdbaud_name = "arduino_stdout_baudrate";
 		final String astdbaud_desc = "Specifies the baudrate for the (Serial) stdout device e.g. 9600";
-		final EClass astdbaud_scope[] = {ThingMLPackage.eINSTANCE.getFunction()};
+		final EClass astdbaud_scope[] = {ThingMLPackage.eINSTANCE.getFunction(),ThingMLPackage.eINSTANCE.getConfiguration()};
 		final Annotation astdbaud_annotation = new Annotation(astdbaud_name, astdbaud_desc, astdbaud_scope);
 		annotations.put(astdbaud_name, astdbaud_annotation);
 
