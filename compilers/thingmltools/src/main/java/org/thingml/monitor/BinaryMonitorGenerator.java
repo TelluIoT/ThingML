@@ -30,7 +30,6 @@ import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.State;

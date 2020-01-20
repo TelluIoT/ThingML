@@ -18,6 +18,8 @@ package org.thingml.monitor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,7 +27,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.SaveOptions;
-import org.eclipse.xtext.resource.XtextResource;
 import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
@@ -104,13 +105,7 @@ public class ByteHelper {
 		return pa_;
 	}
 	
-	public static LocalVariable arrayInit(int size, String name, TypeRef t) {
-		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
-		for(int i = 0; i < size; i++) {
-			final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
-    		s.setIntValue(0);
-    		arrayInit.getValues().add(s);
-		}    		
+	private static LocalVariable createArray(String name, int size, ArrayInit arrayInit, TypeRef t) {
 		final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
 		s.setIntValue(size);
 		final LocalVariable array = ThingMLFactory.eINSTANCE.createLocalVariable();
@@ -121,6 +116,26 @@ public class ByteHelper {
 		array.setTypeRef(byteArray);
 		array.setInit(arrayInit);
 		return array;
+	}
+	
+	public static LocalVariable arrayInit(String name, TypeRef t, List<Expression> inits) {
+		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
+		for(Expression e : inits) {
+    		arrayInit.getValues().add(e);
+		}
+		final LocalVariable array = createArray(name, inits.size(), arrayInit, t);
+		array.setReadonly(true);
+		return array;
+	}
+	
+	public static LocalVariable arrayInit(int size, String name, TypeRef t) {
+		final ArrayInit arrayInit = ThingMLFactory.eINSTANCE.createArrayInit();
+		for(int i = 0; i < size; i++) {
+			final IntegerLiteral s = ThingMLFactory.eINSTANCE.createIntegerLiteral();
+    		s.setIntValue(0);
+    		arrayInit.getValues().add(s);
+		}    	
+		return createArray(name, size, arrayInit, t);		
 	}
 	
     //FIXME: this has nothing to do here. load/save is currently in compiler framework, not accessible from here. This should be part of the thingml project, together with metamodel, etc
@@ -145,13 +160,47 @@ public class ByteHelper {
         ResourceSet rs = new ResourceSetImpl();
         URI xmiuri = URI.createFileURI(file.getAbsolutePath());
         Resource model = rs.createResource(xmiuri);
-        XtextResource resource = (XtextResource) model;        
         model.load(null);
         EcoreUtil.resolveAll(model);
         ThingMLModel m = (ThingMLModel) model.getContents().get(0);
         return m;        
     }
 	
+    
+    public static List<Expression> serializeParam(TypeRef byteTypeRef, Expression param, long size) {
+    	final List<Expression> sParam = new ArrayList<Expression>();
+		if (size == 1) {
+			final CastExpression c = ThingMLFactory.eINSTANCE.createCastExpression();
+			c.setType(byteTypeRef.getType());								
+			c.setTerm(param);							
+			sParam.add(c);			
+		} else {
+			for (int j = 0; j < size; j++) {																		
+				final CastExpression cast = ThingMLFactory.eINSTANCE.createCastExpression();
+				cast.setType(byteTypeRef.getType());
+				final ExpressionGroup group = ThingMLFactory.eINSTANCE.createExpressionGroup();	                			
+				final ExternExpression expr = ThingMLFactory.eINSTANCE.createExternExpression();
+				expr.setExpression("((");
+				expr.getSegments().add(EcoreUtil.copy(param));
+				final ExternExpression bitshift = ThingMLFactory.eINSTANCE.createExternExpression();
+				bitshift.setExpression(" >> "+8*(size-1-j)+") & 0xFF)");
+				expr.getSegments().add(bitshift);
+				group.setTerm(expr);
+				cast.setTerm(group);		
+				sParam.add(cast);
+			}
+		}
+		return sParam;
+	}
+    
+    public static List<Expression> serializeParam(TypeRef byteTypeRef, Variable param) {
+		final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
+		final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
+		pr.setProperty(param);			
+		return serializeParam(byteTypeRef, pr, size);
+	}
+    
+    
 	public static void serializeParam(TypeRef byteTypeRef, Variable param, ActionBlock block, int blockIndex, int index, Variable array) {
 		final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
 		if (size == 1) {

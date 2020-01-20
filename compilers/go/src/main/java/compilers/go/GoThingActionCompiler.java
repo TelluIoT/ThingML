@@ -57,6 +57,7 @@ import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.Variable;
@@ -478,9 +479,20 @@ public class GoThingActionCompiler extends NewCommonThingActionCompiler {
 				cst.append(gctx.getNameFor(expression.getType()));
 				generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
 			}			
-		} else {		
-			cst.append(gctx.getNameFor(expression.getType()));
-			generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
+		} else {
+			final TypeRef tr = ThingMLFactory.eINSTANCE.createTypeRef();
+			tr.setType(expression.getType());
+			tr.setIsArray(expression.isIsArray());
+			final TypeRef btr = TyperHelper.getBroadType(tr);
+			final TypeRef btr2 = TypeChecker.computeTypeOf(expression.getTerm());
+			if (btr2 == Types.BOOLEAN_TYPEREF && btr == Types.INTEGER_TYPEREF) { //ternary operator-like hack to allow casting boolean to byte/integer
+				cst.append("func() " + AnnotatedElementHelper.annotationOrElse(expression.getType(), "go_type", "int") + " { if "); 
+				generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
+				cst.append(" { return 1 } else { return 0 } }()");
+			} else {
+				cst.append(gctx.getNameFor(expression.getType()));
+				generate(expression.getTerm(), cst.section("expression").surroundWith("(", ")"), ctx);
+			}
 		}
 	}
 }

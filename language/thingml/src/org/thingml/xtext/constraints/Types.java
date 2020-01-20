@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
@@ -94,8 +95,9 @@ public class Types {
         //////////////////////////////////////////////////////////////////////
         
         BYTE_TYPEREF = factory.createTypeRef();
-        final Type BYTE_TYPE = factory.createPrimitiveType();
+        final PrimitiveType BYTE_TYPE = factory.createPrimitiveType();
         BYTE_TYPE.setName("Byte");
+        //BYTE_TYPE.setByteSize(1);
         final PlatformAnnotation _byte = factory.createPlatformAnnotation();
         _byte.setName("type_checker");
         _byte.setValue("Byte");
@@ -120,8 +122,9 @@ public class Types {
         arrays.put(INTEGER_TYPEREF.getType().getName(), ARRAY_INTEGER_TYPEREF);
         
         BOOLEAN_TYPEREF = factory.createTypeRef();
-        final Type BOOLEAN_TYPE = factory.createPrimitiveType();
-        BOOLEAN_TYPE.setName("Boolean");
+        final PrimitiveType BOOLEAN_TYPE = factory.createPrimitiveType();
+        BOOLEAN_TYPE.setName("Boolean");        
+        //BOOLEAN_TYPE.setByteSize(1);
         final PlatformAnnotation bool = factory.createPlatformAnnotation();
         bool.setName("type_checker");
         bool.setValue("Boolean");

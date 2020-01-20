@@ -163,7 +163,7 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 		}
 	}	
 	
-	def boolean isLiteralOrReadOnly(Expression e) {
+	/*def boolean isLiteralOrReadOnly(Expression e) {
 		if (e instanceof Literal) {return true;}
 		else if (e instanceof PropertyReference) {
 			val pr = e as PropertyReference
@@ -179,9 +179,10 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 			return isLiteralOrReadOnly(cast.term)	
 		}
 		return false
-	}
+	}*/
 	
-	@Check(FAST)
+	//It was probably too restrictive...
+	/* @Check(FAST)
 	def checkArrayInit(ArrayInit ai) {
 		ai.values.forEach[e, i |
 			if (!isLiteralOrReadOnly(e)) {
@@ -189,5 +190,5 @@ class PropertyInitialization extends ThingMLValidatorCheck {
 				error(msg, ai, ThingMLPackage.eINSTANCE.arrayInit_Values, i)
 			} 
 		]
-	}
+	}*/
 }

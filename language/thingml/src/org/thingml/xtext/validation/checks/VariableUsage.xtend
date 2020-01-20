@@ -60,8 +60,9 @@ class VariableUsage extends ThingMLValidatorCheck {
 		val actual = TypeChecker.computeTypeOf(cast.term)
 		val typeref = ThingMLFactory.eINSTANCE.createTypeRef
 		typeref.type = cast.type
+		typeref.isArray = cast.isIsArray
 		if (!TyperHelper.isA(actual, typeref)) {
-			val msg = "Cannot cast " + actual.type.name + " to " + cast.type.name
+			val msg = "Cannot cast " + Types.toString(actual) + " to " + Types.toString(typeref)
 			val parent = cast.eContainer.eGet(cast.eContainingFeature)
 			if (parent instanceof EList)
 				error(msg, cast.eContainer, cast.eContainingFeature, (parent as EList<Action>).indexOf(cast), "type")

@@ -26,6 +26,7 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ArrayInit;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
@@ -51,6 +52,7 @@ import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.TypeRef;
@@ -423,7 +425,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		for(Expression e : expression.getValues()) {
 			if (expression.getValues().indexOf(e)>0)
 				builder.append(", ");
-			generate(e, builder, ctx);
+			cast(t, false, e, builder, ctx);
 		}
 		builder.append("}");
 	}
@@ -446,4 +448,19 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			builder.append("}\n");
 		}
 	}
+	
+	@Override
+    public void generate(CastExpression expression, StringBuilder builder, Context ctx) {
+		final TypeRef t = TypeChecker.computeTypeOf(expression.getTerm());		
+		final TypeRef c = ThingMLFactory.eINSTANCE.createTypeRef();
+		c.setType(expression.getType());
+		c.setIsArray(expression.isIsArray());
+		if (t == Types.BOOLEAN_TYPEREF && TyperHelper.isA(c, Types.INTEGER_TYPEREF)) {
+			builder.append("((");
+			generate(expression.getTerm(), builder, ctx);
+			builder.append(")? 1 : 0)");
+		}
+		else
+			generate(expression.getTerm(), builder, ctx);
+    }
 }

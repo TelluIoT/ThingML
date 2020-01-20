@@ -94,6 +94,8 @@ public class TyperHelper {
             return t != Types.ERROR_TYPEREF;
         if (t == Types.ANY_TYPEREF)//anything is an Any
             return /*self != Types.OBJECT_TYPE &&*/ self != Types.ERROR_TYPEREF;
+        if (self == Types.BOOLEAN_TYPEREF && (t == Types.BYTE_TYPEREF || t == Types.INTEGER_TYPEREF)) //a Boolean is a Byte/Integer
+        	return true;
         if (self == Types.BYTE_TYPEREF && t == Types.INTEGER_TYPEREF) //a Byte is an Integer
         	return true;
         if ((self == Types.INTEGER_TYPEREF || self == Types.BYTE_TYPEREF) && t == Types.REAL_TYPEREF) //an Integer or a Byte is a Real

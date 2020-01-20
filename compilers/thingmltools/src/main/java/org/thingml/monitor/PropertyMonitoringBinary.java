@@ -16,6 +16,9 @@
  */
 package org.thingml.monitor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -28,6 +31,7 @@ import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
@@ -109,6 +113,8 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
         } else {
         	assign.eContainer().eSet(assign.eContainingFeature(), block);
         }
+    	
+    	final List<Expression> inits = new ArrayList<>();
 		
 		//before
 		final LocalVariable lv = ThingMLFactory.eINSTANCE.createLocalVariable();
@@ -133,32 +139,25 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		block.getActions().add(lv2);		
 		
 		final int varSize = varSize(p);
-		final LocalVariable array = ByteHelper.arrayInit(varSize, p.getName() + "_log_" + counter, EcoreUtil.copy(byteTypeRef));
-		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();		
-		block.getActions().add(array);
-		
-		int index = 0;
 		
 		final EnumLiteralRef id_ = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
 		id_.setLiteral(lit);
 		id_.setEnum((Enumeration)lit.eContainer());
-		final VariableAssignment pa_ = ByteHelper.insertAt(array, index++, id_);		
-		block.getActions().add(block.getActions().size(), pa_);
+		inits.add(id_);
 		
 		final PropertyReference pr0 = ThingMLFactory.eINSTANCE.createPropertyReference();
 		pr0.setProperty(id);
-		final VariableAssignment pa0 = ByteHelper.insertAt(array, index++, pr0);		
-		block.getActions().add(block.getActions().size(), pa0);
+		inits.add(pr0);
 		
 		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
 		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(p, "id").get(0)));
-		final VariableAssignment pa1 = ByteHelper.insertAt(array, index++, id);
-		block.getActions().add(block.getActions().size(), pa1);
+		inits.add(id);
 		
-		ByteHelper.serializeParam(byteTypeRef, lv, block, block.getActions().size(), index, array);
-		index += size;
-		ByteHelper.serializeParam(byteTypeRef, lv2, block, block.getActions().size(), index, array);				
-		
+		inits.addAll(ByteHelper.serializeParam(byteTypeRef, lv));
+		inits.addAll(ByteHelper.serializeParam(byteTypeRef, lv2));
+		final LocalVariable array = ByteHelper.arrayInit(p.getName() + "_log_" + counter, byteTypeRef, inits);
+		block.getActions().add(array);
+								
 		final SendAction send = ThingMLFactory.eINSTANCE.createSendAction();
 		send.setMessage(msg);
 		send.setPort(monitoringPort);
