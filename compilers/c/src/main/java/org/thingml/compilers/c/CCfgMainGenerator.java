@@ -174,10 +174,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         String fifotemplate = ctx.getTemplateByID("ctemplates/fifo.c");
         fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + ctx.fifoSize());
-        //fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + ConfigurationHelper.allInstances(cfg).size());
         fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + ctx.numberInstancesAndPort(cfg));
 
         rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate);
+        rtemplate = rtemplate.replace("#define MAX_INSTANCES 2", "#define MAX_INSTANCES " + ctx.numberInstancesAndPort(cfg));
         ctx.getBuilder(ctx.getPrefix() + "runtime.c").append(rtemplate);
     }
 
