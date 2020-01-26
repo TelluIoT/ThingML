@@ -206,6 +206,9 @@ public class BinaryMonitorGenerator extends ThingMLTool {
         	e.printStackTrace();
         	System.exit(1);
         }
+        
+        new Binary2String(copy, this).monitor();
+        
         return true;
     }
     
