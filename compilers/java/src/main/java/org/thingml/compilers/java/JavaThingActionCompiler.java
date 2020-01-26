@@ -459,6 +459,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			builder.append("((");
 			generate(expression.getTerm(), builder, ctx);
 			builder.append(")? 1 : 0)");
+		} else if (c == Types.BOOLEAN_TYPEREF && TyperHelper.isA(t, Types.INTEGER_TYPEREF)) {
+			builder.append("(!(");
+			generate(expression.getTerm(), builder, ctx);
+			builder.append("==0))");
 		}
 		else
 			generate(expression.getTerm(), builder, ctx);

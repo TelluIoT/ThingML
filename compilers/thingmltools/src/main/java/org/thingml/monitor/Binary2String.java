@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -78,6 +79,30 @@ public class Binary2String implements MonitoringAspect {
 		
 		writeTextFile(builder.toString());
 	}
+	
+	private void parseBytes(StringBuilder builder, PrimitiveType t, String name, String startPayload) {
+		long size = t.getByteSize();
+		builder.append("readonly var bin_" + name + " : Byte[" + size + "] = {");
+		boolean firstByte = true;
+		for(long i = 0; i < size; i++) {
+			if (!firstByte)
+				builder.append(", ");
+			builder.append("payload[" + startPayload + " + " + i + "]");
+			firstByte = false;
+		}
+		builder.append("}\n");
+		builder.append("readonly var " + name + " : " + t.getName() + " = (");
+		for(long i = 0; i < size; i++) {
+			if (i>0)
+				builder.append(" + ");
+			builder.append("((`` & bin_" + name + "[" + i + "] & ` << " + 8*i + "`) as Byte)");
+		}
+		if (t.getName().equals("Boolean")) {
+			builder.append(") != 0\n");
+		} else {
+			builder.append(") as " + t.getName() + "\n");
+		}
+	}
 
 	private void logFunctionCalled(StringBuilder builder) {
 		boolean isFirstThing = true;
@@ -96,31 +121,24 @@ public class Binary2String implements MonitoringAspect {
         		builder.append((isFirstFunction)?"":"else ");
         		builder.append("if (func == " + f_ID + ") do\n");
         		if (f.getTypeRef() != null) {
-        			long size = ((PrimitiveType)f.getTypeRef().getType()).getByteSize();
-        			builder.append("readonly var bin_result : Byte[" + size + "] = {");
-        			boolean firstByte = true;
-        			for(long i = size; i > 0; i--) {
-        				if (!firstByte)
-        					builder.append(", ");
-        				builder.append("payload[size-" + i + "]");
-        				firstByte = false;
-        			}
-        			builder.append("}\n");
-        			builder.append("readonly var result : " + f.getTypeRef().getType().getName() + " = ");
-        			for(long i = 0; i < size; i++) {
-        				if (i>0)
-        					builder.append(" + ");
-        				builder.append("(`` & bin_result[" + i + "] & ` << " + 8*i + "`)");
-        			}
-        			builder.append("\n");
+        			final String startPayload = "size-" + ((PrimitiveType)f.getTypeRef().getType()).getByteSize();
+        			parseBytes(builder, (PrimitiveType)f.getTypeRef().getType(), "result", startPayload);
         		}
         		//TODO: parameters, if any
+        		int index = 3;
+        		for(Parameter p : f.getParameters()) {
+        			parseBytes(builder, (PrimitiveType)p.getTypeRef().getType(), p.getName(), String.valueOf(index));
+        			index += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
+        		}
         		//println "function_called(", inst, ", ", fn_name, ", ", ty, ", ", returns, ", ", params, ")"
         		builder.append("println \"function_called(\", \"" + t.getName() + t_ID + "\", \", \", \"" + f.getName() + ", \", \", " + (f.getTypeRef()==null ? "void\"" : f.getTypeRef().getType().getName() + "\""));
         		if (f.getTypeRef()==null)
-        			builder.append(", \"_\"");
+        			builder.append(", \", _\"");
         		else
         			builder.append(", result");
+        		for(Parameter p : f.getParameters()) {
+        			builder.append(", \", \", " + p.getName());
+        		}
         		builder.append("\n");
         		builder.append("end\n");
         		isFirstFunction = false;
