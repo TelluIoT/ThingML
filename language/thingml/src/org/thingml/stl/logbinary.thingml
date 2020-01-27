@@ -9,10 +9,10 @@ enumeration LogType as Byte {
 }
 
 thing fragment LogMsgs {	
-	message log_on()
-	message log_off()
+	message log_on()@monitor "not"
+	message log_off()@monitor "not"
 	
-	message log(payload : Byte[], size : UInt8) //payload[0]: 0=function, 1=variables, 2-4=events	
+	message log(payload : Byte[], size : UInt8)@monitor "not" //payload[0]: 0=function, 1=variables, 2-4=events	
 }
 
 /*
@@ -20,9 +20,9 @@ thing fragment LogMsgs {
  */
 thing fragment WithBinaryLog includes LogMsgs {
 	
-	readonly property DEBUG_BIN_ID : Byte
+	readonly property DEBUG_BIN_ID : Byte@monitor "not"
 		
-	required port log @sync_send "true" {
+	required port log @sync_send "true" @monitor "not"{
 		sends log
 	}
 	
@@ -31,16 +31,16 @@ thing fragment WithBinaryLog includes LogMsgs {
 /*
  * Generic proxy listening to things WithLog and forwarding to 
  */
-thing fragment Logger includes LogMsgs {
+thing fragment Logger includes LogMsgs @monitor "not"{
 	
-	readonly property ACTIVATE_ON_STARTUP : Boolean
-	readonly property HAS_SIGNED_BYTE : Boolean
+	readonly property ACTIVATE_ON_STARTUP : Boolean@monitor "not"
+	readonly property HAS_SIGNED_BYTE : Boolean@monitor "not"
 	
-	provided port log {
+	provided port log @monitor "not"{
 		receives log_on, log_off, log
 	}
 	
-	abstract function do_log(payload : Byte[], size : UInt8)
+	abstract function do_log(payload : Byte[], size : UInt8)@monitor "not"
 		
 	statechart init STARTUP {
 		
@@ -72,11 +72,11 @@ thing fragment Logger includes LogMsgs {
 	
 }
 
-thing ConsoleLogger includes Logger /* @stdout_sync "true" */ {
+thing ConsoleLogger includes Logger @monitor "not"/* @stdout_sync "true" */ {
 	
-	readonly property QUIET : Boolean = true 
+	readonly property QUIET : Boolean = true @monitor "not"
 	
-	function do_log(payload : Byte[], size : UInt8) do
+	function do_log(payload : Byte[], size : UInt8) @monitor "not" do
 		if (not QUIET) do
 			readonly var log_type : Byte = payload[0]
 			if (log_type == LogType:function_called)       print "log: function_called  ["

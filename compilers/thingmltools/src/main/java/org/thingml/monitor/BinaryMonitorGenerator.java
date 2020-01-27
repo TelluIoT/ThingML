@@ -17,8 +17,13 @@
 package org.thingml.monitor;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -76,7 +81,7 @@ public class BinaryMonitorGenerator extends ThingMLTool {
     	    			
         System.out.println("Generate ThingML from model");
         
-        Import log_import = ThingMLFactory.eINSTANCE.createImport();
+        final Import log_import = ThingMLFactory.eINSTANCE.createImport();
         log_import.setFrom("stl");
        	log_import.setImportURI("logbinary.thingml");
         copy.getImports().add(log_import);
@@ -197,6 +202,13 @@ public class BinaryMonitorGenerator extends ThingMLTool {
         		new PropertyMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef).monitor();
         	}        	
         }
+                
+        new Binary2String(copy, this).monitor();
+        
+        /*final Import bin2string_import = ThingMLFactory.eINSTANCE.createImport();
+        bin2string_import.setImportURI("bin2string.thingml");
+        copy.getImports().add(bin2string_import);
+        copy = ThingMLHelpers.flattenModel(copy);*/
         
         final File monitoringFile = new File(outDir, "monitor/merged.thingml");
         try {        	
@@ -207,9 +219,22 @@ public class BinaryMonitorGenerator extends ThingMLTool {
         	System.exit(1);
         }
         
-        new Binary2String(copy, this).monitor();
+        try {
+        	final StringBuilder b = new StringBuilder();
+        	b.append(readFile(new File(outDir, "monitor/bin2string.thingml").getAbsolutePath()));
+        	b.append(readFile(new File(outDir, "monitor/merged.thingml").getAbsolutePath()));
+        	final File file = new File(outDir, "monitor/merged.thingml");
+            FileUtils.write(file, b.toString(), "UTF-8");
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	System.exit(2);
+        }
         
         return true;
     }
     
+    private String readFile(String path) throws IOException {
+    	byte[] encoded = Files.readAllBytes(Paths.get(path));
+    	return new String(encoded, Charset.forName("UTF-8"));
+    }
 }

@@ -2,8 +2,8 @@ import "datatypes.thingml" from stl
 
 thing fragment LogMsgs {
 	
-	message log_on()
-	message log_off()
+	message log_on() @monitor "not"
+	message log_off()@monitor "not"
 	
 	/*
 	 * inst: name of the thing instance as defined in the configuration
@@ -12,7 +12,7 @@ thing fragment LogMsgs {
 	 * returns: value returned by the function ("" for no return)
 	 * params: list of parameters ("" for no param, "p1=v1, p2=v2, ...pn=vn")
 	 */
-	message function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
+	message function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)@monitor "not"
 	
 	/*
 	 * inst: name of the thing instance as defined in the configuration
@@ -21,11 +21,11 @@ thing fragment LogMsgs {
 	 * old: value before update (serialized as string)
 	 * new: value after update (serialized as string) 
 	 */
-	message property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)
+	message property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)@monitor "not"
 	
-	message message_sent(inst : String, port_name : String, msg_name : String, params : String)
-	message message_lost(inst : String, port_name : String, msg_name : String, params : String)
-	message message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)
+	message message_sent(inst : String, port_name : String, msg_name : String, params : String)@monitor "not"
+	message message_lost(inst : String, port_name : String, msg_name : String, params : String)@monitor "not"
+	message message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)@monitor "not"
 }
 
 /*
@@ -33,9 +33,9 @@ thing fragment LogMsgs {
  */
 thing fragment WithLog includes LogMsgs {
 	
-	readonly property DEBUG_ID : String
+	readonly property DEBUG_ID : String@monitor "not"
 	
-	required port log @sync_send "true" {
+	required port log @sync_send "true" @monitor "not"{
 		sends function_called, property_changed, message_lost, message_handled, message_sent
 	}
 	
@@ -44,19 +44,19 @@ thing fragment WithLog includes LogMsgs {
 /*
  * Generic proxy listening to things WithLog and forwarding to 
  */
-thing fragment Logger includes LogMsgs {
+thing fragment Logger includes LogMsgs @monitor "not"{
 	
-	readonly property ACTIVATE_ON_STARTUP : Boolean
+	readonly property ACTIVATE_ON_STARTUP : Boolean@monitor "not"
 	
-	provided port log {
+	provided port log @monitor "not"{
 		receives function_called, property_changed, message_lost, message_handled, message_sent, log_on, log_off
 	}
 	
-	abstract function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
-	abstract function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)
-	abstract function log_message_lost(inst : String, port_name : String, msg_name : String, params : String)
-	abstract function log_message_sent(inst : String, port_name : String, msg_name : String, params : String)
-	abstract function log_message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)
+	abstract function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)@monitor "not"
+	abstract function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)@monitor "not"
+	abstract function log_message_lost(inst : String, port_name : String, msg_name : String, params : String)@monitor "not"
+	abstract function log_message_sent(inst : String, port_name : String, msg_name : String, params : String)@monitor "not"
+	abstract function log_message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)@monitor "not"
 		
 	statechart init STARTUP {
 		
@@ -100,20 +100,20 @@ thing fragment Logger includes LogMsgs {
 	
 }
 
-thing ConsoleLogger includes Logger @stdout_sync "true" {
+thing ConsoleLogger includes Logger @stdout_sync "true" @monitor "not"{
 	
-	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)
+	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)@monitor "not"
 		println "function_called(", inst, ", ", fn_name, ", ", ty, ", ", returns, ", ", params, ")"
 		
-	function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)
+	function log_property_changed(inst : String, prop_name : String, ty : String, old_value : String, new_value : String)@monitor "not"
 		println "property_changed(", inst, ", ", prop_name, ", ", ty, ", ", old_value, ", ", new_value, ")"
 		
-	function log_message_lost(inst : String, port_name : String, msg_name : String, params : String)
+	function log_message_lost(inst : String, port_name : String, msg_name : String, params : String)@monitor "not"
 		println "message_lost(", inst, ", ", port_name, ", ", msg_name, ", ", params, ")"
 	
-	function log_message_sent(inst : String, port_name : String, msg_name : String, params : String)
+	function log_message_sent(inst : String, port_name : String, msg_name : String, params : String)@monitor "not"
 		println "message_sent(", inst, ", ", port_name, ", ", msg_name, ", ", params, ")"
 		
-	function log_message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)		
+	function log_message_handled(inst : String, source : String, target : String, port_name : String, msg_name : String, params : String)@monitor "not"		
 		println "message_handled(", inst, ", ", source, ", ", target, ", ", port_name, ", ", msg_name, ", ", params, ")"
 }
