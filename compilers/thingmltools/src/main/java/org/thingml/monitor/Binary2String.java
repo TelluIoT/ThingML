@@ -123,7 +123,7 @@ public class Binary2String implements MonitoringAspect {
 			firstByte = false;
 		}
 		builder.append("}\n");
-		builder.append("            readonly var " + name + " : " + t.getName() + " = (");
+		builder.append("            var " + name + " : " + t.getName() + " = (");
 		builder.append("``");
 		for(long i = 0; i < size; i++) {
 			builder.append(" & bin_" + name + "[" + i + "] & ` << " + 8*(size-1-i) + ((i<size-1)?" | ":"") + "`");
@@ -132,6 +132,9 @@ public class Binary2String implements MonitoringAspect {
 			builder.append(") as Integer != 0\n");
 		} else {
 			builder.append(") as " + t.getName() + "\n");
+			if (AnnotatedElementHelper.isDefined(t, "type_checker", "Integer") && !t.getName().startsWith("U")) {
+				builder.append("if (not HAS_SIGNED_BYTE) " + name + " = " + name + " + " + ((int)(Math.pow(2, 8*(size-1))) + "\n"));
+			}
 		}
 	}
 
