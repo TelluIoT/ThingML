@@ -31,6 +31,7 @@ import org.thingml.thingmltools.ThingMLTool;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.PlatformAnnotation;
@@ -142,18 +143,12 @@ public class BinaryMonitorGenerator extends ThingMLTool {
     			ma.setName("id");
     			ma.setValue(Byte.toString(ByteHelper.varID()));
     			p.getAnnotations().add(ma);
-    		} else if (o instanceof Type) {
-    			final Type t = (Type) o;    			
+    		} else if (o instanceof Handler) {
+    			final Handler h = (Handler) o;    			
     			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
     			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.datatypeID()));
-    			t.getAnnotations().add(ma);
-    		} else if (o instanceof State) {
-    			final State s = (State) o;    			
-    			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
-    			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.stateID()));
-    			s.getAnnotations().add(ma);
+    			ma.setValue(Byte.toString(ByteHelper.handlerID()));
+    			h.getAnnotations().add(ma);
     		} 
     	}
     	

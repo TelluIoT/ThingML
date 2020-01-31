@@ -95,17 +95,7 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 		
 		final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
 		id.setByteValue(Byte.parseByte(AnnotatedElementHelper.annotation(f, "id").get(0)));
-		inits.add(id);
-		
-		if (ra != null) {
-			final ByteLiteral id2 = ThingMLFactory.eINSTANCE.createByteLiteral();
-			id2.setByteValue(Byte.valueOf(AnnotatedElementHelper.firstAnnotation(f.getTypeRef().getType(), "id")));
-			inits.add(id2);
-		} else {
-			final ByteLiteral id2 = ThingMLFactory.eINSTANCE.createByteLiteral();
-			id2.setByteValue((byte)0);
-			inits.add(id2);
-		}		
+		inits.add(id);				
 		
 		for(Parameter param : f.getParameters()) {
 			inits.addAll(ByteHelper.serializeParam(byteTypeRef, param));

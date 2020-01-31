@@ -81,6 +81,11 @@ public class EventMonitoringBinary implements MonitoringAspect {
 		catchLostMessages(thing.getBehaviour());
 	}
 	
+	protected byte getHanderID(Handler h) {
+		final String a = AnnotatedElementHelper.firstAnnotation(h, "id");
+		return Byte.valueOf(a);
+	}
+	
 	protected byte getPortID(Port port) {
 		final String a = AnnotatedElementHelper.firstAnnotation(port, "id");
 		return Byte.valueOf(a);
@@ -214,31 +219,11 @@ public class EventMonitoringBinary implements MonitoringAspect {
 					id_ref.setProperty(id);
 					inits.add(id_ref);
 					
-					final byte portID = (h.getEvent() == null)? 0 : getPortID(((ReceiveMessage)h.getEvent()).getPort());
-					final byte msgID = (h.getEvent() == null)? 0 : getMessageID(((ReceiveMessage)h.getEvent()).getMessage());
-					
-					final ByteLiteral port_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
-					port_exp.setByteValue(portID);
-					inits.add(port_exp);
-								
-					final ByteLiteral m_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
-					m_exp.setByteValue(msgID);
-					inits.add(m_exp);
-					
-					final ByteLiteral source_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
-					source_exp.setByteValue(getStateID((State)h.eContainer()));
-					inits.add(source_exp);
-					
-					if (h instanceof InternalTransition) {
-						final ByteLiteral target_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
-						target_exp.setByteValue((byte)0);
-						inits.add(target_exp);
-					} else {
-						final ByteLiteral target_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
-						target_exp.setByteValue(getStateID(((Transition)h).getTarget()));
-						inits.add(target_exp);
-					}							
-					
+					final byte handlerID = (h.getEvent() == null)? 0 : getHanderID(h);
+					final ByteLiteral h_exp = ThingMLFactory.eINSTANCE.createByteLiteral();
+					h_exp.setByteValue(handlerID);
+					inits.add(h_exp);
+											
 					if (h.getEvent() != null) {
 						final ReceiveMessage rm = (ReceiveMessage)h.getEvent();
 						for(Parameter param : rm.getMessage().getParameters()) {

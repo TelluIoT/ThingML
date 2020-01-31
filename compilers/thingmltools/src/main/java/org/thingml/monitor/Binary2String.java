@@ -24,16 +24,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Transition;
 
 public class Binary2String implements MonitoringAspect {
 	
@@ -68,22 +70,6 @@ public class Binary2String implements MonitoringAspect {
 		builder.append("    else\n");
 	    builder.append("      return b as Byte\n");
 	    builder.append("  end\n\n");
-	    
-		builder.append("  function stateName(id : Byte) : String do\n");
-		boolean isFirstState = true;
-		final TreeIterator<EObject> allContent = EcoreUtil.getAllContents(model, true);
-    	while(allContent.hasNext()) {
-    		final EObject o = allContent.next();
-    		if (o instanceof State) {
-    			final State s = (State) o;
-    			final String stateID = AnnotatedElementHelper.firstAnnotation(s, "id");
-    			builder.append((isFirstState)?"    ":"    else ");
-        		builder.append("if (id == " + stateID + ") return \"" + ThingMLElementHelper.qname(s, ".") + "\"\n");    			
-    			isFirstState = false;
-    		}
-    	}
-    	builder.append("    return \"unknown\"\n");
-		builder.append("  end\n\n");
 		
 		builder.append("  function do_log(payload : Byte[], size : UInt8) do\n\n");
 		
@@ -158,7 +144,7 @@ public class Binary2String implements MonitoringAspect {
         			final String startPayload = "size-" + ((PrimitiveType)f.getTypeRef().getType()).getByteSize();
         			parseBytes(builder, (PrimitiveType)f.getTypeRef().getType(), "result", startPayload);
         		}
-        		int index = 3;
+        		int index = 2;
         		for(Parameter p : f.getParameters()) {
         			parseBytes(builder, (PrimitiveType)p.getTypeRef().getType(), p.getName(), String.valueOf(index));
         			index += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
@@ -251,42 +237,57 @@ public class Binary2String implements MonitoringAspect {
 	}
 	
 	private void logMessageHandled(StringBuilder builder) {
-		builder.append("      readonly var portID : Byte = get_byte(payload[2])\n");
-		builder.append("      readonly var messageID : Byte = get_byte(payload[3])\n");
-		builder.append("      readonly var sourceID : Byte = get_byte(payload[4])\n");
-		builder.append("      readonly var targetID : Byte = get_byte(payload[5])\n");
+		builder.append("      readonly var handlerID : Byte = get_byte(payload[2])\n");		
 		boolean isFirstThing = true;
 		for(Thing t : ThingMLHelpers.allThings(model)) {
 			if (AnnotatedElementHelper.isDefined(t, "monitor", "not")) continue;
     		if (!AnnotatedElementHelper.isDefined(t, "monitor", "events")) continue;
     		final String t_ID = AnnotatedElementHelper.firstAnnotation(t, "id");
     		builder.append((isFirstThing)?"        ":"        else ");
-    		builder.append("if (inst == " + t_ID + ") do\n");
-    		boolean isFirstPortMessage = true;
-    		for(Message m : ThingMLHelpers.allMessages(t)) {
-    			if (AnnotatedElementHelper.isDefined(m, "monitor", "not")) continue;
-    			final String messageID = AnnotatedElementHelper.firstAnnotation(m, "id");
-    			for(Port p : ThingMLHelpers.allPorts(t)) {
-    				if (AnnotatedElementHelper.isDefined(p, "monitor", "not")) continue;
-    				final String portID = AnnotatedElementHelper.firstAnnotation(p, "id");
-    				if (p.getReceives().contains(m)) {
-    					builder.append((isFirstPortMessage)?"          ":"          else ");
-    		    		builder.append("if (portID == " + portID + " and messageID == " + messageID + ") do\n");
-    		    		int index = 6;
-    	        		for(Parameter pa : m.getParameters()) {
-    	        			parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), pa.getName(), String.valueOf(index));
-    	        			index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
-    	        		}
-    	        		builder.append("            println \"message_handled(" + t.getName() + t_ID + ", " + p.getName() + ", " + m.getName() + ", \", stateName(sourceID), \", \", stateName(targetID)");
-    	        		for(Parameter pa : m.getParameters()) {
-    	        			builder.append(", \", " + pa.getName() + "=\", " + pa.getName());
-    	        		}
-    	        		builder.append(", \")\"\n");
-    		    		builder.append("          end\n");
-    		    		isFirstPortMessage = false;
-    				}
-    			}
-    		}
+    		builder.append("if (inst == " + t_ID + ") do\n");    		    		
+    		final TreeIterator<EObject> allContent = EcoreUtil.getAllContents(t, true);
+    		boolean isFirstHandler = true;
+        	while(allContent.hasNext()) {
+        		final EObject o = allContent.next();
+        		if (o instanceof Handler) {
+        			final Handler h = (Handler) o;
+        			final String handlerID = AnnotatedElementHelper.firstAnnotation(h, "id");
+        			if (handlerID == null) continue; //this is a transition added by the logging instrumentation
+        			builder.append((isFirstHandler)?"          ":"          else ");
+        			builder.append("if (handlerID == " + handlerID + ") do\n");
+        			int index = 3;
+        			final String stateName = ((State)h.eContainer()).getName();
+        			String portName = "_";
+        			String msgName = "_";
+        			String targetName = "_";
+        			if (h instanceof Transition) {
+        				Transition tr = (Transition) h;
+        				targetName = tr.getName();
+        			}
+        			if (h.getEvent() != null) {
+        				final ReceiveMessage rm = (ReceiveMessage) h.getEvent();
+        				portName = rm.getPort().getName();
+        				msgName = rm.getMessage().getName();
+        			}
+        			if (h.getEvent() != null) {
+        				final ReceiveMessage rm = (ReceiveMessage) h.getEvent();
+        				for(Parameter pa : rm.getMessage().getParameters()) {
+        					parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), pa.getName(), String.valueOf(index));
+        					index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
+        				}
+        			}
+	        		builder.append("            println \"message_handled(" + t.getName() + t_ID + ", " + portName + ", " + msgName + ", " + stateName + ", " + targetName + ", \"");
+	        		if (h.getEvent() != null) {
+        				final ReceiveMessage rm = (ReceiveMessage) h.getEvent();
+        				for(Parameter pa : rm.getMessage().getParameters()) {
+        					builder.append(", \", " + pa.getName() + "=\", " + pa.getName());
+        				}
+	        		}
+	        		builder.append(", \")\"\n");
+		    		builder.append("          end\n");
+		    		isFirstHandler = false;        			
+        		}
+        	}
     		builder.append("        end\n");
     		isFirstThing = false;
 		}
