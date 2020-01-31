@@ -127,17 +127,7 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		block.getActions().add(lv);
 		
 		block.getActions().add(assign);
-		
-		//after
-		final LocalVariable lv2 = ThingMLFactory.eINSTANCE.createLocalVariable();
-		lv2.setName("new_" + p.getName() + "_" + counter);
-		lv2.setTypeRef(EcoreUtil.copy(p.getTypeRef()));
-		lv2.setReadonly(true);
-		final PropertyReference ref2 = ThingMLFactory.eINSTANCE.createPropertyReference();
-		ref2.setProperty(p);
-		lv2.setInit(ref2);
-		block.getActions().add(lv2);		
-		
+			
 		final int varSize = varSize(p);
 		
 		final EnumLiteralRef id_ = ThingMLFactory.eINSTANCE.createEnumLiteralRef();
@@ -154,7 +144,9 @@ public class PropertyMonitoringBinary implements MonitoringAspect {
 		inits.add(id);
 		
 		inits.addAll(ByteHelper.serializeParam(byteTypeRef, lv));
-		inits.addAll(ByteHelper.serializeParam(byteTypeRef, lv2));
+		final PropertyReference ref2 = ThingMLFactory.eINSTANCE.createPropertyReference();
+		ref2.setProperty(p);
+		inits.addAll(ByteHelper.serializeParam(byteTypeRef, ref2));
 		final LocalVariable array = ByteHelper.arrayInit(p.getName() + "_log_" + counter, byteTypeRef, inits);
 		block.getActions().add(array);
 								

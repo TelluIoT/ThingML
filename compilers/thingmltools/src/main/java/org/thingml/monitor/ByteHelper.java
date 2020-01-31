@@ -193,6 +193,11 @@ public class ByteHelper {
 		return sParam;
 	}
     
+    public static List<Expression> serializeParam(TypeRef byteTypeRef, PropertyReference param) {
+    	final long size = ((PrimitiveType)param.getProperty().getTypeRef().getType()).getByteSize();			
+		return serializeParam(byteTypeRef, param, size);
+    }
+    
     public static List<Expression> serializeParam(TypeRef byteTypeRef, Variable param) {
 		final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
 		final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();

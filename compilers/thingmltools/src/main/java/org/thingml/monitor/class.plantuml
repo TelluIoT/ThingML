@@ -1,0 +1,86 @@
+@startuml
+
+namespace org.thingml.compilers #DDDDDD {
+interface ThingMLGenerator {
+  name, ID, description : String
+  +compile(ThingMLModel model, String... options)
+}
+
+abstract class ThingMLCompiler {
+  
+}
+
+note bottom of org.thingml.compilers.ThingMLCompiler
+    ThingML2Code generators
+end note
+}
+
+namespace org.thingml.tools #DDDDDD {
+abstract class ThingMLTool {
+  
+}
+
+note bottom of org.thingml.tools.ThingMLTool
+    ThingML2ThingML pre-processors
+end note
+}
+
+namespace org.thingml.tools.monitor #DDDDDD {
+
+interface MonitoringAspect {
+  +monitor()
+}
+
+
+org.thingml.compilers.ThingMLGenerator <|-left- org.thingml.tools.ThingMLTool
+org.thingml.compilers.ThingMLGenerator <|-- org.thingml.compilers.ThingMLCompiler
+
+
+
+namespace org.thingml.tools.monitor.string #DDDDDD {
+
+class MonitorGenerator {
+
+}
+class EventMonitoring {}
+class FunctionMonitoring {}
+class PropertyMonitoring {}
+
+org.thingml.tools.ThingMLTool <|-left- MonitorGenerator
+
+EventMonitoring <-down- MonitorGenerator
+FunctionMonitoring <-down- MonitorGenerator
+PropertyMonitoring <-down- MonitorGenerator
+
+org.thingml.tools.monitor.MonitoringAspect <|-up- EventMonitoring
+org.thingml.tools.monitor.MonitoringAspect <|-up- FunctionMonitoring
+org.thingml.tools.monitor.MonitoringAspect <|-up- PropertyMonitoring
+}
+
+
+namespace org.thingml.tools.monitor.binary #DDDDDD {
+class BinaryMonitorGenerator {
+
+}
+
+class EventMonitoringBinary {}
+class FunctionMonitoringBinary {}
+class PropertyMonitoringBinary {}
+org.thingml.tools.ThingMLTool <|-left- BinaryMonitorGenerator
+org.thingml.tools.monitor.MonitoringAspect <|-down- EventMonitoringBinary
+org.thingml.tools.monitor.MonitoringAspect <|-down- FunctionMonitoringBinary
+org.thingml.tools.monitor.MonitoringAspect <|-down- PropertyMonitoringBinary
+
+EventMonitoringBinary <-up- BinaryMonitorGenerator
+FunctionMonitoringBinary <-up- BinaryMonitorGenerator
+PropertyMonitoringBinary <-up- BinaryMonitorGenerator
+
+class Binary2String {}
+class ByteHelper {}
+
+Binary2String <-left- BinaryMonitorGenerator
+ByteHelper <-down- BinaryMonitorGenerator
+}
+}
+
+@enduml
