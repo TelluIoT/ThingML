@@ -98,30 +98,18 @@ public class Binary2String implements MonitoringAspect {
 		writeTextFile(builder.toString());
 	}
 	
-	private void parseBytes(StringBuilder builder, PrimitiveType t, String name, String startPayload) {
+	private void parseBytes(StringBuilder builder, PrimitiveType t, int startPayload) {
 		long size = t.getByteSize();
-		builder.append("            readonly var bin_" + name + " : Byte[" + size + "] = {");
-		boolean firstByte = true;
+		builder.append("((``");
 		for(long i = 0; i < size; i++) {
-			if (!firstByte)
-				builder.append(", ");
-			builder.append("            get_byte(payload[" + startPayload + " + " + i + "])");
-			firstByte = false;
-		}
-		builder.append("}\n");
-		builder.append("            var " + name + " : " + t.getName() + " = (");
-		builder.append("``");
-		for(long i = 0; i < size; i++) {
-			builder.append(" & bin_" + name + "[" + i + "] & ` << " + 8*(size-1-i) + ((i<size-1)?" | ":"") + "`");
+			builder.append(" & get_byte(payload[" + (long)(startPayload + i) + "]) & ` << " + 8*(size-1-i) + ((i<size-1)?" | ":"") + "`");
 		}		
 		if (t.getName().equals("Boolean")) {
 			builder.append(") as Integer != 0\n");
 		} else {
-			builder.append(") as " + t.getName() + "\n");
-			if (AnnotatedElementHelper.isDefined(t, "type_checker", "Integer") && !t.getName().startsWith("U")) {
-				builder.append("if (not HAS_SIGNED_BYTE) " + name + " = " + name + " + " + ((int)(Math.pow(2, 8*(size-1))) + "\n"));
-			}
+			builder.append(") as " + t.getName());
 		}
+		builder.append(")");
 	}
 
 	private void logFunctionCalled(StringBuilder builder) {		
@@ -140,22 +128,22 @@ public class Binary2String implements MonitoringAspect {
         		final String f_ID = AnnotatedElementHelper.firstAnnotation(f, "id");
         		builder.append((isFirstFunction)?"          ":"          else ");
         		builder.append("if (func_ == " + f_ID + ") do\n");
-        		if (f.getTypeRef() != null) {
-        			final String startPayload = "size-" + ((PrimitiveType)f.getTypeRef().getType()).getByteSize();
-        			parseBytes(builder, (PrimitiveType)f.getTypeRef().getType(), "result", startPayload);
-        		}
-        		int index = 2;
-        		for(Parameter p : f.getParameters()) {
-        			parseBytes(builder, (PrimitiveType)p.getTypeRef().getType(), p.getName(), String.valueOf(index));
-        			index += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
-        		}
         		builder.append("            println \"function_called(" + t.getName() + t_ID + ", " + f.getName() + ", " + (f.getTypeRef()==null ? "void" : f.getTypeRef().getType().getName()) + "\"");
         		if (f.getTypeRef()==null)
         			builder.append(", \", _\"");
-        		else
-        			builder.append(", \", \", result");
+        		else {
+        			builder.append(", \", \", ");
+        			int startPayload = 2;
+        			for(Parameter p : f.getParameters()) {
+        				startPayload += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
+        			}
+        			parseBytes(builder, (PrimitiveType)f.getTypeRef().getType(), startPayload);
+        		}
+        		int index = 2;
         		for(Parameter p : f.getParameters()) {
-        			builder.append(", \", " + p.getName() + "=\", " + p.getName());
+        			builder.append(", \", " + p.getName() + "=\", ");
+        			parseBytes(builder, (PrimitiveType)p.getTypeRef().getType(), index);
+        			index += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
         		}
         		builder.append(", \")\"\n");
         		builder.append("          end\n");
@@ -182,11 +170,13 @@ public class Binary2String implements MonitoringAspect {
         		builder.append((isFirstProperty)?"          ":"          else ");
         		builder.append("if (prop == " + p_ID + ") do\n");
         		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
-        		long index = 3;
-        		parseBytes(builder, (PrimitiveType)p.getTypeRef().getType(), "old", String.valueOf(index));
+        		int index = 3;
+        		final StringBuilder oldBuilder = new StringBuilder();
+        		parseBytes(oldBuilder, (PrimitiveType)p.getTypeRef().getType(), index);
         		index += size;
-        		parseBytes(builder, (PrimitiveType)p.getTypeRef().getType(), "new_", String.valueOf(index));
-        		builder.append("            println \"property_changed(" + t.getName() + t_ID + ", " + p.getName() + ", " + p.getTypeRef().getType().getName() + "\", \", \", old, \", \", new_, \")\"\n");
+        		final StringBuilder newBuilder = new StringBuilder();
+        		parseBytes(newBuilder, (PrimitiveType)p.getTypeRef().getType(), index);
+        		builder.append("            println \"property_changed(" + t.getName() + t_ID + ", " + p.getName() + ", " + p.getTypeRef().getType().getName() + "\", \", \", " + oldBuilder.toString() + ", \", \", " + newBuilder.toString() + ", \")\"\n");
         		builder.append("          end\n");        		
         		isFirstProperty = false;
     		}
@@ -215,14 +205,12 @@ public class Binary2String implements MonitoringAspect {
     				if (p.getReceives().contains(m)) {
     					builder.append((isFirstPortMessage)?"          ":"          else ");
     		    		builder.append("if (portID == " + portID + " and messageID == " + messageID + ") do\n");
-    		    		int index = 4;
-    	        		for(Parameter pa : m.getParameters()) {
-    	        			parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), pa.getName(), String.valueOf(index));
-    	        			index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
-    	        		}
     	        		builder.append("            println \"message_lost(" + t.getName() + t_ID + ", " + p.getName() + ", " + m.getName() + "\"");
+    	        		int index = 4;
     	        		for(Parameter pa : m.getParameters()) {
-    	        			builder.append(", \", " + pa.getName() + "=\", " + pa.getName());
+    	        			builder.append(", \", " + pa.getName() + "=\", ");
+    	        			parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), index);
+    	        			index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
     	        		}
     	        		builder.append(", \")\"\n");
     		    		builder.append("          end\n");
@@ -255,32 +243,27 @@ public class Binary2String implements MonitoringAspect {
         			if (handlerID == null) continue; //this is a transition added by the logging instrumentation
         			builder.append((isFirstHandler)?"          ":"          else ");
         			builder.append("if (handlerID == " + handlerID + ") do\n");
-        			int index = 3;
         			final String stateName = ((State)h.eContainer()).getName();
         			String portName = "_";
         			String msgName = "_";
         			String targetName = "_";
         			if (h instanceof Transition) {
         				Transition tr = (Transition) h;
-        				targetName = tr.getName();
+        				targetName = tr.getTarget().getName();
         			}
         			if (h.getEvent() != null) {
         				final ReceiveMessage rm = (ReceiveMessage) h.getEvent();
         				portName = rm.getPort().getName();
         				msgName = rm.getMessage().getName();
         			}
-        			if (h.getEvent() != null) {
-        				final ReceiveMessage rm = (ReceiveMessage) h.getEvent();
-        				for(Parameter pa : rm.getMessage().getParameters()) {
-        					parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), pa.getName(), String.valueOf(index));
-        					index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
-        				}
-        			}
 	        		builder.append("            println \"message_handled(" + t.getName() + t_ID + ", " + portName + ", " + msgName + ", " + stateName + ", " + targetName + ", \"");
 	        		if (h.getEvent() != null) {
         				final ReceiveMessage rm = (ReceiveMessage) h.getEvent();
+            			int index = 3;
         				for(Parameter pa : rm.getMessage().getParameters()) {
-        					builder.append(", \", " + pa.getName() + "=\", " + pa.getName());
+        					builder.append(", \", " + pa.getName() + "=\", ");
+        					parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), index);
+        					index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
         				}
 	        		}
 	        		builder.append(", \")\"\n");
@@ -313,14 +296,12 @@ public class Binary2String implements MonitoringAspect {
     				if (p.getSends().contains(m)) {
     					builder.append((isFirstPortMessage)?"          ":"          else ");
     		    		builder.append("if (portID == " + portID + " and messageID == " + messageID + ") do\n");
+    	        		builder.append("            println \"message_sent(" + t.getName() + t_ID + ", " + p.getName() + ", " + m.getName() + "\"");
     		    		int index = 4;
     	        		for(Parameter pa : m.getParameters()) {
-    	        			parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), pa.getName(), String.valueOf(index));
+    	        			builder.append(", \", " + pa.getName() + "=\", ");
+    	        			parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), index);
     	        			index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
-    	        		}
-    	        		builder.append("            println \"message_sent(" + t.getName() + t_ID + ", " + p.getName() + ", " + m.getName() + "\"");
-    	        		for(Parameter pa : m.getParameters()) {
-    	        			builder.append(", \", " + pa.getName() + "=\", " + pa.getName());
     	        		}
     	        		builder.append(", \")\"\n");
     		    		builder.append("          end\n");
