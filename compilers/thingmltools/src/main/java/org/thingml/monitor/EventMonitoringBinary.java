@@ -53,7 +53,6 @@ import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
-import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.TypeRef;
 
 public class EventMonitoringBinary implements MonitoringAspect {
@@ -204,7 +203,7 @@ public class EventMonitoringBinary implements MonitoringAspect {
 					send.setPort(monitoringPort);
 					send.setMessage(log_msg);
 					
-					final int size = ((h.getEvent() == null)? 4 : messageSize(((ReceiveMessage)h.getEvent()).getMessage())) + 2; //+2 for source and target states
+					final int size = ((h.getEvent() == null)? 3 : (messageSize(((ReceiveMessage)h.getEvent()).getMessage())-1));
 					final String name = (h.getEvent() == null)? "empty_handled_log" + counter++ : ((ReceiveMessage)h.getEvent()).getMessage().getName() + "handled_log_" + counter++;										
 					
 					final List<Expression> inits = new ArrayList<Expression>();

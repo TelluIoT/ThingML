@@ -67,7 +67,7 @@ public class FunctionMonitoringBinary implements MonitoringAspect {
 	}
 	
 	protected int funcSize(Function f) {
-		int size = 4; //b[0]=0 (log function), b[1]=instance, b[2]=function, b[3]=return type
+		int size = 3; //b[0]=0 (log function), b[1]=instance, b[2]=function
 		if (f.getTypeRef() != null) {
 			size += ((PrimitiveType)f.getTypeRef().getType()).getByteSize();
 		}

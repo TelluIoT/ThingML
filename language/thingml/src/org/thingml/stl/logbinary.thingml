@@ -74,32 +74,16 @@ thing fragment Logger includes LogMsgs @monitor "not"{
 
 thing ConsoleLogger includes Logger @monitor "not"/* @stdout_sync "true" */ {
 	
-	readonly property QUIET : Boolean = true @monitor "not"
-	
 	function do_log(payload : Byte[], size : UInt8) @monitor "not" do
-		if (not QUIET) do
-			readonly var log_type : Byte = payload[0]
-			if (log_type == LogType:function_called)       print "log: function_called  ["
-			else if (log_type == LogType:property_changed) print "log: property_changed ["
-			else if (log_type == LogType:message_lost)     print "log: message_lost     ["
-			else if (log_type == LogType:message_sent)     print "log: message_sent     ["
-			else if (log_type == LogType:message_handled)  print "log: message_handled  ["
-			else                                           print "log: unknown          ["		
-		end
-		
 		var i : UInt8 = 0
-		while(i<size) do
-			readonly var v : Byte = payload[i] 
+		while(i<size) do 
 			if (HAS_SIGNED_BYTE)
-				print (``& v & ` & 0xFF`) as UInt8				
+				print (``& payload[i] & ` & 0xFF`) as UInt8				
 			else
-				print v
-			if (not QUIET) print ","
+				print payload[i]
 			i++
-		end
-		
-		if (not QUIET) println "]"
-		else println ""
+		end		
+		println ""
 	end
 	
 }
