@@ -186,7 +186,10 @@ public class BinaryMonitorGenerator extends ThingMLTool {
         	//////////////////////////////////////////
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "events")) {
-        		new EventMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef).monitor();
+        		final boolean notSent = AnnotatedElementHelper.isDefined(t, "monitor", "not-sent");
+        		final boolean notHandled = AnnotatedElementHelper.isDefined(t, "monitor", "not-handled");
+        		final boolean notDiscarded = AnnotatedElementHelper.isDefined(t, "monitor", "not-discarded");
+        		new EventMonitoringBinary(t, id, monitoringPort, msg, stringTypeRef, notSent, notHandled, notDiscarded).monitor();
         	}
         	
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "functions")) {        		  			

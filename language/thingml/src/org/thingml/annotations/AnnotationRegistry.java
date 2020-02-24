@@ -61,7 +61,7 @@ public class AnnotationRegistry {
 		final String monitor_name = "monitor";
 		final String monitor_desc = "Generates monitoring instrumentation in a PIM way";
 		final EClass monitor_scope[] = {ThingMLPackage.eINSTANCE.getAnnotatedElement()};
-		final String monitor_values[] = {"not", "events", "functions", "properties"};
+		final String monitor_values[] = {"not", "events", "not-handled", "not-sent", "not-discarded", "functions", "properties"};
 		final Annotation monitor_annotation = new EnumAnnotation(monitor_name, monitor_desc, monitor_scope, monitor_values);
 		annotations.put(monitor_name, monitor_annotation);
 		

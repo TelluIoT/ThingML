@@ -63,21 +63,29 @@ public class EventMonitoringBinary implements MonitoringAspect {
 	final Message log_msg;
 	final TypeRef byteTypeRef;
 	
+	final boolean notSent;
+	final boolean notHandled;
+	final boolean notDiscarded;
+	
 	private static int counter = 0;
 
-	public EventMonitoringBinary(Thing thing, Property id, Port monitoringPort, Message log_msg, TypeRef byteTypeRef) {
+	public EventMonitoringBinary(Thing thing, Property id, Port monitoringPort, Message log_msg, TypeRef byteTypeRef, boolean notSent, boolean notHandled, boolean notDiscarded) {
 		this.thing = thing;
 		this.id = id;
 		this.monitoringPort = monitoringPort;
 		this.byteTypeRef = byteTypeRef;
 		this.log_msg = log_msg;
+		
+		this.notSent = notSent;
+		this.notDiscarded = notDiscarded;
+		this.notHandled = notHandled;
 	}
 	
 	@Override
 	public void monitor() {
-		logSentMessages(thing);
-		logHandledMessages(thing.getBehaviour());
-		catchLostMessages(thing.getBehaviour());
+		if (!notSent) logSentMessages(thing);
+		if (!notHandled) logHandledMessages(thing.getBehaviour());
+		if (!notDiscarded) catchLostMessages(thing.getBehaviour());
 	}
 	
 	protected byte getHanderID(Handler h) {
