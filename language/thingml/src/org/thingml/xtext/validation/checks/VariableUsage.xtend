@@ -137,10 +137,11 @@ class VariableUsage extends ThingMLValidatorCheck {
 				error(msg, v.eContainer, v.eContainingFeature, (parent as EList<Action>).indexOf(v), "readonly-not-init")
 			else
 				error(msg, v.eContainer, v.eContainingFeature, "readonly-not-init")
+			return
 		}
 		if (v.init !== null)
 			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.localVariable_Init)
-		if (v.typeRef.cardinality !== null) {
+		if (v.typeRef.isIsArray && (v.typeRef.cardinality !== null)) {
 			if (v.init !== null) {
 				val actual = TypeChecker.computeTypeOf(v.init)
 				val i = v.init
@@ -155,7 +156,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 					}
 				}
 				else if (!actual.isArray) {
-					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false)
+					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false).type.name
 					error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")										
 				}
 				else if (i instanceof PropertyReference) {
@@ -170,12 +171,12 @@ class VariableUsage extends ThingMLValidatorCheck {
 	}
 
 	@Check(FAST)
-	def checkProperty(Property v) { //FIXME: nearly duplicates previous def...
-		val expected = TyperHelper.getBroadType(v.typeRef)
+	def checkProperty(Property v) { //FIXME: nearly duplicates previous def...		
 		val parent = v.eContainer.eGet(v.eContainingFeature)
 		if (v.init !== null)
 			checkType(v, v.init, v, ThingMLPackage.eINSTANCE.property_Init)
-		if (v.typeRef.cardinality !== null) {
+		if (v.typeRef.isIsArray && (v.typeRef.cardinality !== null)) {
+			val expected = TyperHelper.getBroadType(v.typeRef)
 			if (v.init !== null) {
 				val actual = TypeChecker.computeTypeOf(v.init)												
 				val i = v.init
@@ -192,7 +193,7 @@ class VariableUsage extends ThingMLValidatorCheck {
 					}
 				}							
 				else if (!actual.isArray) {				
-					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false)
+					val msg = "Array can only be initialized with initializer {...} or from another array (or through myArray[i]=x as independent statements) " + Types.getTypeRef(expected, false).type.name
 					error(msg, v.eContainer, v.eContainingFeature, "array-wrong-assign")										
 				}
 				else if (i instanceof PropertyReference) {

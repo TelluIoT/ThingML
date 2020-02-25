@@ -179,8 +179,14 @@ public class BinaryMonitorGenerator extends ThingMLTool {
         	if (AnnotatedElementHelper.isDefined(t, "monitor", "not")) continue;
         	if (!AnnotatedElementHelper.hasAnnotation(t, "monitor")) continue;
         	
-        	//FIXME: do not include it if it has already been included manually
-        	t.getIncludes().add(logAPI);
+        	boolean included = false;
+        	for(Thing i : t.getIncludes()) {
+        		if (i.getName().equals("WithBinaryLog")) {
+        			included = true;
+        			break;
+        		}
+        	}
+        	if (!included) t.getIncludes().add(logAPI);
         	        	
         	        	
         	//////////////////////////////////////////
