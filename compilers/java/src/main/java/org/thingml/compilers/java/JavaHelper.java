@@ -34,31 +34,32 @@ import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 
 /**
  * Created by bmori on 09.12.2014.
  */
 public class JavaHelper {
 
-    public static String getDefaultValue(Type type) {
-        if (AnnotatedElementHelper.isDefined(type, "java_type", "boolean"))
+    public static String getDefaultValue(TypeRef type) {
+    	if (type.isIsArray()) return "{}";
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "boolean"))
             return "false";
-        else if (AnnotatedElementHelper.isDefined(type, "java_type", "int"))
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "int"))
             return "0";
-        else if (AnnotatedElementHelper.isDefined(type, "java_type", "long"))
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "long"))
             return "0";
-        else if (AnnotatedElementHelper.isDefined(type, "java_type", "float"))
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "float"))
             return "0.0f";
-        else if (AnnotatedElementHelper.isDefined(type, "java_type", "double"))
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "double"))
             return "0.0d";
-        else if (AnnotatedElementHelper.isDefined(type, "java_type", "byte"))
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "byte"))
             return "0";
-        else if (AnnotatedElementHelper.isDefined(type, "java_type", "short"))
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "short"))
             return "0";
-        else if (AnnotatedElementHelper.isDefined(type, "java_type", "char"))
+        if (AnnotatedElementHelper.isDefined(type.getType(), "java_type", "char"))
             return "'\u0000'";
-        else
-            return "null";
+        return "null";
     }
 
     public static String getJavaType(Type type, boolean isArray, Context ctx) {

@@ -452,7 +452,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 						if (p.getInit() != null) {
 							ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
 						} else {
-							builder.append(JavaHelper.getDefaultValue(p.getTypeRef().getType()));
+							builder.append(JavaHelper.getDefaultValue(p.getTypeRef()));
 						}
 						builder.append(");\n");
 					}

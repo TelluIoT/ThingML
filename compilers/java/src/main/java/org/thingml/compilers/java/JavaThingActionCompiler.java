@@ -259,7 +259,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 				builder.append(")];");
 			} else {
 				if (action.getTypeRef().getType() instanceof PrimitiveType) {
-					builder.append(" = " + JavaHelper.getDefaultValue(action.getTypeRef().getType()) + ";");
+					builder.append(" = " + JavaHelper.getDefaultValue(action.getTypeRef()) + ";");
 				} else {
 					builder.append(" = null;");
 				}

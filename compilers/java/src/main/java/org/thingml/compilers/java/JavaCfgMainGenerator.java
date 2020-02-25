@@ -48,7 +48,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         StringBuilder tempbuilder = new StringBuilder();
         if (e == null) {
         	tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ")"); //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
-        	tempbuilder.append(JavaHelper.getDefaultValue(p.getTypeRef().getType()));
+        	tempbuilder.append(JavaHelper.getDefaultValue(p.getTypeRef()));
         } else {
             tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ") ");
             tempbuilder.append("(");
