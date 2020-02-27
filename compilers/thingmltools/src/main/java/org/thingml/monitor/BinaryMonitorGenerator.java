@@ -82,10 +82,19 @@ public class BinaryMonitorGenerator extends ThingMLTool {
     	    			
         System.out.println("Generate ThingML from model");
         
-        final Import log_import = ThingMLFactory.eINSTANCE.createImport();
-        log_import.setFrom("stl");
-       	log_import.setImportURI("logbinary.thingml");
-        copy.getImports().add(log_import);
+        boolean imported = false;
+    	for(Thing t : ThingMLHelpers.allThings(model)) {
+    		if (t.getName().equals("WithBinaryLog")) {
+    			imported = true;
+    			break;
+    		}
+    	}
+    	if (!imported) {
+    		final Import log_import = ThingMLFactory.eINSTANCE.createImport();
+    		log_import.setFrom("stl");
+    		log_import.setImportURI("logbinary.thingml");
+    		copy.getImports().add(log_import);
+    	}
 
         copy = ThingMLHelpers.flattenModel(copy);
         final File tempFile = new File(outDir, "monitor/temp.thingml");
