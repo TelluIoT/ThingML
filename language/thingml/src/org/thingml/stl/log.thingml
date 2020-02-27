@@ -1,6 +1,6 @@
 import "datatypes.thingml" from stl
 
-thing fragment LogMsgs {
+thing fragment LogMsgs @stl {
 	
 	message log_on() @monitor "not"
 	message log_off()@monitor "not"
@@ -31,7 +31,7 @@ thing fragment LogMsgs {
 /*
  * Things we want to log needs to include WithLog 
  */
-thing fragment WithLog includes LogMsgs {
+thing fragment WithLog includes LogMsgs @stl {
 	
 	readonly property DEBUG_ID : String@monitor "not"
 	
@@ -44,7 +44,7 @@ thing fragment WithLog includes LogMsgs {
 /*
  * Generic proxy listening to things WithLog and forwarding to 
  */
-thing fragment Logger includes LogMsgs @monitor "not"{
+thing fragment Logger includes LogMsgs @stl @monitor "not"{
 	
 	readonly property ACTIVATE_ON_STARTUP : Boolean@monitor "not"
 	
@@ -100,7 +100,7 @@ thing fragment Logger includes LogMsgs @monitor "not"{
 	
 }
 
-thing ConsoleLogger includes Logger @stdout_sync "true" @monitor "not"{
+thing ConsoleLogger includes Logger @stl @stdout_sync "true" @monitor "not"{
 	
 	function log_function_called(inst : String, fn_name : String, ty : String, returns : String, params : String)@monitor "not"
 		println "function_called(", inst, ", ", fn_name, ", ", ty, ", ", returns, ", ", params, ")"

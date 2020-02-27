@@ -1,6 +1,6 @@
 import "datatypes.thingml" from stl
 
-enumeration LogType as Byte {
+enumeration LogType as Byte @stl {
 	function_called = 0
 	property_changed = 1
 	message_lost = 2
@@ -8,7 +8,9 @@ enumeration LogType as Byte {
 	message_handled = 4
 }
 
-thing fragment LogMsgs {	
+thing fragment LogMsgs 
+@stl
+{	
 	message log_on()@monitor "not"
 	message log_off()@monitor "not"
 	
@@ -18,7 +20,9 @@ thing fragment LogMsgs {
 /*
  * Things we want to log needs to include WithLog 
  */
-thing fragment WithBinaryLog includes LogMsgs {
+thing fragment WithBinaryLog includes LogMsgs 
+@stl
+{
 	
 	readonly property DEBUG_BIN_ID : Byte@monitor "not"
 		
@@ -31,7 +35,7 @@ thing fragment WithBinaryLog includes LogMsgs {
 /*
  * Generic proxy listening to things WithLog and forwarding to 
  */
-thing fragment Logger includes LogMsgs @monitor "not"{
+thing fragment Logger includes LogMsgs @stl @monitor "not"{
 	
 	readonly property ACTIVATE_ON_STARTUP : Boolean@monitor "not"
 	readonly property HAS_SIGNED_BYTE : Boolean@monitor "not"
@@ -72,7 +76,7 @@ thing fragment Logger includes LogMsgs @monitor "not"{
 	
 }
 
-thing ConsoleLogger includes Logger @monitor "not"/* @stdout_sync "true" */ {
+thing ConsoleLogger includes Logger @stl @monitor "not"/* @stdout_sync "true" */ {
 	
 	function do_log(payload : Byte[], size : UInt8) @monitor "not" do
 		var i : UInt8 = 0
