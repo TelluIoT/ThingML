@@ -6,6 +6,7 @@ enumeration LogType as Byte @stl {
 	message_lost = 2
 	message_sent = 3
 	message_handled = 4
+	custom = 5
 }
 
 thing fragment LogMsgs 
