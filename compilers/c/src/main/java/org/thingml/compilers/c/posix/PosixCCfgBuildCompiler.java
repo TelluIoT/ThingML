@@ -17,15 +17,18 @@
 package org.thingml.compilers.c.posix;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Thing;
 
 /**
@@ -62,6 +65,16 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         if (AnnotatedElementHelper.isDefined(cfg, "c_compiler", "clang")) {
         	builder.append("clang ");
         }
+        
+        final Set<String> packages = new HashSet<String>();
+        packages.addAll(AnnotatedElementHelper.annotation(cfg, "docker_install_pkg"));
+        for(Instance i : cfg.getInstances()) {
+        	packages.addAll(AnnotatedElementHelper.annotation(i.getType(), "docker_install_pkg"));
+        }
+        for(String pkg : packages) {
+        	builder.append(pkg + " ");
+        }
+        
         builder.append("&& rm -rf /var/lib/apt/lists/*\n");
         builder.append("COPY . .\n");
         builder.append("RUN make\n");        

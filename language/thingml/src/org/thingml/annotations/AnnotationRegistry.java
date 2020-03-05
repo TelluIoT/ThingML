@@ -73,6 +73,13 @@ public class AnnotationRegistry {
 		final Annotation docker_annotation = new Annotation(docker_name, docker_desc, docker_scope);
 		annotations.put(docker_name, docker_annotation);
 		
+		//@docker_install_pkg
+		final String docker_pkg_name = "docker_install_pkg";
+		final String docker_pkg_desc = "Installs one or several packages in the Docker image";
+		final EClass docker_pkg_scope[] = {ThingMLPackage.eINSTANCE.getType(), ThingMLPackage.eINSTANCE.getConfiguration()};
+		final Annotation docker_pkg_annotation = new Annotation(docker_pkg_name, docker_pkg_desc, docker_pkg_scope);
+		annotations.put(docker_pkg_name, docker_pkg_annotation);
+		
 		//@docker_jre
 		final String docker_jre_name = "docker_jre";
 		final String docker_jre_desc = "Alternative JRE to be used in the docker image";
@@ -164,6 +171,13 @@ public class AnnotationRegistry {
 		final EClass cglobal_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
 		final Annotation cglobal_annotation = new Annotation(cglobal_name, cglobal_desc, cglobal_scope);
 		annotations.put(cglobal_name, cglobal_annotation);
+		
+		//@add_c_libraries
+		final String add_c_libraries_name = "add_c_libraries";
+		final String add_c_libraries_desc = "Adds a lib to the generated Makefile.";
+		final EClass add_c_libraries_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final Annotation add_c_libraries_annotation = new Annotation(add_c_libraries_name, add_c_libraries_desc, add_c_libraries_scope);
+		annotations.put(add_c_libraries_name, add_c_libraries_annotation);
 		
 		//@fork_linux_thread
 		final String cfork_name = "fork_linux_thread";
