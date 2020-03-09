@@ -16,6 +16,7 @@
  */
 package org.thingml.monitor;
 
+import java.io.NotSerializableException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +112,17 @@ public class EventMonitoringBinary implements MonitoringAspect {
 	protected int messageSize(Message m) {
 		int size = 4;		
 		for(Parameter p : m.getParameters()) {
-			size += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
+			if (p.getTypeRef().getType() instanceof PrimitiveType)
+				size += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
+			else if (p.getTypeRef().getType() instanceof Enumeration)
+				size += ((PrimitiveType)((Enumeration)p.getTypeRef().getType()).getTypeRef().getType()).getByteSize();
+			else {
+				try { //FIXME: somehow ugly error management :-)
+					throw new NotSerializableException("Parameter " + p.getName() + " of message " + m.getName() + " cannot be serialized. Its type is " + p.getTypeRef().getType().getName());
+				} catch (NotSerializableException nse) {
+					nse.printStackTrace();
+				}
+			}
 		}
 		return size;
 	}

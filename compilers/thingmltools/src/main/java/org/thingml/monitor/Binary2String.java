@@ -17,6 +17,7 @@
 package org.thingml.monitor;
 
 import java.io.File;
+import java.io.NotSerializableException;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -24,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Message;
@@ -36,6 +38,7 @@ import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Transition;
+import org.thingml.xtext.thingML.Type;
 
 public class Binary2String implements MonitoringAspect {
 	
@@ -98,8 +101,17 @@ public class Binary2String implements MonitoringAspect {
 		writeTextFile(builder.toString());
 	}
 	
-	private void parseBytes(StringBuilder builder, PrimitiveType t, int startPayload) {
-		long size = t.getByteSize();
+	private long parseBytes(StringBuilder builder, Type t, int startPayload) {
+		long size = 0;
+		if (t instanceof PrimitiveType) size = ((PrimitiveType)t).getByteSize();
+		else if (t instanceof Enumeration) size = ((PrimitiveType)((Enumeration)t).getTypeRef().getType()).getByteSize();
+		else {
+			try { //FIXME: somehow ugly error management :-)
+				throw new NotSerializableException("Type " + t.getName() + " cannot be serialized.");
+			} catch (NotSerializableException nse) {
+				nse.printStackTrace();
+			}
+		}
 		builder.append("((``");
 		for(long i = 0; i < size; i++) {
 			builder.append(" & get_byte(payload[" + (long)(startPayload + i) + "]) & ` << " + 8*(size-1-i) + ((i<size-1)?" | ":"") + "`");
@@ -110,6 +122,7 @@ public class Binary2String implements MonitoringAspect {
 			builder.append(") as " + t.getName());
 		}
 		builder.append(")");
+		return size;
 	}
 
 	private void logFunctionCalled(StringBuilder builder) {		
@@ -137,13 +150,12 @@ public class Binary2String implements MonitoringAspect {
         			for(Parameter p : f.getParameters()) {
         				startPayload += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
         			}
-        			parseBytes(builder, (PrimitiveType)f.getTypeRef().getType(), startPayload);
+        			parseBytes(builder, f.getTypeRef().getType(), startPayload);
         		}
         		int index = 2;
         		for(Parameter p : f.getParameters()) {
         			builder.append(", \", " + p.getName() + "=\", ");
-        			parseBytes(builder, (PrimitiveType)p.getTypeRef().getType(), index);
-        			index += ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
+        			index += parseBytes(builder, p.getTypeRef().getType(), index);
         		}
         		builder.append(", \")\"\n");
         		builder.append("          end\n");
@@ -169,13 +181,11 @@ public class Binary2String implements MonitoringAspect {
         		final String p_ID = AnnotatedElementHelper.firstAnnotation(p, "id");
         		builder.append((isFirstProperty)?"          ":"          else ");
         		builder.append("if (prop == " + p_ID + ") do\n");
-        		final long size = ((PrimitiveType)p.getTypeRef().getType()).getByteSize();
         		int index = 3;
         		final StringBuilder oldBuilder = new StringBuilder();
-        		parseBytes(oldBuilder, (PrimitiveType)p.getTypeRef().getType(), index);
-        		index += size;
+        		index += parseBytes(oldBuilder, p.getTypeRef().getType(), index);
         		final StringBuilder newBuilder = new StringBuilder();
-        		parseBytes(newBuilder, (PrimitiveType)p.getTypeRef().getType(), index);
+        		parseBytes(newBuilder, p.getTypeRef().getType(), index);
         		builder.append("            println \"property_changed(" + t.getName() + t_ID + ", " + p.getName() + ", " + p.getTypeRef().getType().getName() + "\", \", \", " + oldBuilder.toString() + ", \", \", " + newBuilder.toString() + ", \")\"\n");
         		builder.append("          end\n");        		
         		isFirstProperty = false;
@@ -209,8 +219,7 @@ public class Binary2String implements MonitoringAspect {
     	        		int index = 4;
     	        		for(Parameter pa : m.getParameters()) {
     	        			builder.append(", \", " + pa.getName() + "=\", ");
-    	        			parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), index);
-    	        			index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
+    	        			index += parseBytes(builder, pa.getTypeRef().getType(), index);    	        			
     	        		}
     	        		builder.append(", \")\"\n");
     		    		builder.append("          end\n");
@@ -262,8 +271,7 @@ public class Binary2String implements MonitoringAspect {
             			int index = 3;
         				for(Parameter pa : rm.getMessage().getParameters()) {
         					builder.append(", \", " + pa.getName() + "=\", ");
-        					parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), index);
-        					index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
+        					index += parseBytes(builder, pa.getTypeRef().getType(), index);
         				}
 	        		}
 	        		builder.append(", \")\"\n");
@@ -300,8 +308,7 @@ public class Binary2String implements MonitoringAspect {
     		    		int index = 4;
     	        		for(Parameter pa : m.getParameters()) {
     	        			builder.append(", \", " + pa.getName() + "=\", ");
-    	        			parseBytes(builder, (PrimitiveType)pa.getTypeRef().getType(), index);
-    	        			index += ((PrimitiveType)pa.getTypeRef().getType()).getByteSize();
+    	        			index += parseBytes(builder, pa.getTypeRef().getType(), index);
     	        		}
     	        		builder.append(", \")\"\n");
     		    		builder.append("          end\n");

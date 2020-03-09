@@ -18,6 +18,7 @@ package org.thingml.monitor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -191,12 +192,34 @@ public class ByteHelper {
 	}
     
     public static List<Expression> serializeParam(TypeRef byteTypeRef, PropertyReference param) {
-    	final long size = ((PrimitiveType)param.getProperty().getTypeRef().getType()).getByteSize();			
+    	long size = 0;
+    	if (param.getProperty().getTypeRef().getType() instanceof PrimitiveType)
+    		size = ((PrimitiveType)param.getProperty().getTypeRef().getType()).getByteSize();
+    	else if (param.getProperty().getTypeRef().getType() instanceof Enumeration)
+    		size = ((PrimitiveType)((Enumeration)param.getProperty().getTypeRef().getType()).getTypeRef().getType()).getByteSize();
+    	else {
+			try { //FIXME: somehow ugly error management :-)
+				throw new NotSerializableException("Property " + param.getProperty().getName() + " cannot be serialized. Its type is " + param.getProperty().getTypeRef().getType().getName());
+			} catch (NotSerializableException nse) {
+				nse.printStackTrace();
+			}
+		}
 		return serializeParam(byteTypeRef, param, size);
     }
     
     public static List<Expression> serializeParam(TypeRef byteTypeRef, Variable param) {
-		final long size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
+    	long size = 0;
+    	if (param.getTypeRef().getType() instanceof PrimitiveType)
+    		size = ((PrimitiveType)param.getTypeRef().getType()).getByteSize();
+    	else if (param.getTypeRef().getType() instanceof Enumeration)
+    		size = ((PrimitiveType)((Enumeration)param.getTypeRef().getType()).getTypeRef().getType()).getByteSize();
+    	else {
+			try { //FIXME: somehow ugly error management :-)
+				throw new NotSerializableException("Variable " + param.getName() + " cannot be serialized. Its type is " + param.getTypeRef().getType().getName());
+			} catch (NotSerializableException nse) {
+				nse.printStackTrace();
+			}
+		}
 		final PropertyReference pr = ThingMLFactory.eINSTANCE.createPropertyReference();
 		pr.setProperty(param);			
 		return serializeParam(byteTypeRef, pr, size);
