@@ -28,6 +28,18 @@ import org.thingml.xtext.thingML.Thing;
  * Created by ffl on 03.05.2016.
  */
 public class ActionHelper {
+	
+    public static <T extends Action> List<T> getAllContainedActions(EObject self, Class<T> clazz) {
+        List<T> result = new ArrayList<T>();
+
+        TreeIterator<EObject> it = self.eAllContents();
+        while(it.hasNext()) {
+            EObject o = it.next();
+            if (clazz.isInstance(o)) result.add((T) o);
+        }        
+        if (clazz.isInstance(self)) result.add((T)self);                
+        return result;
+    }
 
 
     public static <T extends Action> List<T> getAllActions(EObject self, Class<T> clazz) {
