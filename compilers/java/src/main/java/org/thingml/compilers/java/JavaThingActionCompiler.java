@@ -69,7 +69,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		if (action.getVar() instanceof Property) {
 			builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "(");
 			builder.append("(" + JavaHelper.getJavaType(action.getVar().getTypeRef().getType(),
-					action.getVar().getTypeRef().getCardinality() != null, ctx) + ")");
+					action.getVar().getTypeRef().getCardinality() != null) + ")");
 			builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "()");
 			builder.append(" + 1));\n");
 		} else {
@@ -82,7 +82,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		if (action.getVar() instanceof Property) {
 			builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "(");
 			builder.append("(" + JavaHelper.getJavaType(action.getVar().getTypeRef().getType(),
-					action.getVar().getTypeRef().getCardinality() != null, ctx) + ")");
+					action.getVar().getTypeRef().getCardinality() != null) + ")");
 			builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "()");
 			builder.append(" - 1));\n");
 		} else {
@@ -242,7 +242,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		}
 
 		// Define the type of the variable
-		builder.append(JavaHelper.getJavaType(action.getTypeRef().getType(), action.getTypeRef().isIsArray(), ctx));
+		builder.append(JavaHelper.getJavaType(action.getTypeRef().getType(), action.getTypeRef().isIsArray()));
 		builder.append(" ");
 
 		builder.append(ctx.getVariableName(action));
@@ -254,7 +254,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			builder.append(";\n");
 		} else {
 			if (action.getTypeRef().getCardinality() != null) {
-				builder.append(" = new " + JavaHelper.getJavaType(action.getTypeRef().getType(), false, ctx) + "[(int)(");
+				builder.append(" = new " + JavaHelper.getJavaType(action.getTypeRef().getType(), false) + "[(int)(");
 				generate(action.getTypeRef().getCardinality(), builder, ctx);
 				builder.append(")];");
 			} else {
@@ -420,7 +420,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 		final EObject container = expression.eContainer();
 		final TypeRef typeref = (TypeRef) container.eGet(ThingMLPackage.eINSTANCE.getVariable_TypeRef());				
 		final Type t = typeref.getType();		
-		builder.append("new " + JavaHelper.getJavaType(t, false, ctx) + "[]");
+		builder.append("new " + JavaHelper.getJavaType(t, false) + "[]");
 		builder.append("{");
 		for(Expression e : expression.getValues()) {
 			if (expression.getValues().indexOf(e)>0)
@@ -434,10 +434,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	public void generate(ForAction fa, StringBuilder builder, Context ctx) {
 		if (fa.getIndex() != null) {
 			builder.append("{\n");
-			final String t = JavaHelper.getJavaType(fa.getIndex().getTypeRef().getType(), false, ctx);
+			final String t = JavaHelper.getJavaType(fa.getIndex().getTypeRef().getType(), false);
 			builder.append(t + " " + ctx.getVariableName(fa.getIndex()) + " = 0;\n");
 		}
-		final String t = JavaHelper.getJavaType(fa.getVariable().getTypeRef().getType(), false, ctx);
+		final String t = JavaHelper.getJavaType(fa.getVariable().getTypeRef().getType(), false);
 		builder.append("for(" + t + " " + ctx.getVariableName(fa.getVariable()) + " : " + ctx.getVariableName(fa.getArray().getProperty()) + ") {\n");
 		generate(fa.getAction(), builder, ctx);
 		if (fa.getIndex() != null) {

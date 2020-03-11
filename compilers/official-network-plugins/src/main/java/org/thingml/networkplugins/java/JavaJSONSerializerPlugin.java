@@ -181,7 +181,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
                 if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
                     if (m.getParameters().indexOf(p) > 0)
                         builder.append(", ");
-                    builder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, context) + ") ");
+                    builder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null) + ") ");
                     builder.append("msg.get(msgName).asObject().get(\"" + p.getName() + "\")");
                     String getter = "asString()";
                     switch (AnnotatedElementHelper.annotationOrElse(p.getTypeRef().getType(), "java_type", "void")) {

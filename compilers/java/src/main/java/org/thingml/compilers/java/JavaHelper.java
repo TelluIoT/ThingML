@@ -62,7 +62,7 @@ public class JavaHelper {
         return "null";
     }
 
-    public static String getJavaType(Type type, boolean isArray, Context ctx) {
+    public static String getJavaType(Type type, boolean isArray) {
         StringBuilder builder = new StringBuilder();
         if (type == null) {//void
             builder.append("void");
@@ -113,7 +113,7 @@ public class JavaHelper {
         for (Parameter pa : m.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            builder.append(JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            builder.append(JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray()) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
             i++;
         }
     }
@@ -123,7 +123,7 @@ public class JavaHelper {
         for (Parameter pa : m.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            builder.append("final " + JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            builder.append("final " + JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray()) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
             i++;
         }
     }

@@ -72,7 +72,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		for (Parameter p : m.getParameters()) {
 			if (m.getParameters().indexOf(p) > 0)
 				builder.append(", ");
-			builder.append("final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx)
+			builder.append("final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray())
 					+ " " + ctx.protectKeyword(p.getName()));
 		}
 		builder.append(") { return new " + ctx.firstToUpper(m.getName()) + "Message(this");
@@ -86,21 +86,20 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		for (Parameter p : m.getParameters()) {
 			String cast;
 			if (p.getTypeRef().isIsArray() || p.getTypeRef().getCardinality() != null) {
-				cast = JavaHelper.getJavaType(p.getTypeRef().getType(), true, ctx);
+				cast = JavaHelper.getJavaType(p.getTypeRef().getType(), true);
 			} else {
-				if (JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, ctx)
+				if (JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null)
 						.equals("int"))
 					cast = "Integer";
-				else if (JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, ctx)
+				else if (JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null)
 						.equals("char"))
 					cast = "Character";
-				else if (JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, ctx)
+				else if (JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null)
 						.contains("."))
-					cast = JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null,
-							ctx); // extern datatype with full qualified name
+					cast = JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null); // extern datatype with full qualified name
 				else
 					cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getTypeRef().getType(),
-							p.getTypeRef().getCardinality() != null, ctx));
+							p.getTypeRef().getCardinality() != null));
 			}
 			if (m.getParameters().indexOf(p) > 0)
 				builder.append(", ");
@@ -114,7 +113,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 		for (Parameter p : m.getParameters()) {
 			builder.append(
-					"public final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx)
+					"public final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray())
 							+ " " + ctx.protectKeyword(p.getName()) + ";\n");
 		}
 
@@ -133,7 +132,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append("protected " + ctx.firstToUpper(m.getName()) + "Message(EventType type");
 		for (Parameter p : m.getParameters()) {
 			builder.append(
-					", final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+					", final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray()) + " "
 							+ ctx.protectKeyword(p.getName()));
 		}
 		builder.append(") {\n");
@@ -160,7 +159,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
 		final String returnType = JavaHelper.getJavaType(((f.getTypeRef() != null) ? f.getTypeRef().getType() : null),
-				((f.getTypeRef() != null) ? f.getTypeRef().isIsArray() : false), ctx);
+				((f.getTypeRef() != null) ? f.getTypeRef().isIsArray() : false));
 		builder.append(AnnotatedElementHelper.annotationOrElse(f, "java_visibility", "") + " ");
 		builder.append(returnType + " " + f.getName() + "(");
 		JavaHelper.generateParameter(f, builder, ctx);
@@ -288,29 +287,29 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append("//Attributes\n");
 		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
 			builder.append("private ");
-			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));
+			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray()) + " " + ctx.getVariableName(p));
 			builder.append(";\n");
 		}
 		for (Property p : ThingHelper.allSessionsProperties(thing)) {
 			builder.append("private ");
-			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));
+			builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray()) + " " + ctx.getVariableName(p));
 			Expression e = ThingHelper.initExpression(thing, p);
 			if (e != null) {
 				builder.append(" = ");
 				ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
 			}
 			builder.append(";\n");
-			builder.append("private " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx)
+			builder.append("private " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray())
 			+ " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p)
 			+ ";\n}\n\n");
 			if (!p.isReadonly()) {
 				builder.append("private void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
-						+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+						+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray()) + " "
 						+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
 						+ ctx.getVariableName(p) + ";\n}\n\n");
 			}
 			builder.append("public " + thing.getName() + " init" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
-					+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+					+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray()) + " "
 					+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
 					+ ctx.getVariableName(p) + ";\nreturn this;\n}\n\n");
 		}
@@ -333,17 +332,17 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 		builder.append("//Getters and Setters for non readonly/final attributes\n");
 		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-			builder.append("public " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx)
+			builder.append("public " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray())
 					+ " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p)
 					+ ";\n}\n\n");
 			if (!p.isReadonly()) {
 				builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
-						+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+						+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray()) + " "
 						+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
 						+ ctx.getVariableName(p) + ";\n}\n\n");
 			}
 			builder.append("public " + thing.getName() + " init" + ctx.firstToUpper(ctx.getVariableName(p)) + "("
-					+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " "
+					+ JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray()) + " "
 					+ ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = "
 					+ ctx.getVariableName(p) + ";\nreturn this;\n}\n\n");
 		}
@@ -448,7 +447,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 						if (p.isReadonly()) continue;
 						builder.append("this.set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(");
 						builder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(),
-								p.getTypeRef().getCardinality() != null, ctx) + ")");
+								p.getTypeRef().getCardinality() != null) + ")");
 						if (p.getInit() != null) {
 							ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
 						} else {

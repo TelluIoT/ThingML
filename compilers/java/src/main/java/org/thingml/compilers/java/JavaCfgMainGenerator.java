@@ -47,10 +47,10 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 	private static String generateInitialValue(Configuration cfg, Instance i, Property p, Expression e, Context ctx) {
         StringBuilder tempbuilder = new StringBuilder();
         if (e == null) {
-        	tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ")"); //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
+        	tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false) + ")"); //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
         	tempbuilder.append(JavaHelper.getDefaultValue(p.getTypeRef()));
         } else {
-            tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ") ");
+            tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false) + ") ");
             tempbuilder.append("(");
             ctx.generateFixedAtInitValue(cfg, i, e, tempbuilder);
             tempbuilder.append(")");
@@ -95,7 +95,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
         	ctx.currentInstance = i;
             for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-                builder.append("final " + JavaHelper.getJavaType(a.getTypeRef().getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getTypeRef().getType(), false, ctx) + "[");
+                builder.append("final " + JavaHelper.getJavaType(a.getTypeRef().getType(), true) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getTypeRef().getType(), false) + "[");
                 ctx.generateFixedAtInitValue(cfg, i, a.getTypeRef().getCardinality(), builder);
                 builder.append("];\n");
             }
