@@ -1,0 +1,6 @@
+thing TestCheckStateMachine
+@checker_should_fail "true"
+@test_enum "D"
+{
+
+}

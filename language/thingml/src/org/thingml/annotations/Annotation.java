@@ -18,6 +18,7 @@ package org.thingml.annotations;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.thingml.xtext.thingML.Literal;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 public class Annotation {
@@ -37,7 +38,7 @@ public class Annotation {
 		return name;
 	}
 	
-	public boolean check(EObject source, String value) {
+	public boolean check(EObject source, Literal value) {
 		for(EClass clazz : scope) {
 			if (clazz.isInstance(source)) {
 				return true;

@@ -1,10 +1,9 @@
 import "datatypes.thingml" from stl
 
-enumeration E 
-@type_checker "Integer"
+enumeration E as Integer
 {
-	FIRST @enum_val "0"
-	SECOND @enum_val "1"
+	FIRST = 0
+	SECOND = 1
 }
 
 thing TestCheckFunctionCalls
@@ -14,10 +13,9 @@ thing TestCheckFunctionCalls
     end
 
     statechart TestAbstractFunction init INIT {
-		//Should fail because foo is called is wrong number of params.
     	state INIT {
     		on entry do
-    			bar(1) //an integer is not an E
+    			bar(2) //an integer is not an E, especially if it is out of range for the enum...
     		end
     	}
     }

@@ -91,7 +91,7 @@ public class TyperHelper {
     	if (t == Types.OBJECT_TYPEREF) //Only String, Object and Any are Object
     		return self == Types.ANY_TYPEREF || self == Types.OBJECT_TYPEREF || self == Types.STRING_TYPEREF; 
         if (self == Types.ANY_TYPEREF)//Any is anything
-            return t != Types.ERROR_TYPEREF;
+            return true; //t != Types.ERROR_TYPEREF;
         if (t == Types.ANY_TYPEREF)//anything is an Any
             return /*self != Types.OBJECT_TYPE &&*/ self != Types.ERROR_TYPEREF;
         if (self == Types.BOOLEAN_TYPEREF && (t == Types.BYTE_TYPEREF || t == Types.INTEGER_TYPEREF)) //a Boolean is a Byte/Integer

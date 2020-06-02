@@ -28,6 +28,7 @@ import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 
@@ -51,7 +52,9 @@ public class GoTestCase extends ThingMLTestCase {
 	protected void populateFileDumper(Thing dumper, ActionBlock function, Property path) throws AssertionError {
 		PlatformAnnotation ann = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
 		ann.setName("go_import");
-		ann.setValue("os");
+		final StringLiteral lit = ThingMLFactory.eINSTANCE.createStringLiteral();
+		lit.setStringValue("os");
+		ann.setValue(lit);
 		dumper.getAnnotations().add(ann);
 		
 		ThingMLInjector.addActions(function,
@@ -70,7 +73,9 @@ public class GoTestCase extends ThingMLTestCase {
 	protected void populateStopExecution(Thing thing, ActionBlock body) throws AssertionError {
 		PlatformAnnotation ann = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
 		ann.setName("go_import");
-		ann.setValue("os");
+		final StringLiteral lit = ThingMLFactory.eINSTANCE.createStringLiteral();
+		lit.setStringValue("os");
+		ann.setValue(lit);
 		thing.getAnnotations().add(ann);
 		
 		ThingMLInjector.addActions(body,

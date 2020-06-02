@@ -1,0 +1,14 @@
+import "datatypes.thingml" from stl
+
+enumeration MYENUM as String {
+	A = "A"
+	B = "B"
+	C = "C"
+}
+
+thing TestCheckStateMachine
+@checker_should_fail "false"
+@test_enum MYENUM:A
+{
+
+}

@@ -18,6 +18,9 @@ package org.thingml.annotations;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.Literal;
 
 public class IntegerAnnotation extends Annotation {
 	
@@ -29,10 +32,10 @@ public class IntegerAnnotation extends Annotation {
 	}
 
 	@Override
-	public boolean check(EObject source, String value) {
+	public boolean check(EObject source, Literal value) {
 		if (!super.check(source, value)) return false;
 		try {
-			int v = Integer.parseInt(value);
+			long v = (value instanceof IntegerLiteral)? ((IntegerLiteral)value).getIntValue() : Integer.parseInt(AnnotatedElementHelper.toString(value));
 			if (onlyPositive) return v >= 0;
 			return true;
 		} catch (NumberFormatException nfe) {
@@ -45,7 +48,7 @@ public class IntegerAnnotation extends Annotation {
 		if (onlyPositive)
 			return super.toString() + " Valid values are positive integers.";
 		else
-			return super.toString() + " Valid values integers.";
+			return super.toString() + " Valid values are integers.";
 	}
 
 }

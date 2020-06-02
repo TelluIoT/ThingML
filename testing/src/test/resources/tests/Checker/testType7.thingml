@@ -9,7 +9,7 @@ thing TestCheckStateMachine
     	state INIT {  
     		on entry do    			
     			var p : DT
-    			p = (1 == true) //should fail as we cannot compare Integer to Boolean
+    			p = ('t' == true) //should fail as we cannot compare String to Boolean
     		end  		    
     	}
     }

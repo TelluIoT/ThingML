@@ -35,6 +35,7 @@ import org.thingml.xtext.thingML.InternalTransition
 import org.thingml.xtext.thingML.ReceiveMessage
 import org.thingml.xtext.thingML.Handler
 import org.thingml.xtext.thingML.IntegerLiteral
+import org.thingml.xtext.helpers.AnnotatedElementHelper
 
 /**
  * Provides labels for EObjects.
@@ -75,10 +76,10 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 		'outline/open iconic/paperclip-2x.png'
 	}	
 	def text(PlatformAnnotation annotation) {
-		if (annotation.value.length < 16)
-			annotation.name + ': ' + annotation.value
+		if (AnnotatedElementHelper.toString(annotation.value).length < 16)
+			annotation.name + ': ' + AnnotatedElementHelper.toString(annotation.value)
 		else 
-			annotation.name + ': ' + annotation.value.substring(0, 16) + "..."
+			annotation.name + ': ' + AnnotatedElementHelper.toString(annotation.value).substring(0, 16) + "..."
 	}
 	
 	def image(Type datatype) {

@@ -12,5 +12,5 @@ thing TestCheckAssign
 
 configuration cfg {
 	instance i : TestCheckAssign
-	set i.p = false    //wrong type
+	set i.p = "1"
 }

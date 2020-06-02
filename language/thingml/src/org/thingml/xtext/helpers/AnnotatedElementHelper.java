@@ -18,12 +18,19 @@ package org.thingml.xtext.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.AnnotatedElement;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ByteLiteral;
+import org.thingml.xtext.thingML.CharLiteral;
+import org.thingml.xtext.thingML.DoubleLiteral;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.ExternLiteral;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.Literal;
 import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 
 /**
@@ -31,23 +38,16 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class AnnotatedElementHelper {
 
-	private static Pattern leadingTrailingNewlines = Pattern.compile("^\\s+\\n|\\n\\s+$");
-
-	private static String cleanAnnotation(String value) {
-		// Remove surrounding double-quotes
-		String unquoted = value;
-		if (value.startsWith("\"") && value.endsWith("\"")) {
-			unquoted = value.substring(1, value.length()-1);
-		}
-		// Remove leading and trailing patterns of newlines an spaces
-		// These commonly occur when a annotation is split over multiple lines
-		Matcher m = leadingTrailingNewlines.matcher(unquoted);
-		StringBuffer stripped = new StringBuffer(unquoted.length());
-		while (m.find())
-			m.appendReplacement(stripped, "");
-		m.appendTail(stripped);
-		// Done
-		return stripped.toString();
+	public static String toString(Literal value) {
+		if (value instanceof StringLiteral) return ((StringLiteral)value).getStringValue();
+		if (value instanceof ExternLiteral) return ((ExternLiteral)value).getStringValue();
+		if (value instanceof ByteLiteral) return Byte.toString(((ByteLiteral)value).getByteValue());
+		if (value instanceof IntegerLiteral) return Long.toString(((IntegerLiteral)value).getIntValue());
+		if (value instanceof DoubleLiteral) return Double.toString(((DoubleLiteral)value).getDoubleValue());
+		if (value instanceof BooleanLiteral) return Boolean.toString(((BooleanLiteral)value).isBoolValue());
+		if (value instanceof CharLiteral) return Byte.toString(((CharLiteral)value).getCharValue());
+		if (value instanceof EnumLiteralRef) return toString(((EnumLiteralRef)value).getLiteral().getInit());
+		return null;
 	}
 	
     public static List<String> allAnnotation(Thing self, String name) {
@@ -55,7 +55,7 @@ public class AnnotatedElementHelper {
     	for (Thing t : ThingMLHelpers.allThingFragments(self)) {
     		for(PlatformAnnotation a : t.getAnnotations()) {
     			if (a.getName().equals(name) && a.getValue() != null)
-    				annotations.add(a.getValue());	
+    				annotations.add(toString(a.getValue()));	
     		}
     		
     	}    	
@@ -68,7 +68,7 @@ public class AnnotatedElementHelper {
             if (a.getName().equals(annotation)) {
             	if (a.getValue() == null)
             		continue;
-                if (value.equals(cleanAnnotation(a.getValue())))
+                if (value.equals(toString(a.getValue())))
                     return true;
             }
         }
@@ -102,7 +102,7 @@ public class AnnotatedElementHelper {
         List<String> result = new ArrayList<String>();
         for (PlatformAnnotation a : self.getAnnotations()) {
             if (a.getName().equals(name) && a.getValue() != null) {
-                result.add(cleanAnnotation(a.getValue()));
+                result.add(toString(a.getValue()));
             }
         }
         return result;

@@ -35,6 +35,7 @@ import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
@@ -44,7 +45,7 @@ public abstract class LoadModelTestsCommon {
 	/* --- Some helper functions --- */
 	private void checkAnnotation(AnnotatedElement e, String type, String name, String value) {
 		for (PlatformAnnotation a : e.getAnnotations()) {
-			if (a.getName().equals(name) && a.getValue().equals(value))
+			if (a.getName().equals(name) && ((StringLiteral)a.getValue()).getStringValue().equals(value))
 				return;
 		}
 		fail("'"+type+"' has annotation @"+name+"='"+value+"'");

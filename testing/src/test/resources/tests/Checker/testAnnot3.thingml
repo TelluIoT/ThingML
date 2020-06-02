@@ -1,0 +1,6 @@
+thing TestCheckStateMachine
+@checker_should_fail "false"
+@test_integer 0
+{
+
+}

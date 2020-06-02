@@ -56,11 +56,6 @@
         </dependency>
         <dependency>
             <groupId>org.thingml</groupId>
-            <artifactId>compilers.debugGUI</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.thingml</groupId>
             <artifactId>compilers.registry</artifactId>
             <version>${thingml.version}</version>
         </dependency>

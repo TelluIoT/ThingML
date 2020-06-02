@@ -7,7 +7,7 @@ thing TestCheckStateMachine
     	state INIT {  
     		on entry do
     			var p : DT
-    			p = true or false or 0//should fail because false or 0 is an error
+    			p = true or false or "false"
     		end  		    
     	}
     }

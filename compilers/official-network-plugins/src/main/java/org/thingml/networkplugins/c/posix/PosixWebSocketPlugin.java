@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.impl.ThingMLFactoryImpl;
@@ -78,7 +79,9 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
             factory = ThingMLFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
-            pan.setValue("websockets");
+            final StringLiteral lit = factory.createStringLiteral();
+            lit.setStringValue("websockets");
+            pan.setValue(lit);
             cfg.getAnnotations().add(pan);
         }
     }

@@ -79,7 +79,7 @@ public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 			if (ctx.hasContextAnnotation("use_fifo", "true")) {
 				body.append("this.fifo = fifo;");
 			} else {
-				body.append("this.bus = (root === null)? new EventEmitter() : this.root.bus;");
+				body.append("this.bus = (root === null)? new EventEmitter() : root.bus;");
 			}
 			
 			// Common constructor body

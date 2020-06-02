@@ -237,7 +237,7 @@ public class AnnotationRegistry {
 		final String tc_name = "type_checker";
 		final String tc_desc = "Specifies the abstract type of a ThingML-defined primitive type. Used by the type checker.";
 		final EClass tc_scope[] = {ThingMLPackage.eINSTANCE.getType()};
-		final String tc_values[] = {"Byte", "Integer", "Boolean", "Character", "String", "Real", "Void", "Object"};
+		final String tc_values[] = {"Byte", "Integer", "Boolean", "Character", "String", "Real", "Void", "Object", "Any"};
 		final Annotation tc_annotation = new EnumAnnotation(tc_name, tc_desc, tc_scope, tc_values);
 		annotations.put(tc_name, tc_annotation);
 		
@@ -376,6 +376,27 @@ public class AnnotationRegistry {
 			"nodejs_package_publish_config_registry",
 			"Optional registry to publish NPM packages on other registries.",
 			new EClass[] {ThingMLPackage.eINSTANCE.getConfiguration()}
+		));
+		
+		/** Testing **/
+		annotations.put("test_onlything", new Annotation(
+			"test_onlything",
+			"Only for testing annotations. Please ignore.",
+			new EClass[] {ThingMLPackage.eINSTANCE.getThing()}
+		));
+		
+		annotations.put("test_integer", new IntegerAnnotation(
+				"test_integer",
+				"Only for testing annotations. Please ignore.",
+				new EClass[] {ThingMLPackage.eINSTANCE.getThing()},
+				false
+		));
+		
+		annotations.put("test_enum", new EnumAnnotation(
+				"test_enum",
+				"Only for testing annotations. Please ignore.",
+				new EClass[] {ThingMLPackage.eINSTANCE.getThing()},
+				new String[] {"A", "B", "C"}
 		));
 	}
 	

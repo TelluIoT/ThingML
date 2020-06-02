@@ -4,7 +4,7 @@ thing TestCheckFunctionReturn
 {
 	//Should fail because function returns wrong type
     function foo(a : Integer) : Integer do
-      return false
+      return "0"
     end
 
     statechart TestAbstractFunction init INIT {

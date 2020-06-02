@@ -7,7 +7,7 @@ thing TestCheckStateMachine
     	state INIT {  
     		on entry do
     			var p : DT
-    			p = false //should fail because boolean is not an Integer
+    			p = "0"
     		end  		    
     	}
     }

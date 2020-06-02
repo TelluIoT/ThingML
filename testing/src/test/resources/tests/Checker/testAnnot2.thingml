@@ -1,0 +1,5 @@
+thing fragment TestCheckStateMachine
+@checker_should_fail "true"
+{
+	abstract function f() @test_onlything false
+}

@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.thingmltools.ThingMLTool;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.ByteLiteral;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Import;
@@ -123,40 +124,52 @@ public class BinaryMonitorGenerator extends ThingMLTool {
     			final Message m = (Message) o;
     			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
     			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.messageID()));
+    			final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+    			id.setByteValue(ByteHelper.messageID());
+    			ma.setValue(id);
     			m.getAnnotations().add(ma);
     		} else if (o instanceof Port) {
     			final Port port = (Port) o;    			
     			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
     			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.portID()));
+    			final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+    			id.setByteValue(ByteHelper.messageID());
+    			ma.setValue(id);
     			port.getAnnotations().add(ma);
     		}else if (o instanceof Thing) {
     			final Thing thing = (Thing) o;
     			if (AnnotatedElementHelper.isDefined(thing, "monitor", "not") || !AnnotatedElementHelper.hasAnnotation(thing, "monitor")) continue;
     			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
     			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.thingID()));
+    			final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+    			id.setByteValue(ByteHelper.messageID());
+    			ma.setValue(id);
     			thing.getAnnotations().add(ma);
     		} else if (o instanceof Function) {
     			final Function f = (Function) o;
     			if (f.isAbstract() || AnnotatedElementHelper.isDefined(f, "monitor", "not")) continue;
     			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
     			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.functionID()));
+    			final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+    			id.setByteValue(ByteHelper.messageID());
+    			ma.setValue(id);
     			f.getAnnotations().add(ma);
     		} else if (o instanceof Property) {
     			final Property p = (Property) o;
     			if (AnnotatedElementHelper.isDefined(p, "monitor", "not")) continue;
     			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
     			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.varID()));
+    			final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+    			id.setByteValue(ByteHelper.messageID());
+    			ma.setValue(id);
     			p.getAnnotations().add(ma);
     		} else if (o instanceof Handler) {
     			final Handler h = (Handler) o;    			
     			final PlatformAnnotation ma = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
     			ma.setName("id");
-    			ma.setValue(Byte.toString(ByteHelper.handlerID()));
+    			final ByteLiteral id = ThingMLFactory.eINSTANCE.createByteLiteral();
+    			id.setByteValue(ByteHelper.messageID());
+    			ma.setValue(id);
     			h.getAnnotations().add(ma);
     		} 
     	}

@@ -20,6 +20,8 @@ import java.util.Arrays;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Literal;
 
 public class EnumAnnotation extends Annotation {
 	
@@ -29,12 +31,13 @@ public class EnumAnnotation extends Annotation {
 		super(name, description, scope);
 		this.values = values;
 	}
-
+	
 	@Override
-	public boolean check(EObject source, String value) {
+	public boolean check(EObject source, Literal value) {
 		if (!super.check(source, value)) return false;
 		for(String v : values) {
-			if (value.equals(v)) {
+			final String stringValue = AnnotatedElementHelper.toString(value);			
+			if (v.equals(stringValue)) {
 				return true;
 			}
 		}

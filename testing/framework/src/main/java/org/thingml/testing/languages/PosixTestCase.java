@@ -30,6 +30,7 @@ import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 
@@ -56,7 +57,9 @@ public class PosixTestCase extends ThingMLTestCase {
 		for (String header : headers) {
 			PlatformAnnotation annotation = ThingMLFactory.eINSTANCE.createPlatformAnnotation();
 			annotation.setName("c_header");
-			annotation.setValue(header);
+			final StringLiteral lit = ThingMLFactory.eINSTANCE.createStringLiteral();
+			lit.setStringValue(header);
+			annotation.setValue(lit);
 			element.getAnnotations().add(annotation);
 		}
 	}

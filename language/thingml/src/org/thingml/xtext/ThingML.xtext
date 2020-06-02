@@ -14,10 +14,10 @@ Import returns Import:
 	"import" importURI=STRING ("from" from=ID)?;
 
 
+
 PlatformAnnotation returns PlatformAnnotation:
-	name=ANNOTATION_ID (value=EXTERN | value=STRING)?; 
-
-
+	name=ANNOTATION_ID (value=Literal)?;
+	
 NamedElement:
 	Protocol | Function  | Message | Port | Configuration | Handler | State | StateContainer | 
 	Type | Variable | Instance | AbstractConnector | EnumerationLiteral | Event |
@@ -344,7 +344,7 @@ ExternExpression returns ExternExpression:
 	expression=EXTERN ('&' segments+=Expression)*;
 	
 Literal returns Literal:
-	EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral
+	EnumLiteralRef | ByteLiteral | CharLiteral | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | ExternLiteral
 ;
 
 ArrayInit returns ArrayInit:
@@ -366,6 +366,9 @@ IntegerLiteral returns IntegerLiteral:
 BooleanLiteral returns BooleanLiteral:
 	(boolValue?='true') | {BooleanLiteral} 'false'
 	;
+
+ExternLiteral returns ExternLiteral:
+	stringValue=EXTERN;
 
 StringLiteral returns StringLiteral:
 	stringValue=STRING;

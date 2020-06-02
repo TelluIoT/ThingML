@@ -30,6 +30,8 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.impl.ParameterImpl;
 
 /**
@@ -165,7 +167,9 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             // Set the @json_message_name annotation
             PlatformAnnotation jsonMsgName = EcoreUtil.copy(msg.getAnnotations().get(0));
             jsonMsgName.setName("json_message_name");
-            jsonMsgName.setValue("observation");
+            final StringLiteral lit = ThingMLFactory.eINSTANCE.createStringLiteral();
+            lit.setStringValue("observation");
+            jsonMsgName.setValue(lit);
             msg.getAnnotations().add(jsonMsgName);
 
             // Generate JSON serialisation of modified message

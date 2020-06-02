@@ -1,0 +1,6 @@
+thing TestCheckStateMachine
+@checker_should_fail "false"
+@test_integer "0" //we still tolerate using a string for annotations supposed to be integer... as long as it parses to an int
+{
+
+}

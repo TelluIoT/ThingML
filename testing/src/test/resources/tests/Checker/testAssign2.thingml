@@ -4,7 +4,7 @@ datatype DT<1>
 thing TestCheckStateMachine
 {
 	readonly property p : DT = 0
-	set p = false    //wrong type
+	set p = "1"
     
     statechart TestAbstractFunction init INIT {
     	state INIT {}
