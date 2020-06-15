@@ -175,14 +175,14 @@ public class AnnotationRegistry {
 		//@add_c_libraries
 		final String add_c_libraries_name = "add_c_libraries";
 		final String add_c_libraries_desc = "Adds a lib to the generated Makefile.";
-		final EClass add_c_libraries_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final EClass add_c_libraries_scope[] = {ThingMLPackage.eINSTANCE.getThing(), ThingMLPackage.eINSTANCE.getConfiguration()};
 		final Annotation add_c_libraries_annotation = new Annotation(add_c_libraries_name, add_c_libraries_desc, add_c_libraries_scope);
 		annotations.put(add_c_libraries_name, add_c_libraries_annotation);
 		
 		//@add_c_modules
 		final String add_c_modules_name = "add_c_modules";
 		final String add_c_modules_desc = "Copy <modules>.c <modules>.h and add them to the generated Makefile";
-		final EClass add_c_modules_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final EClass add_c_modules_scope[] = {ThingMLPackage.eINSTANCE.getThing(), ThingMLPackage.eINSTANCE.getConfiguration()};
 		final Annotation add_c_modules_annotation = new Annotation(add_c_modules_name, add_c_modules_desc, add_c_modules_scope);
 		annotations.put(add_c_modules_name, add_c_modules_annotation);
 		
