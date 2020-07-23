@@ -53,6 +53,11 @@
 			<artifactId>asm-tree</artifactId>
 			<version>8.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.thingml</groupId>
+			<artifactId>compilers.registry</artifactId>
+			<version>${thingml.version}</version>
+		</dependency>
 	</dependencies>	
 
 	<build>
