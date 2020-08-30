@@ -19,10 +19,10 @@ The ThingML language is supported by a set of tools, which include editors, tran
 
 ### Versions and Distribution
 
-The current **recommended version of ThingML is version 2.X.X**. Some tagged versions are available on the [Github release page](https://github.com/TelluIoT/ThingML/releases) but the latest version is distributed as:
+The current **recommended version of ThingML is version 2.X.X**. Tagged versions are available on the [Github release page](https://github.com/TelluIoT/ThingML/releases):
 
-* A standalone JAR which can be used from the command line: [http://thingml.org/dist/ThingML2CLI.jar](http://thingml.org/dist/ThingML2CLI.jar)
-* An eclipse update site to install the ThingML IDE in eclipse: [http://thingml.org/dist/update2](http://thingml.org/dist/update2)
+* A standalone JAR which can be used from the command line: look for the most recent `*.jar` file on the releases page
+* An eclipse update site to install the ThingML IDE in eclipse: look for the most revent `*.zip` on the releases page
 
 > **Version 1.X.X** is not maintained and should not be used (maintenance was stopped in Q3 2017). Version 2.X.X introduces a complete rewrite of the parser and editors based on XText. A few syntactical changes make the ThingML programs written for version 1 not compatible with version 2. There are also a few constructs which were evaluated in version 1 and were not re-implemented in version 2 (e.g. groups, streams, etc).
 
