@@ -28,7 +28,7 @@ The current **recommended version of ThingML is version 2.X.X**. Tagged versions
 
 ### ThingML Command Line Compiler
 
-The ThingML command line compiler is distributed as a standalone JAR. It **requires Java 8 or newer**. The latest version can be found at [http://thingml.org/dist/ThingML2CLI.jar](http://thingml.org/dist/ThingML2CLI.jar)
+The ThingML command line compiler is distributed as a standalone JAR. It **requires Java 8 or newer**. The latest version (`*.jar`) can be found on [the releases pages](https://github.com/TelluIoT/ThingML/releases)
 
 The command line tool contains all the code generators and plugins which are part of this repository.
 
@@ -36,17 +36,12 @@ The command line tool contains all the code generators and plugins which are par
 
 ### ThingML Eclipse-Based IDE
 
-1. Download and install "Eclipse IDE for Java and DSL Developers" from [the eclipse website](https://eclipse.org/downloads/eclipse-packages/). You should use version *2018-09* or greater to have all the ThingML dependency already installed.
-2. Launch Eclipse
-3. Install the ThingML plugins: `Help -> Install New Software... -> Add...` and input `ThingML` as name and `http://thingml.org/dist/update2` as location, and then `OK`. If the ThingML plugin refuses to install, it is most likely because you have an old version of XText installed.
-4. Select ThingML and continue with the install procedure
+1. Install "Eclipse IDE for Java and DSL Developers" from the [Eclipse website](https://www.eclipse.org/downloads/).
+2. Download the most recent update site (`*.zip`) from [the releases pages](https://github.com/TelluIoT/ThingML/releases).
+3. Launch Eclipse
+4. Install the ThingML plugins from the `*.zip` file: `Help -> Install New Software... -> Add... -> Archive...` 
 
-**Usage:** Once ThingML plugins are installed, `*.thingml` files will open with the ThingML editors. Right-click on `*.thingml` files and use `HEADS / ThingML` sub-menu to compile a ThingML file. Generated code will be put in a `thingml-gen` folder at the root of the eclipse project. Remember that only ThingML files containing a `configuration` can be compiled.    
-
-> **Installing an earlier version of ThingML:** The update site `http://thingml.org/dist/update2` contains the latest version. To install another version, download the zip containing the update site and point the eclipse installer to the zip file. To install a version of ThingML you have built locally, you can point the Eclipse installer to directory `ThingML/language/thingml.repository/target/repository`. It may be necessary to uninstall the ThingML plugins if you want to downgrade.
-
-> **Installing the plugins in a earlier version of Eclipse:** The main dependency of the ThingML plugins is XText version 2.14 or greater. To Install XText version, the update site URL is: http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/ (More info at https://www.eclipse.org/Xtext/download.html). After the instalation (or update) of XText follow the instructions above to install the ThingML plugins.
-
+**Usage:** Once ThingML plugins are installed, `*.thingml` files will open with the ThingML editors. Right-click on `*.thingml` files and use `HEADS / ThingML` sub-menu to compile a ThingML file. Generated code will be put in a `thingml-gen` folder at the root of the eclipse project. Remember that only ThingML files containing a `configuration` can be compiled.
 
 ### Docker-Based Distribution
 
