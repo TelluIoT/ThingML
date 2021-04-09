@@ -68,31 +68,33 @@ thing TimerJava includes Timer
 }
 
 object JSArray;
+object JSMap;
 
 thing TimerJS includes Timer
 @stl {
 
-  property Timeouts : JSArray = `{}` as JSArray
+  property Timeouts : JSMap = `new Map()` as JSMap
 
   function startTimer(id: UInt8, delay : UInt16) do
     `
-      if (`&Timeouts&`[`&id&`] != undefined) {
+      if (`&Timeouts&`.has(`&id&`)) {
         ` cancel(id) `
       }
       
-      `&Timeouts&`[`&id&`] = setTimeout(() => {
+      `&Timeouts&`.set(`&id&`, setTimeout(() => {
         ` timer!timer_timeout(id) `
-        `&Timeouts&`[`&id&`] = undefined;
-      }, `&delay&`);
+        `&Timeouts&`.delete(`&id&`);
+      }, `&delay&`));
     `
     end
 
     function cancel(id: UInt8) do
       `
-        if (`&Timeouts&`[`&id&`] != undefined) {
-          clearTimeout(`&Timeouts&`[`&id&`]);
-          `&Timeouts&`[`&id&`] = undefined;
-        }
+				const timeoutId = `&Timeouts&`.get(`&id&`);
+				if (timeoutId !== undefined) {
+					clearTimeout(timeoutId);
+					`&Timeouts&`.delete(`&id&`);
+				}
       `
     end
 
