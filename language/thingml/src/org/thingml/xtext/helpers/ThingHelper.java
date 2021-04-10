@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
+import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.Variable;
@@ -68,6 +69,17 @@ public class ThingHelper {
 			result.addAll(allIncludedThingsWithCheck(self));
 		} catch (IncludeCycle e) {
 			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public static Set<Thing> allIncludingThings(Thing self) {
+		HashSet<Thing> result = new HashSet<>();
+		final ThingMLModel model = ThingMLElementHelper.findContainingModel(self);
+		for(Thing thing : ThingMLHelpers.allThings(model)) {
+			if (allIncludedThings(thing).contains(self)) {
+				result.add(thing);
+			}
 		}
 		return result;
 	}
