@@ -116,6 +116,58 @@ thing TimerJS includes Timer
     }
 }
 
+/**
+ * A drift-less, though probably not more precise, timer for Node.JS
+ */
+object DriftLess;
+thing TimerNodeJS includes Timer
+@stl 
+@js_dep "driftless:2.0.3" 
+{
+  property Timeouts : JsMap = `new Map()` as JSMap
+  readonly property driftless : DriftLess = `require('driftless')` as DriftLess
+
+  function startTimer(id: UInt8, delay : UInt16) do
+    `
+      if (`&Timeouts&`.has(`&id&`)) {
+        ` cancel(id) `
+      }
+      
+      `&Timeouts&`.set(`&id&`, ` & driftless & `.setDriftlessTimeout(() => {
+        ` timer!timer_timeout(id) `
+        `&Timeouts&`.delete(`&id&`);
+      }, `&delay&`));
+    `
+    end
+
+    function cancel(id: UInt8) do
+      `
+        const timeoutId = `&Timeouts&`.get(`&id&`);
+        if (timeoutId !== undefined) {
+          ` & driftless & `.clearDriftless(timeoutId);
+          `&Timeouts&`.delete(`&id&`);
+        }
+      `
+    end
+
+    statechart SoftTimer init default {
+        state default {
+
+          internal event m : timer?timer_start
+          guard m.time > 0
+          action startTimer(m.id, m.time)
+          
+          internal event m : timer?timer_start
+          guard m.time == 0
+          action timer!timer_timeout(m.id)
+
+          internal cancel
+            event m : timer?timer_cancel
+            action cancel(m.id)
+        }
+    }	
+}
+
 thing TimerPosix includes Timer
 @stl 
 @c_header `
