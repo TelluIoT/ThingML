@@ -1,0 +1,32 @@
+name: Testing
+
+on:
+  push:
+    branches: [ master ]
+  pull_request
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: Restore Maven cache
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ env.cache-name }}-${{ hashFiles('**/pom.xml') }}
+
+    - name: Global Maven Build
+      run: mvn --batch-mode -Dmaven.test.failure.ignore clean install
+    - name: Language Maven Build
+      run: |
+        cd language
+        mvn --batch-mode -Dmaven.test.failure.ignore -pl !thingml.ui.tests install
+
