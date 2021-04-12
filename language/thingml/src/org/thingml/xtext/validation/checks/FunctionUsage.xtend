@@ -51,7 +51,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 			return;			
 		
 		//if not, check if any thing that includes the function actually calls it
-		val isUsedByIncludingThings = ThingHelper.allIncludedThings(thing)
+		val isUsedByIncludingThings = ThingHelper.allIncludingThings(thing)
 		.exists[included |
 			ActionHelper.getAllActions(included, FunctionCallStatement).exists[call | call.function.name == f.name] //we check on names, as included function may call abstract function. Should be fine as long as we do not support overloading...
 			|| ThingMLHelpers.getAllExpressions(included, FunctionCallExpression).exists[call | call.function.name == f.name]
