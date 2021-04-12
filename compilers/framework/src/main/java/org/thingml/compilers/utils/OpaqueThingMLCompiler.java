@@ -98,11 +98,10 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		//Saving the complete model, e.g. to get all required inputs if there is a problem in the compiler
 		ThingMLModel flatModel = ThingMLHelpers.flattenModel(ThingMLHelpers.findContainingModel(cfg));
 		try {
-		saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
+			saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Could not save merged ThingML file!");
 		}
-		//saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
 		
 		//Run validation
 		log.info("Checking configuration...");

@@ -39,6 +39,7 @@ import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Property;
@@ -279,6 +280,13 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
 		generate(expression.getLhs(), builder, ctx);
 		builder.append(" === ");
+		generate(expression.getRhs(), builder, ctx);
+	}
+
+	@Override
+	public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
+		generate(expression.getLhs(), builder, ctx);
+		builder.append(" !== ");
 		generate(expression.getRhs(), builder, ctx);
 	}
 

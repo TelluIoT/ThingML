@@ -84,15 +84,15 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 			for(Parameter p : m.getParameters()) {
 				events.append("    this." + p.getName() + " = params[" + m.getParameters().indexOf(p) + "];\n");
 				if (m.getParameters().indexOf(p) > 0)
-					params.append(" + ', ' + ");
-				params.append("this." + p.getName());
+					params.append(", ");
+				params.append("' + this." + p.getName() + " + '");
 			}
 			events.append("  }\n\n");
 			events.append("  " + className + ".prototype.is = function (type) {\n");
 			events.append("    return this.type === type;\n");
 			events.append("  };\n\n");
 			events.append("  " + className + ".prototype.toString = function () {\n");
-			events.append("    return 'event ' + this.type + '?' + this.port + '(' + " + params + " + ')';\n");
+			events.append("    return 'event ' + this.type + '?' + this.port + '(" + params + ")';\n");
 			events.append("  };\n\n");
 			events.append("  return " + className + ";\n");
 			events.append("}());\n");
