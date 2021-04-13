@@ -90,7 +90,7 @@ public class AnnotatedElementHelper {
             if (a.getName().equals(name) && a.getValue() == null) {
                 return true;
             }
-            if (a.getName().equals(name) && a.getValue().equals("true")) {
+            if (a.getName().equals(name) && "true".equals(toString(a.getValue()))) {
             	return true;
             }
         }
