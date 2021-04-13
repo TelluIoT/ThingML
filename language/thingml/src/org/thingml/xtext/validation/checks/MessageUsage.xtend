@@ -5,6 +5,7 @@ import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.constraints.Types
 import org.thingml.xtext.helpers.ActionHelper
+import org.thingml.xtext.helpers.AnnotatedElementHelper
 import org.thingml.xtext.helpers.StateHelper
 import org.thingml.xtext.helpers.TyperHelper
 import org.thingml.xtext.thingML.Configuration
@@ -40,14 +41,16 @@ class MessageUsage extends ThingMLValidatorCheck {
 		val allSendActions = ActionHelper.getAllActions(thing, SendAction)
 		ThingMLHelpers.allPorts(thing).forEach[p |
 			p.sends.forEach[m, i|
-				val isSent = allSendActions.exists[sa | sa.port === p && sa.message === m]
-				if (!isSent) {
-					val msg = "Message " + p.name + "." + m.name + " is never sent"
-					val t = ThingMLHelpers.findContainingThing(p)
-					if (t == thing)
-						warning(msg, p, ThingMLPackage.eINSTANCE.port_Sends, i, "message-never-sent")
-					else //FIXME: this assumes the port/message comes from a Thing directly included (which is OK for 99% of the case), but will highlight the wrong include if it comes from several levels of includes... The old implementation was also doing the same "mistale"
-						warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, thing.includes.indexOf(t), "included-messages-never-sent")
+				if (!AnnotatedElementHelper.isDefined(m, "ignore", "not-used")) {
+					val isSent = allSendActions.exists[sa | sa.port === p && sa.message === m]
+					if (!isSent) {
+						val msg = "Message " + p.name + "." + m.name + " is never sent"
+						val t = ThingMLHelpers.findContainingThing(p)
+						if (t == thing)
+							warning(msg, p, ThingMLPackage.eINSTANCE.port_Sends, i, "message-never-sent")
+						else //FIXME: this assumes the port/message comes from a Thing directly included (which is OK for 99% of the case), but will highlight the wrong include if it comes from several levels of includes... The old implementation was also doing the same "mistale"
+							warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, thing.includes.indexOf(t), "included-messages-never-sent")
+					}
 				}
 			]
 		]
@@ -60,14 +63,16 @@ class MessageUsage extends ThingMLValidatorCheck {
 		// Check own ports
 		ThingMLHelpers.allPorts(thing).forEach[p |
 			p.receives.forEach[m, i|
-				if (handlers.get(p) === null || handlers.get(p).get(m) === null) {
-					val msg = "Message " + p.name + "." + m.name + " is never received"
-					val t = ThingMLHelpers.findContainingThing(p)
-					if (t == thing)
-						warning(msg, p, ThingMLPackage.eINSTANCE.port_Receives, i, "message-never-used")
-					else //FIXME: this assumes the port/message comes from a Thing directly included (which is OK for 99% of the case), but will highlight the wrong include if it comes from several levels of includes... The old implementation was also doing the same "mistale"
-						warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, thing.includes.indexOf(t), "included-messages-never-used")
+				if (AnnotatedElementHelper.isDefined(m, "ignore", "not-used")) {
+					if (handlers.get(p) === null || handlers.get(p).get(m) === null) {
+						val msg = "Message " + p.name + "." + m.name + " is never received"
+						val t = ThingMLHelpers.findContainingThing(p)
+						if (t == thing)
+							warning(msg, p, ThingMLPackage.eINSTANCE.port_Receives, i, "message-never-used")
+						else //FIXME: this assumes the port/message comes from a Thing directly included (which is OK for 99% of the case), but will highlight the wrong include if it comes from several levels of includes... The old implementation was also doing the same "mistale"
+							warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Includes, thing.includes.indexOf(t), "included-messages-never-used")
 					
+					}
 				}
 			]
 		]

@@ -43,6 +43,7 @@ class FunctionUsage extends ThingMLValidatorCheck {
 	
 	@Check(NORMAL)
 	def checkUsage(Function f) {
+		if (AnnotatedElementHelper.isDefined(f, "ignore", "not-used")) return;
 		val thing = ThingMLHelpers.findContainingThing(f)
 		//Checks if the containing thing calls the function
 		if (ActionHelper.getAllActions(thing, FunctionCallStatement).exists[call | call.function == f || call.function.name == f.name])
