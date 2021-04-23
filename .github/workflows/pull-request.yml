@@ -30,7 +30,7 @@ jobs:
       run: |
         cd language
         mvn --batch-mode -Dmaven.test.failure.ignore -pl !thingml.ui.tests install
-    - name: Run tests
-      run: |
-        cd testing
-        mvn test
+    #- name: Run tests
+    #  run: |
+    #    cd testing
+    #    mvn test
