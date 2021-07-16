@@ -160,8 +160,8 @@ public class AnnotationRegistry {
 		
 		//@c_header
 		final String cheader_name = "c_header";
-		final String cheader_desc = "Adds a header (.h) to the generated code for this Thing.";
-		final EClass cheader_scope[] = {ThingMLPackage.eINSTANCE.getThing()};
+		final String cheader_desc = "Adds a header (.h) to the generated code for this Type.";
+		final EClass cheader_scope[] = {ThingMLPackage.eINSTANCE.getType()};
 		final Annotation cheader_annotation = new Annotation(cheader_name, cheader_desc, cheader_scope);
 		annotations.put(cheader_name, cheader_annotation);
 		
