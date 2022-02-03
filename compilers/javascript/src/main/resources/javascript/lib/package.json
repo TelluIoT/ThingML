@@ -4,7 +4,7 @@
   "description": "<DESCRIPTION>",
   "main": "main.js",
   "dependencies": {
-    "@steelbreeze/state": "8.1.2"
+    "@steelbreeze/state": "8.2.0"
   },
   "devDependencies": {},
   "scripts": {},
